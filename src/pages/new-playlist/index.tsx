@@ -24,6 +24,7 @@ export function Initial() {
 
   const [formValue, setFormValue] = useState<PlaylistInfo>()
   const [submited, setSubmited] = useState(false)
+  
   const { isLoading, isSuccess } = useQuery({ queryKey: ['new-playlist'], queryFn: () => addNewPLaylist(formValue!), staleTime: Infinity, enabled: submited })
 
   const form = useForm<z.infer<typeof formSchema>>({

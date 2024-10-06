@@ -12,10 +12,12 @@
   "app": {
     "windows": [
       {
-        "title": "joy-iptv-player",
-        "width": 800,
-        "height": 600
-        
+        "resizable": true,
+        "maximized": true,
+        "title": "Joy IPTV Player",
+        "minWidth": 1100,
+        "minHeight": 600,
+        "center": true
       }
     ],
     "security": {

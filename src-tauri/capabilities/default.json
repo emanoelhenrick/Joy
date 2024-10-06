@@ -16,6 +16,7 @@
     "fs:read-all",
     "fs:read-files",
     "fs:scope-applocaldata-recursive",
-    "fs:default"
+    "fs:default",
+    "store:default"
   ]
 }

@@ -26,6 +26,8 @@ export function Home() {
   let { playlistName } = useParams();
   const { data, isFetched } = useQuery({ queryKey: ['vodPlaylist'], queryFn: () => getLocalVodPlaylist(playlistName!), staleTime: Infinity })
 
+
+
   const [playlist, setPlaylist] = useState<VodProps[]>([]);
   const [currentCategory, setCurrentCategory] = useState('all')
   const [hasMore, setHasMore] = useState(true)
