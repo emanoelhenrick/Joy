@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import { getMetadata } from "@/core/files/getMetadata";
 
@@ -12,7 +12,7 @@ export function SplashLoading() {
 
     if (isSuccess) {
       if (data.playlists.length === 0) return navigate('/initial')
-      navigate(`/home/${data!.playlists[0]}`)
+      navigate(`/vod-dashboard/${data!.playlists[0]}`)
     }
 
   }, [isSuccess])

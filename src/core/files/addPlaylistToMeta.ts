@@ -20,11 +20,6 @@ export async function addPlaylistToMeta(playlistName: string) {
   if (metadata.playlists.includes(playlistName)) return
   metadata.playlists.push(playlistName)
 
-  console.log(metadata);
-  console.log(metadata.playlists.includes(playlistName));
-  
-  
-
   const contents = JSON.stringify(metadata);
   await writeTextFile('playlists/meta.json', contents, { baseDir: BaseDirectory.AppLocalData });
 }

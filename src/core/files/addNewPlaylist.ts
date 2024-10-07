@@ -1,8 +1,7 @@
-import { create, BaseDirectory, exists, mkdir } from '@tauri-apps/plugin-fs';
+import { create, BaseDirectory, mkdir } from '@tauri-apps/plugin-fs';
 import { updateVod } from './updateVod';
 import { updateSeries } from './updateSeries';
 import { updateLive } from './updateLive';
-import { getMetadata } from './getMetadata';
 import { addPlaylistToMeta } from './addPlaylistToMeta';
 
 interface PlaylistInfo {
@@ -14,10 +13,8 @@ interface PlaylistInfo {
 
 export async function addNewPLaylist(playlistInfo: PlaylistInfo) {
   try {
-    const tokenExists = await exists('playlists', { baseDir: BaseDirectory.AppLocalData });
-    if (!tokenExists) await mkdir('playlists', { baseDir: BaseDirectory.AppLocalData });
     await mkdir(`playlists/${playlistInfo.name}`, { baseDir: BaseDirectory.AppLocalData })
-
+   
     const info = await create(`playlists/${playlistInfo.name}/info.json`, { baseDir: BaseDirectory.AppLocalData })
     await info.write(new TextEncoder().encode(JSON.stringify(playlistInfo)));
     await info.close();
@@ -32,7 +29,7 @@ export async function addNewPLaylist(playlistInfo: PlaylistInfo) {
   } catch (error) {
     return new Promise((_resolve, reject) => {
       console.log(error);
-      reject()
+      reject(false)
     })
   }
 }

@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { Clapperboard, Film, Search, Settings, Tv } from 'lucide-react'
 import {
   Select,
   SelectContent,
@@ -10,25 +8,23 @@ import {
 } from "./components/select"
 import { Input } from "@/components/ui/input";
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
-import { getLocalVodPlaylist } from "@/core/files/getLocalVodPlaylist";
-import { VodProps } from "@/core/models/VodModels";
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { useDebounce } from 'use-debounce';
 import { useParams } from "react-router-dom";
+import { SeriesProps } from "@/core/models/SeriesModels";
+import { getLocalSeriesPlaylist } from "@/core/files/getLocalSeriesPlaylist";
+import { MenuBar } from "../../menubar/MenuBar";
+import { Search } from "lucide-react";
 
 const elementsPerPage = 20
 
 const PlaylistScroll = lazy(() => import('./components/PlaylistScroll'))
 
-export function Home() {
-  useQueryClient()
-  
+export function SeriesDashboard() {
   let { playlistName } = useParams();
-  const { data, isFetched } = useQuery({ queryKey: ['vodPlaylist'], queryFn: () => getLocalVodPlaylist(playlistName!), staleTime: Infinity })
+  const { data, isFetched } = useQuery({ queryKey: ['SeriesPlaylist'], queryFn: () => getLocalSeriesPlaylist(playlistName!), staleTime: Infinity })
 
-
-
-  const [playlist, setPlaylist] = useState<VodProps[]>([]);
+  const [playlist, setPlaylist] = useState<SeriesProps[]>([]);
   const [currentCategory, setCurrentCategory] = useState('all')
   const [hasMore, setHasMore] = useState(true)
 
@@ -80,27 +76,11 @@ export function Home() {
 
   return (
     <div className="h-screen flex">
-      <div className="flex flex-col items-center justify-between px-2 py-8 h-full gap-4 border-r fixed opacity-60">
-        <div className="flex flex-col items-center l gap-4">
-          <Button variant="ghost" className="h-fit">
-            <Tv />
-          </Button>
-          <Button variant="ghost" className="h-fit">
-            <Film />
-          </Button>
-          <Button variant="ghost" className="h-fit">
-            <Clapperboard />
-          </Button>
-        </div>
+      <MenuBar playlist={playlistName} tab='series-dashboard' />
 
-        <Button variant="ghost" className="h-fit">
-          <Settings />
-        </Button>
-      </div>
-
-      <div className="flex flex-col w-full px-4 py-9 gap-6 ml-24">
+      <div className="flex flex-col w-full px-4 py-9 gap-4 ml-24">
         <div className="flex justify-between items-center">
-          <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Movies</h1>
+          <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Series</h1>
           <div className="flex gap-4 items-center">
             <Input className="w-72 text-xl h-fit" onChange={(e) => setSearchValue(e.target.value)} />
             <Search className="mr-4 opacity-60" />
@@ -108,7 +88,7 @@ export function Home() {
         </div>
 
         <Select onValueChange={(value) => setCurrentCategory(value)}>
-          <SelectTrigger  className="w-fit gap-4">
+          <SelectTrigger  className="w-fit gap-2">
             <SelectValue  placeholder="All" />
           </SelectTrigger>
           <SelectContent>
@@ -120,7 +100,7 @@ export function Home() {
         </Select>
         {playlist.length > 0 &&
           <Suspense fallback={<p>loading...</p>}>
-            <PlaylistScroll playlist={playlist} fetchMore={fetchMore}/>
+            <PlaylistScroll playlist={playlist} fetchMore={fetchMore} hasMore={hasMore} />
           </Suspense>
         }
       </div>

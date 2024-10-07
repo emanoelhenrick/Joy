@@ -38,7 +38,7 @@ export function Initial() {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate(`/home/${formValue!.name}`)
+      navigate(`/vod-dashboard/${formValue!.name}`)
     }
     
   }, [isSuccess])

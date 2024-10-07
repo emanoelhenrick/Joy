@@ -1,10 +1,13 @@
-import { BaseDirectory, create, exists, readTextFile } from "@tauri-apps/plugin-fs";
+import { BaseDirectory, create, exists, mkdir, readTextFile } from "@tauri-apps/plugin-fs";
 
 interface MetaProps {
   playlists: string[]
 }
 
 export async function getMetadata(): Promise<MetaProps> {
+  const tokenExists = await exists('playlists', { baseDir: BaseDirectory.AppLocalData });
+  if (!tokenExists) await mkdir('playlists', { baseDir: BaseDirectory.AppLocalData });
+
   const metaExists = await exists('playlists/meta.json', { baseDir: BaseDirectory.AppLocalData })
   
   if (metaExists) {
