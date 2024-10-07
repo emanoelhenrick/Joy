@@ -10,6 +10,8 @@ import { useQuery } from "@tanstack/react-query"
 import { PlaylistInfo } from "@/core/models/PlaylistInfo"
 import { ReloadIcon } from "@radix-ui/react-icons"
 import { useNavigate } from "react-router-dom"
+import { useToast } from "@/hooks/use-toast"
+import { authenticateUser } from "@/core/files/authenticateUser"
  
 const formSchema = z.object({
   name: z.string().min(1),
@@ -24,8 +26,10 @@ export function Initial() {
 
   const [formValue, setFormValue] = useState<PlaylistInfo>()
   const [submited, setSubmited] = useState(false)
+  const [validated, setValidated] = useState(false)
+  const { toast } = useToast()
   
-  const { isLoading, isSuccess } = useQuery({ queryKey: ['new-playlist'], queryFn: () => addNewPLaylist(formValue!), staleTime: Infinity, enabled: submited })
+  const { isSuccess } = useQuery({ queryKey: ['new-playlist'], queryFn: () => addNewPLaylist(formValue!), staleTime: Infinity, enabled: validated })
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema)
@@ -34,10 +38,38 @@ export function Initial() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setSubmited(true)
     setFormValue(values)
+    
   }
+
+  async function validate() {
+    try {
+      const isValidated = await authenticateUser(formValue!)
+      if (isValidated) {
+        setValidated(true)
+        return toast({
+          title: 'Playlist added successfully.',
+          description: 'Please wait while we are configuring your details, this may take a few seconds'
+        })
+      }
+    } catch (error) {
+      setSubmited(false)
+      toast({
+        variant: "destructive",
+        title: 'Playlist cannot be added.',
+        description: 'Check if the data is correct and try again.'
+      })
+    }
+  }
+
+  
+  useEffect(() => {
+    if (submited) validate()
+  }, [submited])
+  
 
   useEffect(() => {
     if (isSuccess) {
+      setSubmited(false)
       navigate(`/vod-dashboard/${formValue!.name}`)
     }
     
@@ -116,7 +148,7 @@ export function Initial() {
                     )}
                   />
                 </div>
-                {isLoading ? <Button disabled><ReloadIcon className="mr-2 h-4 w-4 animate-spin" />Loading playlist</Button> : <Button type="submit" className="w-full">Add</Button>}
+                {submited ? <Button disabled><ReloadIcon className="mr-2 h-4 w-4 animate-spin" />Loading playlist</Button> : <Button type="submit" className="w-full">Add</Button>}
               </div>
             </form>
           </Form>

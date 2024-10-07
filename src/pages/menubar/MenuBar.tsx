@@ -12,14 +12,14 @@ export function MenuBar({ playlist, tab }: { playlist?: string, tab: string }) {
   return (
     <div className="flex flex-col items-center justify-between px-2 py-8 h-full gap-4 border-r fixed">
       <div className="flex flex-col items-center l gap-4">
-        <Button variant={tab === 'live-dashboard' ? 'default' : 'ghost'} onClick={() => changeTab('live-dashboard')} className="h-fit">
-          <Tv />
-        </Button>
         <Button variant={tab === 'vod-dashboard' ? 'default' : 'ghost'} onClick={() => changeTab('vod-dashboard')} className="h-fit">
           <Film />
         </Button>
         <Button variant={tab === 'series-dashboard' ? 'default' : 'ghost'} onClick={() => changeTab('series-dashboard')} className="h-fit">
           <Clapperboard />
+        </Button>
+        <Button variant={tab === 'live-dashboard' ? 'default' : 'ghost'} onClick={() => changeTab('live-dashboard')} className="h-fit">
+          <Tv />
         </Button>
       </div>
 

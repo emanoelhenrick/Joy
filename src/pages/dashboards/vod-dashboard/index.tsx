@@ -100,7 +100,7 @@ export function VodDashboard() {
         </Select>
         {playlist.length > 0 &&
           <Suspense fallback={<p>loading...</p>}>
-            <PlaylistScroll playlist={playlist} fetchMore={fetchMore} hasMore={hasMore} length={playlist.length}/>
+            <PlaylistScroll playlist={playlist} fetchMore={fetchMore} hasMore={hasMore} />
           </Suspense>
         }
       </div>
