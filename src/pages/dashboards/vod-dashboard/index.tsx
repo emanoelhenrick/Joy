@@ -15,6 +15,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useDebounce } from 'use-debounce';
 import { useParams } from "react-router-dom";
 import { MenuBar } from "../../menubar/MenuBar";
+import { getCompressImage } from '@/core/files/getCompressImage';
 
 const elementsPerPage = 10
 

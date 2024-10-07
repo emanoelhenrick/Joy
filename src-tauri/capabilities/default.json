@@ -17,6 +17,16 @@
     "fs:read-files",
     "fs:scope-applocaldata-recursive",
     "fs:default",
-    "store:default"
+    "store:default",
+    "http:default",
+    {
+      "identifier": "http:default",
+      "allow": [{
+        "url": "https://*"
+      },
+      {
+        "url": "http://*"
+      }]
+    }
   ]
 }

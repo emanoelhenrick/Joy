@@ -34,7 +34,7 @@ export function Initial() {
   const [submited, setSubmited] = useState(false)
   const [validated, setValidated] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
-  const [progress, setProgress] = useState<ProgressProps>({ msg: '', value: 0})
+  const [progress, setProgress] = useState<ProgressProps>({ msg: 'Loading...', value: 0})
   const { toast } = useToast()
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -95,7 +95,7 @@ export function Initial() {
 
   return (
     <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px] h-screen">
-      <div className="flex items-center justify-center py-12">
+      <div className="flex items-center justify-center py-12 ">
         <div className="mx-auto grid w-[350px] gap-6">
           <div className="grid gap-2 text-center">
             <h1 className="text-3xl font-bold">Add a playlist</h1>
@@ -170,7 +170,7 @@ export function Initial() {
                 {validated && (
                   <>
                   <Progress className="transition" value={progress?.value} />
-                  <Label>{progress.msg}</Label>
+                  <Label className="animate-pulse">{progress.msg}</Label>
                   </>
                 )}
                 
