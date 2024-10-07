@@ -6,12 +6,13 @@ import { useForm } from "react-hook-form"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { addNewPLaylist } from "@/core/files/addNewPlaylist"
 import { useEffect, useState } from "react"
-import { useQuery } from "@tanstack/react-query"
 import { PlaylistInfo } from "@/core/models/PlaylistInfo"
 import { ReloadIcon } from "@radix-ui/react-icons"
 import { useNavigate } from "react-router-dom"
 import { useToast } from "@/hooks/use-toast"
 import { authenticateUser } from "@/core/files/authenticateUser"
+import { Progress } from "@/components/ui/progress"
+import { Label } from "@/components/ui/label"
  
 const formSchema = z.object({
   name: z.string().min(1),
@@ -20,6 +21,11 @@ const formSchema = z.object({
   url: z.string().url()
 })
 
+interface ProgressProps {
+  msg: string
+  value: number
+}
+
 
 export function Initial() {
   const navigate = useNavigate();
@@ -27,9 +33,9 @@ export function Initial() {
   const [formValue, setFormValue] = useState<PlaylistInfo>()
   const [submited, setSubmited] = useState(false)
   const [validated, setValidated] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
+  const [progress, setProgress] = useState<ProgressProps>({ msg: '', value: 0})
   const { toast } = useToast()
-  
-  const { isSuccess } = useQuery({ queryKey: ['new-playlist'], queryFn: () => addNewPLaylist(formValue!), staleTime: Infinity, enabled: validated })
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema)
@@ -38,6 +44,17 @@ export function Initial() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setSubmited(true)
     setFormValue(values)
+  }
+
+  async function handleNewPLaylist() {
+    try {
+      const generator = addNewPLaylist(formValue!);
+      for await (const value of generator) setProgress(value)
+      setIsSuccess(true)
+
+    } catch (error) {
+      
+    }
     
   }
 
@@ -46,6 +63,7 @@ export function Initial() {
       const isValidated = await authenticateUser(formValue!)
       if (isValidated) {
         setValidated(true)
+        handleNewPLaylist()
         return toast({
           title: 'Playlist added successfully.',
           description: 'Please wait while we are configuring your details, this may take a few seconds'
@@ -149,10 +167,18 @@ export function Initial() {
                   />
                 </div>
                 {submited ? <Button disabled><ReloadIcon className="mr-2 h-4 w-4 animate-spin" />Loading playlist</Button> : <Button type="submit" className="w-full">Add</Button>}
+                {validated && (
+                  <>
+                  <Progress className="transition" value={progress?.value} />
+                  <Label>{progress.msg}</Label>
+                  </>
+                )}
+                
               </div>
             </form>
           </Form>
         </div>
+        
       </div>
       <div className="hidden bg-muted lg:block">
         <div className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"/>
