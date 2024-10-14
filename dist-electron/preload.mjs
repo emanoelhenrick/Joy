@@ -1,0 +1,37 @@
+"use strict";
+const electron = require("electron");
+electron.contextBridge.exposeInMainWorld("ipcRenderer", {
+  on(...args) {
+    const [channel, listener] = args;
+    return electron.ipcRenderer.on(channel, (event, ...args2) => listener(event, ...args2));
+  },
+  off(...args) {
+    const [channel, ...omit] = args;
+    return electron.ipcRenderer.off(channel, ...omit);
+  },
+  send(...args) {
+    const [channel, ...omit] = args;
+    return electron.ipcRenderer.send(channel, ...omit);
+  },
+  invoke(...args) {
+    const [channel, ...omit] = args;
+    return electron.ipcRenderer.invoke(channel, ...omit);
+  },
+  // You can expose other APTs you need here.
+  // ...
+  getMetadata: () => electron.ipcRenderer.invoke("get-metadata"),
+  addNewPlaylist: async (args) => await electron.ipcRenderer.invoke("add-new-playlist", args),
+  updateVod: async (args) => await electron.ipcRenderer.invoke("update-vod", args),
+  updateSeries: async (args) => await electron.ipcRenderer.invoke("update-series", args),
+  updateLive: async (args) => await electron.ipcRenderer.invoke("update-live", args),
+  authenticateUser: async (args) => await electron.ipcRenderer.invoke("authenticate-user", args),
+  addPlaylistToMeta: async (args) => await electron.ipcRenderer.invoke("add-playlist-to-meta", args),
+  getLocalVodPlaylist: async (args) => await electron.ipcRenderer.invoke("get-local-vod-playlist", args),
+  getLocalSeriesPlaylist: async (args) => await electron.ipcRenderer.invoke("get-local-series-playlist", args),
+  getLocalLivePlaylist: async (args) => await electron.ipcRenderer.invoke("get-local-live-playlist", args),
+  getPlaylistInfo: async (args) => await electron.ipcRenderer.invoke("get-playlist-info", args),
+  getVodInfo: async (args) => await electron.ipcRenderer.invoke("get-vod-info", args),
+  getSerieInfo: async (args) => await electron.ipcRenderer.invoke("get-serie-info", args),
+  getUserData: async (args) => await electron.ipcRenderer.invoke("get-user-data", args),
+  updateUserData: async (args) => await electron.ipcRenderer.invoke("update-user-data", args)
+});

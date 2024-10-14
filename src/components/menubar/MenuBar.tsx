@@ -1,0 +1,44 @@
+import { Button } from "@/components/ui/button";
+import electronApi from "@/config/electronApi";
+import { Clapperboard, Film, Settings, Tv } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Fade } from "react-awesome-reveal";
+import { useLocation, useNavigate } from "react-router-dom";
+
+export function MenuBar() {
+  const [playlistName, setPlaylistName] = useState<string>()
+  const navigate = useNavigate();
+  const location = useLocation()
+
+  function changeTab(tab: string) {
+    navigate(`/dashboard/${tab}/${playlistName}`)
+  }
+
+  async function getPlaylistName() {
+    const metadata = await electronApi.getMetadata()
+    setPlaylistName(metadata.currentPlaylist)
+  }
+
+  useEffect(() => {
+    getPlaylistName()
+  }, [])
+
+  return (
+    <div className="flex flex-col items-center justify-center px-2.5 h-full gap-4 fixed">
+      <Fade cascade direction="up" triggerOnce duration={500}>
+      <Button variant='ghost' onClick={() => changeTab('vod')} className={`h-fit ${location.pathname.includes('vod') ? 'opacity-90' : 'opacity-50'}`}>
+        <Film />
+      </Button>
+      <Button variant='ghost' onClick={() => changeTab('series')} className={`h-fit ${location.pathname.includes('series') ? 'opacity-90' : 'opacity-30'}`}>
+        <Clapperboard />
+      </Button>
+      <Button variant='ghost' onClick={() => changeTab('live')} className={`h-fit ${location.pathname.includes('live') ? 'opacity-90' : 'opacity-30'}`}>
+        <Tv />
+      </Button>
+      {/* <Button variant='ghost' onClick={() => changeTab('settings')} className={`h-fit ${location.pathname.includes('settings') ? 'opacity-90' : 'opacity-10'}`}>
+        <Settings />
+      </Button> */}
+      </Fade>
+    </div>
+  )
+}
