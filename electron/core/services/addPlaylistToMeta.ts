@@ -12,15 +12,13 @@ export async function addPlaylistToMeta(playlistInfo: PlaylistInfo) {
 
     const metadata: MetaProps = await readAsync(META_PATH, 'json')
 
-    if (metadata.playlists.length === 0) {
-      metadata.playlists = [playlistInfo]
-    }
-
     if (metadata.playlists) {
       for (const playlist of metadata.playlists) {
         if (playlist.name == playlistInfo.name) return false
       }
       metadata.playlists.push(playlistInfo)
+    } else {
+      metadata.playlists = [playlistInfo]
     }
 
     metadata.currentPlaylist = playlistInfo.name

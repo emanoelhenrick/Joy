@@ -19067,14 +19067,13 @@ async function addPlaylistToMeta(playlistInfo) {
     const PLAYLIST_DIR = path$3.join(SessionDataDir, "playlists");
     const META_PATH = path$3.join(PLAYLIST_DIR, "meta.json");
     const metadata = await main.readAsync(META_PATH, "json");
-    if (metadata.playlists.length === 0) {
-      metadata.playlists = [playlistInfo];
-    }
     if (metadata.playlists) {
       for (const playlist of metadata.playlists) {
         if (playlist.name == playlistInfo.name) return false;
       }
       metadata.playlists.push(playlistInfo);
+    } else {
+      metadata.playlists = [playlistInfo];
     }
     metadata.currentPlaylist = playlistInfo.name;
     await main.writeAsync(META_PATH, metadata);
