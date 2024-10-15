@@ -4,25 +4,29 @@ export interface VodPlaylistProps {
 }
 
 export interface VodProps {
-  title: string,
-  stream_id: string,
-  rating_5based: number,
-  plot: string,
-  cast: string,
-  director: string,
-  category_id: string,
+  title: string
+  name: string
+  stream_id: string
+  rating_5based: number
+  plot: string
+  cast: string
+  director: string
+  category_id: string
   stream_icon: string
 }
 
 export interface VodInfoProps {
   info: {
     name: string
+    title: string
     director: string
     cast: string
+    plot: string
     description: string
   },
   movie_data: {
     container_extension: string
+    name: string
   },
   url: string
   username: string

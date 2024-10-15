@@ -8,6 +8,7 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import { SeriesInfo } from "../SeriesInfo";
 import { useDebounce } from "use-debounce";
 import { Fade } from "react-awesome-reveal";
+import { FaStar } from "react-icons/fa";
 
 interface PlaylistScrollProps {
   playlist: SeriesProps[]
@@ -66,11 +67,11 @@ export default function PlaylistScroll({ playlist }: PlaylistScrollProps) {
                       <Cover src={series.cover} />
                     </div>
                     {isFavorite ? (
-                      <Heart onClick={() => updateRender(series.series_id.toString())} size={20} fill="red" strokeWidth={0} className={`absolute top-3 right-4 ${isFavorite ? 'visible' : 'invisible' }`}  />
-                    ) : (
-                      <Heart onClick={() => updateRender(series.series_id.toString())} size={20} className={`absolute top-3 right-4 opacity-0 group-hover:opacity-100 transition hover:scale-110`}  />
-                    )} 
-                    <h3 className="truncate w-36 text-sm text-muted-foreground font-bold">{series.title}</h3>
+                        <FaStar onClick={() => updateRender(series.series_id.toString())} size={20} strokeWidth={0} className={`absolute fill-yellow-400 top-3 right-4 ${isFavorite ? 'visible' : 'invisible' }`}  />
+                      ) : (
+                        <FaStar onClick={() => updateRender(series.series_id.toString())} size={20} className={`absolute fill-primary top-3 right-4 opacity-0 group-hover:opacity-100 transition hover:scale-110`}  />
+                      )} 
+                    <h3 className="truncate w-36 text-sm text-muted-foreground font-bold">{series.title || series.name}</h3>
                   </div>
                 )
               })}

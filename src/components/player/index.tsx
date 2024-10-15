@@ -7,6 +7,8 @@ import {
   DefaultVideoLayout,
 } from '@vidstack/react/player/layouts/default';
 import { useUserData } from '@/states/useUserData';
+import { ExpandVideo } from './ExpandVideo';
+import { ArrowExpandOutIcon } from '@vidstack/react/icons';
 
 
 interface PlayerProps {
@@ -57,7 +59,13 @@ export function VideoPlayer({ url, type, data, currentTimeStated = 0, title }: P
       >
         <MediaProvider className='player-wrapper' />
         <DefaultAudioLayout icons={defaultLayoutIcons} />
-        <DefaultVideoLayout className='absolute bottom-0' icons={defaultLayoutIcons} />
+        <DefaultVideoLayout
+          slots={{
+            googleCastButton: <ExpandVideo />
+          }}
+          className='absolute bottom-0'
+          icons={defaultLayoutIcons}
+        />
     </MediaPlayer>
   )
 }

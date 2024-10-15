@@ -39,9 +39,6 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
     
   }, [isSuccess])
 
-  console.log(data);
-  
-
   useEffect(() => {
     if (isSuccess) {
       const episodesList = data!.episodes[currentSeason]
@@ -80,7 +77,7 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
         {isSuccess && (
           <div className={`flex flex-col h-full transition max-w-3xl`}>
             <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-              {title}
+              {data?.info.name}
             </h1>
             <p className="leading-7 [&:not(:first-child)]:mt-6 text-lg">
               {data?.info.plot}

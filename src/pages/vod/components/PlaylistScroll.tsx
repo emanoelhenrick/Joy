@@ -24,7 +24,6 @@ export default function PlaylistScroll({ playlist }: PlaylistScrollProps) {
     updateFavorite(streamId, 'vod')
     setUpdate(prev => !prev)
   }
-  
 
   useEffect(() => {
     if (vodData) {
@@ -36,8 +35,6 @@ export default function PlaylistScroll({ playlist }: PlaylistScrollProps) {
     }
     
   }, [userData, update, vodData])
-
- 
 
   return (
     <div className="h-fit rounded-xl">
@@ -73,7 +70,7 @@ export default function PlaylistScroll({ playlist }: PlaylistScrollProps) {
                       ) : (
                         <FaStar onClick={() => updateRender(movie.stream_id.toString())} size={20} className={`absolute fill-primary top-3 right-4 opacity-0 group-hover:opacity-100 transition hover:scale-110`}  />
                       )}
-                    <h3 className="truncate w-36 text-sm text-muted-foreground font-bold">{movie.title}</h3>
+                    <h3 className="truncate w-36 text-sm text-muted-foreground font-bold">{movie.title || movie.name}</h3>
                   </div>
                 )
               })}

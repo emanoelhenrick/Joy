@@ -4,13 +4,14 @@ export interface SeriesPlaylistProps {
 }
 
 export interface SeriesProps {
-  title: string,
-  series_id: number,
-  rating_5based: number,
-  plot: string,
-  cast: string,
-  director: string,
-  category_id: string,
+  title: string
+  name: string
+  series_id: number
+  rating_5based: number
+  plot: string
+  cast: string
+  director: string
+  category_id: string
   cover: string
 }
 

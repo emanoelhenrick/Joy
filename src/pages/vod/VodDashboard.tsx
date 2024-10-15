@@ -41,8 +41,8 @@ export function VodDashboard() {
   const filtered = useMemo(() => {
     setPage(1)
     if (data) {
-      if (currentCategory === 'all') return search.length > 0 ? data!.playlist!.filter(p => p.title.toLowerCase().includes(search.toLowerCase())) : data!.playlist
-      return data!.playlist!.filter(p => p.category_id === currentCategory && p.title.toLowerCase().includes(search.toLowerCase()))
+      if (currentCategory === 'all') return search.length > 0 ? data!.playlist!.filter(p => p.name.toLowerCase().includes(search.toLowerCase())) : data!.playlist
+      return data!.playlist!.filter(p => p.category_id === currentCategory && p.name.toLowerCase().includes(search.toLowerCase()))
     }
     
   }, [search, isFetched, currentCategory])
@@ -78,6 +78,11 @@ export function VodDashboard() {
 
   function previousPage() {
     if (page > 1) setPage(prev => prev - 1)
+  }
+
+  function handleFavorites() {
+    setPage(1)
+    setShowFavorites(prev => !prev)
   }
 
   useEffect(() => {
@@ -117,9 +122,9 @@ export function VodDashboard() {
               </SelectContent>
             </Select>
             {showFavorites ? (
-              <FaStar onClick={() => setShowFavorites(false)} size={22} strokeWidth={0} className={`cursor-pointer fill-yellow-400 ${showFavorites ? 'visible' : 'invisible' }`}  />
+              <FaStar onClick={handleFavorites} size={22} strokeWidth={0} className={`cursor-pointer fill-yellow-400 ${showFavorites ? 'visible' : 'invisible' }`}  />
             ) : (
-              <FaRegStar onClick={() => setShowFavorites(true)} size={22} className={`cursor-pointer opacity-40 group-hover:opacity-100 transition hover:scale-110`}  />
+              <FaRegStar onClick={handleFavorites} size={22} className={`cursor-pointer opacity-40 group-hover:opacity-100 transition hover:scale-110`}  />
             )} 
           </div>
           {!enoughItems && (
@@ -131,7 +136,7 @@ export function VodDashboard() {
           )}
         </div>
         {playlist.length > 0 &&
-          <Suspense fallback={<p>loading...</p>}>
+          <Suspense fallback={<p className="text-muted-foreground">loading...</p>}>
             <PlaylistScroll playlist={playlist} />
           </Suspense>
         }

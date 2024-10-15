@@ -5,7 +5,7 @@ import { usePlaylistUrl } from "@/states/usePlaylistUrl"
 import { QueryFilters, useQuery, useQueryClient } from "@tanstack/react-query"
 import { LoaderCircle } from "lucide-react"
 import { useEffect } from "react"
-import { Fade, Zoom } from "react-awesome-reveal"
+import { Fade } from "react-awesome-reveal"
 import { FaPlay } from "react-icons/fa"
 import { VideoPlayer } from "../../components/player"
 
@@ -21,6 +21,9 @@ export function VodInfo({ streamId, title, cover }: Props) {
   const { data, isSuccess } = useQuery({ queryKey: ['vodInfo'], queryFn: async () => await electronApi.getVodInfo(urls.getVodInfoUrl + streamId) })
 
   const { urls } = usePlaylistUrl()
+
+  console.log(data);
+  
 
   useEffect(() => {
     return () => {
@@ -45,10 +48,10 @@ export function VodInfo({ streamId, title, cover }: Props) {
             <Fade duration={250}>
             <div className={`flex flex-col h-full transition`}>
               <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-                {data.info.name}
+                {data.info.name || data.info.title || data.movie_data.name}
               </h1>
               <p className="leading-7 [&:not(:first-child)]:mt-6 text-lg">
-                {data?.info.description}
+                {data?.info.description || data?.info.plot}
               </p>
               <p className="leading-7 [&:not(:first-child)]:mt-3 text-md text-muted-foreground">
                 {data?.info.cast}
