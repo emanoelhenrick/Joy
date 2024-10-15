@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label"
 import electronApi from "@/config/electronApi"
 import { PlaylistInfo } from "electron/core/models/PlaylistInfo"
 import { makeUrls, PlaylistUrls, usePlaylistUrl } from "@/states/usePlaylistUrl"
+import { useQueryClient } from "@tanstack/react-query"
  
 const formSchema = z.object({
   name: z.string().min(1),
@@ -28,6 +29,7 @@ interface ProgressProps {
 
 export function Initial() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient()
   const { updateUrls } = usePlaylistUrl()
 
   const [formValue, setFormValue] = useState<PlaylistInfo>()
@@ -95,6 +97,7 @@ export function Initial() {
 
   useEffect(() => {
     if (isSuccess) {
+      queryClient.removeQueries()
       setSubmitted(false)
       navigate(`/dashboard/vod/${formValue!.name}`)
     }

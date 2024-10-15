@@ -33,5 +33,6 @@ electron.contextBridge.exposeInMainWorld("ipcRenderer", {
   getVodInfo: async (args) => await electron.ipcRenderer.invoke("get-vod-info", args),
   getSerieInfo: async (args) => await electron.ipcRenderer.invoke("get-serie-info", args),
   getUserData: async (args) => await electron.ipcRenderer.invoke("get-user-data", args),
-  updateUserData: async (args) => await electron.ipcRenderer.invoke("update-user-data", args)
+  updateUserData: async (args) => await electron.ipcRenderer.invoke("update-user-data", args),
+  changeCurrentPlaylist: async (args) => await electron.ipcRenderer.invoke("change-current-playlist", args)
 });

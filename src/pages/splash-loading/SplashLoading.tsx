@@ -1,11 +1,12 @@
 import electronApi from "@/config/electronApi";
 import { makeUrls, usePlaylistUrl } from "@/states/usePlaylistUrl";
 import { useUserData } from "@/states/useUserData";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 
 export function SplashLoading() {
+  const queryClient = useQueryClient()
   const navigate = useNavigate();
 
   const updateUrls = usePlaylistUrl(state => state.updateUrls)
@@ -25,7 +26,7 @@ export function SplashLoading() {
       const urls = makeUrls(currentPlaylist)
       setUserData(currentPlaylist.name)
       updateUrls(urls)
-      
+      queryClient.removeQueries()
       navigate(`/dashboard/vod/${currentPlaylist.name}`)
     }
   }, [isSuccess])

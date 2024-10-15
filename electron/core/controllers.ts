@@ -14,6 +14,7 @@ import { getVodInfo } from "./services/vod/getVodInfo";
 import { getSerieInfo } from "./services/series/getSerieInfo";
 import { getUserData } from "./services/getUserData";
 import { updateUserData } from "./services/updateUserData";
+import { changeCurrentPlaylist } from "./services/changeCurrentPlaylist";
 
 export default function CoreControllers() {
   ipcMain.handle('get-metadata', getMetadata)
@@ -36,4 +37,6 @@ export default function CoreControllers() {
 
   ipcMain.handle('get-user-data', async (_event, args) => await getUserData(args))
   ipcMain.handle('update-user-data', async (_event, args) => await updateUserData(args))
+
+  ipcMain.handle('change-current-playlist', async (_event, args) => await changeCurrentPlaylist(args))
 }

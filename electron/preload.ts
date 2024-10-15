@@ -41,5 +41,7 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   getSerieInfo: async (args: any) => await ipcRenderer.invoke('get-serie-info', args),
 
   getUserData: async (args: any) => await ipcRenderer.invoke('get-user-data', args),
-  updateUserData: async (args: any) => await ipcRenderer.invoke('update-user-data', args)
+  updateUserData: async (args: any) => await ipcRenderer.invoke('update-user-data', args),
+
+  changeCurrentPlaylist: async (args: any) => await ipcRenderer.invoke('change-current-playlist', args)
 })

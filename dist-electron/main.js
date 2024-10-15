@@ -19067,16 +19067,16 @@ async function addPlaylistToMeta(playlistInfo) {
     const PLAYLIST_DIR = path$3.join(SessionDataDir, "playlists");
     const META_PATH = path$3.join(PLAYLIST_DIR, "meta.json");
     const metadata = await main.readAsync(META_PATH, "json");
-    if (metadata.playlists) {
-      for (const playlist of metadata.playlists) {
-        if (playlist.name.includes(playlistInfo.name)) return false;
-        metadata.playlists.push(playlistInfo);
-      }
-    }
     if (metadata.playlists.length === 0) {
       metadata.playlists = [playlistInfo];
-      metadata.currentPlaylist = playlistInfo.name;
     }
+    if (metadata.playlists) {
+      for (const playlist of metadata.playlists) {
+        if (playlist.name == playlistInfo.name) return false;
+      }
+      metadata.playlists.push(playlistInfo);
+    }
+    metadata.currentPlaylist = playlistInfo.name;
     await main.writeAsync(META_PATH, metadata);
     return true;
   } catch (error) {
@@ -19137,6 +19137,22 @@ async function updateUserData(data) {
   await main.writeAsync(USERDATA_PATH, data);
   return new Promise((resolve) => resolve(data));
 }
+async function changeCurrentPlaylist(playlistName) {
+  try {
+    const SessionDataDir = app.getPath("sessionData");
+    const PLAYLIST_DIR = path$3.join(SessionDataDir, "playlists");
+    const META_PATH = path$3.join(PLAYLIST_DIR, "meta.json");
+    const metadata = await main.readAsync(META_PATH, "json");
+    const exists2 = metadata.playlists.find((p) => p.name == playlistName);
+    if (!exists2) return false;
+    metadata.currentPlaylist = playlistName;
+    await main.writeAsync(META_PATH, metadata);
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
 function CoreControllers() {
   ipcMain.handle("get-metadata", getMetadata);
   ipcMain.handle("add-new-playlist", async (_event, args) => await addNewPlaylist(args));
@@ -19153,6 +19169,7 @@ function CoreControllers() {
   ipcMain.handle("get-serie-info", async (_event, args) => await getSerieInfo(args));
   ipcMain.handle("get-user-data", async (_event, args) => await getUserData(args));
   ipcMain.handle("update-user-data", async (_event, args) => await updateUserData(args));
+  ipcMain.handle("change-current-playlist", async (_event, args) => await changeCurrentPlaylist(args));
 }
 const __dirname = path$4.dirname(fileURLToPath(import.meta.url));
 process.env.APP_ROOT = path$4.join(__dirname, "..");

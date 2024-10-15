@@ -4,6 +4,8 @@ import { Clapperboard, Film, Settings, Tv } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Fade } from "react-awesome-reveal";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./dialog";
+import { SettingsPage } from "@/pages/settings";
 
 export function MenuBar() {
   const [playlistName, setPlaylistName] = useState<string>()
@@ -35,9 +37,17 @@ export function MenuBar() {
       <Button variant='ghost' onClick={() => changeTab('live')} className={`h-fit ${location.pathname.includes('live') ? 'opacity-90' : 'opacity-30'}`}>
         <Tv />
       </Button>
-      {/* <Button variant='ghost' onClick={() => changeTab('settings')} className={`h-fit ${location.pathname.includes('settings') ? 'opacity-90' : 'opacity-10'}`}>
-        <Settings />
-      </Button> */}
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button variant='ghost' className={`h-fit ${location.pathname.includes('settings') ? 'opacity-90' : 'opacity-10'}`}>
+            <Settings />
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="w-1/2 items-center p-8" aria-describedby={undefined}>
+          <DialogTitle className="hidden">Settings</DialogTitle>
+          {playlistName && <SettingsPage currentPlaylist={playlistName} />}
+        </DialogContent>
+      </Dialog>
       </Fade>
     </div>
   )

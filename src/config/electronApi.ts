@@ -27,6 +27,7 @@ export interface Api {
   getSerieInfo: (url: string) => Promise<SerieInfoProps | undefined>
   getUserData: (playlistName: string) => Promise<UserDataProps>
   updateUserData: (data: UserDataProps) => Promise<UserDataProps>
+  changeCurrentPlaylist: (playlistName: string) => Promise<Boolean>
 }
 
 const electronApi = window.ipcRenderer as unknown as Api

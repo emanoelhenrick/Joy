@@ -2,9 +2,8 @@ import { app } from "electron"
 import { readAsync, writeAsync } from "fs-jetpack"
 import path from "path"
 import { MetaProps } from "../models/MetaProps"
-import { PlaylistInfo } from "../models/PlaylistInfo"
 
-export async function addPlaylistToMeta(playlistInfo: PlaylistInfo) {
+export async function changeCurrentPlaylist(playlistName: string) {
   try {
     const SessionDataDir = app.getPath('sessionData')
     const PLAYLIST_DIR =  path.join(SessionDataDir, 'playlists')
@@ -12,18 +11,10 @@ export async function addPlaylistToMeta(playlistInfo: PlaylistInfo) {
 
     const metadata: MetaProps = await readAsync(META_PATH, 'json')
 
-    if (metadata.playlists.length === 0) {
-      metadata.playlists = [playlistInfo]
-    }
+    const exists = metadata.playlists.find(p => p.name == playlistName)
+    if (!exists) return false
 
-    if (metadata.playlists) {
-      for (const playlist of metadata.playlists) {
-        if (playlist.name == playlistInfo.name) return false
-      }
-      metadata.playlists.push(playlistInfo)
-    }
-
-    metadata.currentPlaylist = playlistInfo.name
+    metadata.currentPlaylist = playlistName
     
     await writeAsync(META_PATH, metadata)
     return true
