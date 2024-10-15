@@ -39,11 +39,11 @@ export function MenuBar() {
       </Button>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant='ghost' className={`h-fit ${location.pathname.includes('settings') ? 'opacity-90' : 'opacity-10'}`}>
+          <Button variant='ghost' className={`h-fit opacity-30`}>
             <Settings />
           </Button>
         </DialogTrigger>
-        <DialogContent className="w-1/2 items-center p-8" aria-describedby={undefined}>
+        <DialogContent className="w-1/2 max-w-[700px] items-center p-8" aria-describedby={undefined}>
           <DialogTitle className="hidden">Settings</DialogTitle>
           {playlistName && <SettingsPage currentPlaylist={playlistName} />}
         </DialogContent>

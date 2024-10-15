@@ -47,7 +47,7 @@ export function SettingsPage({ currentPlaylist }: { currentPlaylist: string }) {
 
       <h3
         onClick={() => navigate('/initial')}
-        className="scroll-m-20 w-fit text-lg font-semibold tracking-tight cursor-pointer hover:opacity-80"
+        className="scroll-m-20 w-fit text-lg font-semibold text-muted-foreground tracking-tight cursor-pointer hover:text-primary transition"
         >
           New playlist
       </h3>
