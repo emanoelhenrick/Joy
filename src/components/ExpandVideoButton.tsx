@@ -2,7 +2,7 @@ import { ToggleButton } from '@vidstack/react';
 import { ArrowCollapseInIcon, ArrowExpandOutIcon } from '@vidstack/react/icons';
 import { useEffect, useState } from 'react';
 
-export function ExpandVideo() {
+export function ExpandVideoButton() {
 
   const [expand, setExpand] = useState(false)
 

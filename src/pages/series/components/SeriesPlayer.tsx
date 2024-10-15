@@ -8,6 +8,7 @@ import {
 import { useUserData } from '@/states/useUserData';
 import { Button } from '@/components/ui/button';
 import { EpisodeProps, SerieInfoProps } from 'electron/core/models/SeriesModels';
+import { ExpandVideoButton } from '@/components/ExpandVideoButton';
 
 
 interface PlayerProps {
@@ -87,7 +88,13 @@ export function VideoPlayer({ info, seriesId, episodeNumStart = '1', seasonNumSt
           >
           <MediaProvider className='player-wrapper' />
           <DefaultAudioLayout icons={defaultLayoutIcons} />
-          <DefaultVideoLayout className='absolute bottom-0' icons={defaultLayoutIcons} />
+          <DefaultVideoLayout
+            className='absolute bottom-0'
+            icons={defaultLayoutIcons}
+            slots={{
+              googleCastButton: <ExpandVideoButton />
+            }}
+          />
           {hasNext && <Button onClick={handleNext} variant={'secondary'} className={`absolute p-6 text-md bottom-24 right-12 z-50 transition duration-100 ${isControls ? 'opacity-100' : 'opacity-0'}`}>Next episode</Button>}
         </MediaPlayer>
       ): <></>}
