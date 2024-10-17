@@ -5,6 +5,7 @@ export interface VodPlaylistProps {
 
 export interface VodProps {
   title: string
+  num: string | number
   name: string
   stream_id: string
   rating_5based: number

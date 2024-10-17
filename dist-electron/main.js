@@ -19180,8 +19180,9 @@ let win;
 function createWindow() {
   win = new BrowserWindow({
     icon: path$4.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
-    height: 1080,
-    width: 1920,
+    fullscreen: true,
+    minHeight: 720,
+    minWidth: 1080,
     webPreferences: {
       preload: path$4.join(__dirname, "preload.mjs"),
       nodeIntegration: false,
@@ -19198,6 +19199,7 @@ function createWindow() {
   } else {
     win.loadFile(path$4.join(RENDERER_DIST, "index.html"));
   }
+  win.maximize();
 }
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {

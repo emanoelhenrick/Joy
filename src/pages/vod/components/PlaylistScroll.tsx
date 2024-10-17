@@ -58,10 +58,7 @@ export default function PlaylistScroll({ playlist }: PlaylistScrollProps) {
                 const isFavorite = favorites?.includes(movie.stream_id.toString())
 
                 return (
-                  <div
-                    className="w-fit h-fit cursor-pointer relative group flex flex-col gap-2"
-                    key={movie.stream_id}
-                  >
+                  <div className="w-fit h-fit cursor-pointer relative group flex flex-col gap-2" key={movie.num}>
                     <div onClick={() => setSelectedMovie(movie)}>
                       <Cover src={movie.stream_icon} />
                     </div>

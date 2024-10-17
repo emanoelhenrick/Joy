@@ -26,20 +26,20 @@ export function MenuBar() {
   }, [])
 
   return (
-    <div className="flex flex-col items-center justify-center px-2.5 h-full gap-4 fixed">
+    <div className="flex z-50 flex-col justify-center px-2.5 h-full gap-4 fixed">
       <Fade cascade direction="up" triggerOnce duration={500}>
-      <Button variant='ghost' onClick={() => changeTab('vod')} className={`h-fit ${location.pathname.includes('vod') ? 'opacity-90' : 'opacity-50'}`}>
+      <Button variant='ghost' onClick={() => changeTab('vod')} className={`h-fit gap-2 ${location.pathname.includes('vod') ? 'opacity-90' : 'opacity-50'}`}>
         <Film />
       </Button>
-      <Button variant='ghost' onClick={() => changeTab('series')} className={`h-fit ${location.pathname.includes('series') ? 'opacity-90' : 'opacity-30'}`}>
+      <Button variant='ghost' onClick={() => changeTab('series')} className={`h-fit gap-2 ${location.pathname.includes('series') ? 'opacity-90' : 'opacity-30'}`}>
         <Clapperboard />
       </Button>
-      <Button variant='ghost' onClick={() => changeTab('live')} className={`h-fit ${location.pathname.includes('live') ? 'opacity-90' : 'opacity-30'}`}>
+      <Button variant='ghost' onClick={() => changeTab('live')} className={`h-fit gap-2 ${location.pathname.includes('live') ? 'opacity-90' : 'opacity-30'}`}>
         <Tv />
       </Button>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant='ghost' className={`h-fit opacity-30`}>
+          <Button variant='ghost' className={`h-fit gap-2 opacity-30`}>
             <Settings />
           </Button>
         </DialogTrigger>

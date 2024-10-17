@@ -2,6 +2,7 @@ import { app, BrowserWindow } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import CoreControllers from './core/controllers'
+import started from "electron-squirrel-startup";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -25,11 +26,14 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 
 
 let win: BrowserWindow | null
 
+if (started) app.quit();
+
 function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
-    height: 1080,
-    width: 1920,
+    fullscreen: true,
+    minHeight: 720,
+    minWidth: 1080,
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
       nodeIntegration: false,
@@ -50,6 +54,8 @@ function createWindow() {
   } else {
     win.loadFile(path.join(RENDERER_DIST, 'index.html'))
   }
+
+  win.maximize()
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -73,4 +79,5 @@ app.on('activate', () => {
 app.whenReady().then(() => {
   CoreControllers()
   createWindow()
+  
 })

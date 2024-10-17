@@ -18,6 +18,7 @@ import { useUserData } from '@/states/useUserData';
 import { useMeasure } from '@react-hookz/web';
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { FaRegStar, FaStar } from 'react-icons/fa';
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink } from '@/components/ui/pagination';
 
 const PlaylistScroll = lazy(() => import('./components/PlaylistScroll'))
 
@@ -32,6 +33,7 @@ export function VodDashboard() {
   const [hasMore, setHasMore] = useState(true)
   const [measure, ref] = useMeasure()
   const [page, setPage] = useState(1)
+  const [pages, setPages] = useState(0)
 
   const [searchText, setSearchValue] = useState('')
   const [search] = useDebounce(searchText, 400)
@@ -64,7 +66,6 @@ export function VodDashboard() {
     const startIndex = (page - 1) * elements
     const endIndex = (page * elements) > filtered2.length ? (filtered2.length) : (page * elements)
 
-
     if (endIndex === filtered2.length) setHasMore(false)
 
     const paginated = filtered2.length === 1 ? filtered2 : filtered2.slice(startIndex, endIndex)
@@ -91,12 +92,17 @@ export function VodDashboard() {
       const columns = Math.round((window.innerHeight / 300))
       const itemsPerPage = itemsPerRow * columns
 
+      setPages(Math.ceil(filtered!.length / itemsPerPage))
       setEnoughItems(filtered!.length < itemsPerPage)
       setPlaylist([])
       setHasMore(true)
       paginate(page, itemsPerPage)
     }
   }, [search, currentCategory, isFetched, showFavorites, measure, page])
+
+  const firstPage = page < 2 ? page : page - 1
+
+  const midPage = page > 1 ? page : 2
 
   return (
     <div ref={ref as unknown as LegacyRef<HTMLDivElement>} className="h-screen flex pr-2">
@@ -128,11 +134,34 @@ export function VodDashboard() {
             )} 
           </div>
           {!enoughItems && (
-            <div className='mr-4 flex items-center'>
-              <div onClick={previousPage} className='cursor-pointer text-muted-foreground hover:text-primary transition'><IoIosArrowBack size={18} /></div>
-              <h1 className='px-4 font-bold text-muted-foreground'>{page}</h1>
-              <div onClick={nextPage} className={`cursor-pointer text-muted-foreground hover:text-primary transition ${!hasMore && 'invisible'}`}><IoIosArrowForward size={18} /></div>
-            </div>
+            <Pagination className='mr-4'>
+              <PaginationContent>
+                <PaginationItem>
+                  <div onClick={previousPage} className='cursor-pointer text-muted-foreground hover:text-primary transition'><IoIosArrowBack size={16} /></div>
+                </PaginationItem>
+                <PaginationItem className={`${page > 2 ? '' : 'hidden'}`}>
+                  <PaginationLink onClick={() => setPage(1)}>1</PaginationLink>
+                </PaginationItem>
+                <PaginationItem className={`${page == pages ? '' : 'hidden'}`}>
+                  <PaginationEllipsis />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink onClick={() => setPage(firstPage)} isActive={page == firstPage}>{firstPage}</PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink onClick={() => setPage(midPage)} isActive={page == midPage}>{midPage}</PaginationLink>
+                </PaginationItem>
+                <PaginationItem className={`${((page == pages - 1) || (page == pages)) && 'hidden'}`}>
+                  <PaginationEllipsis />
+                </PaginationItem>
+                <PaginationItem className={`${page == pages && 'hidden'}`}>
+                  <PaginationLink onClick={() => setPage(pages)}>{pages}</PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <div onClick={nextPage} className={`cursor-pointer text-muted-foreground hover:text-primary transition ${!hasMore && 'invisible'}`}><IoIosArrowForward size={16} /></div>
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           )}
         </div>
         {playlist.length > 0 &&

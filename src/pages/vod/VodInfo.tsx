@@ -22,9 +22,6 @@ export function VodInfo({ streamId, title, cover }: Props) {
 
   const { urls } = usePlaylistUrl()
 
-  console.log(data);
-  
-
   useEffect(() => {
     return () => {
       queryClient.removeQueries({ queryKey: ['vodInfo'], exact: true } as QueryFilters)
@@ -53,7 +50,7 @@ export function VodInfo({ streamId, title, cover }: Props) {
               <p className="leading-7 [&:not(:first-child)]:mt-6 text-lg">
                 {data?.info.description || data?.info.plot}
               </p>
-              <p className="leading-7 [&:not(:first-child)]:mt-3 text-md text-muted-foreground">
+              <p className="leading-7 truncate max-w-xl [&:not(:first-child)]:mt-3 text-md text-muted-foreground">
                 {data?.info.cast}
               </p>
               <p className="leading-7 [&:not(:first-child)]:mt-0 text-md text-muted-foreground">
