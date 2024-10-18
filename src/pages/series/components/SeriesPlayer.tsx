@@ -88,7 +88,6 @@ export function VideoPlayer({ info, seriesId, episodeNumStart = '1', seasonNumSt
           onTimeUpdate={time => currentTime = (time.currentTime)}
           onDurationChange={dur => duration = dur}
           onControlsChange={(isVisible: boolean) => setIsControls(isVisible)}
-          onLoadStart={() => setIsControls(true)}
           className='h-screen'
           autoPlay
           src={url}
