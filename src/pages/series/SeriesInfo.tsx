@@ -106,10 +106,12 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
                     let progress = 0;
                     const epUserData = episodesData?.find(e => e.episodeId == ep.id)
                     if (epUserData) progress = parseFloat(((epUserData.currentTime / epUserData.duration) * 100).toFixed(2))
-                    return (
-                      <Dialog onOpenChange={() => setUpdated(prev => !prev)}>
+                    const extensions = ['mp4', 'ogg', 'ogv', 'webm', 'mov', 'm4v']
+                    if (extensions.includes(ep.container_extension)) {
+                      return (
+                        <Dialog onOpenChange={() => setUpdated(prev => !prev)} key={currentSeason + '.' + ep.id}>
                         <DialogTrigger asChild>
-                          <div key={currentSeason + '.' + ep.id} className="flex flex-col space-y-2 w-36 cursor-pointer hover:opacity-80">
+                          <div className="flex flex-col space-y-2 w-36 cursor-pointer hover:opacity-80">
                             <div className="relative flex items-center justify-center overflow-hidden rounded-lg">
                               <div key={ep.id} className="py-11 w-full text-lg bg-secondary opacity-40"/>
                               <FaPlay size={22} className="absolute opacity-70" />
@@ -133,7 +135,18 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
                           </div>
                         </DialogContent>
                       </Dialog>
-                    )
+                      )
+                    } else {
+                      return (
+                        <div key={currentSeason + '.' + ep.id} className="flex flex-col cursor-default space-y-2 w-36 opacity-50">
+                          <div className="relative flex items-center justify-center overflow-hidden rounded-lg">
+                            <div className="py-11 w-full text-lg bg-secondary opacity-40"/>
+                            <p className="whitespace-normal absolute text-sm">unsupported</p>
+                          </div>
+                          <p className="whitespace-normal text-sm">{ep.title}</p>
+                        </div>
+                      )
+                    }
                   })}
               </div>
               <ScrollBar color="blue" orientation="horizontal" />

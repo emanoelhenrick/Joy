@@ -31,7 +31,6 @@ if (started) app.quit();
 function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
-    fullscreen: true,
     minHeight: 720,
     minWidth: 1080,
     webPreferences: {

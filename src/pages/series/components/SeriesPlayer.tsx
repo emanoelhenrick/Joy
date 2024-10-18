@@ -1,5 +1,5 @@
-import { MediaPlayer, MediaProvider } from '@vidstack/react';
-import { useEffect, useState } from 'react';
+import { MediaPlayer, MediaPlayerInstance, MediaProvider } from '@vidstack/react';
+import { useEffect, useRef, useState } from 'react';
 import {
   DefaultAudioLayout,
   defaultLayoutIcons,
@@ -26,6 +26,7 @@ let currentEpisode: EpisodeProps | undefined = undefined
 
 export function VideoPlayer({ info, seriesId, episodeNumStart = '1', seasonNumStart = '1', currentTimeStated = 0, baseUrl }: PlayerProps) {
 
+  const player = useRef<MediaPlayerInstance>(null);
   const [episodeNum, setEpisodeNum] = useState(episodeNumStart)
   const [seasonNum, setSeasonNum] = useState(seasonNumStart)
   const [hasNext, setHasNext] = useState<string | undefined>('1')
@@ -48,18 +49,23 @@ export function VideoPlayer({ info, seriesId, episodeNumStart = '1', seasonNumSt
   useEffect(() => {
     const season = info.episodes[seasonNum]
     const episode = season.find(e => e.episode_num == episodeNum)
+  
     if (episode) {
       currentEpisode = episode
       setUrl(`${baseUrl}/${episode!.id}.${episode!.container_extension}`)
     }
     if (parseInt(episodeNum) < season.length) {
-      setHasNext((parseInt(episodeNum) + 1).toString())
-    } else {
-      setHasNext(undefined)
+      const ep = season.find(e => e.episode_num == ((parseInt(episodeNum) +1).toString()))
+      if (ep) {
+        const extensions = ['mp4', 'ogg', 'ogv', 'webm', 'mov', 'm4v']
+        const isSup = extensions.includes(ep.container_extension)
+        if (!isSup) return setHasNext(undefined)
+      } 
+      return setHasNext((parseInt(episodeNum) + 1).toString())
     }
+    setHasNext(undefined)
 
   }, [episodeNum])
-  
 
   useEffect(() => {
     return () => {
@@ -75,6 +81,7 @@ export function VideoPlayer({ info, seriesId, episodeNumStart = '1', seasonNumSt
     <>
       {url ? (
         <MediaPlayer
+          ref={player}
           title={`Episode ${episodeNum} - Season ${seasonNum}`}
           onPlaying={updateMediaState}
           currentTime={currentTimeStated}

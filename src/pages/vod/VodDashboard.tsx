@@ -101,7 +101,6 @@ export function VodDashboard() {
   }, [search, currentCategory, isFetched, showFavorites, measure, page])
 
   const firstPage = page < 2 ? page : page - 1
-
   const midPage = page > 1 ? page : 2
 
   return (
@@ -136,29 +135,25 @@ export function VodDashboard() {
           {!enoughItems && (
             <Pagination className='mr-4'>
               <PaginationContent>
-                <PaginationItem>
-                  <div onClick={previousPage} className='cursor-pointer text-muted-foreground hover:text-primary transition'><IoIosArrowBack size={16} /></div>
+                <PaginationItem className={`${page < 2 && 'hidden'}`}>
+                  <div onClick={previousPage} className='text-muted-foreground hover:text-primary transition'><IoIosArrowBack size={16} /></div>
                 </PaginationItem>
                 <PaginationItem className={`${page > 2 ? '' : 'hidden'}`}>
                   <PaginationLink onClick={() => setPage(1)}>1</PaginationLink>
                 </PaginationItem>
-                <PaginationItem className={`${page == pages ? '' : 'hidden'}`}>
-                  <PaginationEllipsis />
-                </PaginationItem>
+                <PaginationEllipsis className={`${page == pages ? '' : 'hidden'} ${pages < 3 && 'hidden'}`} />
                 <PaginationItem>
                   <PaginationLink onClick={() => setPage(firstPage)} isActive={page == firstPage}>{firstPage}</PaginationLink>
                 </PaginationItem>
                 <PaginationItem>
                   <PaginationLink onClick={() => setPage(midPage)} isActive={page == midPage}>{midPage}</PaginationLink>
                 </PaginationItem>
-                <PaginationItem className={`${((page == pages - 1) || (page == pages)) && 'hidden'}`}>
-                  <PaginationEllipsis />
-                </PaginationItem>
-                <PaginationItem className={`${page == pages && 'hidden'}`}>
+                <PaginationEllipsis className={`${((page == pages - 1) || (page == pages)) && 'hidden'}`} />
+                <PaginationItem className={`${page == pages && 'hidden'} ${pages < 3 && 'hidden'}`}>
                   <PaginationLink onClick={() => setPage(pages)}>{pages}</PaginationLink>
                 </PaginationItem>
                 <PaginationItem>
-                  <div onClick={nextPage} className={`cursor-pointer text-muted-foreground hover:text-primary transition ${!hasMore && 'invisible'}`}><IoIosArrowForward size={16} /></div>
+                  <div onClick={nextPage} className={`text-muted-foreground hover:text-primary transition ${!hasMore && 'invisible'}`}><IoIosArrowForward size={16} /></div>
                 </PaginationItem>
               </PaginationContent>
             </Pagination>

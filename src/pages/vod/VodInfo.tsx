@@ -4,7 +4,7 @@ import electronApi from "@/config/electronApi"
 import { usePlaylistUrl } from "@/states/usePlaylistUrl"
 import { QueryFilters, useQuery, useQueryClient } from "@tanstack/react-query"
 import { LoaderCircle } from "lucide-react"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Fade } from "react-awesome-reveal"
 import { FaPlay } from "react-icons/fa"
 import { VideoPlayer } from "../../components/player"
@@ -19,7 +19,6 @@ export function VodInfo({ streamId, title, cover }: Props) {
   const queryClient = useQueryClient()
 
   const { data, isSuccess } = useQuery({ queryKey: ['vodInfo'], queryFn: async () => await electronApi.getVodInfo(urls.getVodInfoUrl + streamId) })
-
   const { urls } = usePlaylistUrl()
 
   useEffect(() => {
@@ -27,6 +26,8 @@ export function VodInfo({ streamId, title, cover }: Props) {
       queryClient.removeQueries({ queryKey: ['vodInfo'], exact: true } as QueryFilters)
     }
   }, [])
+
+  const extensions = ['mp4', 'ogg', 'ogv', 'webm', 'mov', 'm4v']
 
   return (
     <div className="flex items-center justify-center h-screen">
@@ -58,7 +59,7 @@ export function VodInfo({ streamId, title, cover }: Props) {
               </p>
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button className={`flex gap-2 mt-6 self-start px-6 text-md`}>
+                  <Button disabled={!extensions.includes(data.movie_data.container_extension) && true} className={`flex gap-2 mt-6 self-start px-6 text-md`}>
                     <FaPlay size={12} /> Play
                   </Button>
                 </DialogTrigger>

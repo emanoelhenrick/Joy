@@ -1,8 +1,8 @@
-import { app, ipcMain, BrowserWindow } from "electron";
+import require$$3$1, { app as app$1, ipcMain, BrowserWindow } from "electron";
 import { fileURLToPath } from "node:url";
-import path$4 from "node:path";
+import path$5 from "node:path";
 import require$$1$1, { TextEncoder as TextEncoder$1 } from "util";
-import path$3 from "path";
+import path$4 from "path";
 import require$$0$1 from "fs";
 import require$$0$2 from "crypto";
 import require$$1 from "os";
@@ -14,6 +14,8 @@ import require$$4$1 from "assert";
 import require$$0$4 from "tty";
 import zlib from "zlib";
 import { EventEmitter } from "events";
+import require$$1$2 from "child_process";
+import require$$4$2 from "net";
 function getDefaultExportFromCjs(x) {
   return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
 }
@@ -212,7 +214,7 @@ const removeAsync = (path2) => {
 remove$3.validateInput = validateInput$f;
 remove$3.sync = removeSync;
 remove$3.async = removeAsync;
-const pathUtil$b = path$3;
+const pathUtil$b = path$4;
 const fs$e = fs_1;
 const modeUtil$1 = mode;
 const validate$e = validate$g;
@@ -389,7 +391,7 @@ dir$6.sync = dirSync;
 dir$6.createSync = createBrandNewDirectorySync;
 dir$6.async = dirAsync;
 dir$6.createAsync = createBrandNewDirectoryAsync;
-const pathUtil$a = path$3;
+const pathUtil$a = path$4;
 const fs$d = fs_1;
 const validate$d = validate$g;
 const dir$5 = dir$6;
@@ -667,7 +669,7 @@ var find$1 = {};
 var tree_walker = {};
 var inspect$5 = {};
 const crypto$2 = require$$0$2;
-const pathUtil$9 = path$3;
+const pathUtil$9 = path$4;
 const fs$a = fs_1;
 const validate$a = validate$g;
 const supportedChecksumAlgorithms = ["md5", "sha1", "sha256", "sha512"];
@@ -841,7 +843,7 @@ list$1.validateInput = validateInput$9;
 list$1.sync = listSync;
 list$1.async = listAsync;
 const fs$8 = require$$0$1;
-const pathUtil$8 = path$3;
+const pathUtil$8 = path$4;
 const inspect$4 = inspect$5;
 const fileType = (dirent) => {
   if (dirent.isDirectory()) {
@@ -1040,7 +1042,7 @@ tree_walker.sync = initialWalkSync;
 tree_walker.async = initialWalkAsync;
 var matcher$2 = {};
 const isWindows = typeof process === "object" && process && process.platform === "win32";
-var path$2 = isWindows ? { sep: "\\" } : { sep: "/" };
+var path$3 = isWindows ? { sep: "\\" } : { sep: "/" };
 var balancedMatch = balanced$1;
 function balanced$1(a, b, str) {
   if (a instanceof RegExp) a = maybeMatch(a, str);
@@ -1244,8 +1246,8 @@ const minimatch = minimatch_1 = (p, pattern, options = {}) => {
   return new Minimatch$1(pattern, options).match(p);
 };
 var minimatch_1 = minimatch;
-const path$1 = path$2;
-minimatch.sep = path$1.sep;
+const path$2 = path$3;
+minimatch.sep = path$2.sep;
 const GLOBSTAR = Symbol("globstar **");
 minimatch.GLOBSTAR = GLOBSTAR;
 const expand = braceExpansion;
@@ -1750,8 +1752,8 @@ let Minimatch$1 = class Minimatch {
     if (this.empty) return f === "";
     if (f === "/" && partial) return true;
     const options = this.options;
-    if (path$1.sep !== "/") {
-      f = f.split(path$1.sep).join("/");
+    if (path$2.sep !== "/") {
+      f = f.split(path$2.sep).join("/");
     }
     f = f.split(slashSplit);
     this.debug(this.pattern, "split", f);
@@ -1844,7 +1846,7 @@ matcher$2.create = (basePath, patterns, ignoreCase) => {
   };
   return performMatch;
 };
-const pathUtil$7 = path$3;
+const pathUtil$7 = path$4;
 const treeWalker$2 = tree_walker;
 const inspect$3 = inspect$5;
 const matcher$1 = matcher$2;
@@ -2023,7 +2025,7 @@ find$1.sync = findSyncInit;
 find$1.async = findAsyncInit;
 var inspect_tree = {};
 const crypto$1 = require$$0$2;
-const pathUtil$6 = path$3;
+const pathUtil$6 = path$4;
 const inspect$2 = inspect$5;
 const validate$7 = validate$g;
 const treeWalker$1 = tree_walker;
@@ -2214,7 +2216,7 @@ const existsAsync = (path2) => {
 exists$3.validateInput = validateInput$6;
 exists$3.sync = existsSync;
 exists$3.async = existsAsync;
-const pathUtil$5 = path$3;
+const pathUtil$5 = path$4;
 const fs$6 = fs_1;
 const dir$4 = dir$6;
 const exists$2 = exists$3;
@@ -2475,7 +2477,7 @@ copy$2.validateInput = validateInput$5;
 copy$2.sync = copySync;
 copy$2.async = copyAsync;
 var move$2 = {};
-const pathUtil$4 = path$3;
+const pathUtil$4 = path$4;
 const fs$5 = fs_1;
 const validate$4 = validate$g;
 const copy$1 = copy$2;
@@ -2667,7 +2669,7 @@ read$1.validateInput = validateInput$3;
 read$1.sync = readSync;
 read$1.async = readAsync;
 var rename$1 = {};
-const pathUtil$3 = path$3;
+const pathUtil$3 = path$4;
 const move$1 = move$2;
 const validate$2 = validate$g;
 const validateInput$2 = (methodName, path2, newName, options) => {
@@ -2695,7 +2697,7 @@ rename$1.validateInput = validateInput$2;
 rename$1.sync = renameSync;
 rename$1.async = renameAsync;
 var symlink$1 = {};
-const pathUtil$2 = path$3;
+const pathUtil$2 = path$4;
 const fs$3 = fs_1;
 const validate$1 = validate$g;
 const dir$2 = dir$6;
@@ -2737,7 +2739,7 @@ const fs$2 = require$$0$1;
 streams$1.createWriteStream = fs$2.createWriteStream;
 streams$1.createReadStream = fs$2.createReadStream;
 var tmp_dir = {};
-const pathUtil$1 = path$3;
+const pathUtil$1 = path$4;
 const os = require$$1;
 const crypto = require$$0$2;
 const dir$1 = dir$6;
@@ -2817,7 +2819,7 @@ tmp_dir.validateInput = validateInput;
 tmp_dir.sync = tmpDirSync;
 tmp_dir.async = tmpDirAsync;
 const util$3 = require$$1$1;
-const pathUtil = path$3;
+const pathUtil = path$4;
 const append = append$1;
 const dir = dir$6;
 const file = file$1;
@@ -3033,9 +3035,9 @@ var jetpack$1 = jetpackContext;
 const jetpack = jetpack$1;
 var main = jetpack();
 async function getMetadata() {
-  const SessionDataDir = app.getPath("sessionData");
-  const PLAYLIST_DIR = path$3.join(SessionDataDir, "playlists");
-  const META_PATH = path$3.join(PLAYLIST_DIR, "meta.json");
+  const SessionDataDir = app$1.getPath("sessionData");
+  const PLAYLIST_DIR = path$4.join(SessionDataDir, "playlists");
+  const META_PATH = path$4.join(PLAYLIST_DIR, "meta.json");
   const isPlaylist = await main.existsAsync(META_PATH);
   if (!isPlaylist) {
     const newMeta = { currentPlaylist: "", playlists: [] };
@@ -3047,8 +3049,8 @@ async function getMetadata() {
 }
 async function addNewPlaylist(playlistInfo) {
   try {
-    const SessionDataDir = app.getPath("sessionData");
-    const PLAYLIST_DIR = path$3.join(SessionDataDir, `playlists/${playlistInfo.name}/info.json`);
+    const SessionDataDir = app$1.getPath("sessionData");
+    const PLAYLIST_DIR = path$4.join(SessionDataDir, `playlists/${playlistInfo.name}/info.json`);
     await main.writeAsync(PLAYLIST_DIR, playlistInfo);
     return new Promise((resolve) => resolve(true));
   } catch (error) {
@@ -14478,7 +14480,7 @@ var mimeDb = require$$0;
  */
 (function(exports) {
   var db = mimeDb;
-  var extname = path$3.extname;
+  var extname = path$4.extname;
   var EXTRACT_TYPE_REGEXP = /^\s*([^;\s]*)(?:;|\s|$)/;
   var TEXT_TYPE_REGEXP = /^text\//i;
   exports.charset = charset;
@@ -14714,7 +14716,7 @@ var populate$1 = function(dst, src2) {
 };
 var CombinedStream = combined_stream;
 var util = require$$1$1;
-var path = path$3;
+var path$1 = path$4;
 var http$1 = require$$3;
 var https$1 = require$$4;
 var parseUrl$2 = require$$0$3.parse;
@@ -14840,11 +14842,11 @@ FormData$1.prototype._multiPartHeader = function(field, value, options) {
 FormData$1.prototype._getContentDisposition = function(value, options) {
   var filename, contentDisposition;
   if (typeof options.filepath === "string") {
-    filename = path.normalize(options.filepath).replace(/\\/g, "/");
+    filename = path$1.normalize(options.filepath).replace(/\\/g, "/");
   } else if (options.filename || value.name || value.path) {
-    filename = path.basename(options.filename || value.name || value.path);
+    filename = path$1.basename(options.filename || value.name || value.path);
   } else if (value.readable && value.hasOwnProperty("httpVersion")) {
-    filename = path.basename(value.client._httpMessage.path || "");
+    filename = path$1.basename(value.client._httpMessage.path || "");
   }
   if (filename) {
     contentDisposition = 'filename="' + filename + '"';
@@ -15819,20 +15821,20 @@ function getEnv(key) {
 }
 var getProxyForUrl_1 = getProxyForUrl;
 var followRedirects$1 = { exports: {} };
-var src = { exports: {} };
-var browser = { exports: {} };
-var ms;
-var hasRequiredMs;
-function requireMs() {
-  if (hasRequiredMs) return ms;
-  hasRequiredMs = 1;
+var src$1 = { exports: {} };
+var browser$1 = { exports: {} };
+var ms$1;
+var hasRequiredMs$1;
+function requireMs$1() {
+  if (hasRequiredMs$1) return ms$1;
+  hasRequiredMs$1 = 1;
   var s = 1e3;
   var m = s * 60;
   var h = m * 60;
   var d = h * 24;
   var w = d * 7;
   var y = d * 365.25;
-  ms = function(val, options) {
+  ms$1 = function(val, options) {
     options = options || {};
     var type = typeof val;
     if (type === "string" && val.length > 0) {
@@ -15936,7 +15938,7 @@ function requireMs() {
     var isPlural = msAbs >= n * 1.5;
     return Math.round(ms2 / n) + " " + name + (isPlural ? "s" : "");
   }
-  return ms;
+  return ms$1;
 }
 var common;
 var hasRequiredCommon;
@@ -15950,7 +15952,7 @@ function requireCommon() {
     createDebug.disable = disable;
     createDebug.enable = enable;
     createDebug.enabled = enabled;
-    createDebug.humanize = requireMs();
+    createDebug.humanize = requireMs$1();
     createDebug.destroy = destroy2;
     Object.keys(env).forEach((key) => {
       createDebug[key] = env[key];
@@ -16102,10 +16104,10 @@ function requireCommon() {
   common = setup;
   return common;
 }
-var hasRequiredBrowser;
-function requireBrowser() {
-  if (hasRequiredBrowser) return browser.exports;
-  hasRequiredBrowser = 1;
+var hasRequiredBrowser$1;
+function requireBrowser$1() {
+  if (hasRequiredBrowser$1) return browser$1.exports;
+  hasRequiredBrowser$1 = 1;
   (function(module, exports) {
     exports.formatArgs = formatArgs;
     exports.save = save;
@@ -16271,10 +16273,10 @@ function requireBrowser() {
         return "[UnexpectedJSONParseError]: " + error.message;
       }
     };
-  })(browser, browser.exports);
-  return browser.exports;
+  })(browser$1, browser$1.exports);
+  return browser$1.exports;
 }
-var node = { exports: {} };
+var node$1 = { exports: {} };
 var hasFlag;
 var hasRequiredHasFlag;
 function requireHasFlag() {
@@ -16384,10 +16386,10 @@ function requireSupportsColor() {
   };
   return supportsColor_1;
 }
-var hasRequiredNode;
-function requireNode() {
-  if (hasRequiredNode) return node.exports;
-  hasRequiredNode = 1;
+var hasRequiredNode$1;
+function requireNode$1() {
+  if (hasRequiredNode$1) return node$1.exports;
+  hasRequiredNode$1 = 1;
   (function(module, exports) {
     const tty = require$$0$4;
     const util2 = require$$1$1;
@@ -16557,33 +16559,33 @@ function requireNode() {
       this.inspectOpts.colors = this.useColors;
       return util2.inspect(v, this.inspectOpts);
     };
-  })(node, node.exports);
-  return node.exports;
+  })(node$1, node$1.exports);
+  return node$1.exports;
 }
 var hasRequiredSrc;
 function requireSrc() {
-  if (hasRequiredSrc) return src.exports;
+  if (hasRequiredSrc) return src$1.exports;
   hasRequiredSrc = 1;
   if (typeof process === "undefined" || process.type === "renderer" || process.browser === true || process.__nwjs) {
-    src.exports = requireBrowser();
+    src$1.exports = requireBrowser$1();
   } else {
-    src.exports = requireNode();
+    src$1.exports = requireNode$1();
   }
-  return src.exports;
+  return src$1.exports;
 }
-var debug$1;
+var debug$3;
 var debug_1 = function() {
-  if (!debug$1) {
+  if (!debug$3) {
     try {
-      debug$1 = requireSrc()("follow-redirects");
+      debug$3 = requireSrc()("follow-redirects");
     } catch (error) {
     }
-    if (typeof debug$1 !== "function") {
-      debug$1 = function() {
+    if (typeof debug$3 !== "function") {
+      debug$3 = function() {
       };
     }
   }
-  debug$1.apply(null, arguments);
+  debug$3.apply(null, arguments);
 };
 var url = require$$0$3;
 var URL$1 = url.URL;
@@ -16591,7 +16593,7 @@ var http = require$$3;
 var https = require$$4;
 var Writable = stream.Writable;
 var assert = require$$4$1;
-var debug = debug_1;
+var debug$2 = debug_1;
 (function detectUnsupportedEnvironment() {
   var looksLikeNode = typeof process !== "undefined";
   var looksLikeBrowser = typeof window !== "undefined" && typeof document !== "undefined";
@@ -16908,7 +16910,7 @@ RedirectableRequest.prototype._processResponse = function(response) {
   var currentHost = currentHostHeader || currentUrlParts.host;
   var currentUrl = /^\w+:/.test(location) ? this._currentUrl : url.format(Object.assign(currentUrlParts, { host: currentHost }));
   var redirectUrl = resolveUrl(location, currentUrl);
-  debug("redirecting to", redirectUrl.href);
+  debug$2("redirecting to", redirectUrl.href);
   this._isRedirect = true;
   spreadUrlObject(redirectUrl, this._options);
   if (redirectUrl.protocol !== currentUrlParts.protocol && redirectUrl.protocol !== "https:" || redirectUrl.host !== currentHost && !isSubdomain(redirectUrl.host, currentHost)) {
@@ -16962,7 +16964,7 @@ function wrap(protocols) {
         options.hostname = "::1";
       }
       assert.equal(options.protocol, protocol, "protocol mismatch");
-      debug("options", options);
+      debug$2("options", options);
       return new RedirectableRequest(options, callback);
     }
     function get(input, options, callback) {
@@ -19027,8 +19029,8 @@ async function updateVod({ playlistUrl, categoriesUrl, name }) {
     playlist: playlistResponse.data,
     categories: categoriesResponse.data
   };
-  const SessionDataDir = app.getPath("sessionData");
-  const VOD_PATH = path$3.join(SessionDataDir, `playlists/${name}/vod.json`);
+  const SessionDataDir = app$1.getPath("sessionData");
+  const VOD_PATH = path$4.join(SessionDataDir, `playlists/${name}/vod.json`);
   await main.writeAsync(VOD_PATH, data);
   return new Promise((resolve) => resolve(true));
 }
@@ -19039,8 +19041,8 @@ async function updateSeries({ playlistUrl, categoriesUrl, name }) {
     playlist: playlistResponse.data,
     categories: categoriesResponse.data
   };
-  const SessionDataDir = app.getPath("sessionData");
-  const SERIES_PATH = path$3.join(SessionDataDir, `playlists/${name}/series.json`);
+  const SessionDataDir = app$1.getPath("sessionData");
+  const SERIES_PATH = path$4.join(SessionDataDir, `playlists/${name}/series.json`);
   await main.writeAsync(SERIES_PATH, data);
   return new Promise((resolve) => resolve(true));
 }
@@ -19051,8 +19053,8 @@ async function updateLive({ playlistUrl, categoriesUrl, name }) {
     playlist: playlistResponse.data,
     categories: categoriesResponse.data
   };
-  const SessionDataDir = app.getPath("sessionData");
-  const LIVE_PATH = path$3.join(SessionDataDir, `playlists/${name}/live.json`);
+  const SessionDataDir = app$1.getPath("sessionData");
+  const LIVE_PATH = path$4.join(SessionDataDir, `playlists/${name}/live.json`);
   await main.writeAsync(LIVE_PATH, data);
   return new Promise((resolve) => resolve(true));
 }
@@ -19063,9 +19065,9 @@ async function authenticateUser(url2) {
 }
 async function addPlaylistToMeta(playlistInfo) {
   try {
-    const SessionDataDir = app.getPath("sessionData");
-    const PLAYLIST_DIR = path$3.join(SessionDataDir, "playlists");
-    const META_PATH = path$3.join(PLAYLIST_DIR, "meta.json");
+    const SessionDataDir = app$1.getPath("sessionData");
+    const PLAYLIST_DIR = path$4.join(SessionDataDir, "playlists");
+    const META_PATH = path$4.join(PLAYLIST_DIR, "meta.json");
     const metadata = await main.readAsync(META_PATH, "json");
     if (metadata.playlists) {
       for (const playlist of metadata.playlists) {
@@ -19084,27 +19086,27 @@ async function addPlaylistToMeta(playlistInfo) {
   }
 }
 async function getLocalVodPlaylist(playlistName) {
-  const SessionDataDir = app.getPath("sessionData");
-  const VOD_PATH = path$3.join(SessionDataDir, `playlists/${playlistName}/vod.json`);
+  const SessionDataDir = app$1.getPath("sessionData");
+  const VOD_PATH = path$4.join(SessionDataDir, `playlists/${playlistName}/vod.json`);
   const VodPlaylist = await main.readAsync(VOD_PATH, "json");
   return VodPlaylist;
 }
 async function getLocalSeriesPlaylist(playlistName) {
-  const SessionDataDir = app.getPath("sessionData");
-  const SERIES_PATH = path$3.join(SessionDataDir, `playlists/${playlistName}/series.json`);
+  const SessionDataDir = app$1.getPath("sessionData");
+  const SERIES_PATH = path$4.join(SessionDataDir, `playlists/${playlistName}/series.json`);
   const SeriesPlaylist = await main.readAsync(SERIES_PATH, "json");
   return SeriesPlaylist;
 }
 async function getLocalLivePlaylist(playlistName) {
-  const SessionDataDir = app.getPath("sessionData");
-  const LIVE_PATH = path$3.join(SessionDataDir, `playlists/${playlistName}/live.json`);
+  const SessionDataDir = app$1.getPath("sessionData");
+  const LIVE_PATH = path$4.join(SessionDataDir, `playlists/${playlistName}/live.json`);
   const LivePlaylist = await main.readAsync(LIVE_PATH, "json");
   return LivePlaylist;
 }
 async function getPlaylistInfo(playlistName) {
-  const SessionDataDir = app.getPath("sessionData");
-  const PLAYLIST_DIR = path$3.join(SessionDataDir, "playlists");
-  const INFO_PATH = path$3.join(PLAYLIST_DIR, `${playlistName}/info.json`);
+  const SessionDataDir = app$1.getPath("sessionData");
+  const PLAYLIST_DIR = path$4.join(SessionDataDir, "playlists");
+  const INFO_PATH = path$4.join(PLAYLIST_DIR, `${playlistName}/info.json`);
   return await main.readAsync(INFO_PATH, "json");
 }
 async function getVodInfo(url2) {
@@ -19120,8 +19122,8 @@ async function getSerieInfo(url2) {
   return res.data;
 }
 async function getUserData(playlistName) {
-  const SessionDataDir = app.getPath("sessionData");
-  const USERDATA_PATH = path$3.join(SessionDataDir, `playlists/${playlistName}/userdata.json`);
+  const SessionDataDir = app$1.getPath("sessionData");
+  const USERDATA_PATH = path$4.join(SessionDataDir, `playlists/${playlistName}/userdata.json`);
   let userData = await main.readAsync(USERDATA_PATH, "json");
   if (!userData) {
     userData = { vod: [], series: [], live: [] };
@@ -19131,16 +19133,16 @@ async function getUserData(playlistName) {
 }
 async function updateUserData(data) {
   const { currentPlaylist } = await getMetadata();
-  const SessionDataDir = app.getPath("sessionData");
-  const USERDATA_PATH = path$4.join(SessionDataDir, `playlists/${currentPlaylist}/userdata.json`);
+  const SessionDataDir = app$1.getPath("sessionData");
+  const USERDATA_PATH = path$5.join(SessionDataDir, `playlists/${currentPlaylist}/userdata.json`);
   await main.writeAsync(USERDATA_PATH, data);
   return new Promise((resolve) => resolve(data));
 }
 async function changeCurrentPlaylist(playlistName) {
   try {
-    const SessionDataDir = app.getPath("sessionData");
-    const PLAYLIST_DIR = path$3.join(SessionDataDir, "playlists");
-    const META_PATH = path$3.join(PLAYLIST_DIR, "meta.json");
+    const SessionDataDir = app$1.getPath("sessionData");
+    const PLAYLIST_DIR = path$4.join(SessionDataDir, "playlists");
+    const META_PATH = path$4.join(PLAYLIST_DIR, "meta.json");
     const metadata = await main.readAsync(META_PATH, "json");
     const exists2 = metadata.playlists.find((p) => p.name == playlistName);
     if (!exists2) return false;
@@ -19170,21 +19172,484 @@ function CoreControllers() {
   ipcMain.handle("update-user-data", async (_event, args) => await updateUserData(args));
   ipcMain.handle("change-current-playlist", async (_event, args) => await changeCurrentPlaylist(args));
 }
-const __dirname = path$4.dirname(fileURLToPath(import.meta.url));
-process.env.APP_ROOT = path$4.join(__dirname, "..");
+var src = { exports: {} };
+var browser = { exports: {} };
+var debug$1 = { exports: {} };
+var ms;
+var hasRequiredMs;
+function requireMs() {
+  if (hasRequiredMs) return ms;
+  hasRequiredMs = 1;
+  var s = 1e3;
+  var m = s * 60;
+  var h = m * 60;
+  var d = h * 24;
+  var y = d * 365.25;
+  ms = function(val, options) {
+    options = options || {};
+    var type = typeof val;
+    if (type === "string" && val.length > 0) {
+      return parse(val);
+    } else if (type === "number" && isNaN(val) === false) {
+      return options.long ? fmtLong(val) : fmtShort(val);
+    }
+    throw new Error(
+      "val is not a non-empty string or a valid number. val=" + JSON.stringify(val)
+    );
+  };
+  function parse(str) {
+    str = String(str);
+    if (str.length > 100) {
+      return;
+    }
+    var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(
+      str
+    );
+    if (!match) {
+      return;
+    }
+    var n = parseFloat(match[1]);
+    var type = (match[2] || "ms").toLowerCase();
+    switch (type) {
+      case "years":
+      case "year":
+      case "yrs":
+      case "yr":
+      case "y":
+        return n * y;
+      case "days":
+      case "day":
+      case "d":
+        return n * d;
+      case "hours":
+      case "hour":
+      case "hrs":
+      case "hr":
+      case "h":
+        return n * h;
+      case "minutes":
+      case "minute":
+      case "mins":
+      case "min":
+      case "m":
+        return n * m;
+      case "seconds":
+      case "second":
+      case "secs":
+      case "sec":
+      case "s":
+        return n * s;
+      case "milliseconds":
+      case "millisecond":
+      case "msecs":
+      case "msec":
+      case "ms":
+        return n;
+      default:
+        return void 0;
+    }
+  }
+  function fmtShort(ms2) {
+    if (ms2 >= d) {
+      return Math.round(ms2 / d) + "d";
+    }
+    if (ms2 >= h) {
+      return Math.round(ms2 / h) + "h";
+    }
+    if (ms2 >= m) {
+      return Math.round(ms2 / m) + "m";
+    }
+    if (ms2 >= s) {
+      return Math.round(ms2 / s) + "s";
+    }
+    return ms2 + "ms";
+  }
+  function fmtLong(ms2) {
+    return plural(ms2, d, "day") || plural(ms2, h, "hour") || plural(ms2, m, "minute") || plural(ms2, s, "second") || ms2 + " ms";
+  }
+  function plural(ms2, n, name) {
+    if (ms2 < n) {
+      return;
+    }
+    if (ms2 < n * 1.5) {
+      return Math.floor(ms2 / n) + " " + name;
+    }
+    return Math.ceil(ms2 / n) + " " + name + "s";
+  }
+  return ms;
+}
+var hasRequiredDebug;
+function requireDebug() {
+  if (hasRequiredDebug) return debug$1.exports;
+  hasRequiredDebug = 1;
+  (function(module, exports) {
+    exports = module.exports = createDebug.debug = createDebug["default"] = createDebug;
+    exports.coerce = coerce;
+    exports.disable = disable;
+    exports.enable = enable;
+    exports.enabled = enabled;
+    exports.humanize = requireMs();
+    exports.names = [];
+    exports.skips = [];
+    exports.formatters = {};
+    var prevTime;
+    function selectColor(namespace) {
+      var hash = 0, i;
+      for (i in namespace) {
+        hash = (hash << 5) - hash + namespace.charCodeAt(i);
+        hash |= 0;
+      }
+      return exports.colors[Math.abs(hash) % exports.colors.length];
+    }
+    function createDebug(namespace) {
+      function debug2() {
+        if (!debug2.enabled) return;
+        var self2 = debug2;
+        var curr = +/* @__PURE__ */ new Date();
+        var ms2 = curr - (prevTime || curr);
+        self2.diff = ms2;
+        self2.prev = prevTime;
+        self2.curr = curr;
+        prevTime = curr;
+        var args = new Array(arguments.length);
+        for (var i = 0; i < args.length; i++) {
+          args[i] = arguments[i];
+        }
+        args[0] = exports.coerce(args[0]);
+        if ("string" !== typeof args[0]) {
+          args.unshift("%O");
+        }
+        var index = 0;
+        args[0] = args[0].replace(/%([a-zA-Z%])/g, function(match, format) {
+          if (match === "%%") return match;
+          index++;
+          var formatter = exports.formatters[format];
+          if ("function" === typeof formatter) {
+            var val = args[index];
+            match = formatter.call(self2, val);
+            args.splice(index, 1);
+            index--;
+          }
+          return match;
+        });
+        exports.formatArgs.call(self2, args);
+        var logFn = debug2.log || exports.log || console.log.bind(console);
+        logFn.apply(self2, args);
+      }
+      debug2.namespace = namespace;
+      debug2.enabled = exports.enabled(namespace);
+      debug2.useColors = exports.useColors();
+      debug2.color = selectColor(namespace);
+      if ("function" === typeof exports.init) {
+        exports.init(debug2);
+      }
+      return debug2;
+    }
+    function enable(namespaces) {
+      exports.save(namespaces);
+      exports.names = [];
+      exports.skips = [];
+      var split = (typeof namespaces === "string" ? namespaces : "").split(/[\s,]+/);
+      var len = split.length;
+      for (var i = 0; i < len; i++) {
+        if (!split[i]) continue;
+        namespaces = split[i].replace(/\*/g, ".*?");
+        if (namespaces[0] === "-") {
+          exports.skips.push(new RegExp("^" + namespaces.substr(1) + "$"));
+        } else {
+          exports.names.push(new RegExp("^" + namespaces + "$"));
+        }
+      }
+    }
+    function disable() {
+      exports.enable("");
+    }
+    function enabled(name) {
+      var i, len;
+      for (i = 0, len = exports.skips.length; i < len; i++) {
+        if (exports.skips[i].test(name)) {
+          return false;
+        }
+      }
+      for (i = 0, len = exports.names.length; i < len; i++) {
+        if (exports.names[i].test(name)) {
+          return true;
+        }
+      }
+      return false;
+    }
+    function coerce(val) {
+      if (val instanceof Error) return val.stack || val.message;
+      return val;
+    }
+  })(debug$1, debug$1.exports);
+  return debug$1.exports;
+}
+var hasRequiredBrowser;
+function requireBrowser() {
+  if (hasRequiredBrowser) return browser.exports;
+  hasRequiredBrowser = 1;
+  (function(module, exports) {
+    exports = module.exports = requireDebug();
+    exports.log = log;
+    exports.formatArgs = formatArgs;
+    exports.save = save;
+    exports.load = load;
+    exports.useColors = useColors;
+    exports.storage = "undefined" != typeof chrome && "undefined" != typeof chrome.storage ? chrome.storage.local : localstorage();
+    exports.colors = [
+      "lightseagreen",
+      "forestgreen",
+      "goldenrod",
+      "dodgerblue",
+      "darkorchid",
+      "crimson"
+    ];
+    function useColors() {
+      if (typeof window !== "undefined" && window.process && window.process.type === "renderer") {
+        return true;
+      }
+      return typeof document !== "undefined" && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance || // is firebug? http://stackoverflow.com/a/398120/376773
+      typeof window !== "undefined" && window.console && (window.console.firebug || window.console.exception && window.console.table) || // is firefox >= v31?
+      // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
+      typeof navigator !== "undefined" && navigator.userAgent && navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31 || // double check webkit in userAgent just in case we are in a worker
+      typeof navigator !== "undefined" && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/);
+    }
+    exports.formatters.j = function(v) {
+      try {
+        return JSON.stringify(v);
+      } catch (err) {
+        return "[UnexpectedJSONParseError]: " + err.message;
+      }
+    };
+    function formatArgs(args) {
+      var useColors2 = this.useColors;
+      args[0] = (useColors2 ? "%c" : "") + this.namespace + (useColors2 ? " %c" : " ") + args[0] + (useColors2 ? "%c " : " ") + "+" + exports.humanize(this.diff);
+      if (!useColors2) return;
+      var c = "color: " + this.color;
+      args.splice(1, 0, c, "color: inherit");
+      var index = 0;
+      var lastC = 0;
+      args[0].replace(/%[a-zA-Z%]/g, function(match) {
+        if ("%%" === match) return;
+        index++;
+        if ("%c" === match) {
+          lastC = index;
+        }
+      });
+      args.splice(lastC, 0, c);
+    }
+    function log() {
+      return "object" === typeof console && console.log && Function.prototype.apply.call(console.log, console, arguments);
+    }
+    function save(namespaces) {
+      try {
+        if (null == namespaces) {
+          exports.storage.removeItem("debug");
+        } else {
+          exports.storage.debug = namespaces;
+        }
+      } catch (e) {
+      }
+    }
+    function load() {
+      var r;
+      try {
+        r = exports.storage.debug;
+      } catch (e) {
+      }
+      if (!r && typeof process !== "undefined" && "env" in process) {
+        r = process.env.DEBUG;
+      }
+      return r;
+    }
+    exports.enable(load());
+    function localstorage() {
+      try {
+        return window.localStorage;
+      } catch (e) {
+      }
+    }
+  })(browser, browser.exports);
+  return browser.exports;
+}
+var node = { exports: {} };
+var hasRequiredNode;
+function requireNode() {
+  if (hasRequiredNode) return node.exports;
+  hasRequiredNode = 1;
+  (function(module, exports) {
+    var tty = require$$0$4;
+    var util2 = require$$1$1;
+    exports = module.exports = requireDebug();
+    exports.init = init;
+    exports.log = log;
+    exports.formatArgs = formatArgs;
+    exports.save = save;
+    exports.load = load;
+    exports.useColors = useColors;
+    exports.colors = [6, 2, 3, 4, 5, 1];
+    exports.inspectOpts = Object.keys(process.env).filter(function(key) {
+      return /^debug_/i.test(key);
+    }).reduce(function(obj, key) {
+      var prop = key.substring(6).toLowerCase().replace(/_([a-z])/g, function(_, k) {
+        return k.toUpperCase();
+      });
+      var val = process.env[key];
+      if (/^(yes|on|true|enabled)$/i.test(val)) val = true;
+      else if (/^(no|off|false|disabled)$/i.test(val)) val = false;
+      else if (val === "null") val = null;
+      else val = Number(val);
+      obj[prop] = val;
+      return obj;
+    }, {});
+    var fd = parseInt(process.env.DEBUG_FD, 10) || 2;
+    if (1 !== fd && 2 !== fd) {
+      util2.deprecate(function() {
+      }, "except for stderr(2) and stdout(1), any other usage of DEBUG_FD is deprecated. Override debug.log if you want to use a different log function (https://git.io/debug_fd)")();
+    }
+    var stream2 = 1 === fd ? process.stdout : 2 === fd ? process.stderr : createWritableStdioStream(fd);
+    function useColors() {
+      return "colors" in exports.inspectOpts ? Boolean(exports.inspectOpts.colors) : tty.isatty(fd);
+    }
+    exports.formatters.o = function(v) {
+      this.inspectOpts.colors = this.useColors;
+      return util2.inspect(v, this.inspectOpts).split("\n").map(function(str) {
+        return str.trim();
+      }).join(" ");
+    };
+    exports.formatters.O = function(v) {
+      this.inspectOpts.colors = this.useColors;
+      return util2.inspect(v, this.inspectOpts);
+    };
+    function formatArgs(args) {
+      var name = this.namespace;
+      var useColors2 = this.useColors;
+      if (useColors2) {
+        var c = this.color;
+        var prefix = "  \x1B[3" + c + ";1m" + name + " \x1B[0m";
+        args[0] = prefix + args[0].split("\n").join("\n" + prefix);
+        args.push("\x1B[3" + c + "m+" + exports.humanize(this.diff) + "\x1B[0m");
+      } else {
+        args[0] = (/* @__PURE__ */ new Date()).toUTCString() + " " + name + " " + args[0];
+      }
+    }
+    function log() {
+      return stream2.write(util2.format.apply(util2, arguments) + "\n");
+    }
+    function save(namespaces) {
+      if (null == namespaces) {
+        delete process.env.DEBUG;
+      } else {
+        process.env.DEBUG = namespaces;
+      }
+    }
+    function load() {
+      return process.env.DEBUG;
+    }
+    function createWritableStdioStream(fd2) {
+      var stream22;
+      var tty_wrap = process.binding("tty_wrap");
+      switch (tty_wrap.guessHandleType(fd2)) {
+        case "TTY":
+          stream22 = new tty.WriteStream(fd2);
+          stream22._type = "tty";
+          if (stream22._handle && stream22._handle.unref) {
+            stream22._handle.unref();
+          }
+          break;
+        case "FILE":
+          var fs2 = require$$0$1;
+          stream22 = new fs2.SyncWriteStream(fd2, { autoClose: false });
+          stream22._type = "fs";
+          break;
+        case "PIPE":
+        case "TCP":
+          var net = require$$4$2;
+          stream22 = new net.Socket({
+            fd: fd2,
+            readable: false,
+            writable: true
+          });
+          stream22.readable = false;
+          stream22.read = null;
+          stream22._type = "pipe";
+          if (stream22._handle && stream22._handle.unref) {
+            stream22._handle.unref();
+          }
+          break;
+        default:
+          throw new Error("Implement me. Unknown stream file type!");
+      }
+      stream22.fd = fd2;
+      stream22._isStdio = true;
+      return stream22;
+    }
+    function init(debug2) {
+      debug2.inspectOpts = {};
+      var keys = Object.keys(exports.inspectOpts);
+      for (var i = 0; i < keys.length; i++) {
+        debug2.inspectOpts[keys[i]] = exports.inspectOpts[keys[i]];
+      }
+    }
+    exports.enable(load());
+  })(node, node.exports);
+  return node.exports;
+}
+if (typeof process !== "undefined" && process.type === "renderer") {
+  src.exports = requireBrowser();
+} else {
+  src.exports = requireNode();
+}
+var srcExports = src.exports;
+var path = path$4;
+var spawn = require$$1$2.spawn;
+var debug = srcExports("electron-squirrel-startup");
+var app = require$$3$1.app;
+var run = function(args, done) {
+  var updateExe = path.resolve(path.dirname(process.execPath), "..", "Update.exe");
+  debug("Spawning `%s` with args `%s`", updateExe, args);
+  spawn(updateExe, args, {
+    detached: true
+  }).on("close", done);
+};
+var check = function() {
+  if (process.platform === "win32") {
+    var cmd = process.argv[1];
+    debug("processing squirrel command `%s`", cmd);
+    var target = path.basename(process.execPath);
+    if (cmd === "--squirrel-install" || cmd === "--squirrel-updated") {
+      run(["--createShortcut=" + target], app.quit);
+      return true;
+    }
+    if (cmd === "--squirrel-uninstall") {
+      run(["--removeShortcut=" + target], app.quit);
+      return true;
+    }
+    if (cmd === "--squirrel-obsolete") {
+      app.quit();
+      return true;
+    }
+  }
+  return false;
+};
+var electronSquirrelStartup = check();
+const started = /* @__PURE__ */ getDefaultExportFromCjs(electronSquirrelStartup);
+const __dirname = path$5.dirname(fileURLToPath(import.meta.url));
+process.env.APP_ROOT = path$5.join(__dirname, "..");
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
-const MAIN_DIST = path$4.join(process.env.APP_ROOT, "dist-electron");
-const RENDERER_DIST = path$4.join(process.env.APP_ROOT, "dist");
-process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path$4.join(process.env.APP_ROOT, "public") : RENDERER_DIST;
+const MAIN_DIST = path$5.join(process.env.APP_ROOT, "dist-electron");
+const RENDERER_DIST = path$5.join(process.env.APP_ROOT, "dist");
+process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path$5.join(process.env.APP_ROOT, "public") : RENDERER_DIST;
 let win;
+if (started) app$1.quit();
 function createWindow() {
   win = new BrowserWindow({
-    icon: path$4.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
-    fullscreen: true,
+    icon: path$5.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     minHeight: 720,
     minWidth: 1080,
     webPreferences: {
-      preload: path$4.join(__dirname, "preload.mjs"),
+      preload: path$5.join(__dirname, "preload.mjs"),
       nodeIntegration: false,
       contextIsolation: true,
       webSecurity: false
@@ -19197,22 +19662,22 @@ function createWindow() {
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);
   } else {
-    win.loadFile(path$4.join(RENDERER_DIST, "index.html"));
+    win.loadFile(path$5.join(RENDERER_DIST, "index.html"));
   }
   win.maximize();
 }
-app.on("window-all-closed", () => {
+app$1.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
-    app.quit();
+    app$1.quit();
     win = null;
   }
 });
-app.on("activate", () => {
+app$1.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
 });
-app.whenReady().then(() => {
+app$1.whenReady().then(() => {
   CoreControllers();
   createWindow();
 });
