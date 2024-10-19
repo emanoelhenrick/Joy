@@ -1,14 +1,20 @@
 import { Button } from "@/components/ui/button";
 import electronApi from "@/config/electronApi";
-import { Clapperboard, Film, Settings, Tv } from "lucide-react";
+import { Clapperboard, Film, RotateCw, Settings, Tv } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Fade } from "react-awesome-reveal";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./dialog";
 import { SettingsPage } from "@/pages/settings";
+import { usePlaylistUrl } from "@/states/usePlaylistUrl";
+import { useQueryClient } from "@tanstack/react-query";
+import { RxUpdate } from "react-icons/rx";
 
 export function MenuBar() {
+  const queryClient = useQueryClient()
+  const [updating, setUpdating] = useState(false)
   const [playlistName, setPlaylistName] = useState<string>()
+  const { urls } = usePlaylistUrl()
   const navigate = useNavigate();
   const location = useLocation()
 
@@ -21,14 +27,26 @@ export function MenuBar() {
     setPlaylistName(metadata.currentPlaylist)
   }
 
+  async function updateCurrentPlaylist() {
+    if (playlistName) {
+      setUpdating(true)
+      await electronApi.updateVod({ playlistUrl: urls.getAllVodUrl, categoriesUrl: urls.getAllVodCategoriesUrl, name: playlistName })
+      await electronApi.updateSeries({ playlistUrl: urls.getAllSeriesUrl, categoriesUrl: urls.getAllSeriesCategoriesUrl, name: playlistName })
+      await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: playlistName })
+      await electronApi.updatedAtPlaylist(playlistName)
+      queryClient.removeQueries()
+      setUpdating(false)
+    }
+  }
+
   useEffect(() => {
     getPlaylistName()
   }, [])
 
   return (
-    <div className="flex z-50 flex-col justify-center px-2.5 h-full gap-4 fixed">
+    <div className="flex z-50 flex-col justify-center px-2.5 h-full gap-5 fixed">
       <Fade cascade direction="up" triggerOnce duration={500}>
-      <Button variant='ghost' onClick={() => changeTab('vod')} className={`h-fit gap-2 ${location.pathname.includes('vod') ? 'opacity-90' : 'opacity-50'}`}>
+      <Button variant='ghost' onClick={() => changeTab('vod')} className={`h-fit gap-2 ${location.pathname.includes('vod') ? 'opacity-90' : 'opacity-30'}`}>
         <Film />
       </Button>
       <Button variant='ghost' onClick={() => changeTab('series')} className={`h-fit gap-2 ${location.pathname.includes('series') ? 'opacity-90' : 'opacity-30'}`}>
@@ -48,6 +66,9 @@ export function MenuBar() {
           {playlistName && <SettingsPage currentPlaylist={playlistName} />}
         </DialogContent>
       </Dialog>
+      <Button variant='ghost' onClick={updateCurrentPlaylist} className={`h-fit gap-2 opacity-30`}>
+        <RotateCw className={`${updating && 'animate-spin'}`} />
+      </Button>
       </Fade>
     </div>
   )

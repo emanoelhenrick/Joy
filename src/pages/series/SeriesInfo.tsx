@@ -16,7 +16,7 @@ import { VideoPlayer } from "./components/SeriesPlayer";
 export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title: string, cover: string }) {
   const queryClient = useQueryClient();
 
-  const { data, isSuccess } = useQuery({ queryKey: ['seriesInfo'], queryFn: async () => await electronApi.getSerieInfo(urls.getSeriesInfoUrl + seriesId) })
+  const { data, isSuccess } = useQuery({ queryKey: [`seriesInfo`], queryFn: async () => await electronApi.getSerieInfo(urls.getSeriesInfoUrl + seriesId) })
 
   if (!seriesId) return
   const { urls } = usePlaylistUrl()

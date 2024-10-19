@@ -54,8 +54,9 @@ export function VideoPlayer({ info, seriesId, episodeNumStart = '1', seasonNumSt
       currentEpisode = episode
       setUrl(`${baseUrl}/${episode!.id}.${episode!.container_extension}`)
     }
+    
     if (parseInt(episodeNum) < season.length) {
-      const ep = season.find(e => e.episode_num == ((parseInt(episodeNum) +1).toString()))
+      const ep = season.find(e => e.episode_num == ((parseInt(episodeNum) + 1).toString()))
       if (ep) {
         const extensions = ['mp4', 'ogg', 'ogv', 'webm', 'mov', 'm4v']
         const isSup = extensions.includes(ep.container_extension)
@@ -101,7 +102,14 @@ export function VideoPlayer({ info, seriesId, episodeNumStart = '1', seasonNumSt
               googleCastButton: <ExpandVideoButton />
             }}
           />
-          {hasNext && <Button onClick={handleNext} variant={'secondary'} className={`absolute p-6 text-md bottom-24 right-12 z-50 transition duration-100 ${isControls ? 'opacity-100' : 'opacity-0'}`}>Next episode</Button>}
+          {hasNext &&
+            <Button
+              onClick={handleNext}
+              variant={'secondary'}
+              className={`absolute p-6 text-md bottom-24 right-12 z-50 transition duration-100 ${isControls ? 'opacity-100' : 'opacity-0'}`}
+              >
+              Next episode
+            </Button>}
         </MediaPlayer>
       ): <></>}
     </>

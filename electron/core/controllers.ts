@@ -1,6 +1,5 @@
 import { ipcMain } from "electron";
 import { getMetadata } from "./services/getMetadata";
-import { addNewPlaylist } from "./services/addNewPlaylist";
 import { updateVod } from "./services/vod/updateVod";
 import { updateSeries } from "./services/series/updateSeries";
 import { updateLive } from "./services/live/updateLive";
@@ -15,10 +14,10 @@ import { getSerieInfo } from "./services/series/getSerieInfo";
 import { getUserData } from "./services/getUserData";
 import { updateUserData } from "./services/updateUserData";
 import { changeCurrentPlaylist } from "./services/changeCurrentPlaylist";
+import { updatedAtPlaylist } from "./services/updatedAtPlaylist";
 
 export default function CoreControllers() {
   ipcMain.handle('get-metadata', getMetadata)
-  ipcMain.handle('add-new-playlist', async (_event, args) => await addNewPlaylist(args))
   ipcMain.handle('authenticate-user', async (_event, args) => await authenticateUser(args))
 
   ipcMain.handle('update-vod', async (_event, args) => await updateVod(args))
@@ -39,4 +38,5 @@ export default function CoreControllers() {
   ipcMain.handle('update-user-data', async (_event, args) => await updateUserData(args))
 
   ipcMain.handle('change-current-playlist', async (_event, args) => await changeCurrentPlaylist(args))
+  ipcMain.handle('updated-at-playlist', async (_event, args) => await updatedAtPlaylist(args))
 }

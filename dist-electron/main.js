@@ -3047,19 +3047,6 @@ async function getMetadata() {
   const metadata = await main.readAsync(META_PATH, "json");
   return new Promise((resolve) => resolve(metadata));
 }
-async function addNewPlaylist(playlistInfo) {
-  try {
-    const SessionDataDir = app$1.getPath("sessionData");
-    const PLAYLIST_DIR = path$4.join(SessionDataDir, `playlists/${playlistInfo.name}/info.json`);
-    await main.writeAsync(PLAYLIST_DIR, playlistInfo);
-    return new Promise((resolve) => resolve(true));
-  } catch (error) {
-    return new Promise((_resolve, reject) => {
-      console.log(error);
-      reject(false);
-    });
-  }
-}
 function bind(fn, thisArg) {
   return function wrap2() {
     return fn.apply(thisArg, arguments);
@@ -19106,8 +19093,10 @@ async function getLocalLivePlaylist(playlistName) {
 async function getPlaylistInfo(playlistName) {
   const SessionDataDir = app$1.getPath("sessionData");
   const PLAYLIST_DIR = path$4.join(SessionDataDir, "playlists");
-  const INFO_PATH = path$4.join(PLAYLIST_DIR, `${playlistName}/info.json`);
-  return await main.readAsync(INFO_PATH, "json");
+  const META_PATH = path$4.join(PLAYLIST_DIR, "meta.json");
+  const meta = await main.readAsync(META_PATH, "json");
+  const playlist = meta.playlists.find((p) => p.name == playlistName);
+  return playlist;
 }
 async function getVodInfo(url2) {
   if (!url2) return;
@@ -19154,9 +19143,24 @@ async function changeCurrentPlaylist(playlistName) {
     return false;
   }
 }
+async function updatedAtPlaylist(playlistName) {
+  const SessionDataDir = app$1.getPath("sessionData");
+  const PLAYLIST_DIR = path$4.join(SessionDataDir, "playlists");
+  const META_PATH = path$4.join(PLAYLIST_DIR, "meta.json");
+  const meta = await main.readAsync(META_PATH, "json");
+  const updated = meta.playlists.map((p) => {
+    if (p.name == playlistName) {
+      p.updatedAt = /* @__PURE__ */ new Date();
+      return p;
+    }
+    return p;
+  });
+  meta.playlists = updated;
+  await main.writeAsync(META_PATH, meta);
+  return new Promise((resolve) => resolve(true));
+}
 function CoreControllers() {
   ipcMain.handle("get-metadata", getMetadata);
-  ipcMain.handle("add-new-playlist", async (_event, args) => await addNewPlaylist(args));
   ipcMain.handle("authenticate-user", async (_event, args) => await authenticateUser(args));
   ipcMain.handle("update-vod", async (_event, args) => await updateVod(args));
   ipcMain.handle("update-series", async (_event, args) => await updateSeries(args));
@@ -19171,6 +19175,7 @@ function CoreControllers() {
   ipcMain.handle("get-user-data", async (_event, args) => await getUserData(args));
   ipcMain.handle("update-user-data", async (_event, args) => await updateUserData(args));
   ipcMain.handle("change-current-playlist", async (_event, args) => await changeCurrentPlaylist(args));
+  ipcMain.handle("updated-at-playlist", async (_event, args) => await updatedAtPlaylist(args));
 }
 var src = { exports: {} };
 var browser = { exports: {} };

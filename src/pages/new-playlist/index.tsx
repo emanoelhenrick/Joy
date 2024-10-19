@@ -59,7 +59,6 @@ export function Initial() {
     await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: formValue!.name })
 
     setProgress({ msg: 'Updating configs...', value: 90})
-    await electronApi.addNewPlaylist(formValue!);
     await electronApi.addPlaylistToMeta(formValue!)
     updateUrls(urls)
 

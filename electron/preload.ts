@@ -22,7 +22,6 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   // You can expose other APTs you need here.
   // ...
   getMetadata: () => ipcRenderer.invoke('get-metadata'),
-  addNewPlaylist: async (args: any) => await ipcRenderer.invoke('add-new-playlist', args),
 
   updateVod: async (args: any) => await ipcRenderer.invoke('update-vod', args),
   updateSeries: async (args: any) => await ipcRenderer.invoke('update-series', args),
@@ -43,5 +42,6 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   getUserData: async (args: any) => await ipcRenderer.invoke('get-user-data', args),
   updateUserData: async (args: any) => await ipcRenderer.invoke('update-user-data', args),
 
-  changeCurrentPlaylist: async (args: any) => await ipcRenderer.invoke('change-current-playlist', args)
+  changeCurrentPlaylist: async (args: any) => await ipcRenderer.invoke('change-current-playlist', args),
+  updatedAtPlaylist: async (args: any) => await ipcRenderer.invoke('updated-at-playlist', args)
 })

@@ -13,7 +13,6 @@ interface PlaylistUrlsProps {
 
 export interface Api {
   getMetadata: () => Promise<MetaProps>
-  addNewPlaylist: (playlistInfo: PlaylistInfo) => Promise<Boolean>
   updateVod: (playlistUrls: PlaylistUrlsProps) => Promise<Boolean>
   updateSeries: (playlistUrls: PlaylistUrlsProps) => Promise<Boolean>
   updateLive: (playlistUrls: PlaylistUrlsProps) => Promise<Boolean>
@@ -28,6 +27,7 @@ export interface Api {
   getUserData: (playlistName: string) => Promise<UserDataProps>
   updateUserData: (data: UserDataProps) => Promise<UserDataProps>
   changeCurrentPlaylist: (playlistName: string) => Promise<Boolean>
+  updatedAtPlaylist: (playlistName: string) => Promise<Boolean>
 }
 
 const electronApi = window.ipcRenderer as unknown as Api

@@ -18,7 +18,7 @@ interface Props {
 export function VodInfo({ streamId, title, cover }: Props) {
   const queryClient = useQueryClient()
 
-  const { data, isSuccess } = useQuery({ queryKey: ['vodInfo'], queryFn: async () => await electronApi.getVodInfo(urls.getVodInfoUrl + streamId) })
+  const { data, isSuccess } = useQuery({ queryKey: [`vodInfo`], queryFn: async () => await electronApi.getVodInfo(urls.getVodInfoUrl + streamId) })
   const { urls } = usePlaylistUrl()
 
   useEffect(() => {
