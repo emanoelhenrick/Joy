@@ -14738,7 +14738,7 @@ FormData$1.prototype.append = function(field, value, options) {
   if (typeof value == "number") {
     value = "" + value;
   }
-  if (util.isArray(value)) {
+  if (Array.isArray(value)) {
     this._error(new Error("Arrays are not supported."));
     return;
   }
@@ -16269,12 +16269,11 @@ var hasRequiredHasFlag;
 function requireHasFlag() {
   if (hasRequiredHasFlag) return hasFlag;
   hasRequiredHasFlag = 1;
-  hasFlag = (flag, argv) => {
-    argv = argv || process.argv;
+  hasFlag = (flag, argv = process.argv) => {
     const prefix = flag.startsWith("-") ? "" : flag.length === 1 ? "-" : "--";
-    const pos = argv.indexOf(prefix + flag);
-    const terminatorPos = argv.indexOf("--");
-    return pos !== -1 && (terminatorPos === -1 ? true : pos < terminatorPos);
+    const position = argv.indexOf(prefix + flag);
+    const terminatorPosition = argv.indexOf("--");
+    return position !== -1 && (terminatorPosition === -1 || position < terminatorPosition);
   };
   return hasFlag;
 }
@@ -16284,16 +16283,23 @@ function requireSupportsColor() {
   if (hasRequiredSupportsColor) return supportsColor_1;
   hasRequiredSupportsColor = 1;
   const os2 = require$$1;
+  const tty = require$$0$4;
   const hasFlag2 = requireHasFlag();
-  const env = process.env;
+  const { env } = process;
   let forceColor;
-  if (hasFlag2("no-color") || hasFlag2("no-colors") || hasFlag2("color=false")) {
-    forceColor = false;
+  if (hasFlag2("no-color") || hasFlag2("no-colors") || hasFlag2("color=false") || hasFlag2("color=never")) {
+    forceColor = 0;
   } else if (hasFlag2("color") || hasFlag2("colors") || hasFlag2("color=true") || hasFlag2("color=always")) {
-    forceColor = true;
+    forceColor = 1;
   }
   if ("FORCE_COLOR" in env) {
-    forceColor = env.FORCE_COLOR.length === 0 || parseInt(env.FORCE_COLOR, 10) !== 0;
+    if (env.FORCE_COLOR === "true") {
+      forceColor = 1;
+    } else if (env.FORCE_COLOR === "false") {
+      forceColor = 0;
+    } else {
+      forceColor = env.FORCE_COLOR.length === 0 ? 1 : Math.min(parseInt(env.FORCE_COLOR, 10), 3);
+    }
   }
   function translateLevel(level) {
     if (level === 0) {
@@ -16306,8 +16312,8 @@ function requireSupportsColor() {
       has16m: level >= 3
     };
   }
-  function supportsColor(stream2) {
-    if (forceColor === false) {
+  function supportsColor(haveStream, streamIsTTY) {
+    if (forceColor === 0) {
       return 0;
     }
     if (hasFlag2("color=16m") || hasFlag2("color=full") || hasFlag2("color=truecolor")) {
@@ -16316,19 +16322,22 @@ function requireSupportsColor() {
     if (hasFlag2("color=256")) {
       return 2;
     }
-    if (stream2 && !stream2.isTTY && forceColor !== true) {
+    if (haveStream && !streamIsTTY && forceColor === void 0) {
       return 0;
     }
-    const min = forceColor ? 1 : 0;
+    const min = forceColor || 0;
+    if (env.TERM === "dumb") {
+      return min;
+    }
     if (process.platform === "win32") {
       const osRelease = os2.release().split(".");
-      if (Number(process.versions.node.split(".")[0]) >= 8 && Number(osRelease[0]) >= 10 && Number(osRelease[2]) >= 10586) {
+      if (Number(osRelease[0]) >= 10 && Number(osRelease[2]) >= 10586) {
         return Number(osRelease[2]) >= 14931 ? 3 : 2;
       }
       return 1;
     }
     if ("CI" in env) {
-      if (["TRAVIS", "CIRCLECI", "APPVEYOR", "GITLAB_CI"].some((sign) => sign in env) || env.CI_NAME === "codeship") {
+      if (["TRAVIS", "CIRCLECI", "APPVEYOR", "GITLAB_CI", "GITHUB_ACTIONS", "BUILDKITE"].some((sign) => sign in env) || env.CI_NAME === "codeship") {
         return 1;
       }
       return min;
@@ -16357,19 +16366,16 @@ function requireSupportsColor() {
     if ("COLORTERM" in env) {
       return 1;
     }
-    if (env.TERM === "dumb") {
-      return min;
-    }
     return min;
   }
   function getSupportLevel(stream2) {
-    const level = supportsColor(stream2);
+    const level = supportsColor(stream2, stream2 && stream2.isTTY);
     return translateLevel(level);
   }
   supportsColor_1 = {
     supportsColor: getSupportLevel,
-    stdout: getSupportLevel(process.stdout),
-    stderr: getSupportLevel(process.stderr)
+    stdout: translateLevel(supportsColor(true, tty.isatty(1))),
+    stderr: translateLevel(supportsColor(true, tty.isatty(2)))
   };
   return supportsColor_1;
 }
@@ -19651,8 +19657,6 @@ if (started) app$1.quit();
 function createWindow() {
   win = new BrowserWindow({
     icon: path$5.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
-    minHeight: 720,
-    minWidth: 1080,
     webPreferences: {
       preload: path$5.join(__dirname, "preload.mjs"),
       nodeIntegration: false,
@@ -19669,7 +19673,9 @@ function createWindow() {
   } else {
     win.loadFile(path$5.join(RENDERER_DIST, "index.html"));
   }
-  win.maximize();
+  win.once("ready-to-show", () => {
+    win == null ? void 0 : win.maximize();
+  });
 }
 app$1.on("window-all-closed", () => {
   if (process.platform !== "darwin") {

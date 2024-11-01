@@ -31,8 +31,6 @@ if (started) app.quit();
 function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
-    minHeight: 720,
-    minWidth: 1080,
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
       nodeIntegration: false,
@@ -54,7 +52,9 @@ function createWindow() {
     win.loadFile(path.join(RENDERER_DIST, 'index.html'))
   }
 
-  win.maximize()
+  win.once('ready-to-show', () => {
+    win?.maximize()
+  })
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common
