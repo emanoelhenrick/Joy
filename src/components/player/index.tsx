@@ -8,6 +8,7 @@ import {
 } from '@vidstack/react/player/layouts/default';
 import { useUserData } from '@/states/useUserData';
 import { ExpandVideoButton } from '../ExpandVideoButton';
+import { useToast } from '@/hooks/use-toast';
 
 
 interface PlayerProps {
@@ -28,11 +29,20 @@ export function VideoPlayer({ url, type, data, currentTimeStated = 0, title }: P
     type = searchParams.get('type')!
   }
   const updateVodStatus = useUserData(state => state.updateVodStatus)
+  const { toast } = useToast()
 
   const [_isControls, setIsControls] = useState(false)
 
   function updateMediaState() {
     if (type == 'vod') return updateVodStatus(data.id, currentTime, duration)
+  }
+
+  function onHlsError() {
+    toast({
+      title: 'The format of this video is not yet supported',
+      description: 'Sorry for the inconvenience, while the function is not implemented, try another channel',
+      variant: 'destructive'
+    })
   }
 
   useEffect(() => {
@@ -48,6 +58,7 @@ export function VideoPlayer({ url, type, data, currentTimeStated = 0, title }: P
   return (
     <MediaPlayer title={title} onPlaying={updateMediaState}
       currentTime={currentTimeStated}
+      onHlsError={onHlsError}
       onTimeUpdate={time => currentTime = (time.currentTime)}
       onDurationChange={dur => duration = dur}
       onControlsChange={(isVisible: boolean) => setIsControls(isVisible)}

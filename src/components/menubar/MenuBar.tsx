@@ -9,6 +9,7 @@ import { SettingsPage } from "@/pages/settings";
 import { usePlaylistUrl } from "@/states/usePlaylistUrl";
 import { useQueryClient } from "@tanstack/react-query";
 import { RxUpdate } from "react-icons/rx";
+import { useToast } from "@/hooks/use-toast";
 
 export function MenuBar() {
   const queryClient = useQueryClient()
@@ -17,6 +18,7 @@ export function MenuBar() {
   const { urls } = usePlaylistUrl()
   const navigate = useNavigate();
   const location = useLocation()
+  const { toast } = useToast()
 
   function changeTab(tab: string) {
     navigate(`/dashboard/${tab}/${playlistName}`)
@@ -30,12 +32,23 @@ export function MenuBar() {
   async function updateCurrentPlaylist() {
     if (playlistName) {
       setUpdating(true)
+      try {
+        await electronApi.authenticateUser(urls.getAuthenticateUrl)
+      } catch (error) {
+        setUpdating(false)
+        return toast({
+          title: 'The playlist could not be updated',
+          description: 'Check if the playlist data is correct.',
+          variant: "destructive"
+        })
+      }
       await electronApi.updateVod({ playlistUrl: urls.getAllVodUrl, categoriesUrl: urls.getAllVodCategoriesUrl, name: playlistName })
       await electronApi.updateSeries({ playlistUrl: urls.getAllSeriesUrl, categoriesUrl: urls.getAllSeriesCategoriesUrl, name: playlistName })
       await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: playlistName })
       await electronApi.updatedAtPlaylist(playlistName)
       queryClient.removeQueries()
       setUpdating(false)
+      toast({ title: 'The playlist was updated'})
     }
   }
 
