@@ -14,6 +14,7 @@ import electronApi from "@/config/electronApi"
 import { PlaylistInfo } from "electron/core/models/PlaylistInfo"
 import { makeUrls, PlaylistUrls, usePlaylistUrl } from "@/states/usePlaylistUrl"
 import { useQueryClient } from "@tanstack/react-query"
+import { Fade } from "react-awesome-reveal"
  
 const formSchema = z.object({
   name: z.string().min(1),
@@ -95,17 +96,22 @@ export function Initial() {
   
 
   useEffect(() => {
+    document.body.style.overflow = 'hidden'
     if (isSuccess) {
       queryClient.removeQueries()
       setSubmitted(false)
+      document.body.style.overflow = 'auto';
       navigate(`/dashboard/vod/${formValue!.name}`)
     }
     
   }, [isSuccess])
 
   return (
-    <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px] h-screen">
-      <div className="flex items-center justify-center py-12 ">
+    <div className="w-full h-screen flex justify-center items-center">
+      <img className="w-full fixed blur-2xl -z-10" src='https://images.unsplash.com/flagged/photo-1567400358593-9e6382752ea2?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' />
+
+      <Fade direction="up" duration={500}>
+      <div className="flex items-center justify-center bg-background p-8 rounded-lg w-fit border">
         <div className="mx-auto grid w-[350px] gap-6">
           <div className="grid gap-2 text-center">
             <h1 className="text-3xl font-bold">Add a playlist</h1>
@@ -190,6 +196,7 @@ export function Initial() {
       <div className="hidden bg-muted lg:block">
         <div className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"/>
       </div>
+      </Fade>
     </div>
   )
 }

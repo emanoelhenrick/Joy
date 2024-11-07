@@ -32,8 +32,8 @@ export function SettingsPage({ currentPlaylist }: { currentPlaylist: string }) {
   }, [selectedPlaylist])
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex justify-between">
+    <div className="flex flex-col gap-1">
+      <div className="flex justify-between mb-4">
         <h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-4xl">Settings</h1>
         <Select value={selectedPlaylist} onValueChange={(value) => setSelectedPlaylist(value)}>
           <SelectTrigger className="w-[180px]">
@@ -45,9 +45,16 @@ export function SettingsPage({ currentPlaylist }: { currentPlaylist: string }) {
         </Select>
       </div>
 
+      {/* <h3
+        onClick={() => navigate('/initial')}
+        className="scroll-m-20 w-fit text-md font-semibold text-muted-foreground tracking-tight cursor-pointer hover:text-primary transition"
+        >
+          Edit playlist
+      </h3> */}
+
       <h3
         onClick={() => navigate('/initial')}
-        className="scroll-m-20 w-fit text-lg font-semibold text-muted-foreground tracking-tight cursor-pointer hover:text-primary transition"
+        className="scroll-m-20 w-fit text-md font-semibold text-muted-foreground tracking-tight cursor-pointer hover:text-primary transition"
         >
           New playlist
       </h3>
