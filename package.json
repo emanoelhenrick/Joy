@@ -1,13 +1,12 @@
 {
-  "name": "joy-xtream-player",
+  "name": "Joy Xtream Player",
   "private": true,
   "version": "0.0.1",
   "type": "module",
   "build": {
     "appId": "emhk.joy.player"
   },
-  "author": "Emanoel Henrick",
-  "description": "iptv player",
+  "description": "IPTV player that consumes Xtream API made with modern web technologies.",
   "license": "UNLICENSED",
   "scripts": {
     "dev": "vite",
@@ -64,6 +63,7 @@
     "@electron-forge/cli": "^7.5.0",
     "@electron-forge/maker-deb": "^7.5.0",
     "@electron-forge/maker-rpm": "^7.5.0",
+    "@electron-forge/maker-snap": "^7.5.0",
     "@electron-forge/maker-squirrel": "^7.5.0",
     "@electron-forge/maker-zip": "^7.5.0",
     "@electron-forge/plugin-auto-unpack-natives": "^7.5.0",

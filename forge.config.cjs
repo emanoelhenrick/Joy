@@ -12,7 +12,7 @@ module.exports = {
       "config": {
         "name": "joy_xtream_player",
         "noMsi": true,
-        "shortcutName": "Joy XPlayer",
+        "shortcutName": "JXP",
         "createDesktopShortcut": true
       }
     },
@@ -21,13 +21,9 @@ module.exports = {
       platforms: ['darwin'],
     },
     {
-      name: '@electron-forge/maker-deb',
-      config: {},
-    },
-    {
       name: '@electron-forge/maker-rpm',
       config: {},
-    },
+    }
   ],
   plugins: [
     {
