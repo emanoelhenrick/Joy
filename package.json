@@ -6,11 +6,11 @@
   "build": {
     "appId": "emhk.joy.player"
   },
-  "description": "IPTV player that consumes Xtream API made with modern web technologies.",
+  "description": "Player that consumes Xtream API made with modern web technologies.",
   "license": "UNLICENSED",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && electron-builder",
+    "build": "vite build && package && make",
     "preview": "vite preview",
     "start": "electron-forge start",
     "package": "electron-forge package",
@@ -36,13 +36,11 @@
     "axios": "^1.7.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "electron-router-dom": "^2.0.0",
     "electron-squirrel-startup": "^1.0.1",
     "fs-jetpack": "^5.1.0",
     "lucide-react": "^0.447.0",
     "media-icons": "^1.1.5",
     "next-themes": "^0.3.0",
-    "rc-pagination": "^4.3.0",
     "react": "^18.2.0",
     "react-awesome-reveal": "^4.2.14",
     "react-dom": "^18.2.0",
