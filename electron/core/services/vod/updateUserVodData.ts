@@ -1,8 +1,7 @@
 import { writeAsync } from "fs-jetpack";
-import { app } from "electron";
-import path from "node:path";
 import { UserVodDataProps } from "electron/core/models/VodModels";
 import { getUserData } from "../getUserData";
+import { getUserDataPath } from "electron/core/utils/paths";
 
 interface UpdateUserDataProps {
   userVodData: UserVodDataProps
@@ -10,8 +9,7 @@ interface UpdateUserDataProps {
 }
 
 export async function updateUserVodData({ userVodData, playlistName }: UpdateUserDataProps) {
-  const SessionDataDir = app.getPath('sessionData')
-  const USERDATA_PATH =  path.join(SessionDataDir, `playlists/${playlistName}/userdata.json`)
+  const USERDATA_PATH =  getUserDataPath(playlistName)
   const userData = await getUserData(playlistName)
 
   if (!userData) {
@@ -37,5 +35,5 @@ export async function updateUserVodData({ userVodData, playlistName }: UpdateUse
 
   userData.vod!.push(userVodData)
   await writeAsync(USERDATA_PATH, userVodData)
-  return new Promise(resolve => resolve(userVodData))
+  return userVodData
 }

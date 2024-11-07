@@ -21,7 +21,6 @@ export interface PlaylistUrlsState {
   updateUrls: (urls: PlaylistUrls) => void
 }
 
-
 export const usePlaylistUrl = create<PlaylistUrlsState>((set) => ({
   urls: {
     getAllVodUrl: '',

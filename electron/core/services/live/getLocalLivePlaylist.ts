@@ -1,11 +1,8 @@
-import { app } from 'electron';
-import path from 'path';
 import { readAsync } from 'fs-jetpack';
 import { LivePlaylistProps } from 'electron/core/models/LiveModels';
+import { getLivePath } from 'electron/core/utils/paths';
 
 export async function getLocalLivePlaylist(playlistName: string) {
-  const SessionDataDir = app.getPath('sessionData')
-  const LIVE_PATH =  path.join(SessionDataDir, `playlists/${playlistName}/live.json`)
-  const LivePlaylist = await readAsync(LIVE_PATH, 'json');
+  const LivePlaylist = await readAsync(getLivePath(playlistName), 'json');
   return LivePlaylist as LivePlaylistProps
 }

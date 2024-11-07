@@ -1,12 +1,10 @@
-import { app } from 'electron';
 import { readAsync, writeAsync } from 'fs-jetpack'
-import path from 'path';
 import { UserDataProps } from '../models/UserData';
+import { getUserDataPath } from '../utils/paths';
 
 export async function getUserData(playlistName: string): Promise<UserDataProps | undefined> {
-  const SessionDataDir = app.getPath('sessionData')
-  const USERDATA_PATH =  path.join(SessionDataDir, `playlists/${playlistName}/userdata.json`)
-  let userData = await readAsync(USERDATA_PATH, 'json')
+  const USERDATA_PATH = getUserDataPath(playlistName)
+  let userData = await readAsync(getUserDataPath(playlistName), 'json')
   if (!userData) {
     userData = { vod: [], series: [], live: [] }
     await writeAsync(USERDATA_PATH, userData)

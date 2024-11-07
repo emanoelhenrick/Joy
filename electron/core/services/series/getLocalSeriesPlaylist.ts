@@ -1,11 +1,8 @@
-import { app } from 'electron';
 import { SeriesPlaylistProps } from '../../models/SeriesModels';
-import path from 'path';
 import { readAsync } from 'fs-jetpack';
+import { getSeriesPath } from 'electron/core/utils/paths';
 
 export async function getLocalSeriesPlaylist(playlistName: string) {
-  const SessionDataDir = app.getPath('sessionData')
-  const SERIES_PATH =  path.join(SessionDataDir, `playlists/${playlistName}/series.json`)
-  const SeriesPlaylist = await readAsync(SERIES_PATH, 'json');
+  const SeriesPlaylist = await readAsync(getSeriesPath(playlistName), 'json');
   return SeriesPlaylist as SeriesPlaylistProps
 }

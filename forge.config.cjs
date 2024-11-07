@@ -10,7 +10,7 @@ module.exports = {
     {
       "name": "@electron-forge/maker-squirrel",
       "config": {
-        "name": "joy_xtream_player",
+        "name": "joy-xtream-player",
         "noMsi": true,
         "shortcutName": "JXP",
         "createDesktopShortcut": true

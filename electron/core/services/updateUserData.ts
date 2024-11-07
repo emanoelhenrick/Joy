@@ -1,18 +1,11 @@
 import { writeAsync } from "fs-jetpack";
 import { UserDataProps } from "../models/UserData";
-import { app } from "electron";
-import path from "node:path";
 import { getMetadata } from "./getMetadata";
-
-export interface UpdateUserDataProps {
-  userData: UserDataProps
-  playlistName: string
-}
+import { getUserDataPath } from "../utils/paths";
 
 export async function updateUserData(data: UserDataProps) {
   const { currentPlaylist } = await getMetadata()
-  const SessionDataDir = app.getPath('sessionData')
-  const USERDATA_PATH =  path.join(SessionDataDir, `playlists/${currentPlaylist}/userdata.json`)
+  const USERDATA_PATH =  getUserDataPath(currentPlaylist)
   await writeAsync(USERDATA_PATH, data)
-  return new Promise(resolve => resolve(data))
+  return data
 }

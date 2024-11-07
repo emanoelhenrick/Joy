@@ -3038,13 +3038,12 @@ async function getMetadata() {
   const SessionDataDir = app$1.getPath("sessionData");
   const PLAYLIST_DIR = path$4.join(SessionDataDir, "playlists");
   const META_PATH = path$4.join(PLAYLIST_DIR, "meta.json");
-  const isPlaylist = await main.existsAsync(META_PATH);
-  if (!isPlaylist) {
+  const metadata = await main.readAsync(META_PATH, "json");
+  if (!metadata) {
     const newMeta = { currentPlaylist: "", playlists: [] };
     await main.writeAsync(META_PATH, newMeta);
     return new Promise((resolve) => resolve(newMeta));
   }
-  const metadata = await main.readAsync(META_PATH, "json");
   return new Promise((resolve) => resolve(metadata));
 }
 function bind(fn, thisArg) {
@@ -19134,20 +19133,15 @@ async function updateUserData(data) {
   return new Promise((resolve) => resolve(data));
 }
 async function changeCurrentPlaylist(playlistName) {
-  try {
-    const SessionDataDir = app$1.getPath("sessionData");
-    const PLAYLIST_DIR = path$4.join(SessionDataDir, "playlists");
-    const META_PATH = path$4.join(PLAYLIST_DIR, "meta.json");
-    const metadata = await main.readAsync(META_PATH, "json");
-    const exists2 = metadata.playlists.find((p) => p.name == playlistName);
-    if (!exists2) return false;
-    metadata.currentPlaylist = playlistName;
-    await main.writeAsync(META_PATH, metadata);
-    return true;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
+  const SessionDataDir = app$1.getPath("sessionData");
+  const PLAYLIST_DIR = path$4.join(SessionDataDir, "playlists");
+  const META_PATH = path$4.join(PLAYLIST_DIR, "meta.json");
+  const metadata = await main.readAsync(META_PATH, "json");
+  const exists2 = metadata.playlists.find((p) => p.name == playlistName);
+  if (!exists2) return false;
+  metadata.currentPlaylist = playlistName;
+  await main.writeAsync(META_PATH, metadata);
+  return true;
 }
 async function updatedAtPlaylist(playlistName) {
   const SessionDataDir = app$1.getPath("sessionData");
