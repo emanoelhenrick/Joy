@@ -104,7 +104,7 @@ export function VodDashboard() {
   const midPage = page > 1 ? page : 2
 
   return (
-    <div ref={ref as unknown as LegacyRef<HTMLDivElement>} className="h-screen flex pr-2">
+    <div ref={ref as unknown as LegacyRef<HTMLDivElement>} className="h-screen flex">
       <div className="flex flex-col w-full py-9 gap-4 ml-20">
         <div className="flex justify-between items-center">
           <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Movies</h1>

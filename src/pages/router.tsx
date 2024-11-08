@@ -12,7 +12,7 @@ export const router = createHashRouter(
       <Route path="/" Component={SplashLoading} />
       <Route path="/initial" Component={Initial} />
       <Route path="/dashboard" element={
-        <div>
+        <div className="flex">
           <MenuBar />
           <Outlet />
         </div>
