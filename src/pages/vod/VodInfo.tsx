@@ -8,6 +8,7 @@ import { useEffect, useState } from "react"
 import { Fade } from "react-awesome-reveal"
 import { FaPlay } from "react-icons/fa"
 import { VideoPlayer } from "../../components/player"
+import { useUserData } from "@/states/useUserData"
 
 interface Props {
   streamId: string
@@ -18,6 +19,8 @@ interface Props {
 export function VodInfo({ streamId, title, cover }: Props) {
   const queryClient = useQueryClient()
 
+  const [_isDialog, setIsDialog] = useState(false)
+  const userVodData = useUserData(state => state.userData.vod?.find(v => v.id == streamId))
   const { data, isSuccess } = useQuery({ queryKey: [`vodInfo`], queryFn: async () => await electronApi.getVodInfo(urls.getVodInfoUrl + streamId) })
   const { urls } = usePlaylistUrl()
 
@@ -57,7 +60,7 @@ export function VodInfo({ streamId, title, cover }: Props) {
               <p className="leading-7 [&:not(:first-child)]:mt-0 text-md text-muted-foreground">
                 {data?.info.director && 'Directed by ' + data?.info.director}
               </p>
-              <Dialog>
+              <Dialog onOpenChange={(open) => setIsDialog(open)}>
                 <DialogTrigger asChild>
                   <Button disabled={!extensions.includes(data.movie_data.container_extension) && true} className={`flex gap-2 mt-6 self-start px-6 text-md`}>
                     <FaPlay size={12} /> Play
@@ -69,6 +72,7 @@ export function VodInfo({ streamId, title, cover }: Props) {
                     <VideoPlayer
                       url={`${urls.getVodStreamUrl}/${streamId}.${data?.movie_data.container_extension}`}
                       type="vod"
+                      currentTimeStated={userVodData ? userVodData!.currentTime : undefined}
                       data={{id: streamId}}
                       title={data.info.name}
                     />
