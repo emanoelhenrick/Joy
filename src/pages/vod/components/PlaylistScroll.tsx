@@ -57,7 +57,7 @@ export default function PlaylistScroll({ playlist }: PlaylistScrollProps) {
         </Dialog>
       )}
       <div className={`w-full flex h-full ${selectedMovie && 'invisible'}`}>
-        <div className={`flex flex-wrap h-fit gap-8 justify-center`}>
+        <div className={`flex flex-wrap h-fit gap-10 ml-6`}>
           <Fade duration={200}>
             {playlist!.map((movie) => {
                 const isFavorite = favorites?.includes(movie.stream_id.toString())

@@ -19,6 +19,7 @@ import { useMeasure } from '@react-hookz/web';
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { FaRegStar, FaStar } from 'react-icons/fa';
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink } from '@/components/ui/pagination';
+import { MenuTab } from '@/components/menutab/MenuTab';
 
 const PlaylistScroll = lazy(() => import('./components/PlaylistScroll'))
 
@@ -104,67 +105,65 @@ export function VodDashboard() {
   const midPage = page > 1 ? page : 2
 
   return (
-    <div ref={ref as unknown as LegacyRef<HTMLDivElement>} className="h-screen flex">
-      <div className="flex flex-col w-full py-9 gap-4 ml-20">
-        <div className="flex justify-between items-center">
-          <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Movies</h1>
-          <div className="flex gap-4 items-center">
-            <Input className="w-72 text-xl h-fit" onChange={(e) => setSearchValue(e.target.value)} value={searchText} />
-            <Search className="mr-4 opacity-60" />
-          </div>
-        </div>
+    <div ref={ref as unknown as LegacyRef<HTMLDivElement>} className="h-screen flex flex-col">
+      <div className="flex flex-col w-full">
+        <MenuTab playlistName={playlistName!} />
+        <div className='ml-16 flex flex-col gap-4'>
         <div className='flex items-center justify-between'>
-          <div className='flex items-center gap-4'>
-            <Select onValueChange={(value) => setCurrentCategory(value)} value={currentCategory}>
-              <SelectTrigger  className="w-fit gap-2">
-                <SelectValue  placeholder="All" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value={'all'}>All</SelectItem>
-                  {categories && categories.map(c => <SelectItem value={c.category_id} key={c.category_id}>{c.category_name}</SelectItem>)}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            {showFavorites ? (
-              <FaStar onClick={handleFavorites} size={22} strokeWidth={0} className={`cursor-pointer fill-yellow-400 ${showFavorites ? 'visible' : 'invisible' }`}  />
-            ) : (
-              <FaRegStar onClick={handleFavorites} size={22} className={`cursor-pointer opacity-40 group-hover:opacity-100 transition hover:scale-110`}  />
-            )} 
-          </div>
-          {!enoughItems && (
-            <Pagination className='mr-4'>
-              <PaginationContent>
-                <PaginationItem className={`${page < 2 && 'hidden'}`}>
-                  <div onClick={previousPage} className='text-muted-foreground hover:text-primary transition'><IoIosArrowBack size={16} /></div>
-                </PaginationItem>
-                <PaginationItem className={`${page > 2 ? '' : 'hidden'}`}>
-                  <PaginationLink onClick={() => setPage(1)}>1</PaginationLink>
-                </PaginationItem>
-                <PaginationEllipsis className={`${page == pages ? '' : 'hidden'} ${pages < 3 && 'hidden'}`} />
-                <PaginationItem>
-                  <PaginationLink onClick={() => setPage(firstPage)} isActive={page == firstPage}>{firstPage}</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink onClick={() => setPage(midPage)} isActive={page == midPage}>{midPage}</PaginationLink>
-                </PaginationItem>
-                <PaginationEllipsis className={`${((page == pages - 1) || (page == pages)) && 'hidden'}`} />
-                <PaginationItem className={`${page == pages && 'hidden'} ${pages < 3 && 'hidden'}`}>
-                  <PaginationLink onClick={() => setPage(pages)}>{pages}</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <div onClick={nextPage} className={`text-muted-foreground hover:text-primary transition ${!hasMore && 'invisible'}`}><IoIosArrowForward size={16} /></div>
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          )}
+        <div className='flex items-center gap-4 ml-6'>
+          <Select onValueChange={(value) => setCurrentCategory(value)} value={currentCategory}>
+            <SelectTrigger  className="w-fit gap-2">
+              <SelectValue  placeholder="All" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value={'all'}>All</SelectItem>
+                {categories && categories.map(c => <SelectItem value={c.category_id} key={c.category_id}>{c.category_name}</SelectItem>)}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          {/* {showFavorites ? (
+            <FaStar onClick={handleFavorites} size={22} strokeWidth={0} className={`cursor-pointer fill-yellow-400 ${showFavorites ? 'visible' : 'invisible' }`}  />
+          ) : (
+            <FaRegStar onClick={handleFavorites} size={22} className={`cursor-pointer opacity-40 group-hover:opacity-100 transition hover:scale-110`}  />
+          )}  */}
         </div>
-        {playlist.length > 0 &&
-          <Suspense fallback={<p className="text-muted-foreground">loading...</p>}>
-            <PlaylistScroll playlist={playlist} />
-          </Suspense>
-        }
+        
       </div>
+      {playlist.length > 0 &&
+        <Suspense fallback={<p className="text-muted-foreground">loading...</p>}>
+          <PlaylistScroll playlist={playlist} />
+        </Suspense>
+      }
+        </div>
+         
+      </div>
+      {!enoughItems && (
+          <Pagination className='mr-6 mt-4 w-fit'>
+            <PaginationContent>
+              <PaginationItem className={`${page < 2 && 'hidden'}`}>
+                <div onClick={previousPage} className='text-muted-foreground hover:text-primary transition'><IoIosArrowBack size={16} /></div>
+              </PaginationItem>
+              <PaginationItem className={`${page > 2 ? '' : 'hidden'}`}>
+                <PaginationLink onClick={() => setPage(1)}>1</PaginationLink>
+              </PaginationItem>
+              <PaginationEllipsis className={`${page == pages ? '' : 'hidden'} ${pages < 3 && 'hidden'}`} />
+              <PaginationItem>
+                <PaginationLink onClick={() => setPage(firstPage)} isActive={page == firstPage}>{firstPage}</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink onClick={() => setPage(midPage)} isActive={page == midPage}>{midPage}</PaginationLink>
+              </PaginationItem>
+              <PaginationEllipsis className={`${((page == pages - 1) || (page == pages)) && 'hidden'}`} />
+              <PaginationItem className={`${page == pages && 'hidden'} ${pages < 3 && 'hidden'}`}>
+                <PaginationLink onClick={() => setPage(pages)}>{pages}</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <div onClick={nextPage} className={`text-muted-foreground hover:text-primary transition ${!hasMore && 'invisible'}`}><IoIosArrowForward size={16} /></div>
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        )}
     </div>
   )
 }
