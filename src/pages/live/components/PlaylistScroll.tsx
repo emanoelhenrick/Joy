@@ -2,22 +2,20 @@ import InfiniteScroll from "react-infinite-scroller";
 import { Cover } from "../../../components/Cover";
 import { LiveProps } from "electron/core/models/LiveModels";
 import { usePlaylistUrl } from "@/states/usePlaylistUrl";
-import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useUserData } from "@/states/useUserData";
-import electronApi from "@/config/electronApi";
 import { Heart } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/MediaInfoDialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { VideoPlayer } from "@/components/player";
+import { Fade } from "react-awesome-reveal";
+import { LiveImage } from "./Image";
 
 interface PlaylistScrollProps {
   playlist: LiveProps[]
-  fetchMore: () => void
-  hasMore: boolean
 }
 
-export default function PlaylistScroll({ playlist, fetchMore, hasMore }: PlaylistScrollProps) {
+export default function PlaylistScroll({ playlist }: PlaylistScrollProps) {
   const { urls } = usePlaylistUrl()
 
   const [update, setUpdate] = useState(false)
@@ -56,35 +54,31 @@ export default function PlaylistScroll({ playlist, fetchMore, hasMore }: Playlis
           </DialogContent>
         </Dialog>
       )}
-      <div className={`w-full whitespace-nowrap rounded-md h-fit ${selectedLiveUrl && 'invisible'}`}>
-        <InfiniteScroll
-          pageStart={0}
-          loadMore={fetchMore}
-          hasMore={hasMore}
-          initialLoad={false}
-          className="flex flex-wrap gap-7"
-        >
+      <div className={`w-full flex h-full ${selectedLiveUrl && 'invisible'}`}>
+        <div className={`flex flex-wrap h-fit gap-x-8 gap-y-8 ml-6`}>
+          <Fade duration={200}>
           {playlist.map((live) => {
             const isFavorite = favorites?.includes(live.stream_id.toString())
-
             return (
               <div
-                className="flex flex-col gap-3 w-[154px] h-fit cursor-pointer relative group"
+                className="flex flex-col hover:scale-105 transition bg-secondary w-56 p-4 rounded-xl gap-3 h-fit cursor-pointer relative group"
                 key={live.stream_id}
               >
-                <div onClick={() => setSelectLiveUrl(`${urls.getLiveStreamUrl}${live.stream_id}.m3u8`)}>
-                  <Cover src={live.stream_icon} />
+                <div className="flex gap-2 items-center" onClick={() => setSelectLiveUrl(`${urls.getLiveStreamUrl}${live.stream_id}.m3u8`)}>
+                  <LiveImage src={live.stream_icon} />
+                  <h3 className="text-wrap text-muted-foreground text-sm font-bold">{live.name}</h3>
                 </div>
-                {isFavorite ? (
+                {/* {isFavorite ? (
                   <Heart onClick={() => updateRender(live.stream_id.toString())} size={20} fill="red" strokeWidth={0} className={`absolute top-3 right-4 ${isFavorite ? 'visible' : 'invisible' }`}  />
                 ) : (
                   <Heart onClick={() => updateRender(live.stream_id.toString())} size={20} className={`absolute top-3 right-4 opacity-0 group-hover:opacity-100 transition hover:scale-110`}  />
-                )} 
-                <h3 className="text-wrap text-muted-foreground text-sm font-bold">{live.name}</h3>
+                )}  */}
+                
               </div>
             )
           })}
-      </InfiniteScroll>
+          </Fade>
+        </div>
       </div>
     </div>
   )

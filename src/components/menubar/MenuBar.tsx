@@ -56,6 +56,8 @@ export function MenuBar() {
     getPlaylistName()
   }, [])
 
+  const mediaTabs = ['vod', 'series', 'live']
+
   return (
     <div className="flex flex-col justify-between items-center border-r fixed px-1 py-4 h-full">
         <Fade cascade direction="up" triggerOnce duration={500}>
@@ -68,7 +70,7 @@ export function MenuBar() {
           <Button variant='ghost' className={`h-fit gap-2 ${location.pathname.includes('home') ? 'opacity-90' : 'opacity-30'}`}>
             <House />
           </Button>
-          <Button variant='ghost' onClick={() => changeTab('vod')} className={`h-fit gap-2 ${location.pathname.includes('vod') ? 'opacity-90' : 'opacity-30'}`}>
+          <Button variant='ghost' onClick={() => changeTab('vod')} className={`h-fit gap-2 ${mediaTabs.some(tab => location.pathname.includes(tab)) ? 'opacity-90' : 'opacity-30'}`}>
             <TvMinimal />
           </Button>
           <Button variant='ghost' className={`h-fit gap-2 ${location.pathname.includes('search') ? 'opacity-90' : 'opacity-30'}`}>

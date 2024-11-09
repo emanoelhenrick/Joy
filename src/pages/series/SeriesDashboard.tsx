@@ -26,7 +26,6 @@ export function SeriesDashboard() {
   let { playlistName } = useParams();
   const { data, isFetched } = useQuery({ queryKey: ['SeriesPlaylist'], queryFn: () => electronApi.getLocalSeriesPlaylist(playlistName!), staleTime: Infinity })
 
-  const [showFavorites, setShowFavorites] = useState<boolean>(false)
   const [playlist, setPlaylist] = useState<SeriesProps[]>([]);
   const [currentCategory, setCurrentCategory] = useState('all')
   const [enoughItems, setEnoughItems] = useState(false)
@@ -58,19 +57,12 @@ export function SeriesDashboard() {
   function paginate(page: number, elements: number) {
     if (!filtered) return []
 
-    const filtered2 = showFavorites
-      ? filtered.filter((p) => {
-        for (const series of userData.series!) {
-          if (series.favorite && series.id == p.series_id.toString()) return p 
-        }
-      }) : filtered
-
     const startIndex = (page - 1) * elements
-    const endIndex = (page * elements) > filtered2.length ? filtered2.length : (page * elements)
+    const endIndex = (page * elements) > filtered.length ? filtered.length : (page * elements)
 
-    if (endIndex === filtered2.length) setHasMore(false)
+    if (endIndex === filtered.length) setHasMore(false)
 
-    const paginated = filtered2.slice(startIndex, endIndex)
+    const paginated = filtered.slice(startIndex, endIndex)
     if (playlist.length > 0) return setPlaylist(prev => [...prev, ...paginated])
     return setPlaylist(paginated)
   }
@@ -83,11 +75,6 @@ export function SeriesDashboard() {
     if (page > 1) setPage(prev => prev - 1)
   }
 
-  function handleFavorites() {
-    setPage(1)
-    setShowFavorites(prev => !prev)
-  }
-
   useEffect(() => {
     if (isFetched) {
       const itemsPerPage = 50
@@ -98,7 +85,7 @@ export function SeriesDashboard() {
       setHasMore(true)
       paginate(page, itemsPerPage)
     }
-  }, [search, currentCategory, isFetched, showFavorites, measure, page])
+  }, [search, currentCategory, isFetched, measure, page])
 
   const firstPage = page < 2 ? page : page - 1
   const midPage = page > 1 ? page : 2
