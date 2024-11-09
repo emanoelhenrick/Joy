@@ -27,7 +27,7 @@ export function SplashLoading() {
       setUserData(currentPlaylist.name)
       updateUrls(urls)
       queryClient.removeQueries()
-      navigate(`/dashboard/vod/${currentPlaylist.name}`)
+      navigate(`/dashboard/home/${currentPlaylist.name}`)
     }
   }, [isSuccess])
 

@@ -67,7 +67,7 @@ export function MenuBar() {
         </Avatar>
 
         <div className="flex flex-col justify-center gap-5">
-          <Button variant='ghost' className={`h-fit gap-2 ${location.pathname.includes('home') ? 'opacity-90' : 'opacity-30'}`}>
+          <Button variant='ghost' onClick={() => changeTab('home')} className={`h-fit gap-2 ${location.pathname.includes('home') ? 'opacity-90' : 'opacity-30'}`}>
             <House />
           </Button>
           <Button variant='ghost' onClick={() => changeTab('vod')} className={`h-fit gap-2 ${mediaTabs.some(tab => location.pathname.includes(tab)) ? 'opacity-90' : 'opacity-30'}`}>

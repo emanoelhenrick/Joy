@@ -5,6 +5,7 @@ import { SplashLoading } from "./splash-loading/SplashLoading";
 import { SeriesDashboard } from "./series/SeriesDashboard";
 import { LiveDashboard } from "./live/LiveDashboard";
 import { MenuBar } from "@/components/menubar/MenuBar";
+import { HomeDashboard } from "./home/HomeDashboard";
 
 export const router = createHashRouter(
   createRoutesFromElements(
@@ -18,6 +19,7 @@ export const router = createHashRouter(
         </div>
         }
       >
+        <Route path="/dashboard/home/:playlistName" Component={HomeDashboard} />
         <Route path="/dashboard/vod/:playlistName" Component={VodDashboard} />
         <Route path="/dashboard/series/:playlistName" Component={SeriesDashboard} />
         <Route path="/dashboard/live/:playlistName" Component={LiveDashboard} />

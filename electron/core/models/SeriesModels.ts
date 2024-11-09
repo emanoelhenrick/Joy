@@ -7,8 +7,9 @@ export interface SeriesProps {
   title: string
   name: string
   series_id: number
-  rating_5based: number
+  rating: string
   plot: string
+  last_modified: string
   cast: string
   director: string
   category_id: string

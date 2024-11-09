@@ -101,7 +101,7 @@ export function Initial() {
       queryClient.removeQueries()
       setSubmitted(false)
       document.body.style.overflow = 'auto';
-      navigate(`/dashboard/vod/${formValue!.name}`)
+      navigate(`/dashboard/home/${formValue!.name}`)
     }
     
   }, [isSuccess])

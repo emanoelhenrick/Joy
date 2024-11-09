@@ -25,7 +25,6 @@ export function LiveDashboard() {
   const { data, isFetched } = useQuery({ queryKey: ['livePlaylist'], queryFn: () => electronApi.getLocalLivePlaylist(playlistName!), staleTime: Infinity })
 
   const [playlist, setPlaylist] = useState<LiveProps[]>([]);
-  const [showFavorites, setShowFavorites] = useState<boolean>(false)
   const [currentCategory, setCurrentCategory] = useState('all')
   const [enoughItems, setEnoughItems] = useState(false)
   const [hasMore, setHasMore] = useState(true)

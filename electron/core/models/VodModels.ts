@@ -8,7 +8,8 @@ export interface VodProps {
   num: string | number
   name: string
   stream_id: string
-  rating_5based: number
+  rating: string
+  added: string
   plot: string
   cast: string
   director: string
