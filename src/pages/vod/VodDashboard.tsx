@@ -1,4 +1,4 @@
-import { Search } from 'lucide-react'
+import { Search, X } from 'lucide-react'
 import {
   Select,
   SelectContent,
@@ -72,7 +72,7 @@ export function VodDashboard() {
 
   useEffect(() => {
     if (isFetched) {
-      const itemsPerPage = 50
+      const itemsPerPage = 70
 
       setPages(Math.ceil(filtered!.length / itemsPerPage))
       setEnoughItems(filtered!.length < itemsPerPage)
@@ -107,7 +107,10 @@ export function VodDashboard() {
 
             <div className="flex gap-4 items-center">
               <Input className="w-48 text-sm h-fit" onChange={(e) => setSearchValue(e.target.value)} value={searchText} />
-              <Search size={20} className="mr-4 opacity-60" />
+              {searchText ?
+                <X onClick={() => setSearchValue('')} size={20} className="cursor-pointer mr-4 opacity-60" /> :
+                <Search size={20} className="mr-4 opacity-60" />
+              }
             </div>
           </div>
           {playlist.length > 0 &&

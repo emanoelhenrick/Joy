@@ -11,7 +11,7 @@ import { lazy, LegacyRef, Suspense, useEffect, useMemo, useState } from "react";
 import { useQuery } from '@tanstack/react-query'
 import { useDebounce } from 'use-debounce';
 import { useParams } from "react-router-dom";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import electronApi from "@/config/electronApi";
 import { SeriesProps } from "electron/core/models/SeriesModels";
 import { useUserData } from "@/states/useUserData";
@@ -77,7 +77,7 @@ export function SeriesDashboard() {
 
   useEffect(() => {
     if (isFetched) {
-      const itemsPerPage = 50
+      const itemsPerPage = 70
 
       setPages(Math.ceil(filtered!.length / itemsPerPage))
       setEnoughItems(filtered!.length < itemsPerPage)
@@ -112,7 +112,10 @@ export function SeriesDashboard() {
 
             <div className="flex gap-4 items-center">
               <Input className="w-48 text-sm h-fit" onChange={(e) => setSearchValue(e.target.value)} value={searchText} />
+              {searchText ?
+              <X onClick={() => setSearchValue('')} size={20} className="cursor-pointer mr-4 opacity-60" /> :
               <Search size={20} className="mr-4 opacity-60" />
+              }
             </div>
           </div>
           {playlist.length > 0 &&
