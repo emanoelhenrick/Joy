@@ -25,7 +25,7 @@ export default function PlaylistScroll({ playlist }: PlaylistScrollProps) {
     updateFavorite(streamId, 'series')
     setUpdate(prev => !prev)
   }
-  
+
   useEffect(() => {
     if (userData && userData.series) {
       const udlist = ['']
@@ -54,14 +54,14 @@ export default function PlaylistScroll({ playlist }: PlaylistScrollProps) {
       )}
         <div className={`w-full flex h-full ${selectedSeries && 'invisible'}`}>
           <div className={`flex flex-wrap h-fit gap-x-10 gap-y-8 ml-6`}>
-            <Fade duration={200}>
+            <Fade duration={100}>
               {playlist.map((series) => {
                 const isFavorite = favorites?.includes(series.series_id.toString())
 
                 return (
                   <div
-                    className="flex flex-col hover:scale-105 transition gap-3 w-fit h-fit cursor-pointer relative group"
-                    key={series.series_id}
+                    className="flex flex-col hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative group"
+                    key={series.series_id + '-' + series.num}
                   >
                     <div onClick={() => setSelectedSeries(series)}>
                       <Cover src={series.cover} title={series.name} />

@@ -6,6 +6,7 @@ export interface SeriesPlaylistProps {
 export interface SeriesProps {
   title: string
   name: string
+  num: number
   series_id: number
   rating: string
   plot: string

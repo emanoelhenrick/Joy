@@ -7,18 +7,12 @@ import { VodInfo } from "../VodInfo";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { Fade } from "react-awesome-reveal";
 import { FaStar } from "react-icons/fa";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import electronApi from "@/config/electronApi";
-import { usePlaylistUrl } from "@/states/usePlaylistUrl";
 
 interface PlaylistScrollProps {
   playlist: VodProps[]
 }
 
 export default function PlaylistScroll({ playlist }: PlaylistScrollProps) {
-  const queryClient = useQueryClient()
-  const { urls } = usePlaylistUrl()
-
   const [update, setUpdate] = useState(false)
   const [favorites, setFavorites] = useState<any>()
   const [selectedMovie, setSelectedMovie] = useState<VodProps>()
@@ -58,12 +52,12 @@ export default function PlaylistScroll({ playlist }: PlaylistScrollProps) {
       )}
       <div className={`w-full flex h-full ${selectedMovie && 'invisible'}`}>
         <div className={`flex flex-wrap h-fit gap-x-10 gap-y-8 ml-6`}>
-          <Fade duration={200}>
+          <Fade duration={100}>
             {playlist!.map((movie) => {
                 const isFavorite = favorites?.includes(movie.stream_id.toString())
 
                 return (
-                  <div className="w-fit h-fit hover:scale-105 transition cursor-pointer relative group flex flex-col gap-2" key={movie.num}>
+                  <div className="w-fit h-fit hover:scale-95 transition cursor-pointer relative group flex flex-col gap-2" key={movie.num}>
                     <div onClick={() => setSelectedMovie(movie)}>
                       <Cover src={movie.stream_icon} title={movie.name} />
                     </div>

@@ -56,12 +56,12 @@ export default function PlaylistScroll({ playlist }: PlaylistScrollProps) {
       )}
       <div className={`w-full flex h-full ${selectedLiveUrl && 'invisible'}`}>
         <div className={`flex flex-wrap h-fit gap-x-8 gap-y-8 ml-6`}>
-          <Fade duration={200}>
+          <Fade duration={100}>
           {playlist.map((live) => {
             const isFavorite = favorites?.includes(live.stream_id.toString())
             return (
               <div
-                className="flex flex-col hover:scale-105 transition bg-secondary w-56 p-4 rounded-xl gap-3 h-fit cursor-pointer relative group"
+                className="flex flex-col hover:scale-95 transition bg-secondary w-56 p-4 rounded-xl gap-3 h-fit cursor-pointer relative group"
                 key={live.stream_id}
               >
                 <div className="flex gap-2 items-center" onClick={() => setSelectLiveUrl(`${urls.getLiveStreamUrl}${live.stream_id}.m3u8`)}>
