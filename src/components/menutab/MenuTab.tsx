@@ -9,22 +9,22 @@ export function MenuTab({ playlistName }: { playlistName: string }) {
   }
 
   return (
-    <div className="flex justify-center gap-12 items-center pt-6 pb-2">
+    <div className="flex justify-center gap-4 items-center w-fit">
         <p
           onClick={() => changeTab('vod')}
-          className={`h-fit cursor-pointer transition hover:opacity-90 gap-2 ${location.pathname.includes('vod') ? 'opacity-90' : 'opacity-30'}`}
+          className={`h-fit border text-sm py-1 px-6 rounded-full cursor-pointer transition hover:opacity-90 gap-2 ${location.pathname.includes('vod') ? 'bg-foreground text-primary-foreground' : 'bg-background'}`}
           >
           Movies
         </p>
         <p
           onClick={() => changeTab('series')}
-          className={`h-fit cursor-pointer transition hover:opacity-90 gap-2 ${location.pathname.includes('series') ? 'opacity-90' : 'opacity-30'}`}
+          className={`h-fit border text-sm py-1 px-6 rounded-full cursor-pointer transition hover:opacity-90 gap-2 ${location.pathname.includes('series') ? 'bg-foreground text-primary-foreground' : 'bg-background'}`}
           >
           Series
         </p>
         <p
           onClick={() => changeTab('live')}
-          className={`h-fit cursor-pointer transition hover:opacity-90 gap-2 ${location.pathname.includes('live') ? 'opacity-90' : 'opacity-30'}`}
+          className={`h-fit border text-sm py-1 px-6 rounded-full cursor-pointer transition hover:opacity-90 gap-2 ${location.pathname.includes('live') ? 'bg-foreground text-primary-foreground' : 'bg-background'}`}
           >
           Live
         </p>

@@ -34,7 +34,7 @@ const PaginationItem = React.forwardRef<
   HTMLLIElement,
   React.ComponentProps<"li">
 >(({ className, ...props }, ref) => (
-  <li ref={ref} className={cn("cursor-pointer", className)} {...props} />
+  <li ref={ref} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className={cn("cursor-pointer", className)} {...props} />
 ))
 PaginationItem.displayName = "PaginationItem"
 
