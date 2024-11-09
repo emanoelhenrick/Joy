@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import electronApi from "@/config/electronApi";
-import { Clapperboard, Film, RotateCw, Settings, Tv } from "lucide-react";
+import { Clapperboard, Film, House, RotateCw, Search, Settings, Tv, TvMinimal } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Fade } from "react-awesome-reveal";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -8,8 +8,8 @@ import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./dialog";
 import { SettingsPage } from "@/pages/settings";
 import { usePlaylistUrl } from "@/states/usePlaylistUrl";
 import { useQueryClient } from "@tanstack/react-query";
-import { RxUpdate } from "react-icons/rx";
 import { useToast } from "@/hooks/use-toast";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export function MenuBar() {
   const queryClient = useQueryClient()
@@ -56,18 +56,29 @@ export function MenuBar() {
     getPlaylistName()
   }, [])
 
+  const mediaTabs = ['vod', 'series', 'live']
+
   return (
-    <div className="flex z-50 flex-col justify-center px-2.5 h-full gap-5 fixed">
-      <Fade cascade direction="up" triggerOnce duration={500}>
-      <Button variant='ghost' onClick={() => changeTab('vod')} className={`h-fit gap-2 ${location.pathname.includes('vod') ? 'opacity-90' : 'opacity-30'}`}>
-        <Film />
-      </Button>
-      <Button variant='ghost' onClick={() => changeTab('series')} className={`h-fit gap-2 ${location.pathname.includes('series') ? 'opacity-90' : 'opacity-30'}`}>
-        <Clapperboard />
-      </Button>
-      <Button variant='ghost' onClick={() => changeTab('live')} className={`h-fit gap-2 ${location.pathname.includes('live') ? 'opacity-90' : 'opacity-30'}`}>
-        <Tv />
-      </Button>
+    <div className="flex flex-col justify-between items-center border-r fixed px-1 py-4 h-full">
+        <Fade cascade direction="up" triggerOnce duration={500}>
+        <Avatar>
+          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+
+        <div className="flex flex-col justify-center gap-5">
+          <Button variant='ghost' className={`h-fit gap-2 ${location.pathname.includes('home') ? 'opacity-90' : 'opacity-30'}`}>
+            <House />
+          </Button>
+          <Button variant='ghost' onClick={() => changeTab('vod')} className={`h-fit gap-2 ${mediaTabs.some(tab => location.pathname.includes(tab)) ? 'opacity-90' : 'opacity-30'}`}>
+            <TvMinimal />
+          </Button>
+          <Button variant='ghost' className={`h-fit gap-2 ${location.pathname.includes('search') ? 'opacity-90' : 'opacity-30'}`}>
+            <Search />
+          </Button>
+        </div>
+      
+
       <Dialog>
         <DialogTrigger asChild>
           <Button variant='ghost' className={`h-fit gap-2 opacity-30`}>
@@ -79,10 +90,11 @@ export function MenuBar() {
           {playlistName && <SettingsPage currentPlaylist={playlistName} />}
         </DialogContent>
       </Dialog>
-      <Button variant='ghost' onClick={updateCurrentPlaylist} className={`h-fit gap-2 opacity-30`}>
+      {/* <Button variant='ghost' onClick={updateCurrentPlaylist} className={`h-fit gap-2 opacity-30`}>
         <RotateCw className={`${updating && 'animate-spin'}`} />
-      </Button>
+      </Button> */}
       </Fade>
+      
     </div>
   )
 }

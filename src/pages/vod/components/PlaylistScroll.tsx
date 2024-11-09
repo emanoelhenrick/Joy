@@ -57,22 +57,22 @@ export default function PlaylistScroll({ playlist }: PlaylistScrollProps) {
         </Dialog>
       )}
       <div className={`w-full flex h-full ${selectedMovie && 'invisible'}`}>
-        <div className={`flex flex-wrap h-fit gap-8 justify-center`}>
+        <div className={`flex flex-wrap h-fit gap-x-10 gap-y-8 ml-6`}>
           <Fade duration={200}>
             {playlist!.map((movie) => {
                 const isFavorite = favorites?.includes(movie.stream_id.toString())
 
                 return (
-                  <div className="w-fit h-fit cursor-pointer relative group flex flex-col gap-2" key={movie.num}>
+                  <div className="w-fit h-fit hover:scale-105 transition cursor-pointer relative group flex flex-col gap-2" key={movie.num}>
                     <div onClick={() => setSelectedMovie(movie)}>
-                      <Cover src={movie.stream_icon} />
+                      <Cover src={movie.stream_icon} title={movie.name} />
                     </div>
                       {isFavorite ? (
                         <FaStar onClick={() => updateRender(movie.stream_id.toString())} size={20} strokeWidth={0} className={`absolute fill-yellow-400 top-3 right-4 ${isFavorite ? 'visible' : 'invisible' }`}  />
                       ) : (
                         <FaStar onClick={() => updateRender(movie.stream_id.toString())} size={20} className={`absolute fill-primary top-3 right-4 opacity-0 group-hover:opacity-100 transition hover:scale-110`}  />
                       )}
-                    <h3 className="truncate w-36 text-sm text-muted-foreground font-bold">{movie.title || movie.name}</h3>
+                    <h3 className="truncate w-36 text-xs text-muted-foreground">{movie.title || movie.name}</h3>
                   </div>
                 )
               })}

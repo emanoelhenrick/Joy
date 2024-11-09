@@ -53,25 +53,25 @@ export default function PlaylistScroll({ playlist }: PlaylistScrollProps) {
         </Dialog>
       )}
         <div className={`w-full flex h-full ${selectedSeries && 'invisible'}`}>
-          <div className={`flex flex-wrap h-fit gap-8 justify-center`}>
+          <div className={`flex flex-wrap h-fit gap-x-10 gap-y-8 ml-6`}>
             <Fade duration={200}>
               {playlist.map((series) => {
                 const isFavorite = favorites?.includes(series.series_id.toString())
 
                 return (
                   <div
-                    className="flex flex-col gap-3 w-fit h-fit cursor-pointer relative group"
+                    className="flex flex-col hover:scale-105 transition gap-3 w-fit h-fit cursor-pointer relative group"
                     key={series.series_id}
                   >
                     <div onClick={() => setSelectedSeries(series)}>
-                      <Cover src={series.cover} />
+                      <Cover src={series.cover} title={series.name} />
                     </div>
                     {isFavorite ? (
                         <FaStar onClick={() => updateRender(series.series_id.toString())} size={20} strokeWidth={0} className={`absolute fill-yellow-400 top-3 right-4 ${isFavorite ? 'visible' : 'invisible' }`}  />
                       ) : (
                         <FaStar onClick={() => updateRender(series.series_id.toString())} size={20} className={`absolute fill-primary top-3 right-4 opacity-0 group-hover:opacity-100 transition hover:scale-110`}  />
                       )} 
-                    <h3 className="truncate w-36 text-sm text-muted-foreground font-bold">{series.title || series.name}</h3>
+                    <h3 className="truncate w-36 text-xs text-muted-foreground">{series.title || series.name}</h3>
                   </div>
                 )
               })}

@@ -7,6 +7,7 @@ import {
 import * as SelectPrimitive from "@radix-ui/react-select"
 
 import { cn } from "@/lib/utils"
+import { ChevronDown } from "lucide-react"
 
 const Select = SelectPrimitive.Root
 
@@ -21,14 +22,14 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-fit items-center justify-between text-nowrap rounded-md bg-transparent pr-3 py-2 text-lg font-bold opacity-60 shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+      "flex h-fit items-center justify-between text-nowrap rounded-md bg-transparent pr-3 py-2 text-sm opacity-50 hover:opacity-90 transition ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
       className
     )}
     {...props}
   >
     {children}
     <SelectPrimitive.Icon asChild>
-      <ChevronDownIcon className="h-4 w-4 opacity-50" />
+      <ChevronDown className="h-4 w-4" />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ))
