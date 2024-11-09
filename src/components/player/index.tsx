@@ -36,7 +36,7 @@ export function VideoPlayer({ url, type, data, currentTimeStated = 0, title }: P
   function updateMediaState() {
     if (type == 'vod') return updateVodStatus(data.id, currentTime, duration)
   }
-
+  
   function onHlsError() {
     toast({
       title: 'The format of this video is not yet supported',

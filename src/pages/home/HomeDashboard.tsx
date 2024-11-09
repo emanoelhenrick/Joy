@@ -1,14 +1,7 @@
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from "react-router-dom";
 import electronApi from '@/config/electronApi';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Cover } from "@/components/Cover";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
@@ -42,9 +35,6 @@ export function HomeDashboard() {
     }
   }, [seriesIsFetched])
 
-  console.log(seriesByRating);
-  
-
   if (vodIsFetched && seriesIsFetched) {
 
     return (
@@ -52,7 +42,7 @@ export function HomeDashboard() {
         <div className='ml-16 mb-6 mt-4'>
           <div className="ml-6 flex flex-col gap-6">
             <div>
-              <p className={`h-fit border text-sm py-1 px-6 w-fit mb-2 rounded-full transition gap-2`}>
+              <p className={`h-fit border text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
                 Recently added series
               </p>
               <ScrollArea className="w-full whitespace-nowrap rounded-md">
@@ -68,7 +58,7 @@ export function HomeDashboard() {
             </div>
 
             <div>
-              <p className={`h-fit border text-sm py-1 px-6 w-fit mb-2 rounded-full transition gap-2`}>
+              <p className={`h-fit border text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
                 Top rated series
               </p>
               <ScrollArea className="w-full whitespace-nowrap rounded-md">
@@ -84,7 +74,7 @@ export function HomeDashboard() {
             </div>
 
             <div>
-              <p className={`h-fit border text-sm py-1 px-6 w-fit mb-2 rounded-full transition gap-2`}>
+              <p className={`h-fit border text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
                 Recently added movies
               </p>
               <ScrollArea className="w-full whitespace-nowrap rounded-md">
@@ -100,7 +90,7 @@ export function HomeDashboard() {
             </div>
 
             <div>
-              <p className={`h-fit border text-sm py-1 px-6 w-fit mb-2 rounded-full transition gap-2`}>
+              <p className={`h-fit border text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
                 Top rated movies
               </p>
               <ScrollArea className="w-full whitespace-nowrap rounded-md">

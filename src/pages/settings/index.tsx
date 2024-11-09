@@ -1,7 +1,11 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import electronApi from "@/config/electronApi";
-import { useQuery } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
+import { usePlaylistUrl } from "@/states/usePlaylistUrl";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { formatDistanceToNow } from "date-fns";
 import { PlaylistInfo } from "electron/core/models/PlaylistInfo";
+import { RotateCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -9,6 +13,19 @@ export function SettingsPage({ currentPlaylist }: { currentPlaylist: string }) {
   const navigate = useNavigate()
   const [selectedPlaylist, setSelectedPlaylist] = useState<string>(currentPlaylist)
   const [playlists, setPlaylists] = useState<PlaylistInfo[]>()
+
+  const queryClient = useQueryClient()
+  const [updating, setUpdating] = useState(false)
+  const [playlistName, setPlaylistName] = useState<string>()
+  const [lastUpdated, setLastUpdated] = useState<any>()
+  const { urls } = usePlaylistUrl()
+  const { toast } = useToast()
+
+  async function getPlaylistName() {
+    const metadata = await electronApi.getMetadata()
+    setLastUpdated(metadata.playlists.find(p => p.name === metadata.currentPlaylist)!.updatedAt)
+    setPlaylistName(metadata.currentPlaylist)
+  }
 
   const { isSuccess, data  } = useQuery({ queryKey: ['metadata'], queryFn: electronApi.getMetadata })
 
@@ -31,18 +48,52 @@ export function SettingsPage({ currentPlaylist }: { currentPlaylist: string }) {
     }
   }, [selectedPlaylist])
 
+  useEffect(() => {
+    getPlaylistName()
+  }, [])
+
+  async function updateCurrentPlaylist() {
+    if (playlistName) {
+      setUpdating(true)
+      try {
+        await electronApi.authenticateUser(urls.getAuthenticateUrl)
+      } catch (error) {
+        setUpdating(false)
+        return toast({
+          title: 'The playlist could not be updated',
+          description: 'Check if the playlist data is correct.',
+          variant: "destructive"
+        })
+      }
+      await electronApi.updateVod({ playlistUrl: urls.getAllVodUrl, categoriesUrl: urls.getAllVodCategoriesUrl, name: playlistName })
+      await electronApi.updateSeries({ playlistUrl: urls.getAllSeriesUrl, categoriesUrl: urls.getAllSeriesCategoriesUrl, name: playlistName })
+      await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: playlistName })
+      await electronApi.updatedAtPlaylist(playlistName)
+      queryClient.removeQueries()
+      setUpdating(false)
+      setLastUpdated(Date.now())
+      toast({ title: 'The playlist was updated'})
+    }
+  }
+
   return (
     <div className="flex flex-col gap-1">
       <div className="flex justify-between mb-4">
         <h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-4xl">Settings</h1>
-        <Select value={selectedPlaylist} onValueChange={(value) => setSelectedPlaylist(value)}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {playlists && playlists.map(p => <SelectItem key={p.url} value={p.name}>{p.name}</SelectItem>)}
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-2">
+          <div onClick={updateCurrentPlaylist} className={`h-fit gap-2 cursor-pointer hover:opacity-70 transition flex items-center p-1`}>
+            <p className="scroll-m-20 text-sm text-muted-foreground">Last updated: {lastUpdated && formatDistanceToNow(new Date(lastUpdated))}</p>
+            <RotateCw size={15} className={`text-muted-foreground ${updating && 'animate-spin'}`} />
+          </div>
+          <Select value={selectedPlaylist} onValueChange={(value) => setSelectedPlaylist(value)}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {playlists && playlists.map(p => <SelectItem key={p.url} value={p.name}>{p.name}</SelectItem>)}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* <h3

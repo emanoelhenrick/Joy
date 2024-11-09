@@ -11,7 +11,7 @@ import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { useQuery } from '@tanstack/react-query'
 import { useDebounce } from 'use-debounce';
 import { useParams } from "react-router-dom";
-import { Search, X } from "lucide-react";
+import { LoaderCircle, Search, X } from "lucide-react";
 import electronApi from "@/config/electronApi";
 import { SeriesProps } from "electron/core/models/SeriesModels";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
@@ -22,7 +22,7 @@ const PlaylistScroll = lazy(() => import('./components/PlaylistScroll'))
 
 export function SeriesDashboard() {
   let { playlistName } = useParams();
-  const { data, isFetched } = useQuery({ queryKey: ['SeriesPlaylist'], queryFn: () => electronApi.getLocalSeriesPlaylist(playlistName!), staleTime: Infinity })
+  const { data, isFetched, isFetching } = useQuery({ queryKey: ['SeriesPlaylist'], queryFn: () => electronApi.getLocalSeriesPlaylist(playlistName!), staleTime: Infinity })
 
   const [playlist, setPlaylist] = useState<SeriesProps[]>([]);
   const [currentCategory, setCurrentCategory] = useState('all')
@@ -103,6 +103,12 @@ export function SeriesDashboard() {
                   </SelectGroup>
                 </SelectContent>
               </Select>
+              {isFetching && (
+                <div className='flex gap-1 items-center text-muted-foreground'>
+                  <LoaderCircle size={16} className={`animate-spin self-center`} />
+                  <p className='text-sm'>loading...</p>
+                </div>
+              )}
             </div>
 
             <div className="flex gap-4 items-center">
@@ -114,7 +120,7 @@ export function SeriesDashboard() {
             </div>
           </div>
           {playlist.length > 0 &&
-              <Suspense fallback={<p className="text-muted-foreground">loading...</p>}>
+              <Suspense fallback={<div className='w-full h-screen' />}>
                 <PlaylistScroll playlist={playlist} />
               </Suspense>
             }
