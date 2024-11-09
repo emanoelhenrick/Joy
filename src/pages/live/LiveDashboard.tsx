@@ -122,7 +122,7 @@ export function LiveDashboard() {
       </div>
     </div>
     <div className='flex justify-center'>
-    {!enoughItems && (
+    {(!enoughItems && playlist.length > 0) && (
         <Pagination className='mr-6 mt-4 pb-6 absolute w-fit'>
           <PaginationContent>
             <PaginationItem className={`${page < 2 && 'hidden'}`}>

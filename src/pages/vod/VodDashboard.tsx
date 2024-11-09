@@ -7,13 +7,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../components/dashboard/SelectCategories"
-import { lazy, LegacyRef, Suspense, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { useQuery } from '@tanstack/react-query'
 import { useDebounce } from 'use-debounce';
 import { useParams } from "react-router-dom";
 import electronApi from '@/config/electronApi';
 import { VodProps } from 'electron/core/models/VodModels';
-import { useMeasure } from '@react-hookz/web';
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink } from '@/components/ui/pagination';
 import { MenuTab } from '@/components/menutab/MenuTab';
@@ -29,7 +28,6 @@ export function VodDashboard() {
   const [currentCategory, setCurrentCategory] = useState('all')
   const [enoughItems, setEnoughItems] = useState(false)
   const [hasMore, setHasMore] = useState(true)
-  const [measure, ref] = useMeasure()
   const [page, setPage] = useState(1)
   const [pages, setPages] = useState(0)
 
@@ -80,13 +78,13 @@ export function VodDashboard() {
       setHasMore(true)
       paginate(page, itemsPerPage)
     }
-  }, [search, currentCategory, isFetched, measure, page])
+  }, [search, currentCategory, isFetched, page])
 
   const firstPage = page < 2 ? page : page - 1
   const midPage = page > 1 ? page : 2
 
   return (
-    <div ref={ref as unknown as LegacyRef<HTMLDivElement>} className="h-fit w-full flex flex-col">
+    <div className="h-fit w-full flex flex-col">
       <div className="flex flex-col w-full">
         <div className='ml-16 flex flex-col gap-4'>
           <div className='flex items-center justify-between ml-6 mt-4'>
@@ -121,7 +119,7 @@ export function VodDashboard() {
         </div>
       </div>
       <div className='flex justify-center'>
-      {!enoughItems && (
+      {(!enoughItems && playlist.length > 0) && (
           <Pagination className='mr-6 mt-4 pb-6 absolute w-fit'>
             <PaginationContent>
               <PaginationItem className={`${page < 2 && 'hidden'}`}>
