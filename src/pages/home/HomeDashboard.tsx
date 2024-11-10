@@ -10,6 +10,7 @@ import { SeriesInfo } from '../series/SeriesInfo';
 import { SeriesProps } from 'electron/core/models/SeriesModels';
 import { VodProps } from 'electron/core/models/VodModels';
 import { VodInfo } from '../vod/VodInfo';
+import { Bounce, Fade, Slide } from 'react-awesome-reveal';
 
 
 export function HomeDashboard() {
@@ -77,61 +78,66 @@ export function HomeDashboard() {
         <div className='ml-16 mb-6 mt-4'>
           <div className="ml-6 flex flex-col gap-6">
             <div>
-              <p className={`h-fit border text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
+              <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
                 Recently updated series
               </p>
               <ScrollArea className="w-full whitespace-nowrap rounded-md">
                 <div className="flex w-max space-x-4 pb-6 whitespace-nowrap rounded-md">
-                {seriesByDate!.map(series => {
-                  return (
-                  <div
-                    className="flex flex-col hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative group"
-                    key={series.series_id}
-                    onClick={() => setSelectedSeries(series)}
-                  >
-                    <div>
-                      <Cover src={series.cover} title={series.name} />
-                    </div>
-                    <h3 className="truncate w-36 text-xs text-muted-foreground">{series.title || series.name}</h3>
-                  </div>
-                  )
-                })}
+                  <Fade duration={100}>
+                    {seriesByDate!.map(series => {
+                      return (
+                      <div
+                        className="flex flex-col hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative group"
+                        key={series.series_id}
+                        onClick={() => setSelectedSeries(series)}
+                      >
+                        <div>
+                          <Cover src={series.cover} title={series.name} />
+                        </div>
+                        <h3 className="truncate w-36 text-xs text-muted-foreground">{series.title || series.name}</h3>
+                      </div>
+                      )
+                    })}
+                  </Fade>
                 </div>
                 <ScrollBar color="blue" orientation="horizontal" />
               </ScrollArea>
             </div>
 
             <div>
-              <p className={`h-fit border text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
+              <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
                 Top rated series
               </p>
               <ScrollArea className="w-full whitespace-nowrap rounded-md">
                 <div className="flex w-max space-x-4 pb-6 whitespace-nowrap rounded-md">
-                {seriesByRating!.map(series => {
-                  return (
-                  <div
-                    className="flex flex-col hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative group"
-                    key={series.series_id}
-                    onClick={() => setSelectedSeries(series)}
-                  >
-                    <div>
-                      <Cover src={series.cover} title={series.name} />
+                <Fade duration={100}>
+                  {seriesByRating!.map(series => {
+                    return (
+                    <div
+                      className="flex flex-col hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative group"
+                      key={series.series_id}
+                      onClick={() => setSelectedSeries(series)}
+                    >
+                      <div>
+                        <Cover src={series.cover} title={series.name} />
+                      </div>
+                      <h3 className="truncate w-36 text-xs text-muted-foreground">{series.title || series.name}</h3>
                     </div>
-                    <h3 className="truncate w-36 text-xs text-muted-foreground">{series.title || series.name}</h3>
-                  </div>
-                  )
-                })}
+                    )
+                  })}
+                </Fade>
                 </div>
                 <ScrollBar color="blue" orientation="horizontal" />
               </ScrollArea>
             </div>
 
             <div>
-              <p className={`h-fit border text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
+              <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
                 Recently added movies
               </p>
               <ScrollArea className="w-full whitespace-nowrap rounded-md">
                 <div className="flex w-max space-x-4 pb-6 whitespace-nowrap rounded-md">
+                <Fade duration={100}>
                 {vodByDate!.map(movie => {
                   return (
                   <div
@@ -146,17 +152,19 @@ export function HomeDashboard() {
                   </div>
                   )
                 })}
+                </Fade>
                 </div>
                 <ScrollBar color="blue" orientation="horizontal" />
               </ScrollArea>
             </div>
 
             <div>
-              <p className={`h-fit border text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
+              <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
                 Top rated movies
               </p>
               <ScrollArea className="w-full whitespace-nowrap rounded-md">
                 <div className="flex w-max space-x-4 pb-6 whitespace-nowrap rounded-md">
+                <Fade duration={100}>
                 {vodByRating!.map(movie => {
                   return (
                   <div
@@ -171,6 +179,7 @@ export function HomeDashboard() {
                   </div>
                   )
                 })}
+                </Fade>
                 </div>
                 <ScrollBar color="blue" orientation="horizontal" />
               </ScrollArea>

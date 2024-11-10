@@ -12,19 +12,19 @@ export function MenuTab({ playlistName }: { playlistName: string }) {
     <div className="flex justify-center gap-4 items-center w-fit">
         <p
           onClick={() => changeTab('vod')}
-          className={`h-fit border text-sm py-1 px-6 rounded-full cursor-pointer transition hover:opacity-90 gap-2 ${location.pathname.includes('vod') ? 'bg-foreground text-primary-foreground' : 'bg-background'}`}
+          className={`h-fit border text-sm py-1 px-6 rounded-full cursor-pointer transition hover:opacity-90 gap-2 ${location.pathname.includes('vod') ? 'bg-foreground text-primary-foreground' : 'bg-secondary text-muted-foreground'}`}
           >
           Movies
         </p>
         <p
           onClick={() => changeTab('series')}
-          className={`h-fit border text-sm py-1 px-6 rounded-full cursor-pointer transition hover:opacity-90 gap-2 ${location.pathname.includes('series') ? 'bg-foreground text-primary-foreground' : 'bg-background'}`}
+          className={`h-fit border text-sm py-1 px-6 rounded-full cursor-pointer transition hover:opacity-90 gap-2 ${location.pathname.includes('series') ? 'bg-foreground text-primary-foreground' : 'bg-secondary text-muted-foreground'}`}
           >
           Series
         </p>
         <p
           onClick={() => changeTab('live')}
-          className={`h-fit border text-sm py-1 px-6 rounded-full cursor-pointer transition hover:opacity-90 gap-2 ${location.pathname.includes('live') ? 'bg-foreground text-primary-foreground' : 'bg-background'}`}
+          className={`h-fit border text-sm py-1 px-6 rounded-full cursor-pointer transition hover:opacity-90 gap-2 ${location.pathname.includes('live') ? 'bg-foreground text-primary-foreground' : 'bg-secondary text-muted-foreground'}`}
           >
           Live
         </p>

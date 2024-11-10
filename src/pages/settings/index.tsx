@@ -9,7 +9,7 @@ import { RotateCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export function SettingsPage({ currentPlaylist }: { currentPlaylist: string }) {
+export function SettingsPage({ currentPlaylist, setUpdatingMenu }: { currentPlaylist: string, setUpdatingMenu: (bool: boolean) => void }) {
   const navigate = useNavigate()
   const [selectedPlaylist, setSelectedPlaylist] = useState<string>(currentPlaylist)
   const [playlists, setPlaylists] = useState<PlaylistInfo[]>()
@@ -54,6 +54,7 @@ export function SettingsPage({ currentPlaylist }: { currentPlaylist: string }) {
 
   async function updateCurrentPlaylist() {
     if (playlistName) {
+      setUpdatingMenu(true)
       setUpdating(true)
       try {
         await electronApi.authenticateUser(urls.getAuthenticateUrl)
@@ -65,12 +66,14 @@ export function SettingsPage({ currentPlaylist }: { currentPlaylist: string }) {
           variant: "destructive"
         })
       }
+      toast({ title: `Updating playlist ${playlistName}`})
       await electronApi.updateVod({ playlistUrl: urls.getAllVodUrl, categoriesUrl: urls.getAllVodCategoriesUrl, name: playlistName })
       await electronApi.updateSeries({ playlistUrl: urls.getAllSeriesUrl, categoriesUrl: urls.getAllSeriesCategoriesUrl, name: playlistName })
       await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: playlistName })
       await electronApi.updatedAtPlaylist(playlistName)
       queryClient.removeQueries()
       setUpdating(false)
+      setUpdatingMenu(false)
       setLastUpdated(Date.now())
       toast({ title: 'The playlist was updated'})
     }

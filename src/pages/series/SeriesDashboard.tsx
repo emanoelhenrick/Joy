@@ -119,11 +119,13 @@ export function SeriesDashboard() {
               }
             </div>
           </div>
-          {playlist.length > 0 &&
-              <Suspense fallback={<div className='w-full h-screen' />}>
-                <PlaylistScroll playlist={playlist} />
-              </Suspense>
-            }
+          {playlist.length > 0 ?
+            <Suspense fallback={<div className='w-full h-screen' />}>
+              <PlaylistScroll playlist={playlist} />
+            </Suspense> : (
+              search && <p className='ml-6 text-sm text-muted-foreground'>No results found</p>
+            )
+          }
         </div>
       </div>
       <div className='flex justify-center'>
