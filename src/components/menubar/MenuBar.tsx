@@ -81,20 +81,20 @@ export function MenuBar() {
       
 
       <div className="flex flex-col justify-center gap-5">
-        <Button variant='ghost' onClick={() => changeTab('home')} className={`h-fit gap-2 ${location.pathname.includes('home') ? 'opacity-90' : 'opacity-30'}`}>
+        <Button variant='ghost' onClick={() => changeTab('home')} className={`h-fit gap-2 ${location.pathname.includes('home') ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
           <House />
         </Button>
-        <Button variant='ghost' onClick={() => changeTab('vod')} className={`h-fit gap-2 ${mediaTabs.some(tab => location.pathname.includes(tab)) ? 'opacity-90' : 'opacity-30'}`}>
+        <Button variant='ghost' onClick={() => changeTab('vod')} className={`h-fit gap-2 ${mediaTabs.some(tab => location.pathname.includes(tab)) ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
           <TvMinimal />
         </Button>
-        <Button variant='ghost' className={`h-fit gap-2 ${location.pathname.includes('search') ? 'opacity-90' : 'opacity-30'}`}>
+        <Button variant='ghost' className={`h-fit gap-2 ${location.pathname.includes('search') ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
           <Search />
         </Button>
       </div>
 
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant='ghost' className={`h-fit gap-2 opacity-30`}>
+          <Button variant='ghost' className={`h-fit gap-2 text-muted-foreground opacity-50`}>
             <Settings />
           </Button>
         </DialogTrigger>
