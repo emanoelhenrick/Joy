@@ -59,7 +59,7 @@ export default function PlaylistScroll({ playlist }: PlaylistScrollProps) {
                 return (
                   <div className="w-fit h-fit hover:scale-95 transition cursor-pointer relative group flex flex-col gap-2" key={movie.num}>
                     <div onClick={() => setSelectedMovie(movie)}>
-                      <Cover src={movie.stream_icon} title={movie.name} />
+                      <Cover src={movie.stream_icon} title={movie.title || movie.name} />
                     </div>
                       {isFavorite ? (
                         <FaStar onClick={() => updateRender(movie.stream_id.toString())} size={20} strokeWidth={0} className={`absolute fill-yellow-400 top-3 right-4 ${isFavorite ? 'visible' : 'invisible' }`}  />

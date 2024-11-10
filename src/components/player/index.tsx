@@ -10,7 +10,6 @@ import { useUserData } from '@/states/useUserData';
 import { ExpandVideoButton } from '../ExpandVideoButton';
 import { useToast } from '@/hooks/use-toast';
 
-
 interface PlayerProps {
   url: string
   type: string
@@ -34,7 +33,11 @@ export function VideoPlayer({ url, type, data, currentTimeStated = 0, title }: P
   const [_isControls, setIsControls] = useState(false)
 
   function updateMediaState() {
-    if (type == 'vod') return updateVodStatus(data.id, currentTime, duration)
+    if (type == 'vod') {
+      const progress = parseFloat(((currentTime / duration) * 100).toFixed(2))
+      const watching = progress < 80
+      return updateVodStatus(data.id, currentTime, duration, watching)
+    } 
   }
   
   function onHlsError() {

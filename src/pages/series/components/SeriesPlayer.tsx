@@ -38,7 +38,9 @@ export function VideoPlayer({ info, seriesId, episodeNumStart = '1', seasonNumSt
 
   function updateMediaState() {
     if (!currentEpisode) return
-    return updateSeriesStatus(seriesId, seasonNum, currentEpisode.id, currentTime, duration)
+    const progress = parseFloat(((currentTime / duration) * 100).toFixed(2))
+    const watching = progress < 95
+    return updateSeriesStatus(seriesId, seasonNum, currentEpisode.id, currentTime, duration, watching)
   }
 
   function handleNext() {

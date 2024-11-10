@@ -46,6 +46,7 @@ export interface UserEpisodeProps {
   season: string
   currentTime: number
   duration: number
+  watching: boolean
 }
 
 export interface UserSeriesDataProps {

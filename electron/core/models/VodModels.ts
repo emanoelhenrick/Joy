@@ -45,4 +45,5 @@ export interface UserVodDataProps {
   favorite?: boolean
   currentTime?: number
   duration?: number
+  watching?: boolean
 }

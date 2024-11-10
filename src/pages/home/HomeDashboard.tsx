@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from "react-router-dom";
 import electronApi from '@/config/electronApi';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Cover } from "@/components/Cover";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { DialogContent, DialogTitle, Dialog } from '@/components/MediaInfoDialog';
@@ -10,8 +10,8 @@ import { SeriesInfo } from '../series/SeriesInfo';
 import { SeriesProps } from 'electron/core/models/SeriesModels';
 import { VodProps } from 'electron/core/models/VodModels';
 import { VodInfo } from '../vod/VodInfo';
-import { Bounce, Fade, Slide } from 'react-awesome-reveal';
-
+import { Fade } from 'react-awesome-reveal';
+import { useUserData } from '@/states/useUserData';
 
 export function HomeDashboard() {
   let { playlistName } = useParams();
@@ -19,16 +19,12 @@ export function HomeDashboard() {
   const { data: seriesData, isFetched: seriesIsFetched } = useQuery({ queryKey: ['seriesPlaylist'], queryFn: () => electronApi.getLocalSeriesPlaylist(playlistName!), staleTime: Infinity })
   const [selectedVod, setSelectedVod] = useState<VodProps | undefined>(undefined)
   const [selectedSeries, setSelectedSeries] = useState<SeriesProps | undefined>(undefined)
+  const userDataSeries = useUserData(state => state.userData.series)
+  const userDataVod = useUserData(state => state.userData.vod)
+  const [watchingTab, setWatchingTab] = useState(0)
 
   const vodByDate = useMemo(() => {
     if (vodIsFetched) return vodData!.playlist.slice(0, 25)
-  }, [vodIsFetched])
-
-  const vodByRating = useMemo(() => {
-    if (vodIsFetched) {
-      const playlist = vodData!.playlist.slice().sort((a, b) => parseInt(b.rating.toString()) - parseInt(a.rating.toString()))
-      return playlist.filter(v => parseInt(v.rating) < 10).slice(0, 25)
-    }
   }, [vodIsFetched])
 
   const seriesByDate = useMemo(() => {
@@ -37,13 +33,48 @@ export function HomeDashboard() {
       .sort((a, b) => parseInt(b.last_modified.toString()) - parseInt(a.last_modified.toString()))
       .slice(0, 25)
   }, [seriesIsFetched])
+  
+  const watchingSeries = useMemo(() => {
+    if (userDataSeries && seriesIsFetched) {
+      const udlist = ['']
+      for (const s of userDataSeries) {
+        if(s.episodes) {
+          if (s.episodes.find(e => e.watching)) udlist.push(s.id!)
+        }
+      }
 
-  const seriesByRating = useMemo(() => {
-    if (seriesIsFetched) {
-      const playlist = seriesData!.playlist.slice().sort((a, b) => parseInt(b.rating.toString()) - parseInt(a.rating.toString()))
-      return playlist.filter(s => parseInt(s.rating) < 10).slice(0, 25)
+      const series: SeriesProps[] | undefined = []
+      if (seriesData!.playlist.length > 0) {
+        seriesData!.playlist.forEach((s) => {
+          if (udlist.includes(s.series_id.toString())) {
+            series.push(s)
+          }
+        })
+        return series
+      }
+      return []
     }
-  }, [seriesIsFetched])
+  }, [userDataSeries, seriesIsFetched])
+
+  const watchingVod = useMemo(() => {
+    if (userDataVod && vodIsFetched) {
+      const udlist = ['']
+      for (const v of userDataVod) {
+        if (v.watching) udlist.push(v.id!.toString())
+      }
+
+      const vod: VodProps[] | undefined = []
+      if (vodData!.playlist.length > 0) {
+        vodData!.playlist.forEach((v) => {
+          if (udlist.includes(v.stream_id.toString())) {
+            vod.push(v)
+          }
+        })
+        return vod
+      }
+      return []
+    }
+  }, [userDataVod, vodIsFetched])
 
   if (vodIsFetched && seriesIsFetched) {
 
@@ -77,6 +108,64 @@ export function HomeDashboard() {
         )}
         <div className='ml-16 mb-6 mt-4'>
           <div className="ml-6 flex flex-col gap-6">
+          <div>
+            <div className='flex gap-2'>
+             <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
+               Continue watching
+              </p>
+              {watchingSeries!.length > 0 && (
+                <p
+                  onClick={() => setWatchingTab(0)}
+                  className={`h-fit border ${watchingTab == 0 ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'} cursor-pointer text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
+                  Series
+                </p>
+              )}
+              {watchingVod!.length > 0 && (
+                <p
+                  onClick={() => setWatchingTab(1)}
+                  className={`h-fit border ${watchingTab == 1 ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'} cursor-pointer text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
+                  Movies
+                </p>
+              )}
+            </div>
+              <ScrollArea className="w-full whitespace-nowrap rounded-md">
+                <div className="flex w-max space-x-4 pb-6 whitespace-nowrap rounded-md">
+                  <Fade duration={100}>
+                    {(watchingTab == 0 && watchingSeries) && watchingSeries!.map(series => {
+                      return (
+                      <div
+                        className="flex flex-col hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative group"
+                        key={series.series_id}
+                        onClick={() => setSelectedSeries(series)}
+                      >
+                        <div>
+                          <Cover src={series.cover} title={series.name} />
+                        </div>
+                        <h3 className="truncate w-36 text-xs text-muted-foreground">{series.title || series.name}</h3>
+                      </div>
+                      )
+                    })}
+                    {(watchingTab == 1 && watchingVod) && watchingVod!.map(movie => {
+                      return (
+                        <div
+                          className="w-fit h-fit hover:scale-105 transition cursor-pointer relative group flex flex-col gap-2"
+                          key={movie.num}
+                          onClick={() => setSelectedVod(movie)}
+                          >
+                          <div>
+                            <Cover src={movie.stream_icon} title={movie.name} />
+                          </div>
+                          <h3 className="truncate w-36 text-xs text-muted-foreground">{movie.title || movie.name}</h3>
+                        </div>
+                      )
+                    })}
+                  </Fade>
+                </div>
+                <ScrollBar color="blue" orientation="horizontal" />
+              </ScrollArea>
+            </div>
+
+
             <div>
               <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
                 Recently updated series
@@ -106,33 +195,6 @@ export function HomeDashboard() {
 
             <div>
               <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
-                Top rated series
-              </p>
-              <ScrollArea className="w-full whitespace-nowrap rounded-md">
-                <div className="flex w-max space-x-4 pb-6 whitespace-nowrap rounded-md">
-                <Fade duration={100}>
-                  {seriesByRating!.map(series => {
-                    return (
-                    <div
-                      className="flex flex-col hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative group"
-                      key={series.series_id}
-                      onClick={() => setSelectedSeries(series)}
-                    >
-                      <div>
-                        <Cover src={series.cover} title={series.name} />
-                      </div>
-                      <h3 className="truncate w-36 text-xs text-muted-foreground">{series.title || series.name}</h3>
-                    </div>
-                    )
-                  })}
-                </Fade>
-                </div>
-                <ScrollBar color="blue" orientation="horizontal" />
-              </ScrollArea>
-            </div>
-
-            <div>
-              <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
                 Recently added movies
               </p>
               <ScrollArea className="w-full whitespace-nowrap rounded-md">
@@ -145,33 +207,6 @@ export function HomeDashboard() {
                     key={movie.num}
                     onClick={() => setSelectedVod(movie)}
                     >
-                    <div>
-                      <Cover src={movie.stream_icon} title={movie.name} />
-                    </div>
-                    <h3 className="truncate w-36 text-xs text-muted-foreground">{movie.title || movie.name}</h3>
-                  </div>
-                  )
-                })}
-                </Fade>
-                </div>
-                <ScrollBar color="blue" orientation="horizontal" />
-              </ScrollArea>
-            </div>
-
-            <div>
-              <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
-                Top rated movies
-              </p>
-              <ScrollArea className="w-full whitespace-nowrap rounded-md">
-                <div className="flex w-max space-x-4 pb-6 whitespace-nowrap rounded-md">
-                <Fade duration={100}>
-                {vodByRating!.map(movie => {
-                  return (
-                  <div
-                    className="w-fit h-fit hover:scale-105 transition cursor-pointer relative group flex flex-col gap-2"
-                    key={movie.num}
-                    onClick={() => setSelectedVod(movie)}
-                  >
                     <div>
                       <Cover src={movie.stream_icon} title={movie.name} />
                     </div>

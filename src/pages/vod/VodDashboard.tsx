@@ -1,4 +1,4 @@
-import { LoaderCircle, Search, X } from 'lucide-react'
+import { Bookmark, LoaderCircle, Search, X } from 'lucide-react'
 import {
   Select,
   SelectContent,
@@ -88,7 +88,7 @@ export function VodDashboard() {
       <div className="flex flex-col w-full">
         <div className='ml-16 flex flex-col gap-4'>
           <div className='flex items-center justify-between ml-6 mt-4'>
-            <div className='flex gap-4'>
+            <div className='flex items-center gap-4'>
               <MenuTab playlistName={playlistName!} />
               <Select onValueChange={(value) => setCurrentCategory(value)} value={currentCategory}>
                 <SelectTrigger  className="w-fit gap-2">

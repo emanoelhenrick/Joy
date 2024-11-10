@@ -116,7 +116,8 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
                               <div key={ep.id} className="py-11 w-full text-lg bg-secondary opacity-40"/>
                               <FaPlay size={22} className="absolute opacity-70" />
                               {progress > 0 &&
-                                <Progress  value={progress} className="absolute bottom-0 rounded-none h-1" />}
+                              <Progress  value={progress} className="absolute bottom-0 rounded-none h-1" />
+                              }
                             </div>
                             <p className="whitespace-normal text-sm">{ep.title}</p>
                           </div>

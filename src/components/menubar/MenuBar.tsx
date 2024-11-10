@@ -35,7 +35,7 @@ export function MenuBar() {
   async function updateCurrentPlaylist(metadata: MetaProps) {
     const playlist = metadata.playlists.find(p => p.name === metadata.currentPlaylist)
     const difference = differenceInHours(Date.now(), new Date(playlist!.updatedAt!))
-    if (difference < 12) return
+    // if (difference < 12) return
     setUpdating(true)
     try {
       await electronApi.authenticateUser(urls.getAuthenticateUrl)
@@ -54,7 +54,7 @@ export function MenuBar() {
     await electronApi.updateSeries({ playlistUrl: urls.getAllSeriesUrl, categoriesUrl: urls.getAllSeriesCategoriesUrl, name: metadata.currentPlaylist })
     await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: metadata.currentPlaylist })
     await electronApi.updatedAtPlaylist(metadata.currentPlaylist)
-    queryClient.removeQueries()
+    queryClient.refetchQueries()
     setUpdating(false)
     toast({ title: 'The playlist was updated'})
   }
@@ -74,8 +74,8 @@ export function MenuBar() {
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <span className="relative flex h-3 w-3">
-            {updating && <span className="animate-ping absolute right-0 bottom-2 inline-flex h-full w-full rounded-full bg-sky-300 opacity-75" />}
-            <span className={`relative inline-flex rounded-full right-0 bottom-2 h-3 w-3 ${updating ? 'bg-sky-400' : updatingError ? 'bg-red-500' : 'bg-green-400'}`}/>
+            {updating && <span className="animate-ping absolute right-0 bottom-2 inline-flex h-full w-full rounded-full bg-blue-500 opacity-75" />}
+            <span className={`relative inline-flex rounded-full right-0 bottom-2 h-3 w-3 ${updating ? 'bg-sky-400' : updatingError ? 'bg-red-500' : 'bg-green-500'}`}/>
           </span>
         </div>
       
