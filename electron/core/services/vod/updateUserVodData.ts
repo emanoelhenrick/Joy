@@ -1,7 +1,7 @@
 import { writeAsync } from "fs-jetpack";
 import { UserVodDataProps } from "electron/core/models/VodModels";
 import { getUserData } from "../getUserData";
-import { getUserDataPath } from "electron/core/utils/paths";
+import { getUserDataPath } from "../paths";
 
 interface UpdateUserDataProps {
   userVodData: UserVodDataProps

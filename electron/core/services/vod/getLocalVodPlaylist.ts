@@ -1,6 +1,6 @@
 import { readAsync } from 'fs-jetpack';
 import { VodPlaylistProps } from '../../models/VodModels';
-import { getVodPath } from 'electron/core/utils/paths';
+import { getVodPath } from '../paths';
 
 export async function getLocalVodPlaylist(playlistName: string) {
   const VOD_PATH =  getVodPath(playlistName)

@@ -13,9 +13,9 @@ interface PlaylistUrlsProps {
 
 export interface Api {
   getMetadata: () => Promise<MetaProps>
-  updateVod: (playlistUrls: PlaylistUrlsProps) => Promise<Boolean>
-  updateSeries: (playlistUrls: PlaylistUrlsProps) => Promise<Boolean>
-  updateLive: (playlistUrls: PlaylistUrlsProps) => Promise<Boolean>
+  updateVod: (playlistUrls: PlaylistUrlsProps) => Promise<VodPlaylistProps>
+  updateSeries: (playlistUrls: PlaylistUrlsProps) => Promise<SeriesPlaylistProps>
+  updateLive: (playlistUrls: PlaylistUrlsProps) => Promise<LivePlaylistProps>
   authenticateUser: (url: string) => Promise<Boolean>
   addPlaylistToMeta: (playlistInfo: PlaylistInfo) => Promise<Boolean>
   getLocalVodPlaylist: (playlistName: string) => Promise<VodPlaylistProps>

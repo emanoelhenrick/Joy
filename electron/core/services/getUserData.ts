@@ -1,6 +1,6 @@
 import { readAsync, writeAsync } from 'fs-jetpack'
 import { UserDataProps } from '../models/UserData';
-import { getUserDataPath } from '../utils/paths';
+import { getUserDataPath } from './paths';
 
 export async function getUserData(playlistName: string): Promise<UserDataProps | undefined> {
   const USERDATA_PATH = getUserDataPath(playlistName)

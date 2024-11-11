@@ -1,4 +1,4 @@
-import { Bookmark, LoaderCircle, Search, X } from 'lucide-react'
+import { LoaderCircle, LucideCircleFadingArrowUp, Search, X } from 'lucide-react'
 import {
   Select,
   SelectContent,
@@ -8,21 +8,21 @@ import {
   SelectValue,
 } from "../../components/dashboard/SelectCategories"
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
-import { useQuery } from '@tanstack/react-query'
 import { useDebounce } from 'use-debounce';
 import { useParams } from "react-router-dom";
-import electronApi from '@/config/electronApi';
 import { VodProps } from 'electron/core/models/VodModels';
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink } from '@/components/ui/pagination';
 import { MenuTab } from '@/components/menutab/MenuTab';
 import { Input } from '@/components/dashboard/input';
+import { useVodPlaylist } from '@/states/usePlaylistData';
 
 const PlaylistScroll = lazy(() => import('./components/PlaylistScroll'))
 
 export function VodDashboard() {
   let { playlistName } = useParams();
-  const { data, isFetched, isFetching } = useQuery({ queryKey: ['vodPlaylist'], queryFn: () => electronApi.getLocalVodPlaylist(playlistName!), staleTime: Infinity })
+
+  const data = useVodPlaylist((state => state.data))
 
   const [playlist, setPlaylist] = useState<VodProps[]>([]);
   const [currentCategory, setCurrentCategory] = useState('all')
@@ -37,15 +37,13 @@ export function VodDashboard() {
   const filtered = useMemo(() => {
     setPage(1)
     if (data) {
-      if (currentCategory === 'all') return search.length > 0 ? data!.playlist!.filter(p => p.name.toLowerCase().includes(search.toLowerCase())) : data!.playlist
-      return data!.playlist!.filter(p => p.category_id === currentCategory && p.name.toLowerCase().includes(search.toLowerCase()))
+      if (currentCategory === 'all') return search.length > 0 ? data!.playlist.filter(p => p.name.toLowerCase().includes(search.toLowerCase())) : data!.playlist
+      return data!.playlist.filter(p => p.category_id === currentCategory && p.name.toLowerCase().includes(search.toLowerCase()))
     }
     
-  }, [search, isFetched, currentCategory])
+  }, [search, currentCategory, data])
 
-  const categories = useMemo(() => {
-    if (isFetched) return data!.categories
-  }, [isFetched])
+  // const categories = data!.categories
 
   function paginate(page: number, elements: number) {
     if (!filtered) return []
@@ -69,16 +67,13 @@ export function VodDashboard() {
   }
 
   useEffect(() => {
-    if (isFetched) {
-      const itemsPerPage = 70
-
-      setPages(Math.ceil(filtered!.length / itemsPerPage))
-      setEnoughItems(filtered!.length < itemsPerPage)
-      setPlaylist([])
-      setHasMore(true)
-      paginate(page, itemsPerPage)
-    }
-  }, [search, currentCategory, isFetched, page])
+    const itemsPerPage = 70
+    setPages(Math.ceil(filtered!.length / itemsPerPage))
+    setEnoughItems(filtered!.length < itemsPerPage)
+    setPlaylist([])
+    setHasMore(true)
+    paginate(page, itemsPerPage)
+  }, [search, currentCategory, page, data])
 
   const firstPage = page < 2 ? page : page - 1
   const midPage = page > 1 ? page : 2
@@ -97,23 +92,17 @@ export function VodDashboard() {
                 <SelectContent>
                   <SelectGroup>
                     <SelectItem value={'all'}>All</SelectItem>
-                    {categories && categories.map(c => <SelectItem value={c.category_id} key={c.category_id}>{c.category_name}</SelectItem>)}
+                    {data.categories && data.categories.map(c => <SelectItem value={c.category_id} key={c.category_id}>{c.category_name}</SelectItem>)}
                   </SelectGroup>
                 </SelectContent>
               </Select>
-              {isFetching && (
-                <div className='flex gap-1 items-center text-muted-foreground'>
-                  <LoaderCircle size={16} className={`animate-spin self-center`} />
-                  <p className='text-sm'>loading...</p>
-                </div>
-              )}
             </div>
 
-            <div className="flex gap-4 items-center">
-              <Input className="w-48 text-sm h-fit" onChange={(e) => setSearchValue(e.target.value)} value={searchText} />
+            <div className="flex gap-2 items-center">
+              <Input className="w-36 text-sm bg-secondary rounded-full h-fit" placeholder='search' onChange={(e) => setSearchValue(e.target.value)} value={searchText} />
               {searchText ?
-                <X onClick={() => setSearchValue('')} size={20} className="cursor-pointer mr-4 opacity-60" /> :
-                <Search size={20} className="mr-4 opacity-60" />
+                <X onClick={() => setSearchValue('')} size={20} className="text-muted-foreground cursor-pointer mr-4 opacity-60" /> :
+                <Search size={20} className="mr-4 text-muted-foreground opacity-60" />
               }
             </div>
           </div>

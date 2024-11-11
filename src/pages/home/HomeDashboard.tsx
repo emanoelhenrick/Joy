@@ -1,7 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
-import { useParams } from "react-router-dom";
-import electronApi from '@/config/electronApi';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Cover } from "@/components/Cover";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { DialogContent, DialogTitle, Dialog } from '@/components/MediaInfoDialog';
@@ -12,11 +9,12 @@ import { VodProps } from 'electron/core/models/VodModels';
 import { VodInfo } from '../vod/VodInfo';
 import { Fade } from 'react-awesome-reveal';
 import { useUserData } from '@/states/useUserData';
+import { useSeriesPlaylist, useVodPlaylist } from '@/states/usePlaylistData';
 
 export function HomeDashboard() {
-  let { playlistName } = useParams();
-  const { data: vodData, isFetched: vodIsFetched } = useQuery({ queryKey: ['vodPlaylist'], queryFn: () => electronApi.getLocalVodPlaylist(playlistName!), staleTime: Infinity })
-  const { data: seriesData, isFetched: seriesIsFetched } = useQuery({ queryKey: ['seriesPlaylist'], queryFn: () => electronApi.getLocalSeriesPlaylist(playlistName!), staleTime: Infinity })
+  const vodData = useVodPlaylist(state => state.data)
+  const seriesData = useSeriesPlaylist(state => state.data)
+
   const [selectedVod, setSelectedVod] = useState<VodProps | undefined>(undefined)
   const [selectedSeries, setSelectedSeries] = useState<SeriesProps | undefined>(undefined)
   const userDataSeries = useUserData(state => state.userData.series)
@@ -24,18 +22,22 @@ export function HomeDashboard() {
   const [watchingTab, setWatchingTab] = useState(0)
 
   const vodByDate = useMemo(() => {
-    if (vodIsFetched) return vodData!.playlist.slice(0, 25)
-  }, [vodIsFetched])
+    if (vodData) {
+      return vodData!.playlist.slice(0, 25)
+    }
+  }, [vodData])
 
   const seriesByDate = useMemo(() => {
-    if (seriesIsFetched) return seriesData!.playlist
-      .slice()
-      .sort((a, b) => parseInt(b.last_modified.toString()) - parseInt(a.last_modified.toString()))
-      .slice(0, 25)
-  }, [seriesIsFetched])
+    if (seriesData) {
+      return seriesData!.playlist
+        .slice()
+        .sort((a, b) => parseInt(b.last_modified.toString()) - parseInt(a.last_modified.toString()))
+        .slice(0, 25)
+    }
+  }, [seriesData])
   
   const watchingSeries = useMemo(() => {
-    if (userDataSeries && seriesIsFetched) {
+    if (userDataSeries && seriesData) {
       const udlist = ['']
       for (const s of userDataSeries) {
         if(s.episodes) {
@@ -54,10 +56,11 @@ export function HomeDashboard() {
       }
       return []
     }
-  }, [userDataSeries, seriesIsFetched])
+    return []
+  }, [userDataSeries, seriesData])
 
   const watchingVod = useMemo(() => {
-    if (userDataVod && vodIsFetched) {
+    if (userDataVod && vodData) {
       const udlist = ['']
       for (const v of userDataVod) {
         if (v.watching) udlist.push(v.id!.toString())
@@ -74,9 +77,10 @@ export function HomeDashboard() {
       }
       return []
     }
-  }, [userDataVod, vodIsFetched])
+    return []
+  }, [userDataVod, vodData])
 
-  if (vodIsFetched && seriesIsFetched) {
+  if (vodData && seriesData) {
 
     return (
       <div className="h-fit w-full">
@@ -108,7 +112,8 @@ export function HomeDashboard() {
         )}
         <div className='ml-16 mb-6 mt-4'>
           <div className="ml-6 flex flex-col gap-6">
-          <div>
+          {((watchingVod.length > 0) || (watchingSeries.length > 0)) && (
+            <div>
             <div className='flex gap-2'>
              <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
                Continue watching
@@ -130,11 +135,11 @@ export function HomeDashboard() {
             </div>
               <ScrollArea className="w-full whitespace-nowrap rounded-md">
                 <div className="flex w-max space-x-4 pb-6 whitespace-nowrap rounded-md">
-                  <Fade duration={100}>
+                  <Fade duration={200} cascade damping={0.09} direction='up'>
                     {(watchingTab == 0 && watchingSeries) && watchingSeries!.map(series => {
                       return (
                       <div
-                        className="flex flex-col hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative group"
+                        className="flex flex-col hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative"
                         key={series.series_id}
                         onClick={() => setSelectedSeries(series)}
                       >
@@ -148,7 +153,7 @@ export function HomeDashboard() {
                     {(watchingTab == 1 && watchingVod) && watchingVod!.map(movie => {
                       return (
                         <div
-                          className="w-fit h-fit hover:scale-105 transition cursor-pointer relative group flex flex-col gap-2"
+                          className="flex flex-col hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative"
                           key={movie.num}
                           onClick={() => setSelectedVod(movie)}
                           >
@@ -163,7 +168,8 @@ export function HomeDashboard() {
                 </div>
                 <ScrollBar color="blue" orientation="horizontal" />
               </ScrollArea>
-            </div>
+          </div>
+          )}
 
 
             <div>
@@ -172,7 +178,7 @@ export function HomeDashboard() {
               </p>
               <ScrollArea className="w-full whitespace-nowrap rounded-md">
                 <div className="flex w-max space-x-4 pb-6 whitespace-nowrap rounded-md">
-                  <Fade duration={100}>
+                  <Fade duration={200} cascade triggerOnce damping={0.09} direction='up'>
                     {seriesByDate!.map(series => {
                       return (
                       <div
@@ -199,7 +205,7 @@ export function HomeDashboard() {
               </p>
               <ScrollArea className="w-full whitespace-nowrap rounded-md">
                 <div className="flex w-max space-x-4 pb-6 whitespace-nowrap rounded-md">
-                <Fade duration={100}>
+                <Fade duration={200} cascade triggerOnce damping={0.09} direction='up'>
                 {vodByDate!.map(movie => {
                   return (
                   <div

@@ -1,17 +1,17 @@
 import require$$3$1, { app as app$1, ipcMain, BrowserWindow } from "electron";
 import { fileURLToPath } from "node:url";
-import path$5 from "node:path";
+import path$4 from "node:path";
 import require$$1$1, { TextEncoder as TextEncoder$1 } from "util";
-import path$4 from "path";
+import require$$0$2 from "path";
 import require$$0$1 from "fs";
-import require$$0$2 from "crypto";
+import require$$0$3 from "crypto";
 import require$$1 from "os";
 import stream, { Readable } from "stream";
 import require$$3 from "http";
 import require$$4 from "https";
-import require$$0$3 from "url";
+import require$$0$4 from "url";
 import require$$4$1 from "assert";
-import require$$0$4 from "tty";
+import require$$0$5 from "tty";
 import zlib from "zlib";
 import { EventEmitter } from "events";
 import require$$1$2 from "child_process";
@@ -214,7 +214,7 @@ const removeAsync = (path2) => {
 remove$3.validateInput = validateInput$f;
 remove$3.sync = removeSync;
 remove$3.async = removeAsync;
-const pathUtil$b = path$4;
+const pathUtil$b = require$$0$2;
 const fs$e = fs_1;
 const modeUtil$1 = mode;
 const validate$e = validate$g;
@@ -391,7 +391,7 @@ dir$6.sync = dirSync;
 dir$6.createSync = createBrandNewDirectorySync;
 dir$6.async = dirAsync;
 dir$6.createAsync = createBrandNewDirectoryAsync;
-const pathUtil$a = path$4;
+const pathUtil$a = require$$0$2;
 const fs$d = fs_1;
 const validate$d = validate$g;
 const dir$5 = dir$6;
@@ -668,8 +668,8 @@ file$1.async = fileAsync;
 var find$1 = {};
 var tree_walker = {};
 var inspect$5 = {};
-const crypto$2 = require$$0$2;
-const pathUtil$9 = path$4;
+const crypto$2 = require$$0$3;
+const pathUtil$9 = require$$0$2;
 const fs$a = fs_1;
 const validate$a = validate$g;
 const supportedChecksumAlgorithms = ["md5", "sha1", "sha256", "sha512"];
@@ -843,7 +843,7 @@ list$1.validateInput = validateInput$9;
 list$1.sync = listSync;
 list$1.async = listAsync;
 const fs$8 = require$$0$1;
-const pathUtil$8 = path$4;
+const pathUtil$8 = require$$0$2;
 const inspect$4 = inspect$5;
 const fileType = (dirent) => {
   if (dirent.isDirectory()) {
@@ -1846,7 +1846,7 @@ matcher$2.create = (basePath, patterns, ignoreCase) => {
   };
   return performMatch;
 };
-const pathUtil$7 = path$4;
+const pathUtil$7 = require$$0$2;
 const treeWalker$2 = tree_walker;
 const inspect$3 = inspect$5;
 const matcher$1 = matcher$2;
@@ -2024,8 +2024,8 @@ find$1.validateInput = validateInput$8;
 find$1.sync = findSyncInit;
 find$1.async = findAsyncInit;
 var inspect_tree = {};
-const crypto$1 = require$$0$2;
-const pathUtil$6 = path$4;
+const crypto$1 = require$$0$3;
+const pathUtil$6 = require$$0$2;
 const inspect$2 = inspect$5;
 const validate$7 = validate$g;
 const treeWalker$1 = tree_walker;
@@ -2216,7 +2216,7 @@ const existsAsync = (path2) => {
 exists$3.validateInput = validateInput$6;
 exists$3.sync = existsSync;
 exists$3.async = existsAsync;
-const pathUtil$5 = path$4;
+const pathUtil$5 = require$$0$2;
 const fs$6 = fs_1;
 const dir$4 = dir$6;
 const exists$2 = exists$3;
@@ -2477,7 +2477,7 @@ copy$2.validateInput = validateInput$5;
 copy$2.sync = copySync;
 copy$2.async = copyAsync;
 var move$2 = {};
-const pathUtil$4 = path$4;
+const pathUtil$4 = require$$0$2;
 const fs$5 = fs_1;
 const validate$4 = validate$g;
 const copy$1 = copy$2;
@@ -2669,7 +2669,7 @@ read$1.validateInput = validateInput$3;
 read$1.sync = readSync;
 read$1.async = readAsync;
 var rename$1 = {};
-const pathUtil$3 = path$4;
+const pathUtil$3 = require$$0$2;
 const move$1 = move$2;
 const validate$2 = validate$g;
 const validateInput$2 = (methodName, path2, newName, options) => {
@@ -2697,7 +2697,7 @@ rename$1.validateInput = validateInput$2;
 rename$1.sync = renameSync;
 rename$1.async = renameAsync;
 var symlink$1 = {};
-const pathUtil$2 = path$4;
+const pathUtil$2 = require$$0$2;
 const fs$3 = fs_1;
 const validate$1 = validate$g;
 const dir$2 = dir$6;
@@ -2739,9 +2739,9 @@ const fs$2 = require$$0$1;
 streams$1.createWriteStream = fs$2.createWriteStream;
 streams$1.createReadStream = fs$2.createReadStream;
 var tmp_dir = {};
-const pathUtil$1 = path$4;
+const pathUtil$1 = require$$0$2;
 const os = require$$1;
-const crypto = require$$0$2;
+const crypto = require$$0$3;
 const dir$1 = dir$6;
 const fs$1 = fs_1;
 const validate = validate$g;
@@ -2819,7 +2819,7 @@ tmp_dir.validateInput = validateInput;
 tmp_dir.sync = tmpDirSync;
 tmp_dir.async = tmpDirAsync;
 const util$3 = require$$1$1;
-const pathUtil = path$4;
+const pathUtil = require$$0$2;
 const append = append$1;
 const dir = dir$6;
 const file = file$1;
@@ -3034,17 +3034,21 @@ const jetpackContext = (cwdPath) => {
 var jetpack$1 = jetpackContext;
 const jetpack = jetpack$1;
 var main = jetpack();
+const SessionDataDir = app$1.getPath("sessionData");
+const PLAYLIST_DIR = require$$0$2.join(SessionDataDir, "playlists");
+const META_PATH = require$$0$2.join(PLAYLIST_DIR, "meta.json");
+const getUserDataPath = (playlistName) => require$$0$2.join(SessionDataDir, `playlists/${playlistName}/userdata.json`);
+const getVodPath = (playlistName) => require$$0$2.join(SessionDataDir, `playlists/${playlistName}/vod.json`);
+const getSeriesPath = (playlistName) => require$$0$2.join(SessionDataDir, `playlists/${playlistName}/series.json`);
+const getLivePath = (playlistName) => require$$0$2.join(SessionDataDir, `playlists/${playlistName}/live.json`);
 async function getMetadata() {
-  const SessionDataDir = app$1.getPath("sessionData");
-  const PLAYLIST_DIR = path$4.join(SessionDataDir, "playlists");
-  const META_PATH = path$4.join(PLAYLIST_DIR, "meta.json");
   const metadata = await main.readAsync(META_PATH, "json");
   if (!metadata) {
     const newMeta = { currentPlaylist: "", playlists: [] };
     await main.writeAsync(META_PATH, newMeta);
-    return new Promise((resolve) => resolve(newMeta));
+    return newMeta;
   }
-  return new Promise((resolve) => resolve(metadata));
+  return metadata;
 }
 function bind(fn, thisArg) {
   return function wrap2() {
@@ -14466,7 +14470,7 @@ var mimeDb = require$$0;
  */
 (function(exports) {
   var db = mimeDb;
-  var extname = path$4.extname;
+  var extname = require$$0$2.extname;
   var EXTRACT_TYPE_REGEXP = /^\s*([^;\s]*)(?:;|\s|$)/;
   var TEXT_TYPE_REGEXP = /^text\//i;
   exports.charset = charset;
@@ -14702,10 +14706,10 @@ var populate$1 = function(dst, src2) {
 };
 var CombinedStream = combined_stream;
 var util = require$$1$1;
-var path$1 = path$4;
+var path$1 = require$$0$2;
 var http$1 = require$$3;
 var https$1 = require$$4;
-var parseUrl$2 = require$$0$3.parse;
+var parseUrl$2 = require$$0$4.parse;
 var fs = require$$0$1;
 var Stream = stream.Stream;
 var mime = mimeTypes;
@@ -15238,7 +15242,7 @@ const transitionalDefaults = {
   forcedJSONParsing: true,
   clarifyTimeoutError: false
 };
-const URLSearchParams = require$$0$3.URLSearchParams;
+const URLSearchParams = require$$0$4.URLSearchParams;
 const platform$1 = {
   isNode: true,
   classes: {
@@ -15743,7 +15747,7 @@ function buildFullPath(baseURL, requestedURL) {
   }
   return requestedURL;
 }
-var parseUrl$1 = require$$0$3.parse;
+var parseUrl$1 = require$$0$4.parse;
 var DEFAULT_PORTS = {
   ftp: 21,
   gopher: 70,
@@ -16282,7 +16286,7 @@ function requireSupportsColor() {
   if (hasRequiredSupportsColor) return supportsColor_1;
   hasRequiredSupportsColor = 1;
   const os2 = require$$1;
-  const tty = require$$0$4;
+  const tty = require$$0$5;
   const hasFlag2 = requireHasFlag();
   const { env } = process;
   let forceColor;
@@ -16383,7 +16387,7 @@ function requireNode$1() {
   if (hasRequiredNode$1) return node$1.exports;
   hasRequiredNode$1 = 1;
   (function(module, exports) {
-    const tty = require$$0$4;
+    const tty = require$$0$5;
     const util2 = require$$1$1;
     exports.init = init;
     exports.log = log;
@@ -16579,7 +16583,7 @@ var debug_1 = function() {
   }
   debug$3.apply(null, arguments);
 };
-var url = require$$0$3;
+var url = require$$0$4;
 var URL$1 = url.URL;
 var http = require$$3;
 var https = require$$4;
@@ -19017,38 +19021,23 @@ axios.default = axios;
 async function updateVod({ playlistUrl, categoriesUrl, name }) {
   const playlistResponse = await axios.get(playlistUrl);
   const categoriesResponse = await axios.get(categoriesUrl);
-  const data = {
-    playlist: playlistResponse.data,
-    categories: categoriesResponse.data
-  };
-  const SessionDataDir = app$1.getPath("sessionData");
-  const VOD_PATH = path$4.join(SessionDataDir, `playlists/${name}/vod.json`);
-  await main.writeAsync(VOD_PATH, data);
-  return new Promise((resolve) => resolve(true));
+  const data = { playlist: playlistResponse.data, categories: categoriesResponse.data };
+  await main.writeAsync(getVodPath(name), data);
+  return data;
 }
 async function updateSeries({ playlistUrl, categoriesUrl, name }) {
   const playlistResponse = await axios.get(playlistUrl);
   const categoriesResponse = await axios.get(categoriesUrl);
-  const data = {
-    playlist: playlistResponse.data,
-    categories: categoriesResponse.data
-  };
-  const SessionDataDir = app$1.getPath("sessionData");
-  const SERIES_PATH = path$4.join(SessionDataDir, `playlists/${name}/series.json`);
-  await main.writeAsync(SERIES_PATH, data);
-  return new Promise((resolve) => resolve(true));
+  const data = { playlist: playlistResponse.data, categories: categoriesResponse.data };
+  await main.writeAsync(getSeriesPath(name), data);
+  return data;
 }
 async function updateLive({ playlistUrl, categoriesUrl, name }) {
   const playlistResponse = await axios.get(playlistUrl);
   const categoriesResponse = await axios.get(categoriesUrl);
-  const data = {
-    playlist: playlistResponse.data,
-    categories: categoriesResponse.data
-  };
-  const SessionDataDir = app$1.getPath("sessionData");
-  const LIVE_PATH = path$4.join(SessionDataDir, `playlists/${name}/live.json`);
-  await main.writeAsync(LIVE_PATH, data);
-  return new Promise((resolve) => resolve(true));
+  const data = { playlist: playlistResponse.data, categories: categoriesResponse.data };
+  await main.writeAsync(getLivePath(name), data);
+  return data;
 }
 async function authenticateUser(url2) {
   const res = await axios.get(url2);
@@ -19056,52 +19045,34 @@ async function authenticateUser(url2) {
   return false;
 }
 async function addPlaylistToMeta(playlistInfo) {
-  try {
-    const SessionDataDir = app$1.getPath("sessionData");
-    const PLAYLIST_DIR = path$4.join(SessionDataDir, "playlists");
-    const META_PATH = path$4.join(PLAYLIST_DIR, "meta.json");
-    const metadata = await main.readAsync(META_PATH, "json");
-    if (metadata.playlists) {
-      for (const playlist of metadata.playlists) {
-        if (playlist.name == playlistInfo.name) return false;
-      }
-      metadata.playlists.push(playlistInfo);
-    } else {
-      metadata.playlists = [playlistInfo];
+  const metadata = await main.readAsync(META_PATH, "json");
+  if (metadata.playlists) {
+    for (const playlist of metadata.playlists) {
+      if (playlist.name == playlistInfo.name) return false;
     }
-    metadata.currentPlaylist = playlistInfo.name;
-    await main.writeAsync(META_PATH, metadata);
-    return true;
-  } catch (error) {
-    console.log(error);
-    return false;
+    metadata.playlists.push(playlistInfo);
+  } else {
+    metadata.playlists = [playlistInfo];
   }
+  metadata.currentPlaylist = playlistInfo.name;
+  return await main.writeAsync(META_PATH, metadata);
 }
 async function getLocalVodPlaylist(playlistName) {
-  const SessionDataDir = app$1.getPath("sessionData");
-  const VOD_PATH = path$4.join(SessionDataDir, `playlists/${playlistName}/vod.json`);
+  const VOD_PATH = getVodPath(playlistName);
   const VodPlaylist = await main.readAsync(VOD_PATH, "json");
   return VodPlaylist;
 }
 async function getLocalSeriesPlaylist(playlistName) {
-  const SessionDataDir = app$1.getPath("sessionData");
-  const SERIES_PATH = path$4.join(SessionDataDir, `playlists/${playlistName}/series.json`);
-  const SeriesPlaylist = await main.readAsync(SERIES_PATH, "json");
+  const SeriesPlaylist = await main.readAsync(getSeriesPath(playlistName), "json");
   return SeriesPlaylist;
 }
 async function getLocalLivePlaylist(playlistName) {
-  const SessionDataDir = app$1.getPath("sessionData");
-  const LIVE_PATH = path$4.join(SessionDataDir, `playlists/${playlistName}/live.json`);
-  const LivePlaylist = await main.readAsync(LIVE_PATH, "json");
+  const LivePlaylist = await main.readAsync(getLivePath(playlistName), "json");
   return LivePlaylist;
 }
 async function getPlaylistInfo(playlistName) {
-  const SessionDataDir = app$1.getPath("sessionData");
-  const PLAYLIST_DIR = path$4.join(SessionDataDir, "playlists");
-  const META_PATH = path$4.join(PLAYLIST_DIR, "meta.json");
   const meta = await main.readAsync(META_PATH, "json");
-  const playlist = meta.playlists.find((p) => p.name == playlistName);
-  return playlist;
+  return meta.playlists.find((p) => p.name == playlistName);
 }
 async function getVodInfo(url2) {
   if (!url2) return;
@@ -19116,9 +19087,8 @@ async function getSerieInfo(url2) {
   return res.data;
 }
 async function getUserData(playlistName) {
-  const SessionDataDir = app$1.getPath("sessionData");
-  const USERDATA_PATH = path$4.join(SessionDataDir, `playlists/${playlistName}/userdata.json`);
-  let userData = await main.readAsync(USERDATA_PATH, "json");
+  const USERDATA_PATH = getUserDataPath(playlistName);
+  let userData = await main.readAsync(getUserDataPath(playlistName), "json");
   if (!userData) {
     userData = { vod: [], series: [], live: [] };
     await main.writeAsync(USERDATA_PATH, userData);
@@ -19127,15 +19097,11 @@ async function getUserData(playlistName) {
 }
 async function updateUserData(data) {
   const { currentPlaylist } = await getMetadata();
-  const SessionDataDir = app$1.getPath("sessionData");
-  const USERDATA_PATH = path$5.join(SessionDataDir, `playlists/${currentPlaylist}/userdata.json`);
+  const USERDATA_PATH = getUserDataPath(currentPlaylist);
   await main.writeAsync(USERDATA_PATH, data);
-  return new Promise((resolve) => resolve(data));
+  return data;
 }
 async function changeCurrentPlaylist(playlistName) {
-  const SessionDataDir = app$1.getPath("sessionData");
-  const PLAYLIST_DIR = path$4.join(SessionDataDir, "playlists");
-  const META_PATH = path$4.join(PLAYLIST_DIR, "meta.json");
   const metadata = await main.readAsync(META_PATH, "json");
   const exists2 = metadata.playlists.find((p) => p.name == playlistName);
   if (!exists2) return false;
@@ -19144,9 +19110,6 @@ async function changeCurrentPlaylist(playlistName) {
   return true;
 }
 async function updatedAtPlaylist(playlistName) {
-  const SessionDataDir = app$1.getPath("sessionData");
-  const PLAYLIST_DIR = path$4.join(SessionDataDir, "playlists");
-  const META_PATH = path$4.join(PLAYLIST_DIR, "meta.json");
   const meta = await main.readAsync(META_PATH, "json");
   const updated = meta.playlists.map((p) => {
     if (p.name == playlistName) {
@@ -19156,8 +19119,7 @@ async function updatedAtPlaylist(playlistName) {
     return p;
   });
   meta.playlists = updated;
-  await main.writeAsync(META_PATH, meta);
-  return new Promise((resolve) => resolve(true));
+  return await main.writeAsync(META_PATH, meta);
 }
 function CoreControllers() {
   ipcMain.handle("get-metadata", getMetadata);
@@ -19484,7 +19446,7 @@ function requireNode() {
   if (hasRequiredNode) return node.exports;
   hasRequiredNode = 1;
   (function(module, exports) {
-    var tty = require$$0$4;
+    var tty = require$$0$5;
     var util2 = require$$1$1;
     exports = module.exports = requireDebug();
     exports.init = init;
@@ -19607,7 +19569,7 @@ if (typeof process !== "undefined" && process.type === "renderer") {
   src.exports = requireNode();
 }
 var srcExports = src.exports;
-var path = path$4;
+var path = require$$0$2;
 var spawn = require$$1$2.spawn;
 var debug = srcExports("electron-squirrel-startup");
 var app = require$$3$1.app;
@@ -19640,19 +19602,19 @@ var check = function() {
 };
 var electronSquirrelStartup = check();
 const started = /* @__PURE__ */ getDefaultExportFromCjs(electronSquirrelStartup);
-const __dirname = path$5.dirname(fileURLToPath(import.meta.url));
-process.env.APP_ROOT = path$5.join(__dirname, "..");
+const __dirname = path$4.dirname(fileURLToPath(import.meta.url));
+process.env.APP_ROOT = path$4.join(__dirname, "..");
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
-const MAIN_DIST = path$5.join(process.env.APP_ROOT, "dist-electron");
-const RENDERER_DIST = path$5.join(process.env.APP_ROOT, "dist");
-process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path$5.join(process.env.APP_ROOT, "public") : RENDERER_DIST;
+const MAIN_DIST = path$4.join(process.env.APP_ROOT, "dist-electron");
+const RENDERER_DIST = path$4.join(process.env.APP_ROOT, "dist");
+process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path$4.join(process.env.APP_ROOT, "public") : RENDERER_DIST;
 let win;
 if (started) app$1.quit();
 function createWindow() {
   win = new BrowserWindow({
-    icon: path$5.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
+    icon: path$4.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {
-      preload: path$5.join(__dirname, "preload.mjs"),
+      preload: path$4.join(__dirname, "preload.mjs"),
       nodeIntegration: false,
       contextIsolation: true,
       webSecurity: false
@@ -19665,7 +19627,7 @@ function createWindow() {
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);
   } else {
-    win.loadFile(path$5.join(RENDERER_DIST, "index.html"));
+    win.loadFile(path$4.join(RENDERER_DIST, "index.html"));
   }
   win.once("ready-to-show", () => {
     win == null ? void 0 : win.maximize();

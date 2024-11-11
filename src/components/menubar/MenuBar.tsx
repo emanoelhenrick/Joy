@@ -12,6 +12,7 @@ import { usePlaylistUrl } from "@/states/usePlaylistUrl";
 import { toast } from "@/hooks/use-toast";
 import { MetaProps } from "electron/core/models/MetaProps";
 import { differenceInHours } from "date-fns";
+import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from "@/states/usePlaylistData";
 
 export function MenuBar() {
   const [playlistName, setPlaylistName] = useState<string>()
@@ -21,6 +22,10 @@ export function MenuBar() {
   const { urls } = usePlaylistUrl()
   const navigate = useNavigate();
   const location = useLocation()
+
+  const updateVodPlaylistState = useVodPlaylist(state => state.update)
+  const updateSeriesPlaylistState = useSeriesPlaylist(state => state.update)
+  const updateLivePlaylistState = useLivePlaylist(state => state.update)
 
   function changeTab(tab: string) {
     navigate(`/dashboard/${tab}/${playlistName}`)
@@ -50,11 +55,15 @@ export function MenuBar() {
     }
     setUpdatingError(false)
     toast({ title: `Updating playlist ${metadata.currentPlaylist}`})
-    await electronApi.updateVod({ playlistUrl: urls.getAllVodUrl, categoriesUrl: urls.getAllVodCategoriesUrl, name: metadata.currentPlaylist })
-    await electronApi.updateSeries({ playlistUrl: urls.getAllSeriesUrl, categoriesUrl: urls.getAllSeriesCategoriesUrl, name: metadata.currentPlaylist })
-    await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: metadata.currentPlaylist })
+    const updatedVod = await electronApi.updateVod({ playlistUrl: urls.getAllVodUrl, categoriesUrl: urls.getAllVodCategoriesUrl, name: metadata.currentPlaylist })
+    const updatedSeries = await electronApi.updateSeries({ playlistUrl: urls.getAllSeriesUrl, categoriesUrl: urls.getAllSeriesCategoriesUrl, name: metadata.currentPlaylist })
+    const updatedLive = await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: metadata.currentPlaylist })
     await electronApi.updatedAtPlaylist(metadata.currentPlaylist)
-    queryClient.refetchQueries()
+
+    updateVodPlaylistState(updatedVod)
+    updateSeriesPlaylistState(updatedSeries)
+    updateLivePlaylistState(updatedLive)
+    
     setUpdating(false)
     toast({ title: 'The playlist was updated'})
   }

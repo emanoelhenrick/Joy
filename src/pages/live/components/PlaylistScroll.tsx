@@ -56,7 +56,7 @@ export default function PlaylistScroll({ playlist }: PlaylistScrollProps) {
       )}
       <div className={`w-full flex h-full ${selectedLiveUrl && 'invisible'}`}>
         <div className={`flex flex-wrap h-fit gap-x-8 gap-y-8 ml-6`}>
-          <Fade duration={100}>
+          <Fade direction="up" triggerOnce duration={200}>
           {playlist.map((live) => {
             const isFavorite = favorites?.includes(live.stream_id.toString())
             return (
