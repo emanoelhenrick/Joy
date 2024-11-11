@@ -47,8 +47,8 @@ export function HomeDashboard() {
   
   const userSeries = useMemo(() => {
     if (userDataSeries && seriesData) {
-      const watchingList = ['']
-      const favoritesList = ['']
+      const watchingList: string[] = []
+      const favoritesList: string[] = []
       for (const s of userDataSeries) {
         if(s.episodes) {
           if (s.episodes.find(e => e.watching)) watchingList.push(s.id!)
@@ -64,7 +64,9 @@ export function HomeDashboard() {
       const watchingSeries: SeriesProps[] | undefined = []
       if (seriesData!.playlist.length > 0) {
         seriesData!.playlist.forEach((s) => {
-          const series = userDataSeries.find(ser => s.series_id.toString() == ser.id!.toString())
+          const series = userDataSeries.find(ser => {
+            return (s.series_id.toString() == ser.id!.toString()) && watchingList.includes(ser.id!)
+          })
           if (series) {
             watchingSeries.push({ ...s, updatedAt: series.updatedAt })
           }
@@ -87,8 +89,8 @@ export function HomeDashboard() {
 
   const userVod = useMemo(() => {
     if (userDataVod && vodData) {
-      const watchingList = ['']
-      const favoritesList = ['']
+      const watchingList: string[] = []
+      const favoritesList: string[] = []
       for (const v of userDataVod) {
         if (v.watching) watchingList.push(v.id!.toString())
       }
@@ -102,7 +104,9 @@ export function HomeDashboard() {
       const watchingVod: VodProps[] | undefined = []
       if (vodData!.playlist.length > 0) {
         vodData!.playlist.forEach((v) => {
-          const vod = userDataVod.find(vd => v.stream_id.toString() == vd.id!.toString())
+          const vod = userDataVod.find(vd => {
+            return (v.stream_id.toString() == vd.id!.toString()) && watchingList.includes(vd.id!)
+          })
           if (vod) {
             watchingVod.push({ ...v, updatedAt: vod.updatedAt })
           }

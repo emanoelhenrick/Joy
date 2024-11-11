@@ -23,9 +23,6 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
     return setWatchingTab(0)
   }, [isSeries, isVod])
 
-  console.log(watchingSeries);
-  
-
   return ((watchingVod.length > 0) || (watchingSeries.length > 0)) && (
     <div>
     <div className='flex gap-2'>

@@ -35,7 +35,7 @@ export function VideoPlayer({ url, type, data, currentTimeStated = 0, title }: P
   function updateMediaState() {
     if (type == 'vod') {
       const progress = parseFloat(((currentTime / duration) * 100).toFixed(2))
-      const watching = progress < 80
+      const watching = progress < 95
       return updateVodStatus(data.id, currentTime, duration, watching)
     } 
   }
