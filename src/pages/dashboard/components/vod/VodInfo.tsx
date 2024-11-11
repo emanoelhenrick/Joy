@@ -40,12 +40,12 @@ export function VodInfo({ streamId, title, cover }: Props) {
       <div className="flex items-center gap-6 absolute h-fit max-w-6xl rounded-xl p-8 xl:scale-90 2xl:scale-100">
           {isSuccess ? (
             <div className="relative w-full max-w-72">
-              <div className="items-center overflow-hidden rounded-xl justify-center transition flex hover:scale-95">
+              <div className="transition flex hover:scale-95">
                 {extensions.includes(data!.movie_data.container_extension) ? (
-                  <>
-                    <img onClick={() => setIsDialog(true)} className="shadow-xl cursor-pointer" src={cover!}/>
+                  <div className="items-center justify-center cursor-pointer flex" onClick={() => setIsDialog(true)}>
+                    <img className="shadow-xl rounded-xl" src={cover!}/>
                     <FaPlay className="absolute" size={50} />
-                  </>
+                  </div>
                 ) : (
                   <>
                     <div className="bg-black w-full rounded-xl opacity-40 h-full absolute" />

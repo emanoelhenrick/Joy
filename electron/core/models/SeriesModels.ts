@@ -15,6 +15,7 @@ export interface SeriesProps {
   director: string
   category_id: string
   cover: string
+  updatedAt?: number
 }
 
 export interface EpisodeProps {
@@ -54,4 +55,5 @@ export interface UserSeriesDataProps {
   id?: string
   favorite?: boolean
   episodes?: UserEpisodeProps[]
+  updatedAt?: number
 }

@@ -59,19 +59,19 @@ export const useUserData = create<UserDataState>((set, get) => ({
   updateVodStatus: (id: string, currentTime: number, duration: number, watching: boolean) => {
     set(prev => {
       if (!prev.userData.vod) {
-        prev.userData.vod = [{ id, currentTime, duration, favorite: false }]
+        prev.userData.vod = [{ id, currentTime, duration, favorite: false, updatedAt: Date.now() }]
         return prev
       }
 
       const vod = prev.userData.vod.find(v => v.id == id)
       if (!vod) {
-        prev.userData.vod.push({ id, currentTime, duration, favorite: false, watching })
+        prev.userData.vod.push({ id, currentTime, duration, favorite: false, watching, updatedAt: Date.now() })
         return prev
       }
 
       const updated = prev.userData.vod.map(v => {
         if (v.id == id) {
-          return {...v, currentTime, duration, watching}
+          return {...v, currentTime, duration, watching, updatedAt: Date.now()}
         }
         return v
       })
@@ -85,17 +85,19 @@ export const useUserData = create<UserDataState>((set, get) => ({
     let prevSeries = get().userData.series
     const calculateSeries = () => {
       if (!prevSeries) {
-        return [{ id, favorite: false, episodes: [{ season, episodeId, currentTime, duration, watching }] }]
+        return [{ id, updatedAt: Date.now(), favorite: false, episodes: [{ season, episodeId, currentTime, duration, watching }] }]
       }
 
       const series = prevSeries.find(s => s.id == id)
       if (!series) {
-        prevSeries.push({ id, favorite: false, episodes: [{ season, episodeId, currentTime, duration, watching }] })
+        prevSeries.push({ id, updatedAt: Date.now(), favorite: false, episodes: [{ season, episodeId, currentTime, duration, watching }] })
         return prevSeries
       }
 
       const updated = prevSeries.map(s => {
         if (s.id == id) {
+          s.updatedAt = Date.now()
+
           if (!s.episodes) {
             s.episodes = [{ season, episodeId, currentTime, duration, watching }]
           }
@@ -107,7 +109,7 @@ export const useUserData = create<UserDataState>((set, get) => ({
 
           const updated = s.episodes.map(e => {
             if ((e.episodeId == episodeId) && (e.season == season)) {
-              return {...e, currentTime, duration, watching}
+              return {...e, currentTime, duration, watching }
             }
             return e
           })

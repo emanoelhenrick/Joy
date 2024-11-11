@@ -22,6 +22,14 @@ export function HomeDashboard() {
   const userDataSeries = useUserData(state => state.userData.series)
   const userDataVod = useUserData(state => state.userData.vod)
 
+  const updateFavorite = useUserData(state => state.updateFavorite)
+  const [_update, setUpdate] = useState(false)
+  
+  async function updateRender(streamId: string, type: string) {
+    updateFavorite(streamId, type)
+    setUpdate(prev => !prev)
+  }
+
   const vodByDate = useMemo(() => {
     if (vodData) {
       return vodData!.playlist.slice(0, 25)
@@ -56,8 +64,9 @@ export function HomeDashboard() {
       const watchingSeries: SeriesProps[] | undefined = []
       if (seriesData!.playlist.length > 0) {
         seriesData!.playlist.forEach((s) => {
-          if (watchingList.includes(s.series_id.toString())) {
-            watchingSeries.push(s)
+          const series = userDataSeries.find(ser => s.series_id.toString() == ser.id!.toString())
+          if (series) {
+            watchingSeries.push({ ...s, updatedAt: series.updatedAt })
           }
         })
       }
@@ -93,8 +102,9 @@ export function HomeDashboard() {
       const watchingVod: VodProps[] | undefined = []
       if (vodData!.playlist.length > 0) {
         vodData!.playlist.forEach((v) => {
-          if (watchingList.includes(v.stream_id.toString())) {
-            watchingVod.push(v)
+          const vod = userDataVod.find(vd => v.stream_id.toString() == vd.id!.toString())
+          if (vod) {
+            watchingVod.push({ ...v, updatedAt: vod.updatedAt })
           }
         })
       }
@@ -148,10 +158,10 @@ export function HomeDashboard() {
         <div className='ml-16 mb-6 mt-4'>
           <div className="ml-6 flex flex-col gap-4">
             <WatchingScroll watchingVod={watchingVod} watchingSeries={watchingSeries} setSelectedSeries={setSelectedSeries} setSelectedVod={setSelectedVod} />
-            <FavoritesScroll favoritesSeries={favoritesSeries} favoritesVod={favoritesVod} setSelectedSeries={setSelectedSeries} setSelectedVod={setSelectedVod} />
+            <FavoritesScroll favoritesSeries={favoritesSeries} favoritesVod={favoritesVod} setSelectedSeries={setSelectedSeries} setSelectedVod={setSelectedVod} updateFavorites={updateRender} />
 
             <div>
-              <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
+              <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-0.5 px-4 w-fit mb-3 rounded-full transition gap-2`}>
                 Recently updated series
               </p>
               <ScrollArea className="w-full whitespace-nowrap rounded-md">
@@ -178,7 +188,7 @@ export function HomeDashboard() {
             </div>
 
             <div>
-              <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
+              <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-0.5 px-4 w-fit mb-3 rounded-full transition gap-2`}>
                 Recently added movies
               </p>
               <ScrollArea className="w-full whitespace-nowrap rounded-md">

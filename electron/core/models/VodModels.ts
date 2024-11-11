@@ -15,6 +15,7 @@ export interface VodProps {
   director: string
   category_id: string
   stream_icon: string
+  updatedAt?: number
 }
 
 export interface VodInfoProps {
@@ -47,4 +48,5 @@ export interface UserVodDataProps {
   currentTime?: number
   duration?: number
   watching?: boolean
+  updatedAt?: number
 }
