@@ -18,7 +18,7 @@ export const router = createHashRouter(
         }
       >
         <Route path="/dashboard/home/:playlistName" Component={HomeDashboard} />
-        <Route path="/dashboard/" Component={Dashboard} />
+        <Route path="/dashboard/explore" Component={Dashboard} />
       </Route>
     </>
 

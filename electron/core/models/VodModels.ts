@@ -24,6 +24,7 @@ export interface VodInfoProps {
     director: string
     cast: string
     plot: string
+    genre: string
     description: string
   },
   movie_data: {

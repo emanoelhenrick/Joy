@@ -135,7 +135,7 @@ export function HomeDashboard() {
             </div>
               <ScrollArea className="w-full whitespace-nowrap rounded-md">
                 <div className="flex w-max space-x-4 pb-6 whitespace-nowrap rounded-md">
-                  <Fade duration={200} cascade damping={0.09} direction='up'>
+                  <Fade duration={200} triggerOnce>
                     {(watchingTab == 0 && watchingSeries) && watchingSeries!.map(series => {
                       return (
                       <div
@@ -178,7 +178,7 @@ export function HomeDashboard() {
               </p>
               <ScrollArea className="w-full whitespace-nowrap rounded-md">
                 <div className="flex w-max space-x-4 pb-6 whitespace-nowrap rounded-md">
-                  <Fade duration={200} cascade triggerOnce damping={0.09} direction='up'>
+                  <Fade duration={200} triggerOnce>
                     {seriesByDate!.map(series => {
                       return (
                       <div
@@ -205,7 +205,7 @@ export function HomeDashboard() {
               </p>
               <ScrollArea className="w-full whitespace-nowrap rounded-md">
                 <div className="flex w-max space-x-4 pb-6 whitespace-nowrap rounded-md">
-                <Fade duration={200} cascade triggerOnce damping={0.09} direction='up'>
+                <Fade duration={200} triggerOnce>
                 {vodByDate!.map(movie => {
                   return (
                   <div

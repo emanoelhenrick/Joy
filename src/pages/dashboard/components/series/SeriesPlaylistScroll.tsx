@@ -50,7 +50,7 @@ export default function SeriesPlaylistScroll({ data }: any) {
       )}
         <div className={`w-full flex h-full ${selectedSeries && 'invisible'}`}>
           <div className={`flex flex-wrap h-fit gap-x-10 gap-y-8 ml-6`}>
-            <Fade direction="up" triggerOnce duration={200}>
+            <Fade triggerOnce duration={200}>
               {playlist.map((series) => {
                 const isFavorite = favorites?.includes(series.series_id.toString())
 

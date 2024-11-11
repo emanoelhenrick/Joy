@@ -42,14 +42,14 @@ export default function VodPlaylistScroll({ data }: any) {
             </div>
             <DialogTitle className="invisible">{selectedMovie!.title}</DialogTitle>
             <div className="w-screen">
-              <VodInfo streamId={selectedMovie!.stream_id.toString()} title={selectedMovie!.title} cover={selectedMovie!.stream_icon} />
+                <VodInfo streamId={selectedMovie!.stream_id.toString()} title={selectedMovie!.title} cover={selectedMovie!.stream_icon} />
             </div>
           </DialogContent>
         </Dialog>
       )}
       <div className={`w-full flex h-full ${selectedMovie && 'invisible'}`}>
         <div className={`flex flex-wrap h-fit gap-x-10 gap-y-8 ml-6`}>
-          <Fade direction="up" triggerOnce duration={200}>
+          <Fade triggerOnce duration={200}>
             {playlist!.map((movie) => {
                 const isFavorite = favorites?.includes(movie.stream_id.toString())
 

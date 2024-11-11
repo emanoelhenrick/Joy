@@ -1,14 +1,16 @@
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/MediaInfoDialog"
 import electronApi from "@/config/electronApi"
 import { usePlaylistUrl } from "@/states/usePlaylistUrl"
 import { QueryFilters, useQuery, useQueryClient } from "@tanstack/react-query"
 import { LoaderCircle } from "lucide-react"
 import { useEffect, useState } from "react"
-import { Fade } from "react-awesome-reveal"
+import { AttentionSeeker, Fade } from "react-awesome-reveal"
 import { FaPlay } from "react-icons/fa"
 import { useUserData } from "@/states/useUserData"
 import { VideoPlayer } from "@/components/player"
+import { Badge } from "@/components/ui/badge"
+import { Cross2Icon } from "@radix-ui/react-icons"
 
 interface Props {
   streamId: string
@@ -19,7 +21,7 @@ interface Props {
 export function VodInfo({ streamId, title, cover }: Props) {
   const queryClient = useQueryClient()
 
-  const [_isDialog, setIsDialog] = useState(false)
+  const [isDialog, setIsDialog] = useState(false)
   const userVodData = useUserData(state => state.userData.vod?.find(v => v.id == streamId))
   const { data, isSuccess } = useQuery({ queryKey: [`vodInfo`], queryFn: async () => await electronApi.getVodInfo(urls.getVodInfoUrl + streamId) })
   const { urls } = usePlaylistUrl()
@@ -30,15 +32,35 @@ export function VodInfo({ streamId, title, cover }: Props) {
     }
   }, [])
 
+  console.log(data);
+  
+
+  const genres = data?.info.genre.replaceAll(/^\s+|\s+$/g, "").split(',') || ['']
+
   const extensions = ['mp4', 'ogg', 'ogv', 'webm', 'mov', 'm4v']
 
   return (
     <div className="flex items-center justify-center h-screen">
-      <img className="w-full fixed blur-2xl opacity-30 -z-10" src={cover!} />
-      
-      <div className="flex gap-6 absolute h-fit max-w-6xl rounded-xl p-8 xl:scale-90 2xl:scale-100">
+      <div className="flex items-center gap-6 absolute h-fit max-w-6xl rounded-xl p-8 xl:scale-90 2xl:scale-100">
           {isSuccess ? (
-              <img className="h-full max-h-[500px] rounded-xl shadow-xl" src={cover!} />
+            <div className="relative w-full max-w-72">
+              <div className="items-center overflow-hidden rounded-xl justify-center transition flex hover:scale-95">
+                {extensions.includes(data!.movie_data.container_extension) ? (
+                  <>
+                    <img onClick={() => setIsDialog(true)} className="shadow-xl cursor-pointer" src={cover!}/>
+                    <FaPlay className="absolute" size={50} />
+                  </>
+                ) : (
+                  <>
+                    <div className="bg-black w-full rounded-xl opacity-40 h-full absolute" />
+                    <img className="rounded-xl shadow-xl" src={cover!}/>
+                    <Badge className="absolute text-sm mt-2 font-normal bg-secondary text-muted-foreground hover:bg-secodary">unsupported</Badge>
+                  </>
+                )}
+                
+              </div>
+              <img src={cover!} className="absolute top-0 rounded-3xl blur-3xl -z-10"/>
+            </div>
           ) : (
           <div className="flex items-center justify-center rounded-lg">
             <img className="h-full max-h-[500px] rounded-xl shadow-xl opacity-50" src={cover!} />
@@ -51,22 +73,29 @@ export function VodInfo({ streamId, title, cover }: Props) {
               <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
                 {data.info.name || data.info.title || data.movie_data.name}
               </h1>
-              <p className="leading-7 [&:not(:first-child)]:mt-6 text-lg">
+              <p className="leading-7 w-[700px] [&:not(:first-child)]:mt-4">
                 {data?.info.description || data?.info.plot}
               </p>
+
+              <div className="flex gap-2">
+                {genres[0].length > 0 && genres.map(g => <Badge className="text-sm mt-2 font-normal bg-secondary text-muted-foreground hover:bg-secodary hover:opacity-80">{g}</Badge>)}
+              </div>
               <p className="leading-7 truncate max-w-xl [&:not(:first-child)]:mt-3 text-md text-muted-foreground">
                 {data?.info.cast}
               </p>
               <p className="leading-7 [&:not(:first-child)]:mt-0 text-md text-muted-foreground">
                 {data?.info.director && 'Directed by ' + data?.info.director}
               </p>
-              <Dialog onOpenChange={(open) => setIsDialog(open)}>
+              <Dialog open={isDialog}>
                 <DialogTrigger asChild>
-                  <Button disabled={!extensions.includes(data.movie_data.container_extension) && true} className={`flex gap-2 mt-6 self-start px-6 text-md`}>
+                  {/* <Button disabled={!extensions.includes(data.movie_data.container_extension) && true} className={`flex gap-2 mt-6 rounded-full self-start px-6 text-md`}>
                     <FaPlay size={12} /> Play
-                  </Button>
+                  </Button> */}
                 </DialogTrigger>
                 <DialogContent className="w-fit items-center justify-center" aria-describedby={undefined}>
+                  <div onClick={() => setIsDialog(false)} className=" z-10 cursor-pointer absolute right-14 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                    <Cross2Icon className="h-8 w-8" />
+                  </div>
                   <DialogTitle className="hidden">{title}</DialogTitle>
                   <div className="w-screen">
                     <VideoPlayer
