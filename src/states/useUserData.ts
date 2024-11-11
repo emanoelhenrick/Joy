@@ -4,6 +4,7 @@ import { create } from 'zustand'
 
 export interface UserDataState {
   userData: UserDataProps
+  reset: () => void
   updateUserData: (data: UserDataProps) => void
   updateFavorite: (id: string, type: string) => void
   updateVodStatus: (id: string, currentTime: number, duration: number, watching: boolean) => void
@@ -12,6 +13,7 @@ export interface UserDataState {
 
 export const useUserData = create<UserDataState>((set, get) => ({
   userData: { vod: [], series: [], live: []},
+  reset: () => set({ userData: { vod: [], series: [], live: []} }),
   updateUserData: (data) => set({ userData: data }),
   updateFavorite: (id: string, type: string) => {
     set(prev => {

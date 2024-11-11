@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Cover } from "@/components/Cover";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { DialogContent, DialogTitle, Dialog } from '@/components/MediaInfoDialog';
@@ -19,7 +19,6 @@ export function HomeDashboard() {
   const [selectedSeries, setSelectedSeries] = useState<SeriesProps | undefined>(undefined)
   const userDataSeries = useUserData(state => state.userData.series)
   const userDataVod = useUserData(state => state.userData.vod)
-  const [watchingTab, setWatchingTab] = useState(0)
 
   const vodByDate = useMemo(() => {
     if (vodData) {
@@ -79,6 +78,8 @@ export function HomeDashboard() {
     }
     return []
   }, [userDataVod, vodData])
+
+  const [watchingTab, setWatchingTab] = useState((watchingSeries.length < 1) && (watchingVod.length > 0) ? 1 : 0)
 
   if (vodData && seriesData) {
 

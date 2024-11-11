@@ -1,7 +1,9 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import electronApi from "@/config/electronApi";
 import { useToast } from "@/hooks/use-toast";
+import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from "@/states/usePlaylistData";
 import { usePlaylistUrl } from "@/states/usePlaylistUrl";
+import { useUserData } from "@/states/useUserData";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { PlaylistInfo } from "electron/core/models/PlaylistInfo";
@@ -20,6 +22,11 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu }: { currentPlay
   const [lastUpdated, setLastUpdated] = useState<any>()
   const { urls } = usePlaylistUrl()
   const { toast } = useToast()
+
+  const resetUserData = useUserData(state => state.reset)
+  const updateVodPlaylistState = useVodPlaylist(state => state.update)
+  const updateSeriesPlaylistState = useSeriesPlaylist(state => state.update)
+  const updateLivePlaylistState = useLivePlaylist(state => state.update)
 
   async function getPlaylistName() {
     const metadata = await electronApi.getMetadata()
@@ -67,11 +74,17 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu }: { currentPlay
         })
       }
       toast({ title: `Updating playlist ${playlistName}`})
-      await electronApi.updateVod({ playlistUrl: urls.getAllVodUrl, categoriesUrl: urls.getAllVodCategoriesUrl, name: playlistName })
-      await electronApi.updateSeries({ playlistUrl: urls.getAllSeriesUrl, categoriesUrl: urls.getAllSeriesCategoriesUrl, name: playlistName })
-      await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: playlistName })
+      const vodData = await electronApi.updateVod({ playlistUrl: urls.getAllVodUrl, categoriesUrl: urls.getAllVodCategoriesUrl, name: playlistName })
+      const seriesData = await electronApi.updateSeries({ playlistUrl: urls.getAllSeriesUrl, categoriesUrl: urls.getAllSeriesCategoriesUrl, name: playlistName })
+      const liveData = await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: playlistName })
       await electronApi.updatedAtPlaylist(playlistName)
       queryClient.removeQueries()
+
+      updateVodPlaylistState(vodData)
+      updateSeriesPlaylistState(seriesData)
+      updateLivePlaylistState(liveData)
+      resetUserData()
+
       setUpdating(false)
       setUpdatingMenu(false)
       setLastUpdated(Date.now())

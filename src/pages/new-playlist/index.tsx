@@ -15,6 +15,8 @@ import { PlaylistInfo } from "electron/core/models/PlaylistInfo"
 import { makeUrls, PlaylistUrls, usePlaylistUrl } from "@/states/usePlaylistUrl"
 import { useQueryClient } from "@tanstack/react-query"
 import { Fade } from "react-awesome-reveal"
+import { useUserData } from "@/states/useUserData"
+import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from "@/states/usePlaylistData"
  
 const formSchema = z.object({
   name: z.string().min(1),
@@ -40,6 +42,11 @@ export function Initial() {
   const [progress, setProgress] = useState<ProgressProps>({ msg: 'Loading...', value: 0})
   const { toast } = useToast()
 
+  const resetUserData = useUserData(state => state.reset)
+  const updateVodPlaylistState = useVodPlaylist(state => state.update)
+  const updateSeriesPlaylistState = useSeriesPlaylist(state => state.update)
+  const updateLivePlaylistState = useLivePlaylist(state => state.update)
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema)
   })
@@ -51,17 +58,22 @@ export function Initial() {
 
   async function handleNewPLaylist(urls: PlaylistUrls) {
     setProgress({ msg: 'Downloading VOD playlist...', value: 20})
-    await electronApi.updateVod({ playlistUrl: urls.getAllVodUrl, categoriesUrl: urls.getAllVodCategoriesUrl, name: formValue!.name })
+    const vodData = await electronApi.updateVod({ playlistUrl: urls.getAllVodUrl, categoriesUrl: urls.getAllVodCategoriesUrl, name: formValue!.name })
 
     setProgress({ msg: 'Downloading Series playlist...', value: 50})
-    await electronApi.updateSeries({ playlistUrl: urls.getAllSeriesUrl, categoriesUrl: urls.getAllSeriesCategoriesUrl, name: formValue!.name })
+    const seriesData = await electronApi.updateSeries({ playlistUrl: urls.getAllSeriesUrl, categoriesUrl: urls.getAllSeriesCategoriesUrl, name: formValue!.name })
 
     setProgress({ msg: 'Downloading Live playlist...', value: 80})
-    await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: formValue!.name })
+    const liveData = await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: formValue!.name })
 
     setProgress({ msg: 'Updating configs...', value: 90})
     await electronApi.addPlaylistToMeta(formValue!)
     updateUrls(urls)
+
+    updateVodPlaylistState(vodData)
+    updateSeriesPlaylistState(seriesData)
+    updateLivePlaylistState(liveData)
+    resetUserData()
 
     setProgress({ msg: 'Finished.', value: 100})
     setIsSuccess(true)

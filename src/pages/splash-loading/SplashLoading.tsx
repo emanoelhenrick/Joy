@@ -13,9 +13,7 @@ export function SplashLoading() {
 
   const updateUrls = usePlaylistUrl(state => state.updateUrls)
   const updateUserData = useUserData(state => state.updateUserData)
-
   const updateVodPlaylistState = useVodPlaylist(state => state.update)
-
   const updateSeriesPlaylistState = useSeriesPlaylist(state => state.update)
   const updateLivePlaylistState = useLivePlaylist(state => state.update)
 

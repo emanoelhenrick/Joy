@@ -32,9 +32,6 @@ export function VodInfo({ streamId, title, cover }: Props) {
     }
   }, [])
 
-  console.log(data);
-  
-
   const genres = data?.info.genre.replaceAll(/^\s+|\s+$/g, "").split(',') || ['']
 
   const extensions = ['mp4', 'ogg', 'ogv', 'webm', 'mov', 'm4v']
@@ -78,7 +75,7 @@ export function VodInfo({ streamId, title, cover }: Props) {
               </p>
 
               <div className="flex gap-2">
-                {genres[0].length > 0 && genres.map(g => <Badge className="text-sm mt-2 font-normal bg-secondary text-muted-foreground hover:bg-secodary hover:opacity-80">{g}</Badge>)}
+                {genres[0].length > 0 && genres.map(g => <Badge key={g} className="text-sm mt-2 font-normal bg-secondary text-muted-foreground hover:bg-secodary hover:opacity-80">{g}</Badge>)}
               </div>
               <p className="leading-7 truncate max-w-xl [&:not(:first-child)]:mt-3 text-md text-muted-foreground">
                 {data?.info.cast}
