@@ -2,19 +2,15 @@ import { SeriesProps } from "electron/core/models/SeriesModels";
 import { Cover } from "@/components/Cover";
 import { useEffect, useState } from "react";
 import { useUserData } from "@/states/useUserData";
-import { Heart } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/MediaInfoDialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { SeriesInfo } from "../SeriesInfo";
 import { useDebounce } from "use-debounce";
 import { Fade } from "react-awesome-reveal";
 import { FaStar } from "react-icons/fa";
+import { SeriesInfo } from "./SeriesInfo";
 
-interface PlaylistScrollProps {
-  playlist: SeriesProps[]
-}
-
-export default function PlaylistScroll({ playlist }: PlaylistScrollProps) {
+export default function SeriesPlaylistScroll({ data }: any) {
+  const playlist: SeriesProps[] = data
   const [update, setUpdate] = useState(false)
   const [favorites, setFavorites] = useState<string[]>()
   const [selectedSeries, setSelectedSeries] = useState<SeriesProps>()

@@ -3,13 +3,13 @@ import { Cover } from "@/components/Cover";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { DialogContent, DialogTitle, Dialog } from '@/components/MediaInfoDialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { SeriesInfo } from '../series/SeriesInfo';
 import { SeriesProps } from 'electron/core/models/SeriesModels';
 import { VodProps } from 'electron/core/models/VodModels';
-import { VodInfo } from '../vod/VodInfo';
 import { Fade } from 'react-awesome-reveal';
 import { useUserData } from '@/states/useUserData';
 import { useSeriesPlaylist, useVodPlaylist } from '@/states/usePlaylistData';
+import { SeriesInfo } from '../dashboard/components/series/SeriesInfo';
+import { VodInfo } from '../dashboard/components/vod/VodInfo';
 
 export function HomeDashboard() {
   const vodData = useVodPlaylist(state => state.data)

@@ -1,23 +1,16 @@
-import InfiniteScroll from "react-infinite-scroller";
-import { Cover } from "../../../components/Cover";
 import { LiveProps } from "electron/core/models/LiveModels";
 import { usePlaylistUrl } from "@/states/usePlaylistUrl";
 import { useEffect, useState } from "react";
 import { useUserData } from "@/states/useUserData";
-import { Heart } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/MediaInfoDialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { VideoPlayer } from "@/components/player";
 import { Fade } from "react-awesome-reveal";
 import { LiveImage } from "./Image";
 
-interface PlaylistScrollProps {
-  playlist: LiveProps[]
-}
-
-export default function PlaylistScroll({ playlist }: PlaylistScrollProps) {
+export default function LivePlaylistScroll({ data }: any) {
+  const playlist: LiveProps[] = data
   const { urls } = usePlaylistUrl()
-
   const [update, setUpdate] = useState(false)
   const [favorites, setFavorites] = useState<string[]>()
   const [selectedLiveUrl, setSelectLiveUrl] = useState<string | undefined>(undefined)

@@ -1,11 +1,9 @@
 import { createHashRouter, createRoutesFromElements, Outlet, Route } from "react-router-dom";
 import { Initial } from "./new-playlist";
-import { VodDashboard } from "./vod/VodDashboard";
 import { SplashLoading } from "./splash-loading/SplashLoading";
-import { SeriesDashboard } from "./series/SeriesDashboard";
-import { LiveDashboard } from "./live/LiveDashboard";
 import { MenuBar } from "@/components/menubar/MenuBar";
 import { HomeDashboard } from "./home/HomeDashboard";
+import { Dashboard } from "./dashboard/Dashboard";
 
 export const router = createHashRouter(
   createRoutesFromElements(
@@ -20,9 +18,7 @@ export const router = createHashRouter(
         }
       >
         <Route path="/dashboard/home/:playlistName" Component={HomeDashboard} />
-        <Route path="/dashboard/vod/:playlistName" Component={VodDashboard} />
-        <Route path="/dashboard/series/:playlistName" Component={SeriesDashboard} />
-        <Route path="/dashboard/live/:playlistName" Component={LiveDashboard} />
+        <Route path="/dashboard/" Component={Dashboard} />
       </Route>
     </>
 

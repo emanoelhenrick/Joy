@@ -2,17 +2,14 @@ import { VodProps } from "electron/core/models/VodModels";
 import { useUserData } from "@/states/useUserData";
 import { useEffect, useState } from "react";
 import { Cover } from "@/components/Cover";
-import { Dialog, DialogContent, DialogTitle } from "../../../components/MediaInfoDialog";
-import { VodInfo } from "../VodInfo";
+import { Dialog, DialogContent, DialogTitle } from "../../../../components/MediaInfoDialog";
+import { VodInfo } from "./VodInfo";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { Fade } from "react-awesome-reveal";
 import { FaStar } from "react-icons/fa";
 
-interface PlaylistScrollProps {
-  playlist: VodProps[]
-}
-
-export default function PlaylistScroll({ playlist }: PlaylistScrollProps) {
+export default function VodPlaylistScroll({ data }: any) {
+  const playlist: VodProps[] = data
   const [update, setUpdate] = useState(false)
   const [favorites, setFavorites] = useState<any>()
   const [selectedMovie, setSelectedMovie] = useState<VodProps>()

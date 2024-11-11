@@ -4,14 +4,14 @@ import { EpisodeProps, UserEpisodeProps } from "electron/core/models/SeriesModel
 import { LoaderCircle } from "lucide-react"
 import { FaPlay } from "react-icons/fa";
 import { useEffect, useState } from "react"
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./components/SelectSeason"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./SelectSeason"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { QueryFilters, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { useUserData } from "@/states/useUserData";
 import { Progress } from "@/components/ui/progress";
 import { useDebounce } from "use-debounce";
-import { VideoPlayer } from "./components/SeriesPlayer";
+import { VideoPlayer } from "./SeriesPlayer";
 
 export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title: string, cover: string }) {
   const queryClient = useQueryClient();

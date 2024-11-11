@@ -1,3 +1,4 @@
+import { Search, X } from 'lucide-react'
 import {
   Select,
   SelectContent,
@@ -6,49 +7,59 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../components/dashboard/SelectCategories"
-import { Input } from "../../components/dashboard/input"
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { useDebounce } from 'use-debounce';
-import { useParams } from "react-router-dom";
-import { Search, X } from "lucide-react";
-import { SeriesProps } from "electron/core/models/SeriesModels";
+import { VodProps } from 'electron/core/models/VodModels';
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink } from "@/components/ui/pagination";
-import { MenuTab } from "@/components/menutab/MenuTab";
-import { useSeriesPlaylist } from "@/states/usePlaylistData";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink } from '@/components/ui/pagination';
+import { Input } from '@/components/dashboard/input';
+import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from '@/states/usePlaylistData';
+import { MenuTab } from './components/MenuTab';
 
-const PlaylistScroll = lazy(() => import('./components/PlaylistScroll'))
+const VodPlaylistScroll = lazy(() => import('./components/vod/VodPlaylistScroll'))
+const SeriesPlaylistScroll = lazy(() => import('./components/series/SeriesPlaylistScroll'))
+const LivePlaylistScroll = lazy(() => import('./components/LivePlaylistScroll'))
 
-export function SeriesDashboard() {
-  let { playlistName } = useParams();
-  const data = useSeriesPlaylist(state => state.data)
+export function Dashboard() {
+  const vodData = useVodPlaylist((state => state.data))
+  const seriesData = useSeriesPlaylist((state => state.data))
+  const liveData = useLivePlaylist((state => state.data))
 
-  const [playlist, setPlaylist] = useState<SeriesProps[]>([]);
+  const [playlist, setPlaylist] = useState<VodProps[]>([]);
   const [currentCategory, setCurrentCategory] = useState('all')
   const [enoughItems, setEnoughItems] = useState(false)
   const [hasMore, setHasMore] = useState(true)
   const [page, setPage] = useState(1)
   const [pages, setPages] = useState(0)
+  const [tab, setTab] = useState('vod')
+
+  let data: { categories: any[], playlist: any[] } = vodData;
+  if (tab === 'vod') data = vodData
+  if (tab === 'series') data = seriesData
+  if (tab === 'live') data = liveData
 
   const [searchText, setSearchValue] = useState('')
   const [search] = useDebounce(searchText, 400)
 
   const filtered = useMemo(() => {
     setPage(1)
-    if (currentCategory === 'all') return search.length > 0 ? data!.playlist!.filter(p => p.name.toLowerCase().includes(search.toLowerCase())) : data!.playlist
-    return data!.playlist!.filter(p => p.category_id === currentCategory && p.name.toLowerCase().includes(search.toLowerCase()))
-  }, [search, currentCategory, data]) 
+    if (data) {
+      if (currentCategory === 'all') return search.length > 0 ? data!.playlist.filter((p: { name: string; }) => p.name.toLowerCase().includes(search.toLowerCase())) : data!.playlist
+      return data!.playlist.filter((p: { category_id: string; name: string; }) => p.category_id === currentCategory && p.name.toLowerCase().includes(search.toLowerCase()))
+    }
+    
+  }, [search, currentCategory, data, tab])
 
   function paginate(page: number, elements: number) {
     if (!filtered) return []
 
     const startIndex = (page - 1) * elements
-    const endIndex = (page * elements) > filtered.length ? filtered.length : (page * elements)
+    const endIndex = (page * elements) > filtered.length ? (filtered.length) : (page * elements)
 
     if (endIndex === filtered.length) setHasMore(false)
 
-    const paginated = filtered.slice(startIndex, endIndex)
-    if (playlist.length > 0) return setPlaylist(prev => [...prev, ...paginated])
+    const paginated = filtered.length === 1 ? filtered : filtered.slice(startIndex, endIndex)
+    if (playlist.length > 0) return setPlaylist(paginated)
     return setPlaylist(paginated)
   }
 
@@ -62,13 +73,12 @@ export function SeriesDashboard() {
 
   useEffect(() => {
     const itemsPerPage = 70
-
     setPages(Math.ceil(filtered!.length / itemsPerPage))
     setEnoughItems(filtered!.length < itemsPerPage)
     setPlaylist([])
     setHasMore(true)
     paginate(page, itemsPerPage)
-  }, [search, currentCategory, page, data])
+  }, [search, currentCategory, page, data, tab])
 
   const firstPage = page < 2 ? page : page - 1
   const midPage = page > 1 ? page : 2
@@ -78,8 +88,8 @@ export function SeriesDashboard() {
       <div className="flex flex-col w-full">
         <div className='ml-16 flex flex-col gap-4'>
           <div className='flex items-center justify-between ml-6 mt-4'>
-            <div className='flex gap-4'>
-              <MenuTab playlistName={playlistName!} />
+            <div className='flex items-center gap-4'>
+              <MenuTab tab={tab} setTab={setTab} />
               <Select onValueChange={(value) => setCurrentCategory(value)} value={currentCategory}>
                 <SelectTrigger  className="w-fit gap-2">
                   <SelectValue  placeholder="All" />
@@ -103,7 +113,9 @@ export function SeriesDashboard() {
           </div>
           {playlist.length > 0 ?
             <Suspense fallback={<div className='w-full h-screen' />}>
-              <PlaylistScroll playlist={playlist} />
+              {tab === 'vod' && <VodPlaylistScroll data={playlist} />}
+              {tab === 'series' && <SeriesPlaylistScroll data={playlist} />}
+              {tab === 'live' && <LivePlaylistScroll data={playlist} />}
             </Suspense> : (
               search && <p className='ml-6 text-sm text-muted-foreground'>No results found</p>
             )

@@ -7,8 +7,8 @@ import { LoaderCircle } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Fade } from "react-awesome-reveal"
 import { FaPlay } from "react-icons/fa"
-import { VideoPlayer } from "../../components/player"
 import { useUserData } from "@/states/useUserData"
+import { VideoPlayer } from "@/components/player"
 
 interface Props {
   streamId: string

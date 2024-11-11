@@ -90,10 +90,10 @@ export function MenuBar() {
       
 
       <div className="flex flex-col justify-center gap-5">
-        <Button variant='ghost' onClick={() => changeTab('home')} className={`h-fit gap-2 ${location.pathname.includes('home') ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
+        <Button variant='ghost' onClick={() => navigate(`/dashboard/home/${playlistName}`)} className={`h-fit gap-2 ${location.pathname.includes('home') ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
           <House />
         </Button>
-        <Button variant='ghost' onClick={() => changeTab('vod')} className={`h-fit gap-2 ${mediaTabs.some(tab => location.pathname.includes(tab)) ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
+        <Button variant='ghost' onClick={() => navigate(`/dashboard`)} className={`h-fit gap-2 ${mediaTabs.some(tab => location.pathname.includes(tab)) ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
           <TvMinimal />
         </Button>
         <Button variant='ghost' className={`h-fit gap-2 ${location.pathname.includes('search') ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
