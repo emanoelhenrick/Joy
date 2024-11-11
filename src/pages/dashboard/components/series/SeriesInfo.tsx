@@ -12,6 +12,7 @@ import { useUserData } from "@/states/useUserData";
 import { Progress } from "@/components/ui/progress";
 import { useDebounce } from "use-debounce";
 import { VideoPlayer } from "./SeriesPlayer";
+import { Badge } from "@/components/ui/badge";
 
 export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title: string, cover: string }) {
   const queryClient = useQueryClient();
@@ -21,6 +22,7 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
   if (!seriesId) return
   const { urls } = usePlaylistUrl()
 
+  const [isDialog, setIsDialog] = useState(false)
   const [updated, setUpdated] = useState<boolean>()
   const [currentSeason, setCurrentSeason] = useState('1')
   const [seasons, setSeasons] = useState<string[]>(['1'])
@@ -62,12 +64,19 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
     }
   }, [])
 
+  const genres = data?.info.genre.replaceAll(/^\s+|\s+$/g, "").split(/[^\w\sÀ-ÿ-]/g) || ['']
+
   return (
     <div className="flex items-center justify-center h-screen">
-      <img className="w-full fixed blur-2xl opacity-30 -z-10" src={cover!} />
-      <div className="flex gap-6 h-fit max-w-6xl rounded-xl p-12 xl:scale-90 2xl:scale-100">
+      <div className="flex gap-6 h-fit max-w-7xl rounded-xl p-12 xl:scale-90 2xl:scale-100">
         {isSuccess ? (
-          <img className="h-full max-h-[500px] rounded-xl shadow-xl" src={cover!} />
+          <div className="relative w-full max-w-72">
+            <div className="items-center overflow-hidden rounded-xl justify-center transition flex">
+              <img onClick={() => setIsDialog(true)} className="shadow-xl" src={cover!}/>
+              {/* <FaPlay className="absolute" size={50} /> */}
+            </div>
+          <img src={cover!} className="absolute top-0 rounded-3xl blur-3xl -z-10"/>
+        </div>
         ) : (
           <div className="flex items-center justify-center rounded-lg">
             <img className="h-full max-h-[500px] rounded-xl shadow-xl opacity-50" src={cover!} />
@@ -79,9 +88,12 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
             <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
               {data?.info.name}
             </h1>
-            <p className="leading-7 [&:not(:first-child)]:mt-6 text-lg">
+            <p className="leading-7 [&:not(:first-child)]:mt-4 text-md">
               {data?.info.plot}
             </p>
+            <div className="flex gap-2">
+              {genres[0].length > 0 && genres.map(g => <Badge key={g} className="text-sm mt-2 font-normal bg-secondary text-muted-foreground hover:bg-secodary hover:opacity-80">{g}</Badge>)}
+            </div>
             <p className="leading-7 [&:not(:first-child)]:mt-6  text-md text-muted-foreground">
               {data?.info.cast}
             </p>

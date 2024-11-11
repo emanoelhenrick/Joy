@@ -10,6 +10,8 @@ import { useUserData } from '@/states/useUserData';
 import { useSeriesPlaylist, useVodPlaylist } from '@/states/usePlaylistData';
 import { SeriesInfo } from '../dashboard/components/series/SeriesInfo';
 import { VodInfo } from '../dashboard/components/vod/VodInfo';
+import { WatchingScroll } from './components/WatchingScroll';
+import { FavoritesScroll } from './components/FavoritesScroll';
 
 export function HomeDashboard() {
   const vodData = useVodPlaylist(state => state.data)
@@ -35,51 +37,83 @@ export function HomeDashboard() {
     }
   }, [seriesData])
   
-  const watchingSeries = useMemo(() => {
+  const userSeries = useMemo(() => {
     if (userDataSeries && seriesData) {
-      const udlist = ['']
+      const watchingList = ['']
+      const favoritesList = ['']
       for (const s of userDataSeries) {
         if(s.episodes) {
-          if (s.episodes.find(e => e.watching)) udlist.push(s.id!)
+          if (s.episodes.find(e => e.watching)) watchingList.push(s.id!)
         }
       }
 
-      const series: SeriesProps[] | undefined = []
+      userDataSeries.forEach(s => {
+        if (s.favorite) {
+          favoritesList.push(s.id!)
+        }
+      })
+
+      const watchingSeries: SeriesProps[] | undefined = []
       if (seriesData!.playlist.length > 0) {
         seriesData!.playlist.forEach((s) => {
-          if (udlist.includes(s.series_id.toString())) {
-            series.push(s)
+          if (watchingList.includes(s.series_id.toString())) {
+            watchingSeries.push(s)
           }
         })
-        return series
       }
-      return []
+
+      const favoritesSeries: SeriesProps[] | undefined = []
+      if (seriesData!.playlist.length > 0) {
+        seriesData!.playlist.forEach((s) => {
+          if (favoritesList.includes(s.series_id.toString())) {
+            favoritesSeries.push(s)
+          }
+        })
+      }
+
+      return { watchingSeries, favoritesSeries }
     }
-    return []
+    return { watchingSeries: [], favoritesSeries: [] }
   }, [userDataSeries, seriesData])
 
-  const watchingVod = useMemo(() => {
+  const userVod = useMemo(() => {
     if (userDataVod && vodData) {
-      const udlist = ['']
+      const watchingList = ['']
+      const favoritesList = ['']
       for (const v of userDataVod) {
-        if (v.watching) udlist.push(v.id!.toString())
+        if (v.watching) watchingList.push(v.id!.toString())
       }
 
-      const vod: VodProps[] | undefined = []
+      userDataVod.forEach(s => {
+        if (s.favorite) {
+          favoritesList.push(s.id!)
+        }
+      })
+
+      const watchingVod: VodProps[] | undefined = []
       if (vodData!.playlist.length > 0) {
         vodData!.playlist.forEach((v) => {
-          if (udlist.includes(v.stream_id.toString())) {
-            vod.push(v)
+          if (watchingList.includes(v.stream_id.toString())) {
+            watchingVod.push(v)
           }
         })
-        return vod
       }
-      return []
+
+      const favoritesVod: VodProps[] | undefined = []
+      if (vodData!.playlist.length > 0) {
+        vodData!.playlist.forEach((s) => {
+          if (favoritesList.includes(s.stream_id.toString())) {
+            favoritesVod.push(s)
+          }
+        })
+      }
+      return { watchingVod, favoritesVod }
     }
-    return []
+    return { watchingVod: [], favoritesVod: [] }
   }, [userDataVod, vodData])
 
-  const [watchingTab, setWatchingTab] = useState((watchingSeries.length < 1) && (watchingVod.length > 0) ? 1 : 0)
+  const { watchingSeries, favoritesSeries } = userSeries
+  const { watchingVod, favoritesVod } = userVod
 
   if (vodData && seriesData) {
 
@@ -112,66 +146,9 @@ export function HomeDashboard() {
           </Dialog>
         )}
         <div className='ml-16 mb-6 mt-4'>
-          <div className="ml-6 flex flex-col gap-6">
-          {((watchingVod.length > 0) || (watchingSeries.length > 0)) && (
-            <div>
-            <div className='flex gap-2'>
-             <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
-               Continue watching
-              </p>
-              {watchingSeries!.length > 0 && (
-                <p
-                  onClick={() => setWatchingTab(0)}
-                  className={`h-fit border ${watchingTab == 0 ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'} cursor-pointer text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
-                  Series
-                </p>
-              )}
-              {watchingVod!.length > 0 && (
-                <p
-                  onClick={() => setWatchingTab(1)}
-                  className={`h-fit border ${watchingTab == 1 ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'} cursor-pointer text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>
-                  Movies
-                </p>
-              )}
-            </div>
-              <ScrollArea className="w-full whitespace-nowrap rounded-md">
-                <div className="flex w-max space-x-4 pb-6 whitespace-nowrap rounded-md">
-                  <Fade duration={200} triggerOnce>
-                    {(watchingTab == 0 && watchingSeries) && watchingSeries!.map(series => {
-                      return (
-                      <div
-                        className="flex flex-col hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative"
-                        key={series.series_id}
-                        onClick={() => setSelectedSeries(series)}
-                      >
-                        <div>
-                          <Cover src={series.cover} title={series.name} />
-                        </div>
-                        <h3 className="truncate w-36 text-xs text-muted-foreground">{series.title || series.name}</h3>
-                      </div>
-                      )
-                    })}
-                    {(watchingTab == 1 && watchingVod) && watchingVod!.map(movie => {
-                      return (
-                        <div
-                          className="flex flex-col hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative"
-                          key={movie.num}
-                          onClick={() => setSelectedVod(movie)}
-                          >
-                          <div>
-                            <Cover src={movie.stream_icon} title={movie.name} />
-                          </div>
-                          <h3 className="truncate w-36 text-xs text-muted-foreground">{movie.title || movie.name}</h3>
-                        </div>
-                      )
-                    })}
-                  </Fade>
-                </div>
-                <ScrollBar color="blue" orientation="horizontal" />
-              </ScrollArea>
-          </div>
-          )}
-
+          <div className="ml-6 flex flex-col gap-4">
+            <WatchingScroll watchingVod={watchingVod} watchingSeries={watchingSeries} setSelectedSeries={setSelectedSeries} setSelectedVod={setSelectedVod} />
+            <FavoritesScroll favoritesSeries={favoritesSeries} favoritesVod={favoritesVod} setSelectedSeries={setSelectedSeries} setSelectedVod={setSelectedVod} />
 
             <div>
               <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-1 px-6 w-fit mb-3 rounded-full transition gap-2`}>

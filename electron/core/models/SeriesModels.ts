@@ -30,6 +30,7 @@ export interface SerieInfoProps {
     plot: string
     director: string
     cast: string
+    genre: string
   }
   episodes: {
     [key: string]: EpisodeProps[]

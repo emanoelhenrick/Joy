@@ -1,11 +1,10 @@
-import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/MediaInfoDialog"
 import electronApi from "@/config/electronApi"
 import { usePlaylistUrl } from "@/states/usePlaylistUrl"
 import { QueryFilters, useQuery, useQueryClient } from "@tanstack/react-query"
 import { LoaderCircle } from "lucide-react"
 import { useEffect, useState } from "react"
-import { AttentionSeeker, Fade } from "react-awesome-reveal"
+import { Fade } from "react-awesome-reveal"
 import { FaPlay } from "react-icons/fa"
 import { useUserData } from "@/states/useUserData"
 import { VideoPlayer } from "@/components/player"
@@ -32,8 +31,8 @@ export function VodInfo({ streamId, title, cover }: Props) {
     }
   }, [])
 
-  const genres = data?.info.genre.replaceAll(/^\s+|\s+$/g, "").split(',') || ['']
-
+  const genres = data?.info.genre.replaceAll(/^\s+|\s+$/g, "").split(/[^\w\sÀ-ÿ-]/g) || ['']
+  
   const extensions = ['mp4', 'ogg', 'ogv', 'webm', 'mov', 'm4v']
 
   return (
@@ -54,7 +53,6 @@ export function VodInfo({ streamId, title, cover }: Props) {
                     <Badge className="absolute text-sm mt-2 font-normal bg-secondary text-muted-foreground hover:bg-secodary">unsupported</Badge>
                   </>
                 )}
-                
               </div>
               <img src={cover!} className="absolute top-0 rounded-3xl blur-3xl -z-10"/>
             </div>
@@ -70,7 +68,7 @@ export function VodInfo({ streamId, title, cover }: Props) {
               <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
                 {data.info.name || data.info.title || data.movie_data.name}
               </h1>
-              <p className="leading-7 w-[700px] [&:not(:first-child)]:mt-4">
+              <p className="leading-7 max-w-4xl [&:not(:first-child)]:mt-4">
                 {data?.info.description || data?.info.plot}
               </p>
 

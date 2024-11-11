@@ -1,13 +1,12 @@
 import { Button } from "@/components/ui/button";
 import electronApi from "@/config/electronApi";
-import { House, Search, Settings, TvMinimal } from "lucide-react";
+import { ArrowDownToLine, Film, House, Search, Settings, TvMinimal } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Fade } from "react-awesome-reveal";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./dialog";
 import { SettingsPage } from "@/pages/settings";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { useQueryClient } from "@tanstack/react-query";
 import { usePlaylistUrl } from "@/states/usePlaylistUrl";
 import { toast } from "@/hooks/use-toast";
 import { MetaProps } from "electron/core/models/MetaProps";
@@ -16,7 +15,6 @@ import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from "@/states/use
 
 export function MenuBar() {
   const [playlistName, setPlaylistName] = useState<string>()
-  const queryClient = useQueryClient()
   const [updating, setUpdating] = useState(false)
   const [updatingError, setUpdatingError] = useState(false)
   const { urls } = usePlaylistUrl()
@@ -37,7 +35,7 @@ export function MenuBar() {
   async function updateCurrentPlaylist(metadata: MetaProps) {
     const playlist = metadata.playlists.find(p => p.name === metadata.currentPlaylist)
     const difference = differenceInHours(Date.now(), new Date(playlist!.updatedAt!))
-    // if (difference < 12) return
+    if (difference < 12) return
     setUpdating(true)
     try {
       await electronApi.authenticateUser(urls.getAuthenticateUrl)
@@ -69,8 +67,6 @@ export function MenuBar() {
     getPlaylistName()
   }, [])
 
-  const mediaTabs = ['vod', 'series', 'live']
-
   return (
     <div className="flex flex-col justify-between items-center border-r fixed px-1 py-4 h-full">
       <Fade cascade direction="up" triggerOnce duration={500}>
@@ -93,8 +89,8 @@ export function MenuBar() {
         <Button variant='ghost' onClick={() => navigate(`/dashboard/explore`)} className={`h-fit gap-2 ${location.pathname.includes('explore') ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
           <TvMinimal />
         </Button>
-        <Button variant='ghost' className={`h-fit gap-2 ${location.pathname.includes('search') ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
-          <Search />
+        <Button variant='ghost' onClick={() => navigate(`/dashboard/explore`)} className={`h-fit gap-2 ${location.pathname.includes('downloads') ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
+          <ArrowDownToLine />
         </Button>
       </div>
 
