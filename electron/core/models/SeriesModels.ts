@@ -56,4 +56,5 @@ export interface UserSeriesDataProps {
   favorite?: boolean
   episodes?: UserEpisodeProps[]
   updatedAt?: number
+  season?: string
 }

@@ -22,13 +22,14 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
   if (!seriesId) return
   const { urls } = usePlaylistUrl()
 
-  const [isDialog, setIsDialog] = useState(false)
+  const [_isDialog, setIsDialog] = useState(false)
   const [updated, setUpdated] = useState<boolean>()
-  const [currentSeason, setCurrentSeason] = useState('1')
+  const userSeriesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))
+  const updateSeason = useUserData(state => state.updateSeason)
+  const [currentSeason, setCurrentSeason] = useState(userSeriesData?.season || '1')
   const [seasons, setSeasons] = useState<string[]>(['1'])
   const [episodes, setEpisodes] = useState<EpisodeProps[]>([])
   const [episodesData, setEpisodesData] = useState<UserEpisodeProps[]>()
-  const userSeriesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))
   const [updatedDebounce] = useDebounce(updated, 500)
   
   useEffect(() => {
@@ -45,6 +46,7 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
     if (isSuccess) {
       const episodesList = data!.episodes[currentSeason]
       setEpisodes(episodesList)
+      updateSeason(seriesId, currentSeason)
     }
     
   }, [currentSeason, isSuccess, userSeriesData])
@@ -73,7 +75,6 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
           <div className="relative w-full max-w-72">
             <div className="items-center overflow-hidden rounded-xl justify-center transition flex">
               <img onClick={() => setIsDialog(true)} className="shadow-xl" src={cover!}/>
-              {/* <FaPlay className="absolute" size={50} /> */}
             </div>
           <img src={cover!} className="absolute top-0 rounded-3xl blur-3xl -z-10"/>
         </div>
@@ -101,7 +102,7 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
               {data?.info.director && 'Directed by ' + data?.info.director}
             </p>
             {Object.getOwnPropertyNames(data?.episodes).length > 1 && (
-              <Select onValueChange={(value) => setCurrentSeason(value)}>
+              <Select onValueChange={(value) => setCurrentSeason(value)} value={currentSeason}>
               <SelectTrigger  className="w-fit gap-2">
                 <SelectValue  placeholder="Season 1" />
               </SelectTrigger>

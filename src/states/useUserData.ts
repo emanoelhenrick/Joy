@@ -9,6 +9,7 @@ export interface UserDataState {
   updateFavorite: (id: string, type: string) => void
   updateVodStatus: (id: string, currentTime: number, duration: number, watching: boolean) => void
   updateSeriesStatus: (id: string, season: string, episodeId: string, currentTime: number, number: number, watching: boolean) => void
+  updateSeason: (id: string, season: string) => void
 }
 
 export const useUserData = create<UserDataState>((set, get) => ({
@@ -132,4 +133,18 @@ export const useUserData = create<UserDataState>((set, get) => ({
 
     electronApi.updateUserData(get().userData)
   },
+  updateSeason: (id: string, season: string) => {
+    const newSeries = get().userData.series!.map((s) => {
+      console.log(s);
+      
+      if (s.id == id) s.season = season
+      return s
+    })
+
+    set(prev => ({
+      userData: {
+        ...prev.userData, series: newSeries
+      }
+    }))
+  }
 }))
