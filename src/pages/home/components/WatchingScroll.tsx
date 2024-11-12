@@ -54,9 +54,7 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
                 key={series.series_id}
                 onClick={() => setSelectedSeries(series)}
               >
-                <div>
-                  <Cover src={series.cover} title={series.name} />
-                </div>
+                <Cover src={series.cover} title={series.name} />
                 <h3 className="truncate w-36 text-xs text-muted-foreground">{series.title || series.name}</h3>
               </div>
               )
@@ -68,9 +66,7 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
                   key={movie.num}
                   onClick={() => setSelectedVod(movie)}
                   >
-                  <div>
-                    <Cover src={movie.stream_icon} title={movie.name} />
-                  </div>
+                  <Cover src={movie.stream_icon} title={movie.name} />
                   <h3 className="truncate w-36 text-xs text-muted-foreground">{movie.title || movie.name}</h3>
                 </div>
               )

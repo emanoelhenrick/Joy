@@ -72,6 +72,10 @@ export function Dashboard() {
   }
 
   useEffect(() => {
+    setCurrentCategory('all')
+  }, [tab])
+
+  useEffect(() => {
     const itemsPerPage = 70
     setPages(Math.ceil(filtered!.length / itemsPerPage))
     setEnoughItems(filtered!.length < itemsPerPage)
