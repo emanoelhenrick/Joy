@@ -47,7 +47,7 @@ export default function LivePlaylistScroll({ data }: any) {
           </DialogContent>
         </Dialog>
       )}
-      <div className={`w-full flex h-full ${selectedLiveUrl && 'invisible'}`}>
+      <div className={`w-full flex mb-6 h-full ${selectedLiveUrl && 'invisible'}`}>
         <div className={`flex flex-wrap h-fit gap-x-8 gap-y-8 ml-6`}>
           <Fade direction="up" triggerOnce duration={200}>
           {playlist.map((live) => {

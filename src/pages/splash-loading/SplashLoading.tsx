@@ -1,15 +1,18 @@
+import { Progress } from "@/components/ui/progress";
 import electronApi from "@/config/electronApi";
 import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from "@/states/usePlaylistData";
 import { makeUrls, usePlaylistUrl } from "@/states/usePlaylistUrl";
 import { useUserData } from "@/states/useUserData";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
 import { PlaylistInfo } from "electron/core/models/PlaylistInfo";
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
 
 export function SplashLoading() {
-  const queryClient = useQueryClient()
   const navigate = useNavigate();
+  const queryClient = useQueryClient()
+
+  const [progress, setProgress] = useState(0)
 
   const updateUrls = usePlaylistUrl(state => state.updateUrls)
   const updateUserData = useUserData(state => state.updateUserData)
@@ -21,15 +24,23 @@ export function SplashLoading() {
 
   async function updateStates(info: PlaylistInfo) {
     const userData = await electronApi.getUserData(info.name)
+    setProgress(25)
+
     const vodData = await electronApi.getLocalVodPlaylist(info.name)
+    setProgress(50)
+
     const seriesData = await electronApi.getLocalSeriesPlaylist(info.name)
+    setProgress(75)
+
     const liveData = await electronApi.getLocalLivePlaylist(info.name)
+    setProgress(100)
+
     const urls = makeUrls(info)
+    updateUrls(urls)
 
     updateVodPlaylistState(vodData)
     updateSeriesPlaylistState(seriesData)
     updateLivePlaylistState(liveData)
-    updateUrls(urls)
     updateUserData(userData)
 
     navigate(`/dashboard/home/${info.name}`)
@@ -45,6 +56,8 @@ export function SplashLoading() {
   }, [isSuccess])
 
   return (
-    <div></div>
+    <div className="w-full h-screen flex items-center justify-center">
+      <Progress className="transition w-72" value={progress} />
+    </div>
   )
 }

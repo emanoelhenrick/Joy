@@ -9,6 +9,7 @@ import {
 import { useUserData } from '@/states/useUserData';
 import { ExpandVideoButton } from '../ExpandVideoButton';
 import { useToast } from '@/hooks/use-toast';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '../ui/alert-dialog';
 
 interface PlayerProps {
   url: string
@@ -28,6 +29,8 @@ export function VideoPlayer({ url, type, data, currentTimeStated = 0, title }: P
     type = searchParams.get('type')!
   }
   const updateVodStatus = useUserData(state => state.updateVodStatus)
+  const [isAlert, setIsAlert] = useState(false)
+  const [continueWatching, setContinueWatching] = useState(false) 
   const { toast } = useToast()
 
   const [_isControls, setIsControls] = useState(false)
@@ -48,7 +51,22 @@ export function VideoPlayer({ url, type, data, currentTimeStated = 0, title }: P
     })
   }
 
+  function continueWatchingTheVideo() {
+    setIsAlert(false)
+    setContinueWatching(true)
+  }
+
+  function formatTime(seconds: number) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    const formattedTime = `${hours}:${minutes}:${remainingSeconds}`;
+    return formattedTime;
+  }
+
   useEffect(() => {
+    if (currentTimeStated > 0) setIsAlert(true)
+
     return () => {
       if (duration && type !== 'live') {
         updateMediaState()
@@ -60,7 +78,7 @@ export function VideoPlayer({ url, type, data, currentTimeStated = 0, title }: P
 
   return (
     <MediaPlayer title={title} onPlaying={updateMediaState}
-      currentTime={currentTimeStated}
+      currentTime={continueWatching ? currentTimeStated : 0}
       onHlsError={onHlsError}
       onTimeUpdate={time => currentTime = (time.currentTime)}
       onDurationChange={dur => duration = dur}
@@ -79,6 +97,18 @@ export function VideoPlayer({ url, type, data, currentTimeStated = 0, title }: P
           className='absolute bottom-0'
           icons={defaultLayoutIcons}
         />
+
+        <AlertDialog open={isAlert}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{`Would you like to continue where you left off at ${formatTime(currentTimeStated)}?`}</AlertDialogTitle>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setIsAlert(false)}>from start</AlertDialogCancel>
+              <AlertDialogAction onClick={continueWatchingTheVideo}>continue</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
     </MediaPlayer>
   )
 }

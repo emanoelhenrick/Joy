@@ -9,6 +9,7 @@ import { useUserData } from '@/states/useUserData';
 import { Button } from '@/components/ui/button';
 import { EpisodeProps, SerieInfoProps } from 'electron/core/models/SeriesModels';
 import { ExpandVideoButton } from '@/components/ExpandVideoButton';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
 
 interface PlayerProps {
@@ -30,6 +31,8 @@ export function VideoPlayer({ info, seriesId, episodeNumStart = '1', seasonNumSt
   const [episodeNum, setEpisodeNum] = useState(episodeNumStart)
   const [seasonNum, setSeasonNum] = useState(seasonNumStart)
   const [hasNext, setHasNext] = useState<string | undefined>('1')
+  const [isAlert, setIsAlert] = useState(false)
+  const [continueWatching, setContinueWatching] = useState(false) 
   const [url, setUrl] = useState<string>()
 
   const [isControls, setIsControls] = useState(false)
@@ -46,6 +49,19 @@ export function VideoPlayer({ info, seriesId, episodeNumStart = '1', seasonNumSt
   function handleNext() {
     updateMediaState()
     if (hasNext) setEpisodeNum(hasNext)
+  }
+
+  function continueWatchingTheVideo() {
+    setIsAlert(false)
+    setContinueWatching(true)
+  }
+
+  function formatTime(seconds: number) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    const formattedTime = `${hours}:${minutes}:${remainingSeconds}`;
+    return formattedTime;
   }
 
   useEffect(() => {
@@ -71,6 +87,8 @@ export function VideoPlayer({ info, seriesId, episodeNumStart = '1', seasonNumSt
   }, [episodeNum])
 
   useEffect(() => {
+    if (currentTimeStated > 0) setIsAlert(true)
+      
     return () => {
       if (duration) {
         updateMediaState()
@@ -87,7 +105,7 @@ export function VideoPlayer({ info, seriesId, episodeNumStart = '1', seasonNumSt
           ref={player}
           title={`Episode ${episodeNum} - Season ${seasonNum}`}
           onPlaying={updateMediaState}
-          currentTime={currentTimeStated}
+          currentTime={continueWatching ? currentTimeStated : 0}
           onTimeUpdate={time => currentTime = (time.currentTime)}
           onDurationChange={dur => duration = dur}
           onControlsChange={(isVisible: boolean) => setIsControls(isVisible)}
@@ -112,6 +130,18 @@ export function VideoPlayer({ info, seriesId, episodeNumStart = '1', seasonNumSt
               >
               Next episode
             </Button>}
+
+          <AlertDialog open={isAlert}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>{`Would you like to continue where you left off at ${formatTime(currentTimeStated)}?`}</AlertDialogTitle>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel onClick={() => setIsAlert(false)}>from start</AlertDialogCancel>
+                <AlertDialogAction onClick={continueWatchingTheVideo}>continue</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </MediaPlayer>
       ): <></>}
     </>

@@ -87,7 +87,7 @@ export function Dashboard() {
     <div className="h-fit w-full flex flex-col">
       <div className="flex flex-col w-full">
         <div className='ml-16 flex flex-col gap-4'>
-          <div className='flex items-center justify-between ml-6 mt-4'>
+          <div className='flex items-center justify-between ml-6 mt-2'>
             <div className='flex items-center gap-4'>
               <MenuTab tab={tab} setTab={setTab} />
               <Select onValueChange={(value) => setCurrentCategory(value)} value={currentCategory}>

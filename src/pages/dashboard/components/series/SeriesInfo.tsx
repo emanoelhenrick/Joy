@@ -26,8 +26,8 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
   const [updated, setUpdated] = useState<boolean>()
   const userSeriesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))
   const updateSeason = useUserData(state => state.updateSeason)
-  const [currentSeason, setCurrentSeason] = useState(userSeriesData?.season || '1')
   const [seasons, setSeasons] = useState<string[]>(['1'])
+  const [currentSeason, setCurrentSeason] = useState(userSeriesData?.season || '')
   const [episodes, setEpisodes] = useState<EpisodeProps[]>([])
   const [episodesData, setEpisodesData] = useState<UserEpisodeProps[]>()
   const [updatedDebounce] = useDebounce(updated, 500)
@@ -37,6 +37,7 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
       const seasonsList = []
       for (const key in data?.episodes) seasonsList.push(key)
       setSeasons(seasonsList)
+      setCurrentSeason(userSeriesData?.season || seasonsList[0])
       setEpisodes(data!.episodes[currentSeason])
     }
     
@@ -89,18 +90,27 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
             <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
               {data?.info.name}
             </h1>
-            <p className="leading-7 [&:not(:first-child)]:mt-4 text-md">
-              {data?.info.plot}
-            </p>
+
+            {data?.info.plot && (
+              <p className="leading-7 [&:not(:first-child)]:mt-4 text-md">
+                {data?.info.plot}
+              </p>
+            )}
+
             <div className="flex gap-2">
               {genres[0].length > 0 && genres.map(g => <Badge key={g} className="text-sm mt-2 font-normal bg-secondary text-muted-foreground hover:bg-secodary hover:opacity-80">{g}</Badge>)}
             </div>
-            <p className="leading-7 [&:not(:first-child)]:mt-6  text-md text-muted-foreground">
-              {data?.info.cast}
-            </p>
+
+            {data?.info.cast && (
+              <p className="leading-7 [&:not(:first-child)]:mt-6 text-md text-muted-foreground">
+                {data?.info.cast}
+              </p>
+            )}
+
             <p className="leading-7 [&:not(:first-child)]:mt-0 mb-6 text-md text-muted-foreground">
               {data?.info.director && 'Directed by ' + data?.info.director}
             </p>
+
             {Object.getOwnPropertyNames(data?.episodes).length > 1 && (
               <Select onValueChange={(value) => setCurrentSeason(value)} value={currentSeason}>
               <SelectTrigger  className="w-fit gap-2">

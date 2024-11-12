@@ -2,7 +2,6 @@ import { useInView } from "react-intersection-observer";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Skeleton } from "./ui/skeleton";
 import { useState } from "react";
-import { Ban } from "lucide-react";
 
 export function Cover({ src, title }: { src: string, title: string}) {
   const { ref, inView } = useInView({ rootMargin: '500px'});

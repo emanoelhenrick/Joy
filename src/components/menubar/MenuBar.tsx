@@ -32,6 +32,19 @@ export function MenuBar() {
     await updateCurrentPlaylist(metadata)
   }
 
+  async function verifyAuth() {
+    try {
+      await electronApi.authenticateUser(urls.getAuthenticateUrl)
+    } catch (error) {
+      setUpdatingError(true)
+      return toast({
+        title: 'The playlist could not be updated',
+        description: 'Check if the playlist data is correct.',
+        variant: "destructive"
+      })
+    }
+  }
+
   async function updateCurrentPlaylist(metadata: MetaProps) {
     const playlist = metadata.playlists.find(p => p.name === metadata.currentPlaylist)
     const difference = differenceInHours(Date.now(), new Date(playlist!.updatedAt!))
@@ -64,6 +77,7 @@ export function MenuBar() {
   }
 
   useEffect(() => {
+    verifyAuth()
     getPlaylistName()
   }, [])
 
@@ -89,9 +103,9 @@ export function MenuBar() {
         <Button variant='ghost' onClick={() => navigate(`/dashboard/explore`)} className={`h-fit gap-2 ${location.pathname.includes('explore') ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
           <TvMinimal />
         </Button>
-        <Button variant='ghost' onClick={() => navigate(`/dashboard/explore`)} className={`h-fit gap-2 ${location.pathname.includes('downloads') ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
+        {/* <Button variant='ghost' onClick={() => navigate(`/dashboard/explore`)} className={`h-fit gap-2 ${location.pathname.includes('downloads') ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
           <ArrowDownToLine />
-        </Button>
+        </Button> */}
       </div>
 
       <Dialog>
