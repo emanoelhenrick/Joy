@@ -18,12 +18,10 @@ import { MenuTab } from './components/MenuTab';
 
 const VodPlaylistScroll = lazy(() => import('./components/vod/VodPlaylistScroll'))
 const SeriesPlaylistScroll = lazy(() => import('./components/series/SeriesPlaylistScroll'))
-const LivePlaylistScroll = lazy(() => import('./components/LivePlaylistScroll'))
 
 export function Dashboard() {
   const vodData = useVodPlaylist((state => state.data))
   const seriesData = useSeriesPlaylist((state => state.data))
-  const liveData = useLivePlaylist((state => state.data))
 
   const [playlist, setPlaylist] = useState<VodProps[]>([]);
   const [currentCategory, setCurrentCategory] = useState('all')
@@ -36,7 +34,6 @@ export function Dashboard() {
   let data: { categories: any[], playlist: any[] } = vodData;
   if (tab === 'vod') data = vodData
   if (tab === 'series') data = seriesData
-  if (tab === 'live') data = liveData
 
   const [searchText, setSearchValue] = useState('')
   const [search] = useDebounce(searchText, 400)
@@ -119,7 +116,6 @@ export function Dashboard() {
             <Suspense fallback={<div className='w-full h-screen' />}>
               {tab === 'vod' && <VodPlaylistScroll data={playlist} />}
               {tab === 'series' && <SeriesPlaylistScroll data={playlist} />}
-              {tab === 'live' && <LivePlaylistScroll data={playlist} />}
             </Suspense> : (
               search && <p className='ml-6 text-sm text-muted-foreground'>No results found</p>
             )

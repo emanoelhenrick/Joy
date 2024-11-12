@@ -1,4 +1,3 @@
-import { useSearchParams } from 'react-router-dom'
 import { MediaPlayer, MediaProvider } from '@vidstack/react';
 import { useEffect, useState } from 'react';
 import {
@@ -7,13 +6,11 @@ import {
   DefaultVideoLayout,
 } from '@vidstack/react/player/layouts/default';
 import { useUserData } from '@/states/useUserData';
-import { ExpandVideoButton } from '../ExpandVideoButton';
-import { useToast } from '@/hooks/use-toast';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '../ui/alert-dialog';
+import { ExpandVideoButton } from '../../../../components/ExpandVideoButton';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '../../../../components/ui/alert-dialog';
 
 interface PlayerProps {
   url: string
-  type: string
   data?: any
   currentTimeStated?: number
   title?: string
@@ -22,33 +19,17 @@ interface PlayerProps {
 let currentTime = 0;
 let duration = 0;
 
-export function VideoPlayer({ url, type, data, currentTimeStated = 0, title }: PlayerProps) {
-  if (!url) {
-    const [searchParams] = useSearchParams()
-    url = searchParams.get('url')!
-    type = searchParams.get('type')!
-  }
+export function VodPlayer({ url, data, currentTimeStated = 0, title }: PlayerProps) {
   const updateVodStatus = useUserData(state => state.updateVodStatus)
   const [isAlert, setIsAlert] = useState(false)
-  const [continueWatching, setContinueWatching] = useState(false) 
-  const { toast } = useToast()
+  const [continueWatching, setContinueWatching] = useState(false)
 
   const [_isControls, setIsControls] = useState(false)
 
   function updateMediaState() {
-    if (type == 'vod') {
-      const progress = parseFloat(((currentTime / duration) * 100).toFixed(2))
-      const watching = progress < 95
-      return updateVodStatus(data.id, currentTime, duration, watching)
-    } 
-  }
-  
-  function onHlsError() {
-    toast({
-      title: 'The format of this video is not yet supported',
-      description: 'Sorry for the inconvenience, while the function is not implemented, try another channel',
-      variant: 'destructive'
-    })
+    const progress = parseFloat(((currentTime / duration) * 100).toFixed(2))
+    const watching = progress < 95
+    return updateVodStatus(data.id, currentTime, duration, watching)
   }
 
   function continueWatchingTheVideo() {
@@ -68,7 +49,7 @@ export function VideoPlayer({ url, type, data, currentTimeStated = 0, title }: P
     if (currentTimeStated > 0) setIsAlert(true)
 
     return () => {
-      if (duration && type !== 'live') {
+      if (duration) {
         updateMediaState()
         currentTime = 0;
         duration = 0;
@@ -79,7 +60,6 @@ export function VideoPlayer({ url, type, data, currentTimeStated = 0, title }: P
   return (
     <MediaPlayer title={title} onPlaying={updateMediaState}
       currentTime={continueWatching ? currentTimeStated : 0}
-      onHlsError={onHlsError}
       onTimeUpdate={time => currentTime = (time.currentTime)}
       onDurationChange={dur => duration = dur}
       onControlsChange={(isVisible: boolean) => setIsControls(isVisible)}

@@ -3,7 +3,7 @@ import electronApi from "@/config/electronApi";
 import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from "@/states/usePlaylistData";
 import { makeUrls, usePlaylistUrl } from "@/states/usePlaylistUrl";
 import { useUserData } from "@/states/useUserData";
-import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { PlaylistInfo } from "electron/core/models/PlaylistInfo";
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";

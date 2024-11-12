@@ -14,12 +14,6 @@ export function MenuTab({ tab, setTab }: { tab: string, setTab: (tab: string) =>
           >
           Series
         </p>
-        <p
-          onClick={() => setTab('live')}
-          className={`h-fit border text-sm py-0.5 px-4  rounded-full cursor-pointer transition hover:opacity-90 gap-2 ${tab.includes('live') ? 'bg-foreground text-primary-foreground' : 'bg-secondary text-muted-foreground'}`}
-          >
-          Live
-        </p>
     </div>
   )
 }

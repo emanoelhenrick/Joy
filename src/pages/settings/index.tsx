@@ -23,7 +23,6 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu }: { currentPlay
   const { urls } = usePlaylistUrl()
   const { toast } = useToast()
 
-  const resetUserData = useUserData(state => state.reset)
   const updateVodPlaylistState = useVodPlaylist(state => state.update)
   const updateSeriesPlaylistState = useSeriesPlaylist(state => state.update)
   const updateLivePlaylistState = useLivePlaylist(state => state.update)
@@ -83,7 +82,6 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu }: { currentPlay
       updateVodPlaylistState(vodData)
       updateSeriesPlaylistState(seriesData)
       updateLivePlaylistState(liveData)
-      resetUserData()
 
       setUpdating(false)
       setUpdatingMenu(false)

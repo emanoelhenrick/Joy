@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 import { Fade } from "react-awesome-reveal"
 import { FaPlay } from "react-icons/fa"
 import { useUserData } from "@/states/useUserData"
-import { VideoPlayer } from "@/components/player"
+import { VodPlayer } from "./VodPlayer"
 import { Badge } from "@/components/ui/badge"
 import { Cross2Icon } from "@radix-ui/react-icons"
 
@@ -83,9 +83,6 @@ export function VodInfo({ streamId, title, cover }: Props) {
               </p>
               <Dialog open={isDialog}>
                 <DialogTrigger asChild>
-                  {/* <Button disabled={!extensions.includes(data.movie_data.container_extension) && true} className={`flex gap-2 mt-6 rounded-full self-start px-6 text-md`}>
-                    <FaPlay size={12} /> Play
-                  </Button> */}
                 </DialogTrigger>
                 <DialogContent className="w-fit items-center justify-center" aria-describedby={undefined}>
                   <div onClick={() => setIsDialog(false)} className=" z-10 cursor-pointer absolute right-14 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
@@ -93,9 +90,8 @@ export function VodInfo({ streamId, title, cover }: Props) {
                   </div>
                   <DialogTitle className="hidden">{title}</DialogTitle>
                   <div className="w-screen">
-                    <VideoPlayer
+                    <VodPlayer
                       url={`${urls.getVodStreamUrl}/${streamId}.${data?.movie_data.container_extension}`}
-                      type="vod"
                       currentTimeStated={userVodData ? userVodData!.currentTime : undefined}
                       data={{id: streamId}}
                       title={data.info.name}

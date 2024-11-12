@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Cover } from "@/components/Cover";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { DialogContent, DialogTitle, Dialog } from '@/components/MediaInfoDialog';

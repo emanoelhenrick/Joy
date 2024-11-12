@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import electronApi from "@/config/electronApi";
-import { ArrowDownToLine, Film, House, Search, Settings, TvMinimal } from "lucide-react";
+import { ArrowDownToLine, Film, House, Radio, Search, Settings, TvMinimal } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Fade } from "react-awesome-reveal";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -103,9 +103,9 @@ export function MenuBar() {
         <Button variant='ghost' onClick={() => navigate(`/dashboard/explore`)} className={`h-fit gap-2 ${location.pathname.includes('explore') ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
           <TvMinimal />
         </Button>
-        {/* <Button variant='ghost' onClick={() => navigate(`/dashboard/explore`)} className={`h-fit gap-2 ${location.pathname.includes('downloads') ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
-          <ArrowDownToLine />
-        </Button> */}
+        <Button variant='ghost' onClick={() => navigate(`/dashboard/live`)} className={`h-fit gap-2 ${location.pathname.includes('live') ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
+          <Radio />
+        </Button>
       </div>
 
       <Dialog>
