@@ -13,25 +13,44 @@ import { MetaProps } from "electron/core/models/MetaProps";
 import { differenceInHours } from "date-fns";
 import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from "@/states/usePlaylistData";
 import { SelectProfile } from "../select-profile/SelectProfile";
+import { useUserData } from "@/states/useUserData";
+
+interface ProfilesProps {
+  current: string
+  profiles: string[]
+  playlistName: string
+}
 
 export function MenuBar() {
-  const [playlistName, setPlaylistName] = useState<string>()
+  const [playlistName, setPlaylistName] = useState<string>('')
   const [updating, setUpdating] = useState(false)
   const [profileDialog, setProfileDialog] = useState(false)
   const [updatingError, setUpdatingError] = useState(false)
+  const [profiles, setProfiles] = useState<ProfilesProps>({ current: '', profiles: [''], playlistName: '' })
   const { urls } = usePlaylistUrl()
   const navigate = useNavigate();
   const location = useLocation()
+  const [isCreating, setIsCreating] = useState(false)
+  const [updateRender, setUpdateRender] = useState(false)
 
   const updateVodPlaylistState = useVodPlaylist(state => state.update)
   const updateSeriesPlaylistState = useSeriesPlaylist(state => state.update)
   const updateLivePlaylistState = useLivePlaylist(state => state.update)
-
+  const updateUserData = useUserData(state => state.updateUserData)
 
   async function getPlaylistName() {
-    const metadata = await electronApi.getMetadata()
-    setPlaylistName(metadata.currentPlaylist)
-    await updateCurrentPlaylist(metadata)
+    const meta = await electronApi.getMetadata()
+    const prof = {
+      current: meta.currentPlaylist.profile,
+      profiles: meta.playlists.find(p => p.name === meta.currentPlaylist.name)!.profiles,
+      playlistName: meta.currentPlaylist.name
+    }
+    setProfiles(prof)
+    setPlaylistName(meta.currentPlaylist.name)
+
+    console.log(prof);
+    
+    await updateCurrentPlaylist(meta)
   }
 
   async function verifyAuth() {
@@ -48,12 +67,16 @@ export function MenuBar() {
   }
 
   async function changeProfile(selectedProfile: string) {
+    const userData = await electronApi.getUserData({ playlistName, profile: selectedProfile })
+    await electronApi.switchProfile(selectedProfile)
+    updateUserData(userData)
+    setUpdateRender(prev => !prev)
     toast({ title: `switching to ${selectedProfile}`})
     setProfileDialog(false)
   }
 
   async function updateCurrentPlaylist(metadata: MetaProps) {
-    const playlist = metadata.playlists.find(p => p.name === metadata.currentPlaylist)
+    const playlist = metadata.playlists.find(p => p.name === metadata.currentPlaylist.name)
     const difference = differenceInHours(Date.now(), new Date(playlist!.updatedAt!))
     if (difference < 12) return
     setUpdating(true)
@@ -69,11 +92,11 @@ export function MenuBar() {
       })
     }
     setUpdatingError(false)
-    toast({ title: `Updating playlist ${metadata.currentPlaylist}`})
-    const updatedVod = await electronApi.updateVod({ playlistUrl: urls.getAllVodUrl, categoriesUrl: urls.getAllVodCategoriesUrl, name: metadata.currentPlaylist })
-    const updatedSeries = await electronApi.updateSeries({ playlistUrl: urls.getAllSeriesUrl, categoriesUrl: urls.getAllSeriesCategoriesUrl, name: metadata.currentPlaylist })
-    const updatedLive = await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: metadata.currentPlaylist })
-    await electronApi.updatedAtPlaylist(metadata.currentPlaylist)
+    toast({ title: `Updating playlist ${metadata.currentPlaylist.name}`})
+    const updatedVod = await electronApi.updateVod({ playlistUrl: urls.getAllVodUrl, categoriesUrl: urls.getAllVodCategoriesUrl, name: metadata.currentPlaylist.name })
+    const updatedSeries = await electronApi.updateSeries({ playlistUrl: urls.getAllSeriesUrl, categoriesUrl: urls.getAllSeriesCategoriesUrl, name: metadata.currentPlaylist.name })
+    const updatedLive = await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: metadata.currentPlaylist.name })
+    await electronApi.updatedAtPlaylist(metadata.currentPlaylist.name)
 
     updateVodPlaylistState(updatedVod)
     updateSeriesPlaylistState(updatedSeries)
@@ -87,7 +110,7 @@ export function MenuBar() {
 
   useEffect(() => {
     function handleClickOutside(event: any) {
-      if (ref.current && !ref.current.contains(event.target)) setProfileDialog(false)
+      if (ref.current && !ref.current.contains(event.target) && !isCreating) setProfileDialog(false)
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -98,7 +121,7 @@ export function MenuBar() {
   useEffect(() => {
     verifyAuth()
     getPlaylistName()
-  }, [])
+  }, [updateRender])
 
   return (
     <div className="flex flex-col justify-between items-center fixed px-4 py-4 h-full">
@@ -118,7 +141,7 @@ export function MenuBar() {
           </DialogTrigger>
           <DialogContent ref={ref} onKeyDown={key => key.key == 'Escape' && setProfileDialog(false)} className="w-fit items-center focus:outline-none outline-none" aria-describedby={undefined}>
             <DialogTitle className="hidden">Profile</DialogTitle>
-            <SelectProfile changeProfile={changeProfile} />
+            <SelectProfile changeProfile={changeProfile} data={profiles} isCreating={isCreating} setIsCreating={setIsCreating} />
           </DialogContent>
         </Dialog>
         

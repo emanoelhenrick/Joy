@@ -3,5 +3,6 @@ export interface PlaylistInfo {
   username: string
   password: string
   url: string
-  updatedAt?: Date
+  updatedAt?: number
+  profiles: string[]
 }

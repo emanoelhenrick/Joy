@@ -5,7 +5,7 @@ import { META_PATH } from './paths';
 export async function getMetadata(): Promise<MetaProps> {
   const metadata = await readAsync(META_PATH, 'json')
   if (!metadata) {
-    const newMeta = { currentPlaylist: '', playlists: [] }
+    const newMeta = { currentPlaylist: { name: '', profile: '' }, playlists: [] }
     await writeAsync(META_PATH, newMeta)
     return newMeta
   }

@@ -34,5 +34,7 @@ electron.contextBridge.exposeInMainWorld("ipcRenderer", {
   getUserData: async (args) => await electron.ipcRenderer.invoke("get-user-data", args),
   updateUserData: async (args) => await electron.ipcRenderer.invoke("update-user-data", args),
   changeCurrentPlaylist: async (args) => await electron.ipcRenderer.invoke("change-current-playlist", args),
-  updatedAtPlaylist: async (args) => await electron.ipcRenderer.invoke("updated-at-playlist", args)
+  updatedAtPlaylist: async (args) => await electron.ipcRenderer.invoke("updated-at-playlist", args),
+  createProfile: async (args) => await electron.ipcRenderer.invoke("create-profile", args),
+  switchProfile: async (args) => await electron.ipcRenderer.invoke("switch-profile", args)
 });

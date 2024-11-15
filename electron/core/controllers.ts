@@ -11,10 +11,12 @@ import { getLocalLivePlaylist } from "./services/live/getLocalLivePlaylist";
 import { getPlaylistInfo } from "./services/getPlaylistInfo";
 import { getVodInfo } from "./services/vod/getVodInfo";
 import { getSerieInfo } from "./services/series/getSerieInfo";
-import { getUserData } from "./services/getUserData";
-import { updateUserData } from "./services/updateUserData";
+import { getUserData } from "./services/userdata/getUserData";
+import { updateUserData } from "./services/userdata/updateUserData";
 import { changeCurrentPlaylist } from "./services/changeCurrentPlaylist";
 import { updatedAtPlaylist } from "./services/updatedAtPlaylist";
+import { createProfile } from "./services/userdata/createProfile";
+import { switchProfile } from "./services/userdata/switchProfile";
 
 export default function CoreControllers() {
   ipcMain.handle('get-metadata', getMetadata)
@@ -39,4 +41,7 @@ export default function CoreControllers() {
 
   ipcMain.handle('change-current-playlist', async (_event, args) => await changeCurrentPlaylist(args))
   ipcMain.handle('updated-at-playlist', async (_event, args) => await updatedAtPlaylist(args))
+
+  ipcMain.handle('create-profile', async (_event, args) => await createProfile(args))
+  ipcMain.handle('switch-profile', async (_event, args) => await switchProfile(args))
 }

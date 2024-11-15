@@ -53,7 +53,8 @@ export function Initial() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setSubmitted(true)
-    setFormValue(values)
+    const value = { ...values, profiles: ['Default'] }
+    setFormValue(value)
   }
 
   async function handleNewPLaylist(urls: PlaylistUrls) {
@@ -67,6 +68,7 @@ export function Initial() {
     const liveData = await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: formValue!.name })
 
     setProgress({ msg: 'Updating configs...', value: 90})
+    formValue!.updatedAt = Date.now()
     await electronApi.addPlaylistToMeta(formValue!)
     updateUrls(urls)
 

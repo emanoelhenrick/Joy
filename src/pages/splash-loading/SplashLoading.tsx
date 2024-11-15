@@ -22,8 +22,8 @@ export function SplashLoading() {
 
   const { isSuccess, data  } = useQuery({ queryKey: ['playlistExists'], queryFn: electronApi.getMetadata, staleTime: Infinity })
 
-  async function updateStates(info: PlaylistInfo) {
-    const userData = await electronApi.getUserData(info.name)
+  async function updateStates(info: PlaylistInfo, profile: string) {
+    const userData = await electronApi.getUserData({ playlistName: info.name, profile })
     setProgress(25)
 
     const vodData = await electronApi.getLocalVodPlaylist(info.name)
@@ -49,9 +49,9 @@ export function SplashLoading() {
   useEffect(() => {
     if (isSuccess) {
       if (data.playlists.length === 0) return navigate('/initial')
-      const currentPlaylist = data.playlists.find(p => p.name == data.currentPlaylist)!
+      const currentPlaylist = data.playlists.find(p => p.name == data.currentPlaylist.name)!
       queryClient.removeQueries()
-      updateStates(currentPlaylist)
+      updateStates(currentPlaylist, data.currentPlaylist.profile)
     }
   }, [isSuccess])
 

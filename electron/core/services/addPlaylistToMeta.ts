@@ -13,6 +13,9 @@ export async function addPlaylistToMeta(playlistInfo: PlaylistInfo) {
   } else {
     metadata.playlists = [playlistInfo]
   }
-  metadata.currentPlaylist = playlistInfo.name
+  metadata.currentPlaylist = {
+    name: playlistInfo.name,
+    profile: 'Default'
+  }
   return await writeAsync(META_PATH, metadata)
 }
