@@ -159,11 +159,11 @@ export function HomeDashboard() {
             </DialogContent>
           </Dialog>
         )}
-        <div className='ml-16 mb-6 mt-4'>
-          <div className="ml-6 flex flex-col gap-2">
+        <div className='ml-20 mb-6 mt-5'>
+          <div className="flex flex-col gap-2">
             <WatchingScroll watchingVod={watchingVod} watchingSeries={watchingSeries} setSelectedSeries={setSelectedSeries} setSelectedVod={setSelectedVod} />
-
             <FavoritesScroll favoritesSeries={favoritesSeries} favoritesVod={favoritesVod} setSelectedSeries={setSelectedSeries} setSelectedVod={setSelectedVod} updateFavorites={updateRender} />
+            
             <div>
               <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-0.5 px-4 w-fit mb-3 rounded-full transition gap-2`}>
                 Recently updated series

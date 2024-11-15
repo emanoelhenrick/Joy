@@ -33,7 +33,7 @@ export function SplashLoading() {
     setProgress(75)
 
     const liveData = await electronApi.getLocalLivePlaylist(info.name)
-    setProgress(100)
+    setProgress(99)
 
     const urls = makeUrls(info)
     updateUrls(urls)
@@ -50,13 +50,14 @@ export function SplashLoading() {
     if (isSuccess) {
       if (data.playlists.length === 0) return navigate('/initial')
       const currentPlaylist = data.playlists.find(p => p.name == data.currentPlaylist)!
-      updateStates(currentPlaylist)
       queryClient.removeQueries()
+      updateStates(currentPlaylist)
     }
   }, [isSuccess])
 
   return (
-    <div className="w-full h-screen flex items-center justify-center">
+    <div className="w-full h-screen flex flex-col items-center justify-center">
+      <p className="animate-pulse">Loading...</p>
       <Progress className="transition w-72" value={progress} />
     </div>
   )

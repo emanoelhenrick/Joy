@@ -89,12 +89,14 @@ export function VodInfo({ streamId, title, cover }: Props) {
               <div className="flex gap-2">
                 {data.info.genre && genres.map(g => <Badge key={g} className="text-sm mt-2 font-normal bg-secondary text-muted-foreground hover:bg-secodary hover:opacity-80">{g}</Badge>)}
               </div>
-              <p className="leading-7 truncate max-w-xl [&:not(:first-child)]:mt-3 text-md text-muted-foreground">
-                {data?.info.cast}
-              </p>
-              <p className="leading-7 [&:not(:first-child)]:mt-0 text-md text-muted-foreground">
-                {data?.info.director && 'Directed by ' + data?.info.director}
-              </p>
+              <div className="mt-4">
+                <p className="truncate max-w-xl text-md text-muted-foreground">
+                  {data?.info.cast}
+                </p>
+                <p className="text-md text-muted-foreground">
+                  {data?.info.director && 'Directed by ' + data?.info.director}
+                </p>
+              </div>
               <Dialog open={isDialog}>
                 <DialogTrigger asChild>
                 </DialogTrigger>

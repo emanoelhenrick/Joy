@@ -82,7 +82,7 @@ export function MenuBar() {
   }, [])
 
   return (
-    <div className="flex flex-col justify-between items-center border-r fixed px-1 py-4 h-full">
+    <div className="flex flex-col justify-between items-center fixed px-1 border-r py-4 h-full">
       <Fade cascade direction="up" triggerOnce duration={500}>
         <div>
           <Avatar className="relative">

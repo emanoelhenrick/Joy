@@ -101,16 +101,18 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
               {genres[0].length > 0 && genres.map(g => <Badge key={g} className="text-sm mt-2 font-normal bg-secondary text-muted-foreground hover:bg-secodary hover:opacity-80">{g}</Badge>)}
             </div>
 
-            {data?.info.cast && (
-              <p className="leading-7 [&:not(:first-child)]:mt-6 text-md text-muted-foreground">
-                {data?.info.cast}
+            <div className="mt-4">
+              {data?.info.cast && (
+                <p className="text-md text-muted-foreground">
+                  {data?.info.cast}
+                </p>
+              )}
+
+              <p className="mb-6 text-md text-muted-foreground">
+                {data?.info.director && 'Directed by ' + data?.info.director}
               </p>
-            )}
-
-            <p className="leading-7 [&:not(:first-child)]:mt-0 mb-6 text-md text-muted-foreground">
-              {data?.info.director && 'Directed by ' + data?.info.director}
-            </p>
-
+            </div>
+            
             {Object.getOwnPropertyNames(data?.episodes).length > 1 && (
               <Select onValueChange={(value) => setCurrentSeason(value)} value={currentSeason}>
               <SelectTrigger  className="w-fit gap-2">
@@ -125,7 +127,7 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
             )}
             <ScrollArea className="w-full whitespace-nowrap rounded-md">
               <div className="flex w-max space-x-4 pb-6 whitespace-nowrap rounded-md">
-                  {episodes && episodes.map(ep => {
+                  {episodes && episodes.map((ep, index) => {
                     let progress = 0;
                     const epUserData = episodesData?.find(e => e.episodeId == ep.id)
                     if (epUserData) progress = parseFloat(((epUserData.currentTime / epUserData.duration) * 100).toFixed(2))
@@ -142,7 +144,7 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
                               <Progress  value={progress} className="absolute bottom-0 rounded-none h-1" />
                               }
                             </div>
-                            <p className="whitespace-normal text-sm">{ep.title}</p>
+                            <p className="whitespace-normal text-sm">{`Episode ${index + 1}`}</p>
                           </div>
                         </DialogTrigger>
                         <DialogContent className="w-fit border-none bg-transparent items-center justify-center" aria-describedby={undefined}>
@@ -167,7 +169,7 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
                             <div className="py-11 w-full text-lg bg-secondary opacity-40"/>
                             <p className="whitespace-normal absolute text-sm">unsupported</p>
                           </div>
-                          <p className="whitespace-normal text-sm">{ep.title}</p>
+                          <p className="whitespace-normal text-sm">{`Episode ${index + 1}`}</p>
                         </div>
                       )
                     }

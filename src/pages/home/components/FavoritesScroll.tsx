@@ -27,25 +27,25 @@ export function FavoritesScroll({ favoritesVod, favoritesSeries, setSelectedSeri
 
   return ((favoritesVod.length > 0) || (favoritesSeries.length > 0)) && (
     <div>
-    <div className='flex gap-2'>
-     <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-0.5 px-4 w-fit mb-3 rounded-full transition gap-2`}>
-       Favorites
-      </p>
-      {favoritesSeries!.length > 0 && (
-        <p
-          onClick={() => setFavoritesTab(0)}
-          className={`h-fit border ${favoritesTab == 0 ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'} cursor-pointer text-sm py-0.5 px-3 w-fit mb-4 rounded-full transition gap-2`}>
-          Series
+      <div className='flex mb-3 gap-2'>
+        <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-0.5 px-4 w-fit rounded-full transition`}>
+          Favorites
         </p>
-      )}
-      {favoritesVod!.length > 0 && (
-        <p
-          onClick={() => setFavoritesTab(1)}
-          className={`h-fit border ${favoritesTab == 1 ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'} cursor-pointer text-sm py-0.5 px-3 w-fit mb-4 rounded-full transition gap-2`}>
-          Movies
-        </p>
-      )}
-    </div>
+        {favoritesSeries!.length > 0 && (
+          <p
+            onClick={() => setFavoritesTab(0)}
+            className={`h-fit border ${favoritesTab == 0 ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'} cursor-pointer text-sm py-0.5 px-3 w-fit rounded-full transition gap-2`}>
+            Series
+          </p>
+        )}
+        {favoritesVod!.length > 0 && (
+          <p
+            onClick={() => setFavoritesTab(1)}
+            className={`h-fit border ${favoritesTab == 1 ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'} cursor-pointer text-sm py-0.5 px-3 w-fit rounded-full transition gap-2`}>
+            Movies
+          </p>
+        )}
+      </div>
       <ScrollArea className="w-full rounded-md">
         <div className="flex w-max space-x-4 pb-6 pr-4 rounded-md">
           <Fade duration={200} triggerOnce>
