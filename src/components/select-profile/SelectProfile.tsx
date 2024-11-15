@@ -11,18 +11,18 @@ export function SelectProfile({ changeProfile }: { changeProfile: (profile: stri
   ]
 
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-6 p-4  ">
       {profiles.map(p => (
         <div onClick={() => changeProfile(p)} className="flex flex-col cursor-pointer hover:opacity-80 transition items-center gap-1">
-          <Avatar className="relative rounded-2xl w-24 h-24">
+          <Avatar className="relative w-24 h-24">
             <AvatarImage src="https://github.com/shadcn.png" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <p className="text-muted-foreground text-sm">{p}</p>
         </div>
       ))}
-      <div className="w-16 h-24 flex items-center justify-center">
-        <Plus size={42} className="text-muted-foreground hover:text-primary cursor-pointer transition" />
+      <div className="w-24 h-24 rounded-full flex border bg-secondary hover:opacity-80 cursor-pointer items-center justify-center">
+        <Plus size={42} className="text-muted-foreground transition" />
       </div>
     </div>
   )
