@@ -59,6 +59,7 @@ export function VodPlayer({ url, data, currentTimeStated = 0, title }: PlayerPro
 
   return (
     <MediaPlayer title={title} onPlaying={updateMediaState}
+      streamType='on-demand'
       currentTime={continueWatching ? currentTimeStated : 0}
       onTimeUpdate={time => currentTime = (time.currentTime)}
       onDurationChange={dur => duration = dur}

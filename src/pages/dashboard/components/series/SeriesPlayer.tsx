@@ -126,7 +126,7 @@ export function VideoPlayer({ info, seriesId, episodeNumStart = '1', seasonNumSt
             <Button
               onClick={handleNext}
               variant={'secondary'}
-              className={`absolute p-6 text-md bottom-24 right-12 z-50 transition duration-100 ${isControls ? 'opacity-100' : 'opacity-0'}`}
+              className={`absolute p-6 text-md bottom-24 right-5 transition duration-100 ${isControls ? 'opacity-100' : 'opacity-0'}`}
               >
               Next episode
             </Button>}

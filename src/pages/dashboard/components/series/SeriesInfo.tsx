@@ -125,7 +125,7 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
             )}
             <ScrollArea className="w-full whitespace-nowrap rounded-md">
               <div className="flex w-max space-x-4 pb-6 whitespace-nowrap rounded-md">
-                  {episodes && episodes.map((ep) => {
+                  {episodes && episodes.map(ep => {
                     let progress = 0;
                     const epUserData = episodesData?.find(e => e.episodeId == ep.id)
                     if (epUserData) progress = parseFloat(((epUserData.currentTime / epUserData.duration) * 100).toFixed(2))

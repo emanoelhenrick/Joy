@@ -160,7 +160,7 @@ export function HomeDashboard() {
           </Dialog>
         )}
         <div className='ml-16 mb-6 mt-4'>
-          <div className="ml-6 flex flex-col gap-4">
+          <div className="ml-6 flex flex-col gap-2">
             <WatchingScroll watchingVod={watchingVod} watchingSeries={watchingSeries} setSelectedSeries={setSelectedSeries} setSelectedVod={setSelectedVod} />
 
             <FavoritesScroll favoritesSeries={favoritesSeries} favoritesVod={favoritesVod} setSelectedSeries={setSelectedSeries} setSelectedVod={setSelectedVod} updateFavorites={updateRender} />
@@ -168,8 +168,8 @@ export function HomeDashboard() {
               <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-0.5 px-4 w-fit mb-3 rounded-full transition gap-2`}>
                 Recently updated series
               </p>
-              <ScrollArea className="w-full whitespace-nowrap rounded-md">
-                <div className="flex w-max space-x-4 pb-6 whitespace-nowrap rounded-md">
+              <ScrollArea className="w-full rounded-md">
+                <div className="flex w-max gap-2 pb-6 pr-4 rounded-md">
                   <Fade duration={200} triggerOnce>
                     {seriesByDate!.map(series => {
                       return (
@@ -179,7 +179,6 @@ export function HomeDashboard() {
                         onClick={() => setSelectedSeries(series)}
                       >
                         <Cover src={series.cover} title={series.name} />
-                        <h3 className="truncate w-36 text-xs text-muted-foreground">{series.title || series.name}</h3>
                       </div>
                       )
                     })}
@@ -192,8 +191,8 @@ export function HomeDashboard() {
               <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-0.5 px-4 w-fit mb-3 rounded-full transition gap-2`}>
                 Recently added movies
               </p>
-              <ScrollArea className="w-full whitespace-nowrap rounded-md">
-                <div className="flex w-max space-x-4 pb-6 whitespace-nowrap rounded-md">
+              <ScrollArea className="w-full rounded-md">
+                <div className="flex w-max gap-2 pb-6 pr-4 rounded-md">
                 <Fade duration={200} triggerOnce>
                 {vodByDate!.map(movie => {
                   return (
@@ -203,7 +202,6 @@ export function HomeDashboard() {
                     onClick={() => setSelectedVod(movie)}
                     >
                     <Cover src={movie.stream_icon} title={movie.name} />
-                    <h3 className="truncate w-36 text-xs text-muted-foreground">{movie.title || movie.name}</h3>
                   </div>
                   )
                 })}

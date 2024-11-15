@@ -46,8 +46,8 @@ export function FavoritesScroll({ favoritesVod, favoritesSeries, setSelectedSeri
         </p>
       )}
     </div>
-      <ScrollArea className="w-full whitespace-nowrap rounded-md">
-        <div className="flex w-max space-x-4 pb-6 whitespace-nowrap rounded-md">
+      <ScrollArea className="w-full rounded-md">
+        <div className="flex w-max space-x-4 pb-6 pr-4 rounded-md">
           <Fade duration={200} triggerOnce>
             {(favoritesTab == 0 && favoritesSeries) && favoritesSeries!.map(series => {
               return (
@@ -58,7 +58,6 @@ export function FavoritesScroll({ favoritesVod, favoritesSeries, setSelectedSeri
                 <div onClick={() => setSelectedSeries(series)}>
                   <Cover src={series.cover} title={series.name} />
                 </div>
-                <h3 className="truncate w-36 text-xs text-muted-foreground">{series.title || series.name}</h3>
                 <FaStar onClick={() => updateFavorites(series.series_id.toString(), 'series')} size={20} strokeWidth={0} className={`absolute fill-yellow-400 top-3 right-4`} />
               </div>
               )
@@ -72,7 +71,6 @@ export function FavoritesScroll({ favoritesVod, favoritesSeries, setSelectedSeri
                   <div onClick={() => setSelectedVod(movie)}>
                     <Cover src={movie.stream_icon} title={movie.name} />
                   </div>
-                  <h3 className="truncate w-36 text-xs text-muted-foreground">{movie.title || movie.name}</h3>
                   <FaStar onClick={() => updateFavorites(movie.stream_id.toString(), 'vod')} size={20} strokeWidth={0} className={`absolute fill-yellow-400 top-3 right-4`} />
                 </div>
               )

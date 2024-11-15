@@ -13,8 +13,9 @@ import { VodProps } from 'electron/core/models/VodModels';
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink } from '@/components/ui/pagination';
 import { Input } from '@/components/dashboard/input';
-import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from '@/states/usePlaylistData';
+import { useSeriesPlaylist, useVodPlaylist } from '@/states/usePlaylistData';
 import { MenuTab } from './components/MenuTab';
+import { useMeasure } from "@uidotdev/usehooks";
 
 const VodPlaylistScroll = lazy(() => import('./components/vod/VodPlaylistScroll'))
 const SeriesPlaylistScroll = lazy(() => import('./components/series/SeriesPlaylistScroll'))
@@ -22,6 +23,8 @@ const SeriesPlaylistScroll = lazy(() => import('./components/series/SeriesPlayli
 export function Dashboard() {
   const vodData = useVodPlaylist((state => state.data))
   const seriesData = useSeriesPlaylist((state => state.data))
+
+  const [ref, { width }] = useMeasure();
 
   const [playlist, setPlaylist] = useState<VodProps[]>([]);
   const [currentCategory, setCurrentCategory] = useState('all')
@@ -73,13 +76,13 @@ export function Dashboard() {
   }, [tab])
 
   useEffect(() => {
-    const itemsPerPage = 70
+    const itemsPerPage = Math.floor(width! / 154) * 10
     setPages(Math.ceil(filtered!.length / itemsPerPage))
     setEnoughItems(filtered!.length < itemsPerPage)
     setPlaylist([])
     setHasMore(true)
     paginate(page, itemsPerPage)
-  }, [search, currentCategory, page, data, tab])
+  }, [search, currentCategory, page, data, tab, width])
 
   const firstPage = page < 2 ? page : page - 1
   const midPage = page > 1 ? page : 2
@@ -87,9 +90,9 @@ export function Dashboard() {
   return (
     <div className="h-fit w-full flex flex-col">
       <div className="flex flex-col w-full">
-        <div className='ml-16 flex flex-col gap-4'>
-          <div className='flex items-center justify-between ml-6 mt-2'>
-            <div className='flex items-center gap-4'>
+        <div className='ml-20 flex flex-col gap-2'>
+          <div ref={ref} className='flex items-center justify-between mt-4'>
+            <div className='flex items-center gap-2'>
               <MenuTab tab={tab} setTab={setTab} />
               <Select onValueChange={(value) => setCurrentCategory(value)} value={currentCategory}>
                 <SelectTrigger  className="w-fit gap-2">
@@ -122,7 +125,7 @@ export function Dashboard() {
           }
         </div>
       </div>
-      <div className='flex justify-center'>
+      <div className='flex justify-center mb-8'>
       {(!enoughItems && playlist.length > 0) && (
           <Pagination className='mr-6 mt-4 pb-6 absolute w-fit'>
             <PaginationContent>

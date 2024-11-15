@@ -3,7 +3,7 @@ import electronApi from "@/config/electronApi"
 import { usePlaylistUrl } from "@/states/usePlaylistUrl"
 import { QueryFilters, useQuery, useQueryClient } from "@tanstack/react-query"
 import { LoaderCircle } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Fade } from "react-awesome-reveal"
 import { FaPlay } from "react-icons/fa"
 import { useUserData } from "@/states/useUserData"
@@ -21,6 +21,7 @@ export function VodInfo({ streamId, title, cover }: Props) {
   const queryClient = useQueryClient()
 
   const [isDialog, setIsDialog] = useState(false)
+  const [isCover, setIsCover] = useState(true)
   const userVodData = useUserData(state => state.userData.vod?.find(v => v.id == streamId))
   const { data, isSuccess } = useQuery({ queryKey: [`vodInfo`], queryFn: async () => await electronApi.getVodInfo(urls.getVodInfoUrl + streamId) })
   const { urls } = usePlaylistUrl()
@@ -31,7 +32,14 @@ export function VodInfo({ streamId, title, cover }: Props) {
     }
   }, [])
 
-  const genres = data?.info.genre.replaceAll(/^\s+|\s+$/g, "").split(/[^\w\sÀ-ÿ-]/g) || ['']
+  const genres: string[] = useMemo(() => {
+    if (data) {
+      if (data.info.genre) {
+        return data!.info.genre.replaceAll(/^\s+|\s+$/g, "").split(/[^\w\sÀ-ÿ-]/g)
+      }
+    } 
+    return []
+  }, [isSuccess])
   
   const extensions = ['mp4', 'ogg', 'ogv', 'webm', 'mov', 'm4v']
 
@@ -43,7 +51,10 @@ export function VodInfo({ streamId, title, cover }: Props) {
               <div className="transition flex hover:scale-95">
                 {extensions.includes(data!.movie_data.container_extension) ? (
                   <div className="items-center justify-center cursor-pointer flex" onClick={() => setIsDialog(true)}>
-                    <img className="shadow-xl rounded-xl" src={cover!}/>
+                    { isCover ?
+                      <img onError={() => setIsCover(false)} className="shadow-xl rounded-xl" src={cover!}/> :
+                      <div className="bg-secondary w-72 h-44 shadow-xl rounded-xl" />
+                    }
                     <FaPlay className="absolute" size={50} />
                   </div>
                 ) : (
@@ -54,7 +65,10 @@ export function VodInfo({ streamId, title, cover }: Props) {
                   </>
                 )}
               </div>
-              <img src={cover!} className="absolute top-0 rounded-3xl blur-3xl -z-10"/>
+              { isCover ?
+                <img src={cover!} className="absolute top-0 rounded-3xl blur-3xl -z-10"/> : 
+                <div className="bg-secondary w-72 h-44 absolute top-0 rounded-3xl blur-3xl -z-10" />
+              }
             </div>
           ) : (
           <div className="flex items-center justify-center rounded-lg">
@@ -73,7 +87,7 @@ export function VodInfo({ streamId, title, cover }: Props) {
               </p>
 
               <div className="flex gap-2">
-                {genres[0].length > 0 && genres.map(g => <Badge key={g} className="text-sm mt-2 font-normal bg-secondary text-muted-foreground hover:bg-secodary hover:opacity-80">{g}</Badge>)}
+                {data.info.genre && genres.map(g => <Badge key={g} className="text-sm mt-2 font-normal bg-secondary text-muted-foreground hover:bg-secodary hover:opacity-80">{g}</Badge>)}
               </div>
               <p className="leading-7 truncate max-w-xl [&:not(:first-child)]:mt-3 text-md text-muted-foreground">
                 {data?.info.cast}

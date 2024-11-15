@@ -44,8 +44,8 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
         </p>
       )}
     </div>
-      <ScrollArea className="w-full whitespace-nowrap rounded-md">
-        <div className="flex w-max space-x-4 pb-6 whitespace-nowrap rounded-md">
+      <ScrollArea className="w-full rounded-md">
+        <div className="flex w-max space-x-2 pb-6 pr-4 rounded-md">
           <Fade duration={200} triggerOnce>
             {(watchingTab == 0 && watchingSeries) && watchingSeries!.sort((a, b) => b.updatedAt! - a.updatedAt!).map(series => {
               return (
@@ -55,7 +55,6 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
                 onClick={() => setSelectedSeries(series)}
               >
                 <Cover src={series.cover} title={series.name} />
-                <h3 className="truncate w-36 text-xs text-muted-foreground">{series.title || series.name}</h3>
               </div>
               )
             })}
@@ -67,7 +66,6 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
                   onClick={() => setSelectedVod(movie)}
                   >
                   <Cover src={movie.stream_icon} title={movie.name} />
-                  <h3 className="truncate w-36 text-xs text-muted-foreground">{movie.title || movie.name}</h3>
                 </div>
               )
             })}

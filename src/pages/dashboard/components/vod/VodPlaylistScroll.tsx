@@ -7,8 +7,12 @@ import { VodInfo } from "./VodInfo";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { Fade } from "react-awesome-reveal";
 import { FaStar } from "react-icons/fa";
+import { useMeasure } from "@uidotdev/usehooks";
 
 export default function VodPlaylistScroll({ data }: any) {
+  const [ref, { width }] = useMeasure();
+  const columns = Math.floor(width! / 154)
+
   const playlist: VodProps[] = data
   const [update, setUpdate] = useState(false)
   const [favorites, setFavorites] = useState<any>()
@@ -47,8 +51,8 @@ export default function VodPlaylistScroll({ data }: any) {
           </DialogContent>
         </Dialog>
       )}
-      <div className={`w-full flex h-full ${selectedMovie && 'invisible'}`}>
-        <div className={`flex flex-wrap h-fit gap-x-10 gap-y-8 ml-6`}>
+      <div className={`w-full flex h-full pr-4`}>
+        <div ref={ref} style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }} className={`grid w-full h-fit gap-2`}>
           <Fade triggerOnce duration={200}>
             {playlist!.map((movie) => {
                 const isFavorite = favorites?.includes(movie.stream_id.toString())
@@ -63,7 +67,7 @@ export default function VodPlaylistScroll({ data }: any) {
                       ) : (
                         <FaStar onClick={() => updateRender(movie.stream_id.toString())} size={20} className={`absolute fill-primary top-3 right-4 opacity-0 group-hover:opacity-100 transition hover:scale-110`}  />
                       )}
-                    <h3 className="truncate w-36 text-xs text-muted-foreground">{movie.title || movie.name}</h3>
+                    {/* <h3 className="truncate w-36 text-xs text-muted-foreground">{movie.title || movie.name}</h3> */}
                   </div>
                 )
               })}

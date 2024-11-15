@@ -10,13 +10,16 @@ import { useToast } from '@/hooks/use-toast';
 interface PlayerProps {
   url: string
   title?: string
+  setIsSupported: (bool: boolean) => void
 }
 
-export function LivePlayer({ url, title }: PlayerProps) {
+export function LivePlayer({ url, title, setIsSupported }: PlayerProps) {
   const { toast } = useToast()
   const [_isControls, setIsControls] = useState(false)
  
-  function onHlsError() {
+  function onHlsError(error: any) {
+    if (!error.reason.includes('Unsupported')) return
+    setIsSupported(false)
     toast({
       title: 'The format of this video is not yet supported',
       description: 'Sorry for the inconvenience, while the function is not implemented, try another channel',
@@ -30,7 +33,6 @@ export function LivePlayer({ url, title }: PlayerProps) {
       onControlsChange={(isVisible: boolean) => setIsControls(isVisible)}
       onLoadStart={() => setIsControls(true)}
       className='block player-wrapper'
-      streamType='live'
       autoPlay
       src={url!}
       >
