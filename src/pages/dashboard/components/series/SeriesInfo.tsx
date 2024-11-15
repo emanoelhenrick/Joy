@@ -98,7 +98,7 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
             )}
 
             <div className="flex gap-2">
-              {genres[0].length > 0 && genres.map(g => <Badge key={g} className="text-sm mt-2 font-normal bg-secondary text-muted-foreground hover:bg-secodary hover:opacity-80">{g}</Badge>)}
+              {genres[0].length > 0 && genres.map(g => <Badge key={g} className="text-sm mt-2 font-normal bg-secondary text-muted-foreground hover:bg-secondary hover:opacity-80">{g}</Badge>)}
             </div>
 
             <div className="mt-4">
