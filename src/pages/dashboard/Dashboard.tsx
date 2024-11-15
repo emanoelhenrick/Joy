@@ -16,6 +16,7 @@ import { Input } from '@/components/dashboard/input';
 import { useSeriesPlaylist, useVodPlaylist } from '@/states/usePlaylistData';
 import { MenuTab } from './components/MenuTab';
 import { useMeasure } from "@uidotdev/usehooks";
+import Fuse from "fuse.js"
 
 const VodPlaylistScroll = lazy(() => import('./components/vod/VodPlaylistScroll'))
 const SeriesPlaylistScroll = lazy(() => import('./components/series/SeriesPlaylistScroll'))
@@ -39,13 +40,25 @@ export function Dashboard() {
   if (tab === 'series') data = seriesData
 
   const [searchText, setSearchValue] = useState('')
-  const [search] = useDebounce(searchText, 400)
+  const [search] = useDebounce(searchText, 300)
 
   const filtered = useMemo(() => {
     setPage(1)
     if (data) {
-      if (currentCategory === 'all') return search.length > 0 ? data!.playlist.filter((p: { name: string; }) => p.name.toLowerCase().includes(search.toLowerCase())) : data!.playlist
-      return data!.playlist.filter((p: { category_id: string; name: string; }) => p.category_id === currentCategory && p.name.toLowerCase().includes(search.toLowerCase()))
+      const fuse = new Fuse(data!.playlist, {
+        keys: ['name'],
+        threshold: 0.4,
+        minMatchCharLength: 2
+      })
+
+      if (currentCategory === 'all') {
+        return search.length > 0 ? fuse.search(search).map(i => i.item) : data!.playlist
+      }
+
+      return search.length > 0 ? fuse.search(search)
+        .map(i => i.item)
+        .filter(p => p.category_id === currentCategory) :
+          data!.playlist.filter(p => p.category_id === currentCategory)
     }
     
   }, [search, currentCategory, data, tab])
@@ -74,6 +87,10 @@ export function Dashboard() {
   useEffect(() => {
     setCurrentCategory('all')
   }, [tab])
+
+  useEffect(() => {
+    setSearchValue('')
+  }, [currentCategory])
 
   useEffect(() => {
     const itemsPerPage = Math.floor(width! / 154) * 10

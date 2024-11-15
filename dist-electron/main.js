@@ -19617,7 +19617,8 @@ function createWindow() {
       preload: path$4.join(__dirname, "preload.mjs"),
       nodeIntegration: false,
       contextIsolation: true,
-      webSecurity: false
+      webSecurity: false,
+      spellcheck: false
     }
   });
   win.menuBarVisible = false;

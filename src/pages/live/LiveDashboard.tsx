@@ -12,6 +12,7 @@ import { useDebounce } from 'use-debounce';
 import { Input } from '@/components/dashboard/input';
 import { useLivePlaylist } from '@/states/usePlaylistData';
 import { LiveProps } from 'electron/core/models/LiveModels';
+import Fuse from "fuse.js"
 
 const LivePlaylistScroll = lazy(() => import('./components/LivePlaylistScroll'))
 
@@ -32,8 +33,20 @@ export function LiveDashboard() {
 
   const filtered = useMemo(() => {
     if (data) {
-      if (currentCategory === 'all') return search.length > 0 ? data!.playlist.filter((p: { name: string; }) => p.name.toLowerCase().includes(search.toLowerCase())) : data!.playlist
-      return data!.playlist.filter((p: { category_id: string; name: string; }) => p.category_id === currentCategory && p.name.toLowerCase().includes(search.toLowerCase()))
+      const fuse = new Fuse(data!.playlist, {
+        keys: ['name'],
+        threshold: 0.4,
+        minMatchCharLength: 2
+      })
+
+      if (currentCategory === 'all') {
+        return search.length > 0 ? fuse.search(search).map(i => i.item) : data!.playlist
+      }
+
+      return search.length > 0 ? fuse.search(search)
+        .map(i => i.item)
+        .filter(p => p.category_id === currentCategory) :
+          data!.playlist.filter(p => p.category_id === currentCategory)
     }
     
   }, [search, currentCategory, data])
@@ -59,6 +72,10 @@ export function LiveDashboard() {
     const nextPage = Math.floor((playlist.length + elementsPerPage) / elementsPerPage)
     if (hasMore) paginate(nextPage)
   }
+
+  useEffect(() => {
+    setSearchValue('')
+  }, [currentCategory])
 
   useEffect(() => {
     if (liveData) {
