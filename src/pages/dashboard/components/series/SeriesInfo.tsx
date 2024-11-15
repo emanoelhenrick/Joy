@@ -144,7 +144,7 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
                               <Progress  value={progress} className="absolute bottom-0 rounded-none h-1" />
                               }
                             </div>
-                            <p className="whitespace-normal text-sm">{`Episode ${index + 1}`}</p>
+                            <p className="whitespace-normal text-muted-foreground text-sm">{`Episode ${index + 1}`}</p>
                           </div>
                         </DialogTrigger>
                         <DialogContent className="w-fit border-none bg-transparent items-center justify-center" aria-describedby={undefined}>
@@ -169,7 +169,7 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
                             <div className="py-11 w-full text-lg bg-secondary opacity-40"/>
                             <p className="whitespace-normal absolute text-sm">unsupported</p>
                           </div>
-                          <p className="whitespace-normal text-sm">{`Episode ${index + 1}`}</p>
+                          <p className="whitespace-normal text-muted-foreground text-sm">{`Episode ${index + 1}`}</p>
                         </div>
                       )
                     }

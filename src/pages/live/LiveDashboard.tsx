@@ -72,7 +72,7 @@ export function LiveDashboard() {
     <div className="max-h-screen overflow-hidden w-full flex flex-col">
       <div className="flex flex-col w-full">
         <div className='ml-20 flex flex-col gap-2'>
-          <div className='flex items-center justify-between mt-4'>
+          <div className='flex ml-2 items-center justify-between mt-4'>
             <div className='flex items-center justify-between gap-4'>
               <div className={`h-fit border text-sm py-0.5 px-4 rounded-full transition hover:opacity-90 gap-2 bg-secondary text-primary relative flex items-center`}>
                 <p>Live</p>

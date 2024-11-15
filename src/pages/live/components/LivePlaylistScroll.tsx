@@ -53,9 +53,9 @@ export default function LivePlaylistScroll({ playlist, fetchMore, hasMore, first
   }, [inView])
 
   return (
-      <div className={`w-full flex mb-6`}>
-        <div className={`flex w-full pr-2 h-fit`}>
-          <div className="w-full max-w-xl pb-4">
+      <div className={`w-full flex mb-6 ml-2`}>
+        <div className={`flex w-full gap-2 pr-2 h-fit`}>
+          <div className="w-full max-w-lg pb-4">
             <ScrollArea className="w-full h-[90vh] rounded-md">
               <div className="flex flex-col mb-4 gap-2 pr-4">
                 {playlist.map((live) => {
@@ -84,7 +84,7 @@ export default function LivePlaylistScroll({ playlist, fetchMore, hasMore, first
                 <ScrollBar color="blue" />
             </ScrollArea>
           </div>
-          <div className="w-full h-fit flex flex-col gap-4">
+          <div className="w-full pr-4 h-fit flex flex-col gap-4">
             { isSupported ? (
               <LivePlayer url={selectedLiveUrl!} setIsSupported={setIsSupported} />
             ) : (

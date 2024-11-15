@@ -37,7 +37,7 @@ export default function VodPlaylistScroll({ data }: any) {
   }, [userData, update, vodData])
 
   return (
-    <div className="h-fit rounded-xl">
+    <div className="h-fit ml-2 rounded-xl">
       {selectedMovie && (
         <Dialog open={selectedMovie && true}>
           <DialogContent className="w-fit items-center justify-center" aria-describedby={undefined}>

@@ -160,7 +160,7 @@ export function HomeDashboard() {
           </Dialog>
         )}
         <div className='ml-20 mb-6 mt-5'>
-          <div className="flex flex-col gap-2">
+          <div className="flex ml-2 flex-col gap-2">
             <WatchingScroll watchingVod={watchingVod} watchingSeries={watchingSeries} setSelectedSeries={setSelectedSeries} setSelectedVod={setSelectedVod} />
             <FavoritesScroll favoritesSeries={favoritesSeries} favoritesVod={favoritesVod} setSelectedSeries={setSelectedSeries} setSelectedVod={setSelectedVod} updateFavorites={updateRender} />
             
