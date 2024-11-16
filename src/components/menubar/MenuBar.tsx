@@ -31,6 +31,7 @@ export function MenuBar() {
   const navigate = useNavigate();
   const location = useLocation()
   const [isCreating, setIsCreating] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
   const [updateRender, setUpdateRender] = useState(false)
 
   const updateVodPlaylistState = useVodPlaylist(state => state.update)
@@ -47,9 +48,6 @@ export function MenuBar() {
     }
     setProfiles(prof)
     setPlaylistName(meta.currentPlaylist.name)
-
-    console.log(prof);
-    
     await updateCurrentPlaylist(meta)
   }
 
@@ -67,7 +65,7 @@ export function MenuBar() {
   }
 
   async function changeProfile(selectedProfile: string) {
-    const userData = await electronApi.getUserData({ playlistName, profile: selectedProfile })
+    const userData = await electronApi.getUserData(selectedProfile)
     await electronApi.switchProfile(selectedProfile)
     updateUserData(userData)
     setUpdateRender(prev => !prev)
@@ -110,7 +108,7 @@ export function MenuBar() {
 
   useEffect(() => {
     function handleClickOutside(event: any) {
-      if (ref.current && !ref.current.contains(event.target) && !isCreating) setProfileDialog(false)
+      if (ref.current && !ref.current.contains(event.target) && !isCreating && !isEditing) setProfileDialog(false)
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -123,25 +121,39 @@ export function MenuBar() {
     getPlaylistName()
   }, [updateRender])
 
+  function getInitials(string: string) {
+    if (!string || typeof string !== 'string') return '';
+    const words = string.trim().split(/\s+/);
+    const initials = words.slice(0, 2).map(word => word.charAt(0).toUpperCase());
+    return initials.join('');
+  }
+
   return (
     <div className="flex flex-col justify-between items-center fixed px-4 py-4 h-full">
       <Fade cascade direction="up" triggerOnce duration={500}>
         <Dialog open={profileDialog} >
           <DialogTrigger onClick={() => setProfileDialog(true)} asChild>
             <div>
-              <Avatar className="relative cursor-pointer hover:opacity-80 transition">
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
+              <Avatar className="relative bg-secondary cursor-pointer hover:opacity-80 transition flex items-center justify-center">
+                <p className="absolute text-lg">{getInitials(profiles.current)}</p>
               </Avatar>
               <span className="relative flex h-3 w-3">
-                {updating && <span className="animate-ping absolute right-0 bottom-2 inline-flex h-full w-full rounded-full bg-blue-500 opacity-75" />}
-                <span className={`relative inline-flex rounded-full right-0 bottom-2 h-3 w-3 ${updating ? 'bg-sky-400' : updatingError ? 'bg-red-500' : 'bg-green-500'}`}/>
+                {updating && <span className="animate-ping absolute right-0 bottom-3 inline-flex h-full w-full rounded-full bg-blue-500 opacity-75" />}
+                <span className={`relative inline-flex rounded-full right-0 bottom-3 h-3 w-3 ${updating ? 'bg-sky-400' : updatingError ? 'bg-red-500' : 'bg-green-500'}`}/>
               </span>
             </div>
           </DialogTrigger>
           <DialogContent ref={ref} onKeyDown={key => key.key == 'Escape' && setProfileDialog(false)} className="w-fit items-center focus:outline-none outline-none" aria-describedby={undefined}>
-            <DialogTitle className="hidden">Profile</DialogTitle>
-            <SelectProfile changeProfile={changeProfile} data={profiles} isCreating={isCreating} setIsCreating={setIsCreating} />
+            <DialogTitle className="text-center text-muted-foreground">Select profile</DialogTitle>
+            <SelectProfile
+              changeProfile={changeProfile}
+              data={profiles}
+              isCreating={isCreating}
+              setIsCreating={setIsCreating}
+              isEditing={isEditing}
+              setIsEditing={setIsEditing}
+              setUpdateRender={setUpdateRender}
+            />
           </DialogContent>
         </Dialog>
         

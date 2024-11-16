@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Plus } from "lucide-react";
+import { Avatar } from "../ui/avatar";
+import { Plus, Settings, Trash } from "lucide-react";
 import { Input } from "../ui/input";
 import electronApi from "@/config/electronApi";
 import { useUserData } from "@/states/useUserData";
@@ -12,33 +12,64 @@ interface ProfilesProps {
   playlistName: string
 }
 
-export function SelectProfile({ changeProfile, data, setIsCreating, isCreating }: { changeProfile: (profile: string) => void, data: ProfilesProps, setIsCreating: (value: boolean) => void,
-  isCreating: boolean }) {
+interface Props {
+  changeProfile: (profile: string) => void
+  data: ProfilesProps
+  setIsCreating: (value: boolean) => void
+  isCreating: boolean
+  setIsEditing: (value: boolean) => void
+  isEditing: boolean
+  setUpdateRender: (prev: any) => void
+}
+
+export function SelectProfile({ changeProfile, data, setIsCreating, isCreating, setIsEditing, isEditing, setUpdateRender }: Props) {
 
   const [inputValue, setInputValue] = useState('')
   const isProfilesLimit = data.profiles.length === 5
   const updateUserData = useUserData(state => state.updateUserData)
 
   async function createNewProfile() {
-    await electronApi.createProfile({ playlistName: data.playlistName, profile: inputValue })
-    const userData = await electronApi.getUserData({ playlistName: data.playlistName, profile: inputValue })
+    await electronApi.createProfile(inputValue)
+    const userData = await electronApi.getUserData(inputValue)
     updateUserData(userData)
     changeProfile(inputValue)
     setIsCreating(false)
   }
 
+  async function editProfile() {
+    await electronApi.renameProfile({ profile: data.current, newName: inputValue })
+    const userData = await electronApi.getUserData(inputValue)
+    updateUserData(userData)
+    setUpdateRender((prev: any) => !prev)
+    setIsEditing(false)
+  }
+
+  function getInitials(string: string) {
+    if (!string || typeof string !== 'string') return '';
+    const words = string.trim().split(/\s+/);
+    const initials = words.slice(0, 2).map(word => word.charAt(0).toUpperCase());
+    return initials.join('');
+  }
+
+  useEffect(() => {
+    if (isEditing) setInputValue(data.current)
+  }, [isEditing])
+
   return (
-    <div className="flex gap-6 p-4  ">
+    <div className="flex gap-6 p-4">
       {data.profiles.map(p => (
-        <div onClick={() => changeProfile(p)} className="flex flex-col cursor-pointer hover:opacity-80 transition items-center gap-1">
-          <Avatar className="relative w-24 h-24">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
+        <div onClick={() => data.current === p ? setIsEditing(true) : changeProfile(p)} className={`flex hover:scale-105 relative ${data.current !== p && 'opacity-50'} flex-col cursor-pointer group transition items-center gap-1`}>
+          <Avatar className={`relative transition bg-secondary flex items-center justify-center w-24 h-24 `}>
+            <p className={`absolute ${data.current !== p && 'group-hover:opacity-100'} text-muted-foreground opacity-100 group-hover:opacity-0 transition text-4xl`}>{getInitials(p)}</p>
+            <Settings size={32} className={`absolute ${data.current !== p && 'invisible'} opacity-0 group-hover:opacity-100 text-muted-foreground transition`}/>
           </Avatar>
-          <p className="text-muted-foreground text-sm">{p}</p>
+          
+          <p className="text-muted-foreground text-center max-w-24 truncate text-sm">
+            {p}
+          </p>
         </div>
       ))}
-      <div onClick={() => setIsCreating(true)} className={`w-24 h-24 ${isProfilesLimit && 'hidden'} rounded-full flex border bg-secondary hover:opacity-80 cursor-pointer items-center justify-center`}>
+      <div onClick={() => setIsCreating(true)} className={`w-24 h-24 ${isProfilesLimit && 'hidden'} rounded-full flex hover:scale-105 border bg-secondary opacity-50 hover:opacity-80 cursor-pointer items-center justify-center`}>
         <Plus size={42} className="text-muted-foreground transition" />
       </div>
       <AlertDialog open={isCreating}>
@@ -46,12 +77,24 @@ export function SelectProfile({ changeProfile, data, setIsCreating, isCreating }
           <AlertDialogHeader>
             <AlertDialogTitle>{`New profile`}</AlertDialogTitle>
           </AlertDialogHeader>
-
           <Input className="" placeholder='Name' onChange={(e) => setInputValue(e.target.value)} value={inputValue} />
-
           <AlertDialogFooter>
             <AlertDialogCancel onClick={() => setIsCreating(false)}>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={createNewProfile}>Create</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={isEditing}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{`Edit profile`}</AlertDialogTitle>
+          </AlertDialogHeader>
+          <Input className="" onChange={(e) => setInputValue(e.target.value)} value={inputValue} />
+          <p className="text-sm flex gap-1 font-semibold text-red-500 hover:opacity-80 transition cursor-pointer items-center">Remove profile</p>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setIsEditing(false)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={editProfile}>Confirm</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

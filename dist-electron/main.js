@@ -19089,9 +19089,10 @@ async function getSerieInfo(url2) {
   if (!res.data) return;
   return res.data;
 }
-async function getUserData({ playlistName, profile }) {
-  const USERDATA_PATH = getUserDataPath(playlistName, profile);
-  let userData = await main.readAsync(getUserDataPath(playlistName, profile), "json");
+async function getUserData(profile) {
+  const { currentPlaylist } = await getMetadata();
+  const USERDATA_PATH = getUserDataPath(currentPlaylist.name, profile);
+  let userData = await main.readAsync(getUserDataPath(currentPlaylist.name, profile), "json");
   if (!userData) {
     userData = { vod: [], series: [], live: [] };
     await main.writeAsync(USERDATA_PATH, userData);
@@ -19127,23 +19128,21 @@ async function updatedAtPlaylist(playlistName) {
   meta.playlists = updated;
   return await main.writeAsync(META_PATH, meta);
 }
-async function createProfile({ playlistName, profile }) {
-  const USERDATA_PATH = getUserDataPath(playlistName, profile);
-  const metadata = await main.readAsync(META_PATH, "json");
-  const currentPlaylist = metadata.playlists.find((p) => p.name === playlistName);
+async function createProfile(profile) {
+  const metadata = await getMetadata();
+  const USERDATA_PATH = getUserDataPath(metadata.currentPlaylist.name, profile);
+  const currentPlaylist = metadata.playlists.find((p) => p.name === metadata.currentPlaylist.name);
   const profileExists = currentPlaylist == null ? void 0 : currentPlaylist.profiles.find((p) => p === profile);
   if (profileExists) return false;
   const updatedPlaylist = metadata.playlists.map((p) => {
-    if (p.name === playlistName) {
-      p.profiles.push(profile);
-    }
+    if (p.name === metadata.currentPlaylist.name) p.profiles.push(profile);
     return p;
   });
   metadata.playlists = updatedPlaylist;
   await main.writeAsync(META_PATH, metadata);
-  let userData = await main.readAsync(getUserDataPath(playlistName, profile), "json");
+  let userData = await main.readAsync(getUserDataPath(metadata.currentPlaylist.name, profile), "json");
   if (!userData) {
-    userData = { profile, vod: [], series: [], live: [] };
+    userData = { vod: [], series: [], live: [] };
     await main.writeAsync(USERDATA_PATH, userData);
     return true;
   }
@@ -19154,6 +19153,22 @@ async function switchProfile(profile) {
   metadata.currentPlaylist.profile = profile;
   await main.writeAsync(META_PATH, metadata);
   return true;
+}
+async function renameProfile({ profile, newName }) {
+  const meta = await getMetadata();
+  const USERDATA_PATH = getUserDataPath(meta.currentPlaylist.name, profile);
+  meta.currentPlaylist.profile = newName;
+  const updatedPlaylist = meta.playlists.map((p) => {
+    if (p.name === meta.currentPlaylist.name) {
+      const p1 = p.profiles.filter((pf) => pf !== profile);
+      p1.push(newName);
+      p.profiles = p1;
+    }
+    return p;
+  });
+  meta.playlists = updatedPlaylist;
+  await main.writeAsync(META_PATH, meta);
+  return await main.renameAsync(USERDATA_PATH, `${newName}.json`);
 }
 function CoreControllers() {
   ipcMain.handle("get-metadata", getMetadata);
@@ -19174,6 +19189,7 @@ function CoreControllers() {
   ipcMain.handle("updated-at-playlist", async (_event, args) => await updatedAtPlaylist(args));
   ipcMain.handle("create-profile", async (_event, args) => await createProfile(args));
   ipcMain.handle("switch-profile", async (_event, args) => await switchProfile(args));
+  ipcMain.handle("rename-profile", async (_event, args) => await renameProfile(args));
 }
 var src = { exports: {} };
 var browser = { exports: {} };

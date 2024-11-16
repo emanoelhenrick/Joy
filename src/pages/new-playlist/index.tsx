@@ -53,7 +53,7 @@ export function Initial() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setSubmitted(true)
-    const value = { ...values, profiles: ['Default'] }
+    const value = { ...values, profiles: [] }
     setFormValue(value)
   }
 
@@ -70,6 +70,7 @@ export function Initial() {
     setProgress({ msg: 'Updating configs...', value: 90})
     formValue!.updatedAt = Date.now()
     await electronApi.addPlaylistToMeta(formValue!)
+    await electronApi.createProfile('Default')
     updateUrls(urls)
 
     updateVodPlaylistState(vodData)

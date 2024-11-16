@@ -29,8 +29,8 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu }: { currentPlay
 
   async function getPlaylistName() {
     const metadata = await electronApi.getMetadata()
-    setLastUpdated(metadata.playlists.find(p => p.name === metadata.currentPlaylist)!.updatedAt)
-    setPlaylistName(metadata.currentPlaylist)
+    setLastUpdated(metadata.playlists.find(p => p.name === metadata.currentPlaylist.name)!.updatedAt)
+    setPlaylistName(metadata.currentPlaylist.name)
   }
 
   const { isSuccess, data  } = useQuery({ queryKey: ['metadata'], queryFn: electronApi.getMetadata })
