@@ -35,12 +35,17 @@ export function Dashboard() {
   const [pages, setPages] = useState(0)
   const [tab, setTab] = useState('vod')
 
+  function switchTab(tab: string) {
+    setSearchValue('')
+    setTab(tab)
+  }
+
   let data: { categories: any[], playlist: any[] } = vodData;
   if (tab === 'vod') data = vodData
   if (tab === 'series') data = seriesData
 
   const [searchText, setSearchValue] = useState('')
-  const [search] = useDebounce(searchText, 300)
+  const [search, { flush }] = useDebounce(searchText, 300)
 
   const filtered = useMemo(() => {
     setPage(1)
@@ -85,6 +90,7 @@ export function Dashboard() {
   }
 
   useEffect(() => {
+    flush()
     setCurrentCategory('all')
   }, [tab])
 
@@ -110,7 +116,7 @@ export function Dashboard() {
         <div className='ml-20 flex flex-col gap-2'>
           <div ref={ref} className='flex ml-2 items-center justify-between mt-4'>
             <div className='flex items-center gap-2'>
-              <MenuTab tab={tab} setTab={setTab} />
+              <MenuTab tab={tab} switchTab={switchTab} />
               <Select onValueChange={(value) => setCurrentCategory(value)} value={currentCategory}>
                 <SelectTrigger  className="w-fit gap-2">
                   <SelectValue  placeholder="All" />
