@@ -10,6 +10,7 @@ import { useUserData } from "@/states/useUserData"
 import { VodPlayer } from "./VodPlayer"
 import { Badge } from "@/components/ui/badge"
 import { Cross2Icon } from "@radix-ui/react-icons"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 
 interface Props {
   streamId: string
@@ -23,6 +24,7 @@ export function VodInfo({ streamId, title, cover }: Props) {
   const [isDialog, setIsDialog] = useState(false)
   const [isCover, setIsCover] = useState(true)
   const userVodData = useUserData(state => state.userData.vod?.find(v => v.id == streamId))
+  const removeVodStatus = useUserData(state => state.removeVodStatus)
   const { data, isSuccess } = useQuery({ queryKey: [`vodInfo`], queryFn: async () => await electronApi.getVodInfo(urls.getVodInfoUrl + streamId) })
   const { urls } = usePlaylistUrl()
 
@@ -77,7 +79,6 @@ export function VodInfo({ streamId, title, cover }: Props) {
           </div>
           )}
           {data && (
-            <Fade duration={250}>
             <div className={`flex flex-col h-full transition`}>
               <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
                 {data.info.name || data.info.title || data.movie_data.name}
@@ -97,6 +98,23 @@ export function VodInfo({ streamId, title, cover }: Props) {
                   {data?.info.director && 'Directed by ' + data?.info.director}
                 </p>
               </div>
+              <AlertDialog>
+                <AlertDialogTrigger>
+                  { userVodData && <p className="text-muted-foreground text-right opacity-70 hover:opacity-100 cursor-pointer transition mt-2">Clear data</p> }
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will erase all related data like where you stopped watching and favorite.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => removeVodStatus(streamId)}>Clear</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
               <Dialog open={isDialog}>
                 <DialogTrigger asChild>
                 </DialogTrigger>
@@ -116,7 +134,6 @@ export function VodInfo({ streamId, title, cover }: Props) {
                 </DialogContent>
               </Dialog>
             </div>
-            </Fade>
           )}
       </div>
     </div>

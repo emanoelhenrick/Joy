@@ -10,6 +10,9 @@ export interface UserDataState {
   updateVodStatus: (id: string, currentTime: number, duration: number, watching: boolean) => void
   updateSeriesStatus: (id: string, season: string, episodeId: string, currentTime: number, number: number, watching: boolean) => void
   updateSeason: (id: string, season: string) => void
+
+  removeVodStatus: (id: string) => void
+  removeSeriesStatus: (id: string) => void
 }
 
 export const useUserData = create<UserDataState>((set, get) => ({
@@ -146,5 +149,21 @@ export const useUserData = create<UserDataState>((set, get) => ({
         ...prev.userData, series: newSeries
       }
     }))
-  }
+  },
+  removeVodStatus: (id: string) => {
+    set(prev => {
+      const updated = prev.userData.vod?.filter(v => v.id != id)
+      prev.userData.vod = updated
+      electronApi.updateUserData(prev.userData)
+      return prev
+    })
+  },
+  removeSeriesStatus: (id: string) => {
+    set(prev => {
+      const updated = prev.userData.series?.filter(v => v.id != id)
+      prev.userData.series = updated
+      electronApi.updateUserData(prev.userData)
+      return prev
+    })
+  },
 }))

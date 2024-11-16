@@ -13,6 +13,7 @@ import { Progress } from "@/components/ui/progress";
 import { useDebounce } from "use-debounce";
 import { VideoPlayer } from "./SeriesPlayer";
 import { Badge } from "@/components/ui/badge";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title: string, cover: string }) {
   const queryClient = useQueryClient();
@@ -26,6 +27,7 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
   const [updated, setUpdated] = useState<boolean>()
   const userSeriesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))
   const updateSeason = useUserData(state => state.updateSeason)
+  const removeSeriesStatus = useUserData(state => state.removeSeriesStatus)
   const [seasons, setSeasons] = useState<string[]>(['1'])
   const [currentSeason, setCurrentSeason] = useState(userSeriesData?.season || '')
   const [episodes, setEpisodes] = useState<EpisodeProps[]>([])
@@ -58,6 +60,8 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
       const seasonEpisodes = userSeriesData.episodes!.filter(e => e.season == currentSeason)
       if (!seasonEpisodes) return
       setEpisodesData(seasonEpisodes)
+    } else {
+      setEpisodesData(undefined)
     }
   }, [userSeriesData, currentSeason, updatedDebounce])
 
@@ -112,7 +116,7 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
                 {data?.info.director && 'Directed by ' + data?.info.director}
               </p>
             </div>
-            
+
             {Object.getOwnPropertyNames(data?.episodes).length > 1 && (
               <Select onValueChange={(value) => setCurrentSeason(value)} value={currentSeason}>
               <SelectTrigger  className="w-fit gap-2">
@@ -141,7 +145,7 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
                               <div key={ep.id} className="py-11 w-full text-lg bg-secondary opacity-40"/>
                               <FaPlay size={22} className="absolute opacity-70" />
                               {progress > 0 &&
-                              <Progress  value={progress} className="absolute bottom-0 rounded-none h-1" />
+                              <Progress value={progress} className="absolute transition bottom-0 rounded-none h-1" />
                               }
                             </div>
                             <p className="whitespace-normal text-muted-foreground text-sm">{`Episode ${index + 1}`}</p>
@@ -177,6 +181,23 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
               </div>
               <ScrollBar color="blue" orientation="horizontal" />
             </ScrollArea>
+            <AlertDialog onOpenChange={() => setUpdated(prev => !prev)}>
+              <AlertDialogTrigger>
+                { userSeriesData && <p className="text-muted-foreground text-right opacity-70 hover:opacity-100 cursor-pointer transition mt-2">Clear data</p> }
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will erase all related data like where you stopped watching and favorite.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => removeSeriesStatus(seriesId)}>Clear</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         )}
       </div>
