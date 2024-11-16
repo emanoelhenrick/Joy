@@ -6,12 +6,13 @@ import { LiveImage } from "./Image";
 import { LivePlayer } from "./LivePlayer";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useInView } from "react-intersection-observer";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { HeartCrack } from "lucide-react";
-
-
+import axios from "axios";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { decode } from 'js-base64';
 
 export default function LivePlaylistScroll({ playlist, fetchMore, hasMore, firstChannel }: { playlist: LiveProps[], fetchMore: () => void, hasMore: boolean, firstChannel: LiveProps }) {
+  const queryClient = useQueryClient()
+  
   const { urls } = usePlaylistUrl()
   const [update, setUpdate] = useState(false)
   const [favorites, setFavorites] = useState<string[]>()
@@ -22,9 +23,12 @@ export default function LivePlaylistScroll({ playlist, fetchMore, hasMore, first
     urls.getLiveStreamUrl + playlist[0].stream_id + '.m3u8'}`
   )
   const [live, setLive] = useState(firstChannel || playlist[0])
+  const { data, isSuccess } = useQuery({ queryKey: [`liveEpg`], queryFn: () =>  axios.get(urls.getLiveEpgUrl + live.stream_id)})
   const { userData, updateFavorite } = useUserData()
 
-  const { ref, inView, entry } = useInView({ threshold: 0 });
+  console.log(data);
+
+  const { ref, inView } = useInView({ threshold: 0 });
 
   async function updateRender(streamId: string) {
     updateFavorite(streamId, 'live')
@@ -36,6 +40,10 @@ export default function LivePlaylistScroll({ playlist, fetchMore, hasMore, first
     setIsSupported(true)
     setSelectLiveUrl(`${urls.getLiveStreamUrl}${live.stream_id}.m3u8`)
   }
+
+  useEffect(() => {
+    queryClient.refetchQueries()
+  }, [selectedLiveUrl])
 
   useEffect(() => {
     if (userData && userData.live) {
@@ -84,23 +92,37 @@ export default function LivePlaylistScroll({ playlist, fetchMore, hasMore, first
                 <ScrollBar color="blue" />
             </ScrollArea>
           </div>
-          <div className="w-full pr-4 h-fit flex flex-col gap-4">
+          <div className="w-full pr-4 h-fit flex flex-col">
             { isSupported ? (
-              <LivePlayer url={selectedLiveUrl!} setIsSupported={setIsSupported} />
+              <LivePlayer url={selectedLiveUrl!} setIsSupported={setIsSupported} title={live.name} />
             ) : (
               <div className="bg-secondary relative flex items-center justify-center rounded-lg aspect-video">
                 <p className="absolute text-muted-foreground">unsupported</p>
               </div>
             )}
-            <div className="flex gap-2 items-center">
-              <LiveImage src={live.stream_icon} />
-              <h3 className="text-xl">{live.name}</h3>
+            <div className="flex gap-3 items-center mt-4">
+              <LiveImage src={live.stream_icon} /> 
+              <h3 className="text-md">{live.name}</h3>
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
+                <span className={`relative inline-flex rounded-full h-2 w-2 bg-red-500`}/>
+              </span>
+              <p className="text-md text-muted-foreground">{data?.data.epg_listings[0] && decode(data?.data.epg_listings[0].title)}</p>
             </div>
-              <Alert className="w-fit">
-                <AlertDescription className="text-muted-foreground">
-                  Some video formats have not yet been implemented but will soon be!
-                </AlertDescription>
-              </Alert>
+            <div className="">
+            {data?.data.epg_listings[0] && (
+              <p className="text-sm p-2 border rounded-md mt-2 text-muted-foreground">{decode(data?.data.epg_listings[0].description)}</p>
+            )}
+            
+            </div>
+            {/* <ScrollArea className="whitespace-nowrap rounded-md">
+              <div className="flex w-96 mt-2 space-x-2 pb-4 whitespace-nowrap rounded-md">
+                {data?.data.epg_listings && data?.data.epg_listings.map(p =>
+                  <p className="bg-secondary text-sm text-muted-foreground py-1 px-3 rounded-md">{decode(p.title)}</p>
+                )}
+              </div>
+             <ScrollBar color="blue" orientation="horizontal" />
+            </ScrollArea> */}
           </div>
         </div>
       </div>

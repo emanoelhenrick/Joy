@@ -16,8 +16,10 @@ interface PlayerProps {
 export function LivePlayer({ url, title, setIsSupported }: PlayerProps) {
   const { toast } = useToast()
   const [_isControls, setIsControls] = useState(false)
+  const [update, setUpdate] = useState(false)
  
   function onHlsError(error: any) {
+    setUpdate(prev => !prev)
     if (!error.reason.includes('Unsupported')) return
     setIsSupported(false)
     toast({
@@ -32,6 +34,7 @@ export function LivePlayer({ url, title, setIsSupported }: PlayerProps) {
       onHlsError={onHlsError}
       onControlsChange={(isVisible: boolean) => setIsControls(isVisible)}
       onLoadStart={() => setIsControls(true)}
+      onWaiting={() => setUpdate(prev => !prev)}
       className='block player-wrapper'
       autoPlay
       src={url!}

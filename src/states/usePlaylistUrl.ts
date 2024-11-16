@@ -14,6 +14,7 @@ export interface PlaylistUrls {
   getVodStreamUrl: string,
   getSeriesStreamUrl: string,
   getLiveStreamUrl: string
+  getLiveEpgUrl: string
 }
 
 export interface PlaylistUrlsState {
@@ -34,7 +35,8 @@ export const usePlaylistUrl = create<PlaylistUrlsState>((set) => ({
     getAuthenticateUrl: '',
     getVodStreamUrl: '',
     getSeriesStreamUrl: '',
-    getLiveStreamUrl: ''
+    getLiveStreamUrl: '',
+    getLiveEpgUrl: ''
   },
   updateUrls: (urls: any) => set({ urls })
 }))
@@ -54,5 +56,6 @@ export function makeUrls(playlistInfo: PlaylistInfo) {
     getAllLiveUrl: `${url}/player_api.php?username=${username}&password=${password}&action=get_live_streams`,
     getAllLiveCategoriesUrl: `${url}/player_api.php?username=${username}&password=${password}&action=get_live_categories`,
     getLiveStreamUrl: `${url}/live/${username}/${password}/`,
+    getLiveEpgUrl: `${url}/player_api.php?username=${username}&password=${password}&action=get_short_epg&limit=20&stream_id=`
   }
 }
