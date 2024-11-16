@@ -32,6 +32,7 @@ export function MenuBar() {
   const location = useLocation()
   const [isCreating, setIsCreating] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
+  const [isRemoving, setIsRemoving] = useState(false)
   const [updateRender, setUpdateRender] = useState(false)
 
   const updateVodPlaylistState = useVodPlaylist(state => state.update)
@@ -108,7 +109,12 @@ export function MenuBar() {
 
   useEffect(() => {
     function handleClickOutside(event: any) {
-      if (ref.current && !ref.current.contains(event.target) && !isCreating && !isEditing) setProfileDialog(false)
+      if (ref.current
+        && !ref.current.contains(event.target)
+        && !isCreating
+        && !isEditing
+        && !isRemoving
+      ) setProfileDialog(false)
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -152,6 +158,8 @@ export function MenuBar() {
               setIsCreating={setIsCreating}
               isEditing={isEditing}
               setIsEditing={setIsEditing}
+              isRemoving={isRemoving}
+              setIsRemoving={setIsRemoving}
               setUpdateRender={setUpdateRender}
             />
           </DialogContent>

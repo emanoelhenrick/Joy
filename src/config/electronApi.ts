@@ -37,6 +37,7 @@ export interface Api {
   createProfile: (profile: string) => Promise<boolean>
   switchProfile: (profile: string) => Promise<boolean>
   renameProfile: (data: RenameProfileProps) => Promise<boolean>
+  removeProfile: (profile: string) => Promise<void>
 }
 
 const electronApi = window.ipcRenderer as unknown as Api

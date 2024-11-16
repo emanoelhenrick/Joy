@@ -47,5 +47,6 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 
   createProfile: async (args: any) => await ipcRenderer.invoke('create-profile', args),
   switchProfile: async (args: any) => await ipcRenderer.invoke('switch-profile', args),
-  renameProfile: async (args: any) => await ipcRenderer.invoke('rename-profile', args)
+  renameProfile: async (args: any) => await ipcRenderer.invoke('rename-profile', args),
+  removeProfile: async (args: any) => await ipcRenderer.invoke('remove-profile', args)
 })

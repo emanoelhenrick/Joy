@@ -18,6 +18,7 @@ import { updatedAtPlaylist } from "./services/updatedAtPlaylist";
 import { createProfile } from "./services/userdata/createProfile";
 import { switchProfile } from "./services/userdata/switchProfile";
 import { renameProfile } from "./services/userdata/renameProfile";
+import { removeProfile } from "./services/userdata/removeProfile";
 
 export default function CoreControllers() {
   ipcMain.handle('get-metadata', getMetadata)
@@ -46,4 +47,5 @@ export default function CoreControllers() {
   ipcMain.handle('create-profile', async (_event, args) => await createProfile(args))
   ipcMain.handle('switch-profile', async (_event, args) => await switchProfile(args))
   ipcMain.handle('rename-profile', async (_event, args) => await renameProfile(args))
+  ipcMain.handle('remove-profile', async (_event, args) => await removeProfile(args))
 }

@@ -23,7 +23,7 @@ export function SplashLoading() {
   const { isSuccess, data  } = useQuery({ queryKey: ['playlistExists'], queryFn: electronApi.getMetadata, staleTime: Infinity })
 
   async function updateStates(info: PlaylistInfo, profile: string) {
-    const userData = await electronApi.getUserData({ playlistName: info.name, profile })
+    const userData = await electronApi.getUserData(profile)
     setProgress(25)
 
     const vodData = await electronApi.getLocalVodPlaylist(info.name)

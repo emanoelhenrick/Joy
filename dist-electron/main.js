@@ -19170,6 +19170,23 @@ async function renameProfile({ profile, newName }) {
   await main.writeAsync(META_PATH, meta);
   return await main.renameAsync(USERDATA_PATH, `${newName}.json`);
 }
+async function removeProfile(profile) {
+  const metadata = await getMetadata();
+  let updatedProfiles = [];
+  const updatedPlaylists = metadata.playlists.map((p) => {
+    if (p.name === metadata.currentPlaylist.name) {
+      const newProfiles = p.profiles.filter((prof) => prof !== profile);
+      p.profiles = newProfiles;
+      updatedProfiles = newProfiles;
+    }
+    return p;
+  });
+  metadata.currentPlaylist.profile = updatedProfiles[0];
+  metadata.playlists = updatedPlaylists;
+  await main.writeAsync(META_PATH, metadata);
+  const USERDATA_PATH = getUserDataPath(metadata.currentPlaylist.name, profile);
+  await main.removeAsync(USERDATA_PATH);
+}
 function CoreControllers() {
   ipcMain.handle("get-metadata", getMetadata);
   ipcMain.handle("authenticate-user", async (_event, args) => await authenticateUser(args));
@@ -19190,6 +19207,7 @@ function CoreControllers() {
   ipcMain.handle("create-profile", async (_event, args) => await createProfile(args));
   ipcMain.handle("switch-profile", async (_event, args) => await switchProfile(args));
   ipcMain.handle("rename-profile", async (_event, args) => await renameProfile(args));
+  ipcMain.handle("remove-profile", async (_event, args) => await removeProfile(args));
 }
 var src = { exports: {} };
 var browser = { exports: {} };
