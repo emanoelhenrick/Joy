@@ -15,7 +15,6 @@ import { FavoritesScroll } from './components/FavoritesScroll';
 import { Trending } from './components/Trending';
 
 export function HomeDashboard() {
-  
   const vodData = useVodPlaylist(state => state.data)
   const seriesData = useSeriesPlaylist(state => state.data)
 

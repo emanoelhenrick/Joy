@@ -11,6 +11,7 @@ import { VodPlayer } from "./VodPlayer"
 import { Badge } from "@/components/ui/badge"
 import { Cross2Icon } from "@radix-ui/react-icons"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
+import { VodPlayerDialog } from "./VodPlayerDialog"
 
 interface Props {
   streamId: string
@@ -115,24 +116,15 @@ export function VodInfo({ streamId, title, cover }: Props) {
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
-              <Dialog open={isDialog}>
-                <DialogTrigger asChild>
-                </DialogTrigger>
-                <DialogContent className="w-fit items-center justify-center" aria-describedby={undefined}>
-                  <div onClick={() => setIsDialog(false)} className=" z-10 cursor-pointer absolute right-14 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-                    <Cross2Icon className="h-8 w-8" />
-                  </div>
-                  <DialogTitle className="hidden">{title}</DialogTitle>
-                  <div className="w-screen">
-                    <VodPlayer
-                      url={`${urls.getVodStreamUrl}/${streamId}.${data?.movie_data.container_extension}`}
-                      currentTimeStated={userVodData ? userVodData!.currentTime : undefined}
-                      data={{id: streamId}}
-                      title={data.info.name}
-                    />
-                  </div>
-                </DialogContent>
-              </Dialog>
+
+              <VodPlayerDialog
+                name={data.info.name}
+                container_extension={data?.movie_data.container_extension}
+                currentTime={userVodData ? userVodData!.currentTime : undefined}
+                streamId={streamId}
+                open={isDialog}
+                setIsOpen={setIsDialog}
+              />
             </div>
           )}
       </div>

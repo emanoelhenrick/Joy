@@ -5,6 +5,7 @@ import { MenuBar } from "@/components/menubar/MenuBar";
 import { HomeDashboard } from "./home/HomeDashboard";
 import { Dashboard } from "./dashboard/Dashboard";
 import { LiveDashboard } from "./live/LiveDashboard";
+import { HomeVodPlayer } from "./home/HomeVodPlayer";
 
 export const router = createHashRouter(
   createRoutesFromElements(
@@ -19,6 +20,7 @@ export const router = createHashRouter(
         }
       >
         <Route path="/dashboard/home/:playlistName" Component={HomeDashboard} />
+        <Route path="/dashboard/home/:playlistName/player" Component={HomeVodPlayer} />
         <Route path="/dashboard/explore" Component={Dashboard} />
         <Route path="/dashboard/live" Component={LiveDashboard} />
       </Route>

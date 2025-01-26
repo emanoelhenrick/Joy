@@ -1,36 +1,30 @@
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay"
-import { MovieDb, TrendingResponse } from "moviedb-promise";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { format } from "date-fns";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useNavigate, useParams } from "react-router-dom";
+import { useTrending } from "@/states/useTrending";
+import { FaPlay } from "react-icons/fa";
 
 export function Trending() {
   const navigate = useNavigate()
+  const params = useParams()
 
-  const { data, isSuccess } = useQuery({ queryKey: ['tmdb-trending'], queryFn: fetchTrending  })
-
-  async function fetchTrending() {
-    if (!import.meta.env.VITE_TMDB_API_KEY) return
-    const moviedb = new MovieDb(import.meta.env.VITE_TMDB_API_KEY)
-    const res = await moviedb.trending({ media_type: 'all', time_window: 'week', language: 'pt-BR'})
-    return res.results
-  }
-
+  const data = useTrending(state => state.matches)
+  
   function handleSearchForMatch(mediaType: string, search: string) {
     const type = mediaType === 'movie' ? 'vod' : 'series'
     navigate(`/dashboard/explore?type=${type}&search=${search}`)
   }
 
-  useEffect(() => {
-    fetchTrending()
-  }, [])
-
   const renderItem = useCallback((info: any) => {
     const releaseDate = format(info.release_date || info.first_air_date, "u")
+    const perfectMatch = info.matches[0]
+
+    const url = `/dashboard/home/${params.playlistName}/player?streamId=${perfectMatch.stream_id}&container_extension=${perfectMatch.container_extension}`
+
     return (
       <CarouselItem key={info.poster_path}> 
         <div className="flex items-center h-full justify-center rounded-2xl overflow-hidden">
@@ -62,9 +56,27 @@ export function Trending() {
                 </div>
                 
                 <span className="text-sm 2xl:text-base line-clamp-5 text-muted-foreground max-w-screen-sm">{info.overview}</span>
-                <Button onClick={() => handleSearchForMatch(info.media_type, info.title || info.name)} className="w-fit flex gap-2 z-10">
-                  <span>Search for matches</span>
-                </Button>
+                <div className="flex gap-3 items-center">
+                  <div className="mt-2 flex gap-3 bg-primary/5 backdrop-blur-3xl shadow-lg p-3 rounded-lg pr-4 relative">
+                    <img className="w-16 rounded-md " src={perfectMatch.stream_icon || perfectMatch.cover} alt="" />
+
+                    <div className="flex flex-col justify-between">
+                      <div>
+                        <h1 className="text-xs text-muted-foreground">Perfect match</h1>
+                        <span className="text-xl">{perfectMatch.name}</span>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          onClick={() => navigate(url)}
+                          className="flex-1 px-6 flex gap-2 bg-primary/10 text-primary hover:text-background">
+                          <FaPlay className="size-3 opacity-90" />
+                          <span>Watch</span>
+                        </Button>
+                        <Button onClick={() => handleSearchForMatch(info.media_type, info.title || info.name)} variant={"ghost"} className="hover:bg-primary/10">See matches</Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -74,11 +86,12 @@ export function Trending() {
           </div>
           <img className="absolute w-full h-full object-cover" src={`https://image.tmdb.org/t/p/original${info.backdrop_path}`} />
         </div>
+
       </CarouselItem>
     )
   }, [data])
 
-  if (isSuccess && data) return (
+  if (data) return (
     <section className="pr-3 mb-3 relative">
       <Carousel
         plugins={[Autoplay({ delay: 5000 })]}
