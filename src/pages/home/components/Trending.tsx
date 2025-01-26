@@ -13,9 +13,8 @@ export function Trending() {
   const navigate = useNavigate()
 
   async function fetchTrending() {
-    const meta = await electronApi.getMetadata()
-    if (!meta.tmdbKey) return
-    const moviedb = new MovieDb(meta.tmdbKey)
+    if (!import.meta.env.VITE_TMDB_API_KEY) return
+    const moviedb = new MovieDb(import.meta.env.VITE_TMDB_API_KEY)
     const res = await moviedb.trending({ media_type: 'all', time_window: 'week', language: 'pt-BR'})
     setData(res.results)
   }
