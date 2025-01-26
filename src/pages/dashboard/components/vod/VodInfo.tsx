@@ -88,10 +88,10 @@ export function VodInfo({ streamId, title, cover }: Props) {
               </p>
 
               <div className="flex gap-2">
-                {data.info.genre && genres.map(g => <Badge key={g} className="text-sm mt-2 font-normal bg-secondary text-muted-foreground hover:bg-secodary hover:opacity-80">{g}</Badge>)}
+                {data.info.genre && genres.map(g => <Badge key={g} className="text-sm mt-2 font-normal bg-primary text-background hover:bg-secodary hover:opacity-80">{g}</Badge>)}
               </div>
-              <div className="mt-4">
-                <p className="truncate max-w-xl text-md text-muted-foreground">
+              <div className="mt-6">
+                <p className="truncate max-w-xl text-sm text-muted-foreground">
                   {data?.info.cast}
                 </p>
                 <p className="text-md text-muted-foreground">

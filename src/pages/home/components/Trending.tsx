@@ -55,7 +55,7 @@ export function Trending() {
                 <h1 className="text-5xl 2xl:text-6xl font-bold">{info.title || info.name}</h1>
                 <div className="flex items-center gap-2">
                   
-                  <span className="w-fit text-sm 2xl:text-base px-2 py-1 2xl:py-0.5 rounded-md bg-primary-foreground text-white leading-none">
+                  <span className="w-fit text-sm 2xl:text-base px-2 py-1 2xl:py-0.5 rounded-md bg-primary text-background leading-none">
                     {info.media_type === 'movie' ? 'Movies' : 'Series'}
                   </span>
                   <span className="text-muted-foreground">{releaseDate}</span>
@@ -72,7 +72,7 @@ export function Trending() {
           <div className="z-10 w-full h-full absolute flex items-center justify-start">
             <div className="inset-0 w-full h-full bg-gradient-to-l from-transparent to-background/95" />
           </div>
-          <img className="absolute w-full" src={`https://image.tmdb.org/t/p/original${info.backdrop_path}`} />
+          <img className="absolute w-full h-full object-cover" src={`https://image.tmdb.org/t/p/original${info.backdrop_path}`} />
         </div>
       </CarouselItem>
     )

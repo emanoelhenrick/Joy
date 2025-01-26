@@ -102,10 +102,10 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
             )}
 
             <div className="flex gap-2">
-              {genres[0].length > 0 && genres.map(g => <Badge key={g} className="text-sm mt-2 font-normal bg-secondary text-muted-foreground hover:bg-secondary hover:opacity-80">{g}</Badge>)}
+              {genres[0].length > 0 && genres.map(g => <Badge key={g} className="text-sm mt-2 font-normal bg-primary text-background hover:opacity-90">{g}</Badge>)}
             </div>
 
-            <div className="mt-4">
+            <div className="mt-6 text-sm">
               {data?.info.cast && (
                 <p className="text-md text-muted-foreground">
                   {data?.info.cast}
@@ -149,7 +149,7 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
                               }
                               <FaPlay size={22} className="absolute opacity-80" />
                               {progress > 0 &&
-                              <Progress value={progress} className="absolute transition bottom-0 rounded-none h-1" />
+                              <Progress value={progress} className="absolute w-full transition bottom-0 rounded-none h-0.5" />
                               }
                             </div>
                             <p className="whitespace-normal text-muted-foreground text-sm">{`Episode ${index + 1}`}</p>
