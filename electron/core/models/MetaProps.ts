@@ -5,5 +5,6 @@ export interface MetaProps {
     name: string,
     profile: string
   }
-  playlists: PlaylistInfo[]
+  playlists: PlaylistInfo[],
+  tmdbKey: string
 }

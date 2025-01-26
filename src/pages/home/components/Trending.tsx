@@ -4,12 +4,15 @@ import Autoplay from "embla-carousel-autoplay"
 import { MovieDb, TrendingResponse } from "moviedb-promise";
 import { useCallback, useEffect, useState } from "react";
 import { format } from "date-fns";
+import electronApi from "@/config/electronApi";
 
 export function Trending() {
-  const moviedb = new MovieDb()
   const [data, setData] = useState<TrendingResponse['results']>()
-  
+
     async function fetchTrending() {
+      const meta = await electronApi.getMetadata()
+      if (!meta.tmdbKey) return
+      const moviedb = new MovieDb(meta.tmdbKey)
       const res = await moviedb.trending({ media_type: 'all', time_window: 'week', language: 'pt-BR'})
       setData(res.results)
     }
