@@ -1,6 +1,6 @@
 import { VodProps } from "electron/core/models/VodModels";
 import { useUserData } from "@/states/useUserData";
-import { useEffect, useState } from "react";
+import { SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
 import { Cover } from "@/components/Cover";
 import { Dialog, DialogContent, DialogTitle } from "../../../../components/MediaInfoDialog";
 import { VodInfo } from "./VodInfo";
@@ -14,27 +14,40 @@ export default function VodPlaylistScroll({ data }: any) {
   const columns = Math.floor(width! / 154)
 
   const playlist: VodProps[] = data
-  const [update, setUpdate] = useState(false)
+  const [refresh, setRefresh] = useState(false)
   const [favorites, setFavorites] = useState<any>()
   const [selectedMovie, setSelectedMovie] = useState<VodProps>()
-  const { updateFavorite, userData } = useUserData()
+  const updateFavorite = useUserData(state => state.updateFavorite)
   const vodData = useUserData(state => state.userData.vod)
 
   async function updateRender(streamId: string) {
     updateFavorite(streamId, 'vod')
-    setUpdate(prev => !prev)
+    setRefresh(prev => !prev)
   }
 
   useEffect(() => {
-    if (vodData) {
-      const udlist = []
-      for (const vd of vodData) {
-        if (vd.favorite == true) udlist.push(vd.id)
-      }
-      setFavorites(udlist)
-    }
-    
-  }, [userData, update, vodData])
+    if (!vodData) return
+    const udlist = []
+    for (const vd of vodData) if (vd.favorite == true) udlist.push(vd.id)
+    setFavorites(udlist)
+  }, [vodData, refresh])
+
+  const renderItem = useCallback((movie: VodProps) => {
+    const isFavorite = favorites?.includes(movie.stream_id.toString())
+
+    return (
+      <div className="w-fit h-fit hover:scale-95 transition cursor-pointer relative group flex flex-col gap-2" key={movie.num}>
+        <div onClick={() => setSelectedMovie(movie)} className="group-hover:opacity-70">
+          <Cover src={movie.stream_icon} title={movie.title || movie.name} />
+        </div>
+          {isFavorite ? (
+            <FaStar onClick={() => updateRender(movie.stream_id.toString())} strokeWidth={0} className={`absolute size-5 fill-yellow-400 top-3 right-4 ${isFavorite ? 'visible' : 'invisible' }`}  />
+          ) : (
+            <FaStar onClick={() => updateRender(movie.stream_id.toString())} className={`absolute fill-primary size-5 top-3 right-4 opacity-0 group-hover:opacity-100 transition hover:scale-110`}  />
+          )}
+      </div>
+    )
+  }, [playlist, favorites])
 
   return (
     <div className="h-fit ml-2 rounded-xl">
@@ -54,23 +67,7 @@ export default function VodPlaylistScroll({ data }: any) {
       <div className={`w-full flex h-full pr-4`}>
         <div ref={ref} style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }} className={`grid w-full h-fit gap-2`}>
           <Fade triggerOnce duration={200}>
-            {playlist!.map((movie) => {
-                const isFavorite = favorites?.includes(movie.stream_id.toString())
-
-                return (
-                  <div className="w-fit h-fit hover:scale-95 transition cursor-pointer relative group flex flex-col gap-2" key={movie.num}>
-                    <div onClick={() => setSelectedMovie(movie)}>
-                      <Cover src={movie.stream_icon} title={movie.title || movie.name} />
-                    </div>
-                      {isFavorite ? (
-                        <FaStar onClick={() => updateRender(movie.stream_id.toString())} size={20} strokeWidth={0} className={`absolute fill-yellow-400 top-3 right-4 ${isFavorite ? 'visible' : 'invisible' }`}  />
-                      ) : (
-                        <FaStar onClick={() => updateRender(movie.stream_id.toString())} size={20} className={`absolute fill-primary top-3 right-4 opacity-0 group-hover:opacity-100 transition hover:scale-110`}  />
-                      )}
-                    {/* <h3 className="truncate w-36 text-xs text-muted-foreground">{movie.title || movie.name}</h3> */}
-                  </div>
-                )
-              })}
+            {playlist!.map((movie) => renderItem(movie))}
           </Fade>
         </div>
       </div>

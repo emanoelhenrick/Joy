@@ -29,7 +29,7 @@ export const useUserData = create<UserDataState>((set, get) => ({
             writable: true,
             value: [{ id, favorite: true }],
           })
-          return prev
+          return { ...prev }
         }
         const list = Object.getOwnPropertyDescriptor(prev.userData, type)!.value
         const exists = list.find((v: { id: string }) => v.id == id)
@@ -57,20 +57,20 @@ export const useUserData = create<UserDataState>((set, get) => ({
           })
         }
         electronApi.updateUserData(prev.userData)
-        return prev
+        return { ...prev }
     })
   },
   updateVodStatus: (id: string, currentTime: number, duration: number, watching: boolean) => {
     set(prev => {
       if (!prev.userData.vod) {
         prev.userData.vod = [{ id, currentTime, duration, favorite: false, updatedAt: Date.now() }]
-        return prev
+        return { ...prev }
       }
 
       const vod = prev.userData.vod.find(v => v.id == id)
       if (!vod) {
         prev.userData.vod.push({ id, currentTime, duration, favorite: false, watching, updatedAt: Date.now() })
-        return prev
+        return { ...prev }
       }
 
       const updated = prev.userData.vod.map(v => {
@@ -82,38 +82,39 @@ export const useUserData = create<UserDataState>((set, get) => ({
 
       prev.userData.vod = updated
       electronApi.updateUserData(prev.userData)
-      return prev
+      return { ...prev }
     })
   },
   updateSeriesStatus: (id, season, episodeId, currentTime, duration, watching) => {
     let prevSeries = get().userData.series
     const calculateSeries = () => {
       if (!prevSeries) {
-        return [{ id, updatedAt: Date.now(), favorite: false, episodes: [{ season, episodeId, currentTime, duration, watching }] }]
+        return [{ id, updatedAt: Date.now(), favorite: false, watching, episodes: [{ season, episodeId, currentTime, duration }] }]
       }
 
       const series = prevSeries.find(s => s.id == id)
       if (!series) {
-        prevSeries.push({ id, updatedAt: Date.now(), favorite: false, episodes: [{ season, episodeId, currentTime, duration, watching }] })
+        prevSeries.push({ id, updatedAt: Date.now(), favorite: false, watching, episodes: [{ season, episodeId, currentTime, duration }] })
         return prevSeries
       }
 
       const updated = prevSeries.map(s => {
         if (s.id == id) {
           s.updatedAt = Date.now()
+          s.watching = watching
 
           if (!s.episodes) {
-            s.episodes = [{ season, episodeId, currentTime, duration, watching }]
+            s.episodes = [{ season, episodeId, currentTime, duration }]
           }
 
           const episode = s.episodes.find(e => (e.episodeId == episodeId) && (e.season == season))
           if (!episode) {
-            s.episodes.push({ season, episodeId, currentTime, duration, watching })
+            s.episodes.push({ season, episodeId, currentTime, duration })
           }
 
           const updated = s.episodes.map(e => {
             if ((e.episodeId == episodeId) && (e.season == season)) {
-              return {...e, currentTime, duration, watching }
+              return {...e, currentTime, duration}
             }
             return e
           })
@@ -138,8 +139,6 @@ export const useUserData = create<UserDataState>((set, get) => ({
   },
   updateSeason: (id: string, season: string) => {
     const newSeries = get().userData.series!.map((s) => {
-      console.log(s);
-      
       if (s.id == id) s.season = season
       return s
     })

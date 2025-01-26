@@ -10,13 +10,12 @@ import {
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { useDebounce } from 'use-debounce';
 import { VodProps } from 'electron/core/models/VodModels';
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink } from '@/components/ui/pagination';
 import { Input } from '@/components/dashboard/input';
 import { useSeriesPlaylist, useVodPlaylist } from '@/states/usePlaylistData';
 import { MenuTab } from './components/MenuTab';
 import { useMeasure } from "@uidotdev/usehooks";
 import Fuse from "fuse.js"
+import PaginationComponent from '@/components/PaginationComponent'
 
 const VodPlaylistScroll = lazy(() => import('./components/vod/VodPlaylistScroll'))
 const SeriesPlaylistScroll = lazy(() => import('./components/series/SeriesPlaylistScroll'))
@@ -30,7 +29,6 @@ export function Dashboard() {
   const [playlist, setPlaylist] = useState<VodProps[]>([]);
   const [currentCategory, setCurrentCategory] = useState('all')
   const [enoughItems, setEnoughItems] = useState(false)
-  const [hasMore, setHasMore] = useState(true)
   const [page, setPage] = useState(1)
   const [pages, setPages] = useState(0)
   const [tab, setTab] = useState('vod')
@@ -46,6 +44,10 @@ export function Dashboard() {
 
   const [searchText, setSearchValue] = useState('')
   const [search, { flush }] = useDebounce(searchText, 300)
+
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const filtered = useMemo(() => {
     setPage(1)
@@ -70,23 +72,11 @@ export function Dashboard() {
 
   function paginate(page: number, elements: number) {
     if (!filtered) return []
-
     const startIndex = (page - 1) * elements
     const endIndex = (page * elements) > filtered.length ? (filtered.length) : (page * elements)
-
-    if (endIndex === filtered.length) setHasMore(false)
-
     const paginated = filtered.length === 1 ? filtered : filtered.slice(startIndex, endIndex)
     if (playlist.length > 0) return setPlaylist(paginated)
     return setPlaylist(paginated)
-  }
-
-  function nextPage() {
-    setPage(prev => prev + 1)
-  }
-
-  function previousPage() {
-    if (page > 1) setPage(prev => prev - 1)
   }
 
   useEffect(() => {
@@ -99,16 +89,13 @@ export function Dashboard() {
   }, [currentCategory])
 
   useEffect(() => {
-    const itemsPerPage = Math.floor(width! / 154) * 10
+    handleScrollToTop()
+    const itemsPerPage = Math.floor(width! / 156) * 10
     setPages(Math.ceil(filtered!.length / itemsPerPage))
     setEnoughItems(filtered!.length < itemsPerPage)
     setPlaylist([])
-    setHasMore(true)
     paginate(page, itemsPerPage)
   }, [search, currentCategory, page, data, tab, width])
-
-  const firstPage = page < 2 ? page : page - 1
-  const midPage = page > 1 ? page : 2
 
   return (
     <div className="h-fit w-full flex flex-col">
@@ -150,30 +137,7 @@ export function Dashboard() {
       </div>
       <div className='flex justify-center mb-8'>
       {(!enoughItems && playlist.length > 0) && (
-          <Pagination className='mr-6 mt-4 pb-6 absolute w-fit'>
-            <PaginationContent>
-              <PaginationItem className={`${page < 2 && 'hidden'}`}>
-                <div onClick={previousPage} className='text-muted-foreground hover:text-primary transition'><IoIosArrowBack size={16} /></div>
-              </PaginationItem>
-              <PaginationItem className={`${page > 2 ? '' : 'hidden'}`}>
-                <PaginationLink onClick={() => setPage(1)}>1</PaginationLink>
-              </PaginationItem>
-              <PaginationEllipsis className={`${page == pages ? '' : 'hidden'} ${pages < 3 && 'hidden'}`} />
-              <PaginationItem>
-                <PaginationLink onClick={() => setPage(firstPage)} isActive={page == firstPage}>{firstPage}</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink onClick={() => setPage(midPage)} isActive={page == midPage}>{midPage}</PaginationLink>
-              </PaginationItem>
-              <PaginationEllipsis className={`${((page == pages - 1) || (page == pages)) && 'hidden'}`} />
-              <PaginationItem className={`${page == pages && 'hidden'} ${pages < 3 && 'hidden'}`}>
-                <PaginationLink onClick={() => setPage(pages)}>{pages}</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <div onClick={nextPage} className={`text-muted-foreground hover:text-primary transition ${!hasMore && 'invisible'}`}><IoIosArrowForward size={16} /></div>
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+          <PaginationComponent currentPage={page} totalPages={pages} setPage={setPage} />
         )}
       </div>
     </div>

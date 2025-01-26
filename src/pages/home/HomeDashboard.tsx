@@ -50,9 +50,7 @@ export function HomeDashboard() {
       const watchingList: string[] = []
       const favoritesList: string[] = []
       for (const s of userDataSeries) {
-        if(s.episodes) {
-          if (s.episodes.find(e => e.watching)) watchingList.push(s.id!)
-        }
+        if(s.watching) watchingList.push(s.id!)
       }
 
       userDataSeries.forEach(s => {
@@ -86,6 +84,9 @@ export function HomeDashboard() {
     }
     return { watchingSeries: [], favoritesSeries: [] }
   }, [userDataSeries, seriesData])
+
+  console.log(userSeries);
+  
 
   const userVod = useMemo(() => {
     if (userDataVod && vodData) {
@@ -169,7 +170,7 @@ export function HomeDashboard() {
                 Recently updated series
               </p>
               <ScrollArea className="w-full rounded-md">
-                <div className="flex w-max gap-2 pb-6 pr-4 rounded-md">
+                <div className="flex w-max gap-2 pb-5 pr-4 rounded-md">
                   <Fade duration={200} triggerOnce>
                     {seriesByDate!.map(series => {
                       return (
@@ -192,7 +193,7 @@ export function HomeDashboard() {
                 Recently added movies
               </p>
               <ScrollArea className="w-full rounded-md">
-                <div className="flex w-max gap-2 pb-6 pr-4 rounded-md">
+                <div className="flex w-max gap-2 pb-5 pr-4 rounded-md">
                 <Fade duration={200} triggerOnce>
                 {vodByDate!.map(movie => {
                   return (

@@ -45,7 +45,7 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
       )}
     </div>
       <ScrollArea className="w-full rounded-md">
-        <div className="flex w-max space-x-2 pb-6 pr-4 rounded-md">
+        <div className="flex w-max space-x-2 pb-5 pr-4 rounded-md">
           <Fade duration={200} triggerOnce>
             {(watchingTab == 0 && watchingSeries) && watchingSeries!.sort((a, b) => b.updatedAt! - a.updatedAt!).map(series => {
               return (

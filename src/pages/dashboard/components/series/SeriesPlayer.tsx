@@ -35,14 +35,20 @@ export function VideoPlayer({ info, seriesId, episodeNumStart = '1', seasonNumSt
   const [continueWatching, setContinueWatching] = useState(false) 
   const [url, setUrl] = useState<string>()
 
+  function isWatching() {
+    const seasonsNumber = Object.getOwnPropertyNames(info.episodes).length
+    if (parseInt(seasonNum) < seasonsNumber) return true
+    if (parseInt(episodeNum) < info.episodes[seasonNum].length) return true
+    const progress = parseFloat(((currentTime / duration) * 100).toFixed(2))
+    return progress < 95
+  }
+  
   const [isControls, setIsControls] = useState(false)
-
   const updateSeriesStatus = useUserData(state => state.updateSeriesStatus)
 
   function updateMediaState() {
     if (!currentEpisode) return
-    const progress = parseFloat(((currentTime / duration) * 100).toFixed(2))
-    const watching = progress < 95
+    const watching = isWatching()
     return updateSeriesStatus(seriesId, seasonNum, currentEpisode.id, currentTime, duration, watching)
   }
 
@@ -97,7 +103,7 @@ export function VideoPlayer({ info, seriesId, episodeNumStart = '1', seasonNumSt
       }
     }
   }, [])
-
+  
   return (
     <>
       {url ? (

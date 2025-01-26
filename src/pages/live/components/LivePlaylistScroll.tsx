@@ -24,9 +24,7 @@ export default function LivePlaylistScroll({ playlist, fetchMore, hasMore, first
   )
   const [live, setLive] = useState(firstChannel || playlist[0])
   const { data, isSuccess } = useQuery({ queryKey: [`liveEpg`], queryFn: () =>  axios.get(urls.getLiveEpgUrl + live.stream_id)})
-  const { userData, updateFavorite } = useUserData()
-
-  console.log(data);
+  const { userData, updateFavorite } = useUserData();
 
   const { ref, inView } = useInView({ threshold: 0 });
 

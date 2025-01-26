@@ -14,7 +14,7 @@ export function Cover({ src, title }: { src: string, title: string}) {
             src={src}
             width={154}
             onError={() => setImg(false)}
-            className={`relative bg-secondary h-[231px] hover:opacity-80 object-fill`}
+            className={`relative bg-secondary h-[231px] object-fill`}
             placeholder={<Skeleton className="w-36 h-full" />}
           />
           ) : <div className="bg-secondary p-4 h-[231px] w-[152px]">

@@ -60,11 +60,11 @@ export function VodInfo({ streamId, title, cover }: Props) {
                     <FaPlay className="absolute" size={50} />
                   </div>
                 ) : (
-                  <>
-                    <div className="bg-black w-full rounded-xl opacity-40 h-full absolute" />
+                  <div className="flex relative justify-center items-center">
+                    <div className="bg-black w-full rounded-xl opacity-70 h-full absolute" />
                     <img className="rounded-xl shadow-xl" src={cover!}/>
-                    <Badge className="absolute text-sm mt-2 font-normal bg-secondary text-muted-foreground hover:bg-secodary">unsupported</Badge>
-                  </>
+                    <Badge className="absolute text-sm mt-2 font-normal bg-secondary text-muted-foreground hover:bg-secondary">unsupported</Badge>
+                  </div>
                 )}
               </div>
               { isCover ?

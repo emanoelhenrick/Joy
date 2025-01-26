@@ -14,6 +14,7 @@ import { differenceInHours } from "date-fns";
 import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from "@/states/usePlaylistData";
 import { SelectProfile } from "../select-profile/SelectProfile";
 import { useUserData } from "@/states/useUserData";
+import { PiHouseFill, PiMonitorFill, PiBroadcastFill, PiGearSixFill } from "react-icons/pi";
 
 interface ProfilesProps {
   current: string
@@ -166,22 +167,22 @@ export function MenuBar() {
         </Dialog>
         
       
-        <div className="flex flex-col justify-center gap-4">
+        <div className="flex flex-col justify-center gap-6">
           <Button variant='ghost' onClick={() => navigate(`/dashboard/home/${playlistName}`)} className={`h-fit gap-2 ${location.pathname.includes('home') ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
-            <House />
+            <PiHouseFill className="size-6" />
           </Button>
           <Button variant='ghost' onClick={() => navigate(`/dashboard/explore`)} className={`h-fit gap-2 ${location.pathname.includes('explore') ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
-            <TvMinimal />
+            <PiMonitorFill className="size-6" />
           </Button>
           <Button variant='ghost' onClick={() => navigate(`/dashboard/live`)} className={`h-fit gap-2 ${location.pathname.includes('live') ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
-            <Radio />
+            <PiBroadcastFill className='size-6' />
           </Button>
         </div>
 
         <Dialog>
           <DialogTrigger asChild>
             <Button variant='ghost' className={`h-fit gap-2 text-muted-foreground opacity-50`}>
-              <Settings />
+              <PiGearSixFill className='size-6' />
             </Button>
           </DialogTrigger>
           <DialogContent className="w-1/2 max-w-[700px] items-center p-8" aria-describedby={undefined}>
