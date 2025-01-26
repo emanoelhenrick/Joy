@@ -3035,12 +3035,12 @@ var jetpack$1 = jetpackContext;
 const jetpack = jetpack$1;
 var main = jetpack();
 const SessionDataDir = app$1.getPath("sessionData");
-const PLAYLIST_DIR = require$$0$2.join(SessionDataDir, "playlists");
+const PLAYLIST_DIR = require$$0$2.join(SessionDataDir, "Playlists");
 const META_PATH = require$$0$2.join(PLAYLIST_DIR, "meta.json");
-const getUserDataPath = (playlistName, profile) => require$$0$2.join(SessionDataDir, `playlists/${playlistName}/user/${profile}.json`);
-const getVodPath = (playlistName) => require$$0$2.join(SessionDataDir, `playlists/${playlistName}/vod.json`);
-const getSeriesPath = (playlistName) => require$$0$2.join(SessionDataDir, `playlists/${playlistName}/series.json`);
-const getLivePath = (playlistName) => require$$0$2.join(SessionDataDir, `playlists/${playlistName}/live.json`);
+const getUserDataPath = (playlistName, profile) => require$$0$2.join(SessionDataDir, `Playlists/${playlistName}/user/${profile}.json`);
+const getVodPath = (playlistName) => require$$0$2.join(SessionDataDir, `Playlists/${playlistName}/vod.json`);
+const getSeriesPath = (playlistName) => require$$0$2.join(SessionDataDir, `Playlists/${playlistName}/series.json`);
+const getLivePath = (playlistName) => require$$0$2.join(SessionDataDir, `Playlists/${playlistName}/live.json`);
 async function getMetadata() {
   const metadata = await main.readAsync(META_PATH, "json");
   if (!metadata) {
@@ -19021,6 +19021,8 @@ axios.default = axios;
 async function updateVod({ playlistUrl, categoriesUrl, name }) {
   const playlistResponse = await axios.get(playlistUrl);
   const categoriesResponse = await axios.get(categoriesUrl);
+  if (playlistResponse.status !== 200 || categoriesResponse.status !== 200) return;
+  if (!Array.isArray(playlistResponse.data) || !Array.isArray(categoriesResponse.data)) return;
   const data = { playlist: playlistResponse.data, categories: categoriesResponse.data };
   await main.writeAsync(getVodPath(name), data);
   return data;
@@ -19028,6 +19030,8 @@ async function updateVod({ playlistUrl, categoriesUrl, name }) {
 async function updateSeries({ playlistUrl, categoriesUrl, name }) {
   const playlistResponse = await axios.get(playlistUrl);
   const categoriesResponse = await axios.get(categoriesUrl);
+  if (playlistResponse.status !== 200 || categoriesResponse.status !== 200) return;
+  if (!Array.isArray(playlistResponse.data) || !Array.isArray(categoriesResponse.data)) return;
   const data = { playlist: playlistResponse.data, categories: categoriesResponse.data };
   await main.writeAsync(getSeriesPath(name), data);
   return data;
@@ -19035,6 +19039,8 @@ async function updateSeries({ playlistUrl, categoriesUrl, name }) {
 async function updateLive({ playlistUrl, categoriesUrl, name }) {
   const playlistResponse = await axios.get(playlistUrl);
   const categoriesResponse = await axios.get(categoriesUrl);
+  if (playlistResponse.status !== 200 || categoriesResponse.status !== 200) return;
+  if (!Array.isArray(playlistResponse.data) || !Array.isArray(categoriesResponse.data)) return;
   const data = { playlist: playlistResponse.data, categories: categoriesResponse.data };
   await main.writeAsync(getLivePath(name), data);
   return data;
@@ -19080,13 +19086,13 @@ async function getPlaylistInfo(playlistName) {
 async function getVodInfo(url2) {
   if (!url2) return;
   const res = await axios.get(url2);
-  if (!res.data) return;
+  if (!res.data || res.status !== 200) return;
   return res.data;
 }
 async function getSerieInfo(url2) {
   if (!url2) return;
   const res = await axios.get(url2);
-  if (!res.data) return;
+  if (!res.data || res.status !== 200) return;
   return res.data;
 }
 async function getUserData(profile) {

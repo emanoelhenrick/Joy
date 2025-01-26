@@ -31,15 +31,14 @@ export function HomeDashboard() {
   }
 
   const vodByDate = useMemo(() => {
-    if (vodData) {
+    if (vodData && vodData.playlist) {
       return vodData!.playlist.slice(0, 25)
     }
   }, [vodData])
 
   const seriesByDate = useMemo(() => {
-    if (seriesData) {
-      return seriesData!.playlist
-        .slice()
+    if (seriesData && seriesData.playlist) {
+      return seriesData.playlist
         .sort((a, b) => parseInt(b.last_modified.toString()) - parseInt(a.last_modified.toString()))
         .slice(0, 25)
     }
@@ -84,9 +83,6 @@ export function HomeDashboard() {
     }
     return { watchingSeries: [], favoritesSeries: [] }
   }, [userDataSeries, seriesData])
-
-  console.log(userSeries);
-  
 
   const userVod = useMemo(() => {
     if (userDataVod && vodData) {
