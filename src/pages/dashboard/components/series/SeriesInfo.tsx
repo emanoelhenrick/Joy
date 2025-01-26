@@ -81,7 +81,7 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
             <div className="items-center overflow-hidden rounded-xl justify-center transition flex">
               <img onClick={() => setIsDialog(true)} className="shadow-xl" src={cover!}/>
             </div>
-          <img src={cover!} className="absolute top-0 rounded-3xl blur-3xl -z-10"/>
+          <img src={cover!} className="absolute top-0 rounded-3xl blur-2xl -z-10"/>
         </div>
         ) : (
           <div className="flex items-center justify-center rounded-lg">
@@ -140,10 +140,14 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
                       return (
                         <Dialog onOpenChange={() => setUpdated(prev => !prev)} key={currentSeason + '.' + ep.id}>
                         <DialogTrigger asChild>
-                          <div className="flex flex-col space-y-2 w-36 cursor-pointer hover:opacity-80">
-                            <div className="relative flex items-center justify-center overflow-hidden rounded-lg">
-                              <div key={ep.id} className="py-11 w-full text-lg bg-secondary opacity-40"/>
-                              <FaPlay size={22} className="absolute opacity-70" />
+                          <div className="flex flex-col space-y-2 w-44 cursor-pointer hover:opacity-80">
+                            <div className="relative flex items-center aspect-video justify-center overflow-hidden rounded-lg">
+                              { ep.info.movie_image ?
+                                <img src={ep.info.movie_image} className="object-cover opacity-70" />
+                                : 
+                                <div key={ep.id} className="py-11 w-full h-full text-lg bg-secondary opacity-40"/>
+                              }
+                              <FaPlay size={22} className="absolute opacity-80" />
                               {progress > 0 &&
                               <Progress value={progress} className="absolute transition bottom-0 rounded-none h-1" />
                               }

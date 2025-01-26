@@ -23,6 +23,9 @@ export interface EpisodeProps {
   title: string
   container_extension: string
   episode_num: string
+  info: {
+    movie_image?: string
+  }
 }
 
 export interface SerieInfoProps {
