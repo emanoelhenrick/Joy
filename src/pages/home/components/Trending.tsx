@@ -35,23 +35,23 @@ export function Trending() {
       <CarouselItem key={info.poster_path}> 
         <div className="flex items-center h-full justify-center rounded-2xl overflow-hidden">
           <div className="flex h-full w-full relative">
-            <div className="p-16 flex flex-col justify-end gap-2 z-20 mt-0 2xl:mt-8">
+            <div className="p-16 flex flex-col justify-between gap-2 z-20">
+              <div className="mb-3">
+                <h1 className="w-fit text-muted-foreground text-base">
+                  Trending
+                </h1>
+                <HoverCard openDelay={400}>
+                  <HoverCardTrigger>
+                  <h1 className="text-xs w-fit opacity-50 hover:opacity-40 cursor-pointer">by TMDB</h1>
+                  </HoverCardTrigger>
+                  <HoverCardContent>
+                    <span className="text-sm">
+                    TMDB is an external service that provides data about films and series and has no relation to your private playlist.
+                    </span>
+                  </HoverCardContent>
+                </HoverCard>
+              </div>
               <div className="flex flex-col gap-3 z-10">
-                <div className="mb-3">
-                  <h1 className="w-fit text-muted-foreground text-lg">
-                    Trending
-                  </h1>
-                  <HoverCard openDelay={400}>
-                    <HoverCardTrigger>
-                    <h1 className="text-xs opacity-50 hover:opacity-40 cursor-pointer">by TMDB</h1>
-                    </HoverCardTrigger>
-                    <HoverCardContent>
-                      <span className="text-sm">
-                      TMDB is an external service that provides data about films and series and has no relation to your private playlist.
-                      </span>
-                    </HoverCardContent>
-                  </HoverCard>
-                </div>
                 <h1 className="text-5xl 2xl:text-6xl font-bold">{info.title || info.name}</h1>
                 <div className="flex items-center gap-2">
                   
@@ -62,10 +62,10 @@ export function Trending() {
                 </div>
                 
                 <span className="text-sm 2xl:text-base line-clamp-5 text-muted-foreground max-w-screen-sm">{info.overview}</span>
+                <Button onClick={() => handleSearchForMatch(info.media_type, info.title || info.name)} className="w-fit flex gap-2 z-10">
+                  <span>Search for matches</span>
+                </Button>
               </div>
-              <Button onClick={() => handleSearchForMatch(info.media_type, info.title || info.name)} className="w-fit flex gap-2 justify-self-end z-10 mt-3">
-                <span>Search for matches</span>
-              </Button>
             </div>
           </div>
 

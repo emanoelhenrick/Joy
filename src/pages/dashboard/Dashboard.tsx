@@ -136,7 +136,7 @@ export function Dashboard() {
               {tab === 'vod' && <VodPlaylistScroll data={playlist} />}
               {tab === 'series' && <SeriesPlaylistScroll data={playlist} />}
             </Suspense> : (
-              search && <p className='ml-6 text-sm text-muted-foreground'>No results found</p>
+              search && <p className='ml-2 text-sm text-muted-foreground'>No results found</p>
             )
           }
         </div>
