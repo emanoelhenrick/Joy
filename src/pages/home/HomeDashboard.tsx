@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Cover } from "@/components/Cover";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { DialogContent, DialogTitle, Dialog } from '@/components/MediaInfoDialog';
@@ -12,8 +12,10 @@ import { SeriesInfo } from '../dashboard/components/series/SeriesInfo';
 import { VodInfo } from '../dashboard/components/vod/VodInfo';
 import { WatchingScroll } from './components/WatchingScroll';
 import { FavoritesScroll } from './components/FavoritesScroll';
+import { Trending } from './components/Trending';
 
 export function HomeDashboard() {
+  
   const vodData = useVodPlaylist(state => state.data)
   const seriesData = useSeriesPlaylist(state => state.data)
 
@@ -158,6 +160,8 @@ export function HomeDashboard() {
         )}
         <div className='ml-20 mb-6 mt-5'>
           <div className="flex ml-2 flex-col gap-2">
+            <Trending />
+
             <WatchingScroll watchingVod={watchingVod} watchingSeries={watchingSeries} setSelectedSeries={setSelectedSeries} setSelectedVod={setSelectedVod} />
             <FavoritesScroll favoritesSeries={favoritesSeries} favoritesVod={favoritesVod} setSelectedSeries={setSelectedSeries} setSelectedVod={setSelectedVod} updateFavorites={updateRender} />
             
