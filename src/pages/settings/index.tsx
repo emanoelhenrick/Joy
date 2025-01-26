@@ -61,9 +61,8 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu }: { currentPlay
     if (playlistName) {
       setUpdatingMenu(true)
       setUpdating(true)
-      try {
-        await electronApi.authenticateUser(urls.getAuthenticateUrl)
-      } catch (error) {
+      const isValidated = await electronApi.authenticateUser(urls.getAuthenticateUrl)
+      if (!isValidated) {
         setUpdating(false)
         return toast({
           title: 'The playlist could not be updated',

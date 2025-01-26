@@ -60,7 +60,7 @@ export function Initial() {
   async function handleNewPLaylist(urls: PlaylistUrls) {
     setProgress({ msg: 'Downloading VOD playlist...', value: 20})
     const vodData = await electronApi.updateVod({ playlistUrl: urls.getAllVodUrl, categoriesUrl: urls.getAllVodCategoriesUrl, name: formValue!.name })
-
+    
     setProgress({ msg: 'Downloading Series playlist...', value: 50})
     const seriesData = await electronApi.updateSeries({ playlistUrl: urls.getAllSeriesUrl, categoriesUrl: urls.getAllSeriesCategoriesUrl, name: formValue!.name })
 
@@ -84,25 +84,22 @@ export function Initial() {
 
   async function validate() {
     const urls = makeUrls(formValue!)
-    try {
-      const isValidated = await electronApi.authenticateUser(urls.getAuthenticateUrl)
-      if (isValidated) {
-        setValidated(true)
-        handleNewPLaylist(urls)
-        return toast({
-          title: 'Playlist added successfully.',
-          description: 'Please wait while we are configuring your details, this may take a few seconds'
-        })
-      }
-    } catch (error) {
-      setSubmitted(false)
-      toast({
-        variant: "destructive",
-        title: 'Playlist cannot be added.',
-        description: 'Check if the data is correct and try again.'
+    const isValidated = await electronApi.authenticateUser(urls.getAuthenticateUrl)
+    if (isValidated) {
+      setValidated(true)
+      handleNewPLaylist(urls)
+      return toast({
+        title: 'Playlist added successfully.',
+        description: 'Please wait while we are configuring your details, this may take a few seconds'
       })
     }
-  }
+    setSubmitted(false)
+    toast({
+      variant: "destructive",
+      title: 'Playlist cannot be added.',
+      description: 'Check if the data is correct and try again.'
+    })
+}
 
   
   useEffect(() => {

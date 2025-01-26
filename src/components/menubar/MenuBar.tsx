@@ -80,9 +80,8 @@ export function MenuBar() {
     const difference = differenceInHours(Date.now(), new Date(playlist!.updatedAt!))
     if (difference < 12) return
     setUpdating(true)
-    try {
-      await electronApi.authenticateUser(urls.getAuthenticateUrl)
-    } catch (error) {
+    const isValidated = await electronApi.authenticateUser(urls.getAuthenticateUrl)
+    if (!isValidated) {
       setUpdatingError(true)
       setUpdating(false)
       return toast({
@@ -91,6 +90,7 @@ export function MenuBar() {
         variant: "destructive"
       })
     }
+
     setUpdatingError(false)
     toast({ title: `Updating playlist ${metadata.currentPlaylist.name}`})
     const updatedVod = await electronApi.updateVod({ playlistUrl: urls.getAllVodUrl, categoriesUrl: urls.getAllVodCategoriesUrl, name: metadata.currentPlaylist.name })

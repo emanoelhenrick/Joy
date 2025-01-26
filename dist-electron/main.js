@@ -19048,8 +19048,9 @@ async function updateLive({ playlistUrl, categoriesUrl, name }) {
 }
 async function authenticateUser(url2) {
   const res = await axios.get(url2);
-  if (res.status === 200) return true;
-  return false;
+  if (res.status !== 200) return false;
+  if (res.data.user_info.status === "Expired") return false;
+  return true;
 }
 async function addPlaylistToMeta(playlistInfo) {
   const metadata = await main.readAsync(META_PATH, "json");
