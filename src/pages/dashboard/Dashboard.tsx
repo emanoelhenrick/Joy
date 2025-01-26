@@ -16,6 +16,7 @@ import { MenuTab } from './components/MenuTab';
 import { useMeasure } from "@uidotdev/usehooks";
 import Fuse from "fuse.js"
 import PaginationComponent from '@/components/PaginationComponent'
+import { useSearchParams } from 'react-router-dom';
 
 const VodPlaylistScroll = lazy(() => import('./components/vod/VodPlaylistScroll'))
 const SeriesPlaylistScroll = lazy(() => import('./components/series/SeriesPlaylistScroll'))
@@ -26,12 +27,19 @@ export function Dashboard() {
 
   const [ref, { width }] = useMeasure();
 
+  const [searchParams] = useSearchParams()
+
+  const initialTab = searchParams.get('type') || 'vod'
+  const initialSearch = searchParams.get('search') || ''
+  
   const [playlist, setPlaylist] = useState<VodProps[]>([]);
   const [currentCategory, setCurrentCategory] = useState('all')
   const [enoughItems, setEnoughItems] = useState(false)
   const [page, setPage] = useState(1)
   const [pages, setPages] = useState(0)
-  const [tab, setTab] = useState('vod')
+  const [tab, setTab] = useState(initialTab)
+  const [searchText, setSearchValue] = useState(initialSearch)
+  const [search, { flush }] = useDebounce(searchText, 300)
 
   function switchTab(tab: string) {
     setSearchValue('')
@@ -41,9 +49,6 @@ export function Dashboard() {
   let data: { categories: any[], playlist: any[] } = vodData;
   if (tab === 'vod') data = vodData
   if (tab === 'series') data = seriesData
-
-  const [searchText, setSearchValue] = useState('')
-  const [search, { flush }] = useDebounce(searchText, 300)
 
   const handleScrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -85,6 +90,7 @@ export function Dashboard() {
   }, [tab])
 
   useEffect(() => {
+    if (initialSearch || (searchText === '')) return
     setSearchValue('')
   }, [currentCategory])
 
