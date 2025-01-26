@@ -4,19 +4,20 @@ import Autoplay from "embla-carousel-autoplay"
 import { MovieDb, TrendingResponse } from "moviedb-promise";
 import { useCallback, useEffect, useState } from "react";
 import { format } from "date-fns";
-import electronApi from "@/config/electronApi";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
 export function Trending() {
-  const [data, setData] = useState<TrendingResponse['results']>()
   const navigate = useNavigate()
+
+  const { data, isSuccess } = useQuery({ queryKey: ['tmdb-trending'], queryFn: fetchTrending  })
 
   async function fetchTrending() {
     if (!import.meta.env.VITE_TMDB_API_KEY) return
     const moviedb = new MovieDb(import.meta.env.VITE_TMDB_API_KEY)
     const res = await moviedb.trending({ media_type: 'all', time_window: 'week', language: 'pt-BR'})
-    setData(res.results)
+    return res.results
   }
 
   function handleSearchForMatch(mediaType: string, search: string) {
@@ -77,7 +78,7 @@ export function Trending() {
     )
   }, [data])
 
-  if (data) return (
+  if (isSuccess && data) return (
     <section className="pr-3 mb-3 relative">
       <Carousel
         plugins={[Autoplay({ delay: 5000 })]}
