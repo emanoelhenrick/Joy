@@ -27,27 +27,27 @@ export function FavoritesScroll({ favoritesVod, favoritesSeries, setSelectedSeri
 
   return ((favoritesVod.length > 0) || (favoritesSeries.length > 0)) && (
     <div>
-      <div className='flex mb-3 gap-2'>
-        <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-0.5 px-4 w-fit rounded-full transition`}>
+      <div className='flex gap-2 items-center mb-3'>
+        <p className={`h-fit text-secondary bg-primary text-sm py-0.5 px-4 w-fit rounded-md transition gap-2`}>
           Favorites
         </p>
         {favoritesSeries!.length > 0 && (
           <p
             onClick={() => setFavoritesTab(0)}
-            className={`h-fit border ${favoritesTab == 0 ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'} cursor-pointer text-sm py-0.5 px-3 w-fit rounded-full transition gap-2`}>
+            className={`h-fit ${favoritesTab == 0 ? 'bg-secondary text-primary' : 'text-muted-foreground'} cursor-pointer text-sm py-0.5 px-3 w-fit rounded-md transition gap-2 hover:opacity-80`}>
             Series
           </p>
         )}
         {favoritesVod!.length > 0 && (
           <p
             onClick={() => setFavoritesTab(1)}
-            className={`h-fit border ${favoritesTab == 1 ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'} cursor-pointer text-sm py-0.5 px-3 w-fit rounded-full transition gap-2`}>
+            className={`h-fit ${favoritesTab == 1 ? 'bg-secondary text-primary' : 'text-muted-foreground'} cursor-pointer text-sm py-0.5 px-3 w-fit rounded-md transition gap-2 hover:opacity-80`}>
             Movies
           </p>
         )}
       </div>
       <ScrollArea className="w-full rounded-md">
-        <div className="flex w-max space-x-4 pb-5 pr-4 rounded-md">
+        <div className="flex w-max space-x-3 pb-5 pr-4 rounded-md">
           <Fade duration={200} triggerOnce>
             {(favoritesTab == 0 && favoritesSeries) && favoritesSeries!.map(series => {
               return (

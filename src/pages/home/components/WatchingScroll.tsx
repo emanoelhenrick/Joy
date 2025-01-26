@@ -24,28 +24,28 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
   }, [isSeries, isVod])
 
   return ((watchingVod.length > 0) || (watchingSeries.length > 0)) && (
-    <div>
-    <div className='flex gap-2'>
-     <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-0.5 px-4 w-fit mb-3 rounded-full transition gap-2`}>
+  <div>
+    <div className='flex gap-2 items-center mb-3'>
+     <p className={`h-fit text-secondary bg-primary text-sm py-0.5 px-4 w-fit rounded-md transition gap-2`}>
        Continue watching
       </p>
       {watchingSeries!.length > 0 && (
         <p
           onClick={() => setWatchingTab(0)}
-          className={`h-fit border ${watchingTab == 0 ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'} cursor-pointer text-sm py-0.5 px-4 w-fit mb-3 rounded-full transition gap-2`}>
+          className={`h-fit ${watchingTab == 0 ? 'bg-secondary text-primary' : 'text-muted-foreground'} cursor-pointer text-sm py-0.5 px-3 w-fit rounded-md transition gap-2 hover:opacity-80`}>
           Series
         </p>
       )}
       {watchingVod!.length > 0 && (
         <p
           onClick={() => setWatchingTab(1)}
-          className={`h-fit border ${watchingTab == 1 ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'} cursor-pointer text-sm py-0.5 px-4 w-fit mb-3 rounded-full transition gap-2`}>
+          className={`h-fit ${watchingTab == 1 ? 'bg-secondary text-primary' : 'text-muted-foreground'} cursor-pointer text-sm py-0.5 px-3 w-fit rounded-md transition gap-2 hover:opacity-80`}>
           Movies
         </p>
       )}
     </div>
       <ScrollArea className="w-full rounded-md">
-        <div className="flex w-max space-x-2 pb-5 pr-4 rounded-md">
+        <div className="flex w-max space-x-3 pb-5 pr-4 rounded-md">
           <Fade duration={200} triggerOnce>
             {(watchingTab == 0 && watchingSeries) && watchingSeries!.sort((a, b) => b.updatedAt! - a.updatedAt!).map(series => {
               return (

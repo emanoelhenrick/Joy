@@ -5,6 +5,7 @@ import { Plus, Settings, Trash } from "lucide-react";
 import { Input } from "../ui/input";
 import electronApi from "@/config/electronApi";
 import { useUserData } from "@/states/useUserData";
+import { PiGearSixFill } from "react-icons/pi";
 
 interface ProfilesProps {
   current: string
@@ -85,7 +86,7 @@ export function SelectProfile({ changeProfile, data, setIsCreating, isCreating, 
         <div onClick={() => data.current === p ? setIsEditing(true) : changeProfile(p)} className={`flex hover:scale-105 relative ${data.current !== p && 'opacity-50'} flex-col cursor-pointer group transition items-center gap-1`}>
           <Avatar className={`relative transition bg-secondary flex items-center justify-center w-24 h-24 `}>
             <p className={`absolute ${data.current !== p && 'group-hover:opacity-100'} text-muted-foreground opacity-100 group-hover:opacity-0 transition text-4xl`}>{getInitials(p)}</p>
-            <Settings size={32} className={`absolute ${data.current !== p && 'invisible'} opacity-0 group-hover:opacity-100 text-muted-foreground transition`}/>
+            <PiGearSixFill className={`absolute size-8 ${data.current !== p && 'invisible'} opacity-0 group-hover:opacity-100 text-muted-foreground transition`}/>
           </Avatar>
           
           <p className="text-muted-foreground text-center max-w-24 truncate text-sm">

@@ -162,11 +162,11 @@ export function HomeDashboard() {
             <FavoritesScroll favoritesSeries={favoritesSeries} favoritesVod={favoritesVod} setSelectedSeries={setSelectedSeries} setSelectedVod={setSelectedVod} updateFavorites={updateRender} />
             
             <div>
-              <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-0.5 px-4 w-fit mb-3 rounded-full transition gap-2`}>
+              <p className={`h-fit text-secondary bg-primary text-sm py-0.5 px-4 w-fit rounded-md transition gap-2 mb-3`}>
                 Recently updated series
               </p>
               <ScrollArea className="w-full rounded-md">
-                <div className="flex w-max gap-2 pb-5 pr-4 rounded-md">
+                <div className="flex w-max gap-3 pb-5 pr-4 rounded-md">
                   <Fade duration={200} triggerOnce>
                     {seriesByDate!.map(series => {
                       return (
@@ -185,11 +185,11 @@ export function HomeDashboard() {
               </ScrollArea>
             </div>
             <div>
-              <p className={`h-fit border text-muted-foreground bg-secondary text-sm py-0.5 px-4 w-fit mb-3 rounded-full transition gap-2`}>
+              <p className={`h-fit text-secondary bg-primary text-sm py-0.5 px-4 w-fit rounded-md transition gap-2 mb-3`}>
                 Recently added movies
               </p>
               <ScrollArea className="w-full rounded-md">
-                <div className="flex w-max gap-2 pb-5 pr-4 rounded-md">
+                <div className="flex w-max gap-3 pb-5 pr-4 rounded-md">
                 <Fade duration={200} triggerOnce>
                 {vodByDate!.map(movie => {
                   return (

@@ -24,7 +24,6 @@ export function LiveDashboard() {
   const [playlist, setPlaylist] = useState<LiveProps[]>([]);
   const [currentCategory, setCurrentCategory] = useState('all')
   const [hasMore, setHasMore] = useState(true)
-  // const [tab, setTab] = useState('vod')
 
   let data: { categories: any[], playlist: any[] } = liveData;
 
@@ -91,7 +90,7 @@ export function LiveDashboard() {
         <div className='ml-20 flex flex-col gap-2'>
           <div className='flex ml-2 items-center justify-between mt-4'>
             <div className='flex items-center justify-between gap-4'>
-              <div className={`h-fit border text-sm py-0.5 px-4 rounded-full transition hover:opacity-90 gap-2 bg-secondary text-primary relative flex items-center`}>
+              <div className={`h-fit text-sm py-0.5 px-3 rounded-md transition hover:opacity-90 gap-2 bg-secondary text-primary relative flex items-center`}>
                 <p>Live</p>
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
@@ -113,10 +112,10 @@ export function LiveDashboard() {
             </div>
 
             <div className="flex gap-2 items-center">
-              <Input className="w-36 text-sm bg-secondary rounded-full h-fit" placeholder='search' onChange={(e) => setSearchValue(e.target.value)} value={searchText} />
+              <Input className="w-36 text-sm bg-secondary rounded-md h-fit" placeholder='search' onChange={(e) => setSearchValue(e.target.value)} value={searchText} />
               {searchText ?
                 <X onClick={() => setSearchValue('')} size={20} className="text-muted-foreground cursor-pointer mr-4 opacity-60" /> :
-                <Search size={20} className="mr-4 text-muted-foreground opacity-60" />
+                <Search className="mr-4 size-4 text-muted-foreground opacity-60" />
               }
             </div>
           </div>

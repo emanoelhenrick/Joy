@@ -118,10 +118,10 @@ export function Dashboard() {
             </div>
 
             <div className="flex gap-2 items-center">
-              <Input className="w-36 text-sm bg-secondary rounded-full h-fit" placeholder='search' onChange={(e) => setSearchValue(e.target.value)} value={searchText} />
+              <Input className="w-36 text-sm bg-secondary rounded-md h-fit" placeholder='search' onChange={(e) => setSearchValue(e.target.value)} value={searchText} />
               {searchText ?
                 <X onClick={() => setSearchValue('')} size={20} className="text-muted-foreground cursor-pointer mr-4 opacity-60" /> :
-                <Search size={20} className="mr-4 text-muted-foreground opacity-60" />
+                <Search className="mr-4 size-4 text-muted-foreground opacity-60" />
               }
             </div>
           </div>
