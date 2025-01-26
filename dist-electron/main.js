@@ -3037,6 +3037,7 @@ var main = jetpack();
 const SessionDataDir = app$1.getPath("sessionData");
 const PLAYLIST_DIR = require$$0$2.join(SessionDataDir, "Playlists");
 const META_PATH = require$$0$2.join(PLAYLIST_DIR, "meta.json");
+const getPlaylistFolderPath = (playlistName) => require$$0$2.join(SessionDataDir, `Playlists/${playlistName}`);
 const getUserDataPath = (playlistName, profile) => require$$0$2.join(SessionDataDir, `Playlists/${playlistName}/user/${profile}.json`);
 const getVodPath = (playlistName) => require$$0$2.join(SessionDataDir, `Playlists/${playlistName}/vod.json`);
 const getSeriesPath = (playlistName) => require$$0$2.join(SessionDataDir, `Playlists/${playlistName}/series.json`);
@@ -19193,6 +19194,27 @@ async function removeProfile(profile) {
   const USERDATA_PATH = getUserDataPath(metadata.currentPlaylist.name, profile);
   await main.removeAsync(USERDATA_PATH);
 }
+async function removePlaylist(playlistName) {
+  const metadata = await getMetadata();
+  if (metadata.playlists) {
+    const updatedPlaylists = metadata.playlists.filter((p) => p.name !== playlistName);
+    metadata.playlists = updatedPlaylists;
+  }
+  if (metadata.playlists.length === 0) {
+    metadata.currentPlaylist = {
+      name: "",
+      profile: ""
+    };
+  } else {
+    metadata.currentPlaylist = {
+      name: metadata.playlists[0].name,
+      profile: "Default"
+    };
+  }
+  await main.removeAsync(getPlaylistFolderPath(playlistName));
+  await main.writeAsync(META_PATH, metadata);
+  return metadata;
+}
 function CoreControllers() {
   ipcMain.handle("get-metadata", getMetadata);
   ipcMain.handle("authenticate-user", async (_event, args) => await authenticateUser(args));
@@ -19200,6 +19222,7 @@ function CoreControllers() {
   ipcMain.handle("update-series", async (_event, args) => await updateSeries(args));
   ipcMain.handle("update-live", async (_event, args) => await updateLive(args));
   ipcMain.handle("add-playlist-to-meta", async (_event, args) => await addPlaylistToMeta(args));
+  ipcMain.handle("remove-playlist", async (_event, args) => await removePlaylist(args));
   ipcMain.handle("get-local-vod-playlist", async (_event, args) => await getLocalVodPlaylist(args));
   ipcMain.handle("get-local-series-playlist", async (_event, args) => await getLocalSeriesPlaylist(args));
   ipcMain.handle("get-local-live-playlist", async (_event, args) => await getLocalLivePlaylist(args));

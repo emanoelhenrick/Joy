@@ -19,6 +19,7 @@ import { createProfile } from "./services/userdata/createProfile";
 import { switchProfile } from "./services/userdata/switchProfile";
 import { renameProfile } from "./services/userdata/renameProfile";
 import { removeProfile } from "./services/userdata/removeProfile";
+import { removePlaylist } from "./services/removePlaylist";
 
 export default function CoreControllers() {
   ipcMain.handle('get-metadata', getMetadata)
@@ -29,6 +30,7 @@ export default function CoreControllers() {
   ipcMain.handle('update-live', async (_event, args) => await updateLive(args))
   
   ipcMain.handle('add-playlist-to-meta', async (_event, args) => await addPlaylistToMeta(args))
+  ipcMain.handle('remove-playlist', async (_event, args) => await removePlaylist(args))
 
   ipcMain.handle('get-local-vod-playlist', async (_event, args) => await getLocalVodPlaylist(args))
   ipcMain.handle('get-local-series-playlist', async (_event, args) => await getLocalSeriesPlaylist(args))

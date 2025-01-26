@@ -1,9 +1,9 @@
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import electronApi from "@/config/electronApi";
 import { useToast } from "@/hooks/use-toast";
 import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from "@/states/usePlaylistData";
 import { usePlaylistUrl } from "@/states/usePlaylistUrl";
-import { useUserData } from "@/states/useUserData";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { PlaylistInfo } from "electron/core/models/PlaylistInfo";
@@ -48,7 +48,6 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu }: { currentPlay
   useEffect(() => {
     return () => {
       if (selectedPlaylist != currentPlaylist) {
-        console.log('mudou');
         navigate('/')
       }
     }
@@ -90,6 +89,13 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu }: { currentPlay
     }
   }
 
+  async function removePlaylist() {
+    console.log('ouch');
+    
+    await electronApi.removePlaylist(selectedPlaylist)
+    navigate('/')
+  }
+
   return (
     <div className="flex flex-col gap-1">
       <div className="flex justify-between mb-4">
@@ -110,19 +116,32 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu }: { currentPlay
         </div>
       </div>
 
-      {/* <h3
-        onClick={() => navigate('/initial')}
-        className="scroll-m-20 w-fit text-md font-semibold text-muted-foreground tracking-tight cursor-pointer hover:text-primary transition"
-        >
-          Edit playlist
-      </h3> */}
-
       <h3
         onClick={() => navigate('/initial')}
-        className="scroll-m-20 w-fit text-md font-semibold text-muted-foreground tracking-tight cursor-pointer hover:text-primary transition"
+        className="scroll-m-20 w-fit text-muted-foreground tracking-tight cursor-pointer hover:text-primary transition"
         >
           New playlist
       </h3>
+
+      <AlertDialog>
+        <AlertDialogTrigger>
+          <h3 className="scroll-m-20  w-fit text-red-400 opacity-80 tracking-tight cursor-pointer hover:text-red-600 transition">
+            Remove playlist
+          </h3>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will erase all data related to the current playlist forever.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction className="bg-red-500 text-primary" onClick={removePlaylist}>Remove</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

@@ -30,6 +30,7 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   authenticateUser: async (args: any) => await ipcRenderer.invoke('authenticate-user', args),
 
   addPlaylistToMeta: async (args: any) => await ipcRenderer.invoke('add-playlist-to-meta', args),
+  removePlaylist: async (args: any) => await ipcRenderer.invoke('remove-playlist', args),
 
   getLocalVodPlaylist: async (args: any) => await ipcRenderer.invoke('get-local-vod-playlist', args),
   getLocalSeriesPlaylist: async (args: any) => await ipcRenderer.invoke('get-local-series-playlist', args),

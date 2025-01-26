@@ -56,9 +56,9 @@ export function SplashLoading() {
   }, [isSuccess])
 
   return (
-    <div className="w-full h-screen flex flex-col items-center justify-center">
+    <div className="w-full h-screen flex flex-col gap-1 text-sm items-center justify-center">
       <p className="animate-pulse">Loading...</p>
-      <Progress className="transition w-72" value={progress} />
+      <Progress className="transition w-72 h-1" value={progress} />
     </div>
   )
 }

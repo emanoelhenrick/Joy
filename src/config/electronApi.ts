@@ -16,7 +16,6 @@ interface RenameProfileProps {
   newName: string
 } 
 
-
 export interface Api {
   getMetadata: () => Promise<MetaProps>
   updateVod: (playlistUrls: PlaylistUrlsProps) => Promise<VodPlaylistProps>
@@ -24,6 +23,7 @@ export interface Api {
   updateLive: (playlistUrls: PlaylistUrlsProps) => Promise<LivePlaylistProps>
   authenticateUser: (url: string) => Promise<Boolean>
   addPlaylistToMeta: (playlistInfo: PlaylistInfo) => Promise<Boolean>
+  removePlaylist: (playlistName: string) => Promise<MetaProps>
   getLocalVodPlaylist: (playlistName: string) => Promise<VodPlaylistProps>
   getLocalSeriesPlaylist: (playlistName: string) => Promise<SeriesPlaylistProps>
   getLocalLivePlaylist: (playlistName: string) => Promise<LivePlaylistProps>
