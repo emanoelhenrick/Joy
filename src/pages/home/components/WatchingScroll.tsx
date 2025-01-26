@@ -26,22 +26,22 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
   return ((watchingVod.length > 0) || (watchingSeries.length > 0)) && (
   <div>
     <div className='flex gap-2 items-center mb-3'>
-     <p className={`h-fit text-secondary bg-primary text-sm py-0.5 px-4 w-fit rounded-md transition gap-2`}>
+     <span className={`h-fit text-secondary bg-primary text-sm py-0.5 px-3 w-fit rounded-md transition gap-2`}>
        Continue watching
-      </p>
+      </span>
       {watchingSeries!.length > 0 && (
-        <p
+        <span
           onClick={() => setWatchingTab(0)}
           className={`h-fit ${watchingTab == 0 ? 'bg-secondary text-primary' : 'text-muted-foreground'} cursor-pointer text-sm py-0.5 px-3 w-fit rounded-md transition gap-2 hover:opacity-80`}>
           Series
-        </p>
+        </span>
       )}
       {watchingVod!.length > 0 && (
-        <p
+        <span
           onClick={() => setWatchingTab(1)}
           className={`h-fit ${watchingTab == 1 ? 'bg-secondary text-primary' : 'text-muted-foreground'} cursor-pointer text-sm py-0.5 px-3 w-fit rounded-md transition gap-2 hover:opacity-80`}>
           Movies
-        </p>
+        </span>
       )}
     </div>
       <ScrollArea className="w-full rounded-md">

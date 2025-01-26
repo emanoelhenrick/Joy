@@ -37,13 +37,13 @@ export function Trending() {
           <div className="flex h-full w-full relative">
             <div className="p-16 flex flex-col justify-end gap-2 z-20 mt-0 2xl:mt-8">
               <div className="flex flex-col gap-3 z-10">
-                <div className="flex items-end gap-2">
-                  <span className="w-fit text-muted-foreground text-lg 2xl:text-xl leading-none">
+                <div className="mb-3">
+                  <h1 className="w-fit text-muted-foreground text-lg">
                     Trending
-                  </span>
+                  </h1>
                   <HoverCard openDelay={400}>
                     <HoverCardTrigger>
-                    <span className="text-xs opacity-50 hover:opacity-40 cursor-pointer">by TMDB</span>
+                    <h1 className="text-xs opacity-50 hover:opacity-40 cursor-pointer">by TMDB</h1>
                     </HoverCardTrigger>
                     <HoverCardContent>
                       <span className="text-sm">
@@ -64,7 +64,7 @@ export function Trending() {
                 <span className="text-sm 2xl:text-base line-clamp-5 text-muted-foreground max-w-screen-sm">{info.overview}</span>
               </div>
               <Button onClick={() => handleSearchForMatch(info.media_type, info.title || info.name)} className="w-fit flex gap-2 justify-self-end z-10 mt-3">
-                Search for matches
+                <span>Search for matches</span>
               </Button>
             </div>
           </div>

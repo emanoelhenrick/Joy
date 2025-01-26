@@ -166,7 +166,7 @@ export function HomeDashboard() {
             <FavoritesScroll favoritesSeries={favoritesSeries} favoritesVod={favoritesVod} setSelectedSeries={setSelectedSeries} setSelectedVod={setSelectedVod} updateFavorites={updateRender} />
             
             <div>
-              <p className={`h-fit text-secondary bg-primary text-sm py-0.5 px-4 w-fit rounded-md transition gap-2 mb-3`}>
+              <p className={`h-fit text-secondary bg-primary text-sm py-0.5 px-3 w-fit rounded-md transition gap-2 mb-3`}>
                 Recently updated series
               </p>
               <ScrollArea className="w-full rounded-md">
