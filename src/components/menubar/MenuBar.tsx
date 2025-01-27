@@ -136,7 +136,7 @@ export function MenuBar() {
   }
 
   return (
-    <div className="flex flex-col justify-between items-center fixed px-4 py-4 h-full">
+    <div className="flex flex-col justify-between items-center px-4 py-4 h-screen z-10">
       <Fade cascade direction="up" triggerOnce duration={500}>
         <Dialog open={profileDialog} >
           <DialogTrigger onClick={() => setProfileDialog(true)} asChild>

@@ -106,7 +106,7 @@ export function Dashboard() {
   return (
     <div className="h-fit w-full flex flex-col">
       <div className="flex flex-col w-full">
-        <div className='ml-20 flex flex-col gap-2'>
+        <div className='flex flex-col gap-2'>
           <div ref={ref} className='flex ml-2 items-center justify-between mt-4'>
             <div className='flex items-center gap-2'>
               <MenuTab tab={tab} switchTab={switchTab} />

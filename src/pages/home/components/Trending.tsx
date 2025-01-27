@@ -22,8 +22,7 @@ export function Trending() {
   const renderItem = useCallback((info: any) => {
     const releaseDate = format(info.release_date || info.first_air_date, "u")
     const perfectMatch = info.matches[0]
-
-    const url = `/dashboard/home/${params.playlistName}/player?streamId=${perfectMatch.stream_id}&container_extension=${perfectMatch.container_extension}`
+    const url = `/other/${params.playlistName}/player/vod?streamId=${perfectMatch.stream_id}&container_extension=${perfectMatch.container_extension}`
 
     return (
       <CarouselItem key={info.poster_path}> 
@@ -84,7 +83,7 @@ export function Trending() {
           <div className="z-10 w-full h-full absolute flex items-center justify-start">
             <div className="inset-0 w-full h-full bg-gradient-to-l from-transparent to-background/95" />
           </div>
-          <img className="absolute w-full h-full object-cover" src={`https://image.tmdb.org/t/p/original${info.backdrop_path}`} />
+          <img className="absolute h-full w-full object-cover" src={`https://image.tmdb.org/t/p/original${info.backdrop_path}`} />
         </div>
 
       </CarouselItem>

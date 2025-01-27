@@ -130,7 +130,7 @@ export function HomeDashboard() {
   if (vodData && seriesData) {
 
     return (
-      <div className="h-fit w-full">
+      <div className="h-fit absolute w-full pl-24 z-0">
         {selectedSeries && (
           <Dialog open={selectedSeries && true}>
             <DialogContent className="w-fit items-center justify-center" aria-describedby={undefined}>
@@ -157,8 +157,8 @@ export function HomeDashboard() {
             </DialogContent>
           </Dialog>
         )}
-        <div className='ml-20 mb-6 mt-5'>
-          <div className="flex ml-2 flex-col gap-2">
+        <div className='mb-6 mt-5'>
+          <div className="flex flex-col gap-2">
             <Trending />
 
             <WatchingScroll watchingVod={watchingVod} watchingSeries={watchingSeries} setSelectedSeries={setSelectedSeries} setSelectedVod={setSelectedVod} />

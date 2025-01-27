@@ -95,7 +95,7 @@ export function VodInfo({ streamId, title, cover }: Props) {
                 <p className="truncate max-w-xl text-sm text-muted-foreground">
                   {data?.info.cast}
                 </p>
-                <p className="text-md text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   {data?.info.director && 'Directed by ' + data?.info.director}
                 </p>
               </div>
