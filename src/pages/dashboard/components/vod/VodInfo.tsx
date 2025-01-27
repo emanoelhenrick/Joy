@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge"
 import { Cross2Icon } from "@radix-ui/react-icons"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { VodPlayerDialog } from "./VodPlayerDialog"
+import { MovieDb } from "moviedb-promise"
 
 interface Props {
   streamId: string
@@ -19,7 +20,7 @@ interface Props {
   cover: string
 }
 
-export function VodInfo({ streamId, title, cover }: Props) {
+export function VodInfo({ streamId, cover }: Props) {
   const queryClient = useQueryClient()
 
   const [isDialog, setIsDialog] = useState(false)
@@ -46,9 +47,6 @@ export function VodInfo({ streamId, title, cover }: Props) {
   
   const extensions = ['mp4', 'ogg', 'ogv', 'webm', 'mov', 'm4v']
 
-  console.log(data);
-  
-
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="flex items-center gap-6 absolute h-fit max-w-6xl rounded-xl p-8 xl:scale-90 2xl:scale-100">
@@ -58,7 +56,7 @@ export function VodInfo({ streamId, title, cover }: Props) {
                 {extensions.includes(data!.movie_data.container_extension) ? (
                   <div className="items-center justify-center cursor-pointer flex" onClick={() => setIsDialog(true)}>
                     { isCover ?
-                      <img onError={() => setIsCover(false)} className="shadow-xl rounded-xl" src={cover!}/> :
+                      <img onError={() => setIsCover(false)} className="shadow-xl w-72 rounded-xl" src={cover!}/> :
                       <div className="bg-secondary w-72 h-44 shadow-xl rounded-xl" />
                     }
                     <FaPlay className="absolute" size={50} />

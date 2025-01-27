@@ -20,10 +20,12 @@ import { switchProfile } from "./services/userdata/switchProfile";
 import { renameProfile } from "./services/userdata/renameProfile";
 import { removeProfile } from "./services/userdata/removeProfile";
 import { removePlaylist } from "./services/removePlaylist";
+import { fetchTmdbTrending } from "./services/fetchTmdbTrending";
 
 export default function CoreControllers() {
   ipcMain.handle('get-metadata', getMetadata)
   ipcMain.handle('authenticate-user', async (_event, args) => await authenticateUser(args))
+  ipcMain.handle('fetch-tmdb-trending', async (_event, args) => await fetchTmdbTrending(args))
 
   ipcMain.handle('update-vod', async (_event, args) => await updateVod(args))
   ipcMain.handle('update-series', async (_event, args) => await updateSeries(args))

@@ -22,6 +22,7 @@ export interface Api {
   updateSeries: (playlistUrls: PlaylistUrlsProps) => Promise<SeriesPlaylistProps>
   updateLive: (playlistUrls: PlaylistUrlsProps) => Promise<LivePlaylistProps>
   authenticateUser: (url: string) => Promise<Boolean>
+  fetchTmdbTrending: ({ apiKey, playlistName }: { apiKey: string, playlistName: string}) => Promise<[]>
   addPlaylistToMeta: (playlistInfo: PlaylistInfo) => Promise<Boolean>
   removePlaylist: (playlistName: string) => Promise<MetaProps>
   getLocalVodPlaylist: (playlistName: string) => Promise<VodPlaylistProps>

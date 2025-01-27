@@ -28,6 +28,7 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   updateLive: async (args: any) => await ipcRenderer.invoke('update-live', args),
 
   authenticateUser: async (args: any) => await ipcRenderer.invoke('authenticate-user', args),
+  fetchTmdbTrending: async (args: any) => await ipcRenderer.invoke('fetch-tmdb-trending', args),
 
   addPlaylistToMeta: async (args: any) => await ipcRenderer.invoke('add-playlist-to-meta', args),
   removePlaylist: async (args: any) => await ipcRenderer.invoke('remove-playlist', args),

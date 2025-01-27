@@ -89,6 +89,7 @@ export function Trending() {
       </CarouselItem>
     )
   }, [data])
+  
 
   if (data) return (
     <section className="pr-3 mb-3 relative">
