@@ -130,7 +130,8 @@ export function HomeDashboard() {
   if (vodData && seriesData) {
 
     return (
-      <div className="h-fit absolute w-full pl-24 z-0">
+      <ScrollArea>
+      <div className="h-fit z-0">
         {selectedSeries && (
           <Dialog open={selectedSeries && true}>
             <DialogContent className="w-fit items-center justify-center" aria-describedby={undefined}>
@@ -213,6 +214,7 @@ export function HomeDashboard() {
           </div>
         </div>
       </div>
+      </ScrollArea>
     )
   }
 

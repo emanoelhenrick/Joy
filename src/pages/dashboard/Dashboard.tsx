@@ -17,6 +17,7 @@ import { useMeasure } from "@uidotdev/usehooks";
 import Fuse from "fuse.js"
 import PaginationComponent from '@/components/PaginationComponent'
 import { useSearchParams } from 'react-router-dom';
+import { SearchInput } from '@/components/SearchInput';
 
 const VodPlaylistScroll = lazy(() => import('./components/vod/VodPlaylistScroll'))
 const SeriesPlaylistScroll = lazy(() => import('./components/series/SeriesPlaylistScroll'))
@@ -38,8 +39,8 @@ export function Dashboard() {
   const [page, setPage] = useState(1)
   const [pages, setPages] = useState(0)
   const [tab, setTab] = useState(initialTab)
-  const [searchText, setSearchValue] = useState(initialSearch)
-  const [search, { flush }] = useDebounce(searchText, 300)
+  const [searchValue, setSearchValue] = useState(initialSearch)
+  const [search, { flush }] = useDebounce(searchValue, 500)
 
   function switchTab(tab: string) {
     setSearchValue('')
@@ -51,7 +52,7 @@ export function Dashboard() {
   if (tab === 'series') data = seriesData
 
   const handleScrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const filtered = useMemo(() => {
@@ -90,12 +91,15 @@ export function Dashboard() {
   }, [tab])
 
   useEffect(() => {
-    if (initialSearch || (searchText === '')) return
+    if (initialSearch || (searchValue === '')) return
     setSearchValue('')
   }, [currentCategory])
 
   useEffect(() => {
     handleScrollToTop()
+  }, [page])
+
+  useEffect(() => {
     const itemsPerPage = Math.floor(width! / 156) * 10
     setPages(Math.ceil(filtered!.length / itemsPerPage))
     setEnoughItems(filtered!.length < itemsPerPage)
@@ -104,42 +108,34 @@ export function Dashboard() {
   }, [search, currentCategory, page, data, tab, width])
 
   return (
-    <div className="h-fit w-full flex flex-col">
-      <div className="flex flex-col w-full">
-        <div className='flex flex-col gap-2'>
-          <div ref={ref} className='flex ml-2 items-center justify-between mt-4'>
-            <div className='flex items-center gap-2'>
-              <MenuTab tab={tab} switchTab={switchTab} />
-              <Select onValueChange={(value) => setCurrentCategory(value)} value={currentCategory}>
-                <SelectTrigger  className="w-fit gap-2">
-                  <SelectValue  placeholder="All" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value={'all'}>All</SelectItem>
-                    {data.categories && data.categories.map(c => <SelectItem value={c.category_id} key={c.category_id}>{c.category_name}</SelectItem>)}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="flex gap-2 items-center">
-              <Input className="w-36 text-sm bg-secondary rounded-md h-fit" placeholder='search' onChange={(e) => setSearchValue(e.target.value)} value={searchText} />
-              {searchText ?
-                <X onClick={() => setSearchValue('')} size={20} className="text-muted-foreground cursor-pointer mr-4 opacity-60" /> :
-                <Search className="mr-4 size-4 text-muted-foreground opacity-60" />
-              }
-            </div>
+    <div className="h-fit w-full">
+      <div className='flex flex-col gap-2'>
+        <div ref={ref} className='flex items-center justify-between mt-4'>
+          <div className='flex items-center gap-2'>
+            <MenuTab tab={tab} switchTab={switchTab} />
+            <Select onValueChange={(value) => setCurrentCategory(value)} value={currentCategory}>
+              <SelectTrigger className="w-fit gap-2">
+                <SelectValue  placeholder="All" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value={'all'}>All</SelectItem>
+                  {data.categories && data.categories.map(c => <SelectItem value={c.category_id} key={c.category_id}>{c.category_name}</SelectItem>)}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
-          {playlist.length > 0 ?
-            <Suspense fallback={<div className='w-full h-screen' />}>
-              {tab === 'vod' && <VodPlaylistScroll data={playlist} />}
-              {tab === 'series' && <SeriesPlaylistScroll data={playlist} />}
-            </Suspense> : (
-              search && <p className='ml-2 text-sm text-muted-foreground'>No results found</p>
-            )
-          }
+
+          <SearchInput setSearchValue={setSearchValue} searchValue={searchValue} />
         </div>
+        {playlist.length > 0 ?
+          <Suspense fallback={<div className='w-full h-screen' />}>
+            {tab === 'vod' && <VodPlaylistScroll data={playlist} />}
+            {tab === 'series' && <SeriesPlaylistScroll data={playlist} />}
+          </Suspense> : (
+            search && <p className='text-sm text-muted-foreground'>No results found</p>
+          )
+        }
       </div>
       <div className='flex justify-center mb-8'>
       {(!enoughItems && playlist.length > 0) && (

@@ -50,7 +50,7 @@ export default function VodPlaylistScroll({ data }: any) {
   }, [playlist, favorites])
 
   return (
-    <div className="h-fit ml-2 rounded-xl">
+    <div className="h-fit w-full rounded-xl">
       {selectedMovie && (
         <Dialog open={selectedMovie && true}>
           <DialogContent className="w-fit items-center justify-center" aria-describedby={undefined}>
@@ -66,7 +66,7 @@ export default function VodPlaylistScroll({ data }: any) {
       )}
       <div className={`w-full flex h-full pr-4`}>
         <div ref={ref} style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }} className={`grid w-full h-fit gap-2`}>
-          <Fade triggerOnce duration={200}>
+          <Fade duration={200}>
             {playlist!.map((movie) => renderItem(movie))}
           </Fade>
         </div>

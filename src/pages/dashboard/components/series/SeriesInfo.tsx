@@ -33,7 +33,7 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
   const [episodes, setEpisodes] = useState<EpisodeProps[]>([])
   const [episodesData, setEpisodesData] = useState<UserEpisodeProps[]>()
   const [updatedDebounce] = useDebounce(updated, 500)
-  
+
   useEffect(() => {
     if (isSuccess) {
       const seasonsList = []
@@ -105,14 +105,14 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
               {genres[0].length > 0 && genres.map(g => <Badge key={g} className="text-sm mt-2 font-normal bg-primary text-background hover:opacity-90">{g}</Badge>)}
             </div>
 
-            <div className="mt-6 text-sm">
+            <div className="mt-6">
               {data?.info.cast && (
-                <p className="text-md text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   {data?.info.cast}
                 </p>
               )}
 
-              <p className="mb-6 text-md text-muted-foreground">
+              <p className="mb-6 text-sm text-muted-foreground">
                 {data?.info.director && 'Directed by ' + data?.info.director}
               </p>
             </div>

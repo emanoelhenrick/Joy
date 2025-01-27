@@ -54,7 +54,7 @@ export function Trending() {
                   <span className="text-muted-foreground">{releaseDate}</span>
                 </div>
                 
-                <span className="text-sm 2xl:text-base line-clamp-5 text-muted-foreground max-w-screen-sm">{info.overview}</span>
+                <span className="text-base 2xl:text-lg line-clamp-5 text-muted-foreground max-w-screen-sm">{info.overview}</span>
                 <div className="flex gap-3 items-center">
                   <div className="mt-2 flex gap-3 bg-primary/5 backdrop-blur-3xl shadow-lg p-3 rounded-lg pr-4 relative">
                     <img className="w-16 rounded-md " src={perfectMatch.stream_icon || perfectMatch.cover} alt="" />
@@ -92,7 +92,7 @@ export function Trending() {
   
 
   if (data) return (
-    <section className="pr-3 mb-3 relative">
+    <section className="pr-4 mb-3 relative">
       <Carousel
         plugins={[Autoplay({ delay: 5000 })]}
         className="bg-background rounded-2xl overflow-hidden"

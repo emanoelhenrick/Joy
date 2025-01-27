@@ -13,6 +13,7 @@ import { Input } from '@/components/dashboard/input';
 import { useLivePlaylist } from '@/states/usePlaylistData';
 import { LiveProps } from 'electron/core/models/LiveModels';
 import Fuse from "fuse.js"
+import { SearchInput } from '@/components/SearchInput';
 
 const LivePlaylistScroll = lazy(() => import('./components/LivePlaylistScroll'))
 
@@ -27,8 +28,8 @@ export function LiveDashboard() {
 
   let data: { categories: any[], playlist: any[] } = liveData;
 
-  const [searchText, setSearchValue] = useState('')
-  const [search] = useDebounce(searchText, 400)
+  const [searchValue, setSearchValue] = useState('')
+  const [search] = useDebounce(searchValue, 500)
 
   const filtered = useMemo(() => {
     if (data) {
@@ -90,7 +91,7 @@ export function LiveDashboard() {
         <div className='flex flex-col gap-2'>
           <div className='flex ml-2 items-center justify-between mt-4'>
             <div className='flex items-center justify-between gap-4'>
-              <div className={`h-fit text-sm py-0.5 px-3 rounded-md transition hover:opacity-90 gap-2 bg-secondary text-primary relative flex items-center`}>
+              <div className={`h-fit text-sm py-1 px-4 rounded-md transition hover:opacity-90 gap-2 bg-secondary text-primary relative flex items-center`}>
                 <p>Live</p>
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
@@ -111,13 +112,7 @@ export function LiveDashboard() {
               </Select>
             </div>
 
-            <div className="flex gap-2 items-center">
-              <Input className="w-36 text-sm bg-secondary rounded-md h-fit" placeholder='search' onChange={(e) => setSearchValue(e.target.value)} value={searchText} />
-              {searchText ?
-                <X onClick={() => setSearchValue('')} size={20} className="text-muted-foreground cursor-pointer mr-4 opacity-60" /> :
-                <Search className="mr-4 size-4 text-muted-foreground opacity-60" />
-              }
-            </div>
+            <SearchInput searchValue={searchValue} setSearchValue={setSearchValue} />
           </div>
           {playlist.length > 0 ?
             <Suspense fallback={<div className='w-full h-screen' />}>

@@ -38,7 +38,7 @@ export default function SeriesPlaylistScroll({ data }: any) {
   }, [userData, updateDebounced])
 
   return (
-    <div className="h-fit ml-2 rounded-xl">
+    <div className="h-fit rounded-xl">
       {selectedSeries && (
         <Dialog open={selectedSeries && true}>
           <DialogContent className="w-fit items-center justify-center" aria-describedby={undefined}>
