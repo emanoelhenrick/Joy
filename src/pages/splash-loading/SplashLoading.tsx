@@ -18,6 +18,7 @@ export function SplashLoading() {
   const queryClient = useQueryClient()
 
   const [progress, setProgress] = useState(0)
+  const [tmdbData, setTmdbData] = useState<any[]>([])
 
   const updateUrls = usePlaylistUrl(state => state.updateUrls)
   const updateUserData = useUserData(state => state.updateUserData)
@@ -27,13 +28,12 @@ export function SplashLoading() {
   const updateMatches = useTrending(state => state.updateMatches)
 
   const { isSuccess, data  } = useQuery({ queryKey: ['playlistExists'], queryFn: electronApi.getMetadata, staleTime: Infinity })
-  const { data: tmdbData } = useQuery({ queryKey: ['tmdb-trending'], queryFn: fetchTrending  })
 
   async function fetchTrending() {
     if (!import.meta.env.VITE_TMDB_API_KEY) return
     const moviedb = new MovieDb(import.meta.env.VITE_TMDB_API_KEY)
     const res = await moviedb.trending({ media_type: 'all', time_window: 'week', language: 'pt-BR'})
-    return res.results
+    setTmdbData(res.results!)
   }
 
   function filterTrending(vodData: VodPlaylistProps, seriesData: SeriesPlaylistProps) {
@@ -78,7 +78,7 @@ export function SplashLoading() {
 
     const filteredTrending = filterTrending(vodData, seriesData)
     updateMatches(filteredTrending!)
-    setProgress(99)
+    setProgress(95)
 
     const urls = makeUrls(info)
     updateUrls(urls)
@@ -90,6 +90,10 @@ export function SplashLoading() {
 
     navigate(`/dashboard/home/${info.name}`)
   }
+
+  useEffect(() => {
+    fetchTrending()
+  }, [])
 
   useEffect(() => {
     if (isSuccess) {

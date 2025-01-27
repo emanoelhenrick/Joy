@@ -6,7 +6,6 @@ import { HomeDashboard } from "./home/HomeDashboard";
 import { Dashboard } from "./dashboard/Dashboard";
 import { LiveDashboard } from "./live/LiveDashboard";
 import { HomeVodPlayer } from "./home/HomeVodPlayer";
-import { ScrollIcon } from "lucide-react";
 
 export const router = createHashRouter(
   createRoutesFromElements(

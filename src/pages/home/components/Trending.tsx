@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay"
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { format } from "date-fns";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { useNavigate, useParams } from "react-router-dom";

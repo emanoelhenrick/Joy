@@ -46,6 +46,9 @@ export function VodInfo({ streamId, title, cover }: Props) {
   
   const extensions = ['mp4', 'ogg', 'ogv', 'webm', 'mov', 'm4v']
 
+  console.log(data);
+  
+
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="flex items-center gap-6 absolute h-fit max-w-6xl rounded-xl p-8 xl:scale-90 2xl:scale-100">
