@@ -1,4 +1,3 @@
-import { Cover } from "@/components/Cover"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { SeriesProps } from "electron/core/models/SeriesModels"
 import { VodProps } from "electron/core/models/VodModels"

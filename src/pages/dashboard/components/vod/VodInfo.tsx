@@ -105,12 +105,15 @@ export function VodInfo({ streamId, cover }: Props) {
           <div className="max-w-96 h-fit">
             { logoPath !== undefined ? (<img className="object-contain max-h-40" src={logoPath} alt="" />) : <h1 className="text-5xl">{title}</h1>}
           </div>
+
+          <div className="flex items-center gap-4 mt-4">
+            { data.info.releasedate && <span className="text-base 2xl:text-lg text-muted-foreground">{format(data.info.releasedate, 'u')}</span>}
+
+            {data.info.genre && <span className="text-base 2xl:text-lg text-muted-foreground">{genres[0]}</span>}
+          </div>
           
-          <div className="max-w-screen-md 2xl:max-w-screen-lg mt-8 flex flex-col gap-4">
+          <div className="max-w-screen-md 2xl:max-w-screen-lg mt-2 flex flex-col gap-4">
           {description && <span className="text-base 2xl:text-xl text-primary line-clamp-6">{description}</span>}
-            <div className="flex gap-2">
-              {data.info.genre && genres.map(g => <span className="text-muted-foreground italic">{g}</span>)}
-            </div>
             <div>
               <p className="truncate max-w-xl text-muted-foreground">
                 {data?.info.cast}
@@ -118,7 +121,6 @@ export function VodInfo({ streamId, cover }: Props) {
               <p className="text-muted-foreground">
                 {data?.info.director && 'Directed by ' + data?.info.director}
               </p>
-              { data.info.releasedate && <span className="text-muted-foreground">Released in {format(data.info.releasedate, 'u')}</span>}
             </div>
             <span className="text-primary/90">Title: {title}</span>
 

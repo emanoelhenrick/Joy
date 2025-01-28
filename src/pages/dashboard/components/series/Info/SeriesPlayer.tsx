@@ -11,7 +11,6 @@ import { EpisodeProps, SerieInfoProps } from 'electron/core/models/SeriesModels'
 import { ExpandVideoButton } from '@/components/ExpandVideoButton';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
-
 interface PlayerProps {
   info: SerieInfoProps
   seriesId: string
@@ -25,7 +24,7 @@ let currentTime = 0;
 let duration = 0;
 let currentEpisode: EpisodeProps | undefined = undefined
 
-export function VideoPlayer({ info, seriesId, episodeNumStart = '1', seasonNumStart = '1', currentTimeStated = 0, baseUrl }: PlayerProps) {
+export function SeriesPlayer({ info, seriesId, episodeNumStart = '1', seasonNumStart = '1', currentTimeStated = 0, baseUrl }: PlayerProps) {
 
   const player = useRef<MediaPlayerInstance>(null);
   const [episodeNum, setEpisodeNum] = useState(episodeNumStart)

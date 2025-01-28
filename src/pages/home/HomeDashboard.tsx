@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Cover } from "@/components/Cover";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { useMemo, useState } from 'react';
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { DialogContent, DialogTitle, Dialog } from '@/components/MediaInfoDialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { SeriesProps } from 'electron/core/models/SeriesModels';
@@ -8,7 +7,7 @@ import { VodProps } from 'electron/core/models/VodModels';
 import { Fade } from 'react-awesome-reveal';
 import { useUserData } from '@/states/useUserData';
 import { useSeriesPlaylist, useVodPlaylist } from '@/states/usePlaylistData';
-import { SeriesInfo } from '../dashboard/components/series/SeriesInfo';
+import { SeriesPage } from '../dashboard/components/series/Info';
 import { VodInfo } from '../dashboard/components/vod/VodInfo';
 import { WatchingScroll } from './components/WatchingScroll';
 import { FavoritesScroll } from './components/FavoritesScroll';
@@ -140,9 +139,9 @@ export function HomeDashboard() {
               <div onClick={() => setSelectedSeries(undefined)} className="cursor-pointer absolute right-14 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
                 <Cross2Icon className="h-8 w-8" />
               </div>
-              <DialogTitle className="invisible">{selectedSeries!.name}</DialogTitle>
+              <DialogTitle className="hidden" />
               <div className="w-screen">
-                <SeriesInfo seriesId={selectedSeries!.series_id.toString()} title={selectedSeries!.title} cover={selectedSeries!.cover} />
+                <SeriesPage seriesId={selectedSeries!.series_id.toString()} title={selectedSeries!.title} cover={selectedSeries!.cover} />
               </div>
             </DialogContent>
           </Dialog>

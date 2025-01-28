@@ -7,7 +7,7 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import { useDebounce } from "use-debounce";
 import { Fade } from "react-awesome-reveal";
 import { FaStar } from "react-icons/fa";
-import { SeriesInfo } from "./SeriesInfo";
+import { SeriesPage } from "./Info";
 import { useMeasure } from "@uidotdev/usehooks";
 
 export default function SeriesPlaylistScroll({ data }: any) {
@@ -67,7 +67,7 @@ export default function SeriesPlaylistScroll({ data }: any) {
             </div>
             <DialogTitle className="invisible">{selectedSeries!.title}</DialogTitle>
             <div className="w-screen">
-              <SeriesInfo seriesId={selectedSeries!.series_id.toString()} title={selectedSeries!.title} cover={selectedSeries!.cover} />
+              <SeriesPage seriesId={selectedSeries!.series_id.toString()} title={selectedSeries!.title} cover={selectedSeries!.cover} />
             </div>
           </DialogContent>
         </Dialog>
