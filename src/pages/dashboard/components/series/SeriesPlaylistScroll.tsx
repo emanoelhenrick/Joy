@@ -1,6 +1,6 @@
 import { SeriesProps } from "electron/core/models/SeriesModels";
 import { Cover } from "@/components/Cover";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useUserData } from "@/states/useUserData";
 import { Dialog, DialogContent, DialogTitle } from "@/components/MediaInfoDialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
@@ -37,6 +37,26 @@ export default function SeriesPlaylistScroll({ data }: any) {
     
   }, [userData, updateDebounced])
 
+  const renderItem = useCallback((series: SeriesProps) => {
+    const isFavorite = favorites?.includes(series.series_id.toString()) 
+
+    return (
+      <div
+        className="w-full h-fit hover:scale-95 transition cursor-pointer relative group"
+        key={series.series_id + '-' + series.num}
+      >
+        <div onClick={() => setSelectedSeries(series)}>
+          <Cover src={series.cover} title={series.name} />
+        </div>
+        {isFavorite ? (
+            <FaStar onClick={() => updateRender(series.series_id.toString())} size={20} strokeWidth={0} className={`absolute fill-yellow-400 top-3 right-4 ${isFavorite ? 'visible' : 'invisible' }`}  />
+          ) : (
+            <FaStar onClick={() => updateRender(series.series_id.toString())} size={20} className={`absolute fill-primary top-3 right-4 opacity-0 group-hover:opacity-100 transition hover:scale-110`}  />
+          )}
+      </div>
+      )
+    }, [playlist, favorites])
+
   return (
     <div className="h-fit rounded-xl">
       {selectedSeries && (
@@ -55,26 +75,7 @@ export default function SeriesPlaylistScroll({ data }: any) {
         <div className={`w-full flex h-full pr-4`}>
           <div ref={ref} style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }} className={`grid w-full h-fit gap-2`}>
             <Fade triggerOnce duration={200}>
-              {playlist.map((series) => {
-                const isFavorite = favorites?.includes(series.series_id.toString())
-
-                return (
-                  <div
-                    className="flex flex-col hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative group"
-                    key={series.series_id + '-' + series.num}
-                  >
-                    <div onClick={() => setSelectedSeries(series)}>
-                      <Cover src={series.cover} title={series.name} />
-                    </div>
-                    {isFavorite ? (
-                        <FaStar onClick={() => updateRender(series.series_id.toString())} size={20} strokeWidth={0} className={`absolute fill-yellow-400 top-3 right-4 ${isFavorite ? 'visible' : 'invisible' }`}  />
-                      ) : (
-                        <FaStar onClick={() => updateRender(series.series_id.toString())} size={20} className={`absolute fill-primary top-3 right-4 opacity-0 group-hover:opacity-100 transition hover:scale-110`}  />
-                      )} 
-                    {/* <h3 className="truncate w-36 text-xs text-muted-foreground">{series.title || series.name}</h3> */}
-                  </div>
-                )
-              })}
+              {playlist.map((series) => renderItem(series))}
             </Fade>
           </div>
         </div>

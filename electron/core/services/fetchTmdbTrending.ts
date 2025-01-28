@@ -5,7 +5,7 @@ import { getLocalSeriesPlaylist } from "./series/getLocalSeriesPlaylist"
 
 export async function fetchTmdbTrending({ apiKey, playlistName }: any) {
   const moviedb = new MovieDb(apiKey)
-  const res = await moviedb.trending({ media_type: 'all', time_window: 'week', language: 'pt-BR'})
+  const res = await moviedb.trending({ media_type: 'movie', time_window: 'week', language: 'pt-BR'})
   const tmdbData = res.results!
 
   const vodData = await getLocalVodPlaylist(playlistName)

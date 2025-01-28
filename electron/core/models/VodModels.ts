@@ -1,3 +1,5 @@
+import { MovieImagesResponse } from "moviedb-promise"
+
 export interface VodPlaylistProps {
   playlist: VodProps[]
   categories: CategoriesProps[]
@@ -27,6 +29,8 @@ export interface VodInfoProps {
     plot: string
     genre: string
     description: string
+    backdrop_path: string[]
+    tmdb_id?: number
   },
   movie_data: {
     container_extension: string
@@ -35,6 +39,7 @@ export interface VodInfoProps {
   url: string
   username: string
   password: string
+  tmdbImages?: MovieImagesResponse
 }
 
 export interface CategoriesProps {

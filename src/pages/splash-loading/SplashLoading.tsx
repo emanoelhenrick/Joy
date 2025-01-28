@@ -1,4 +1,3 @@
-import { Dots_v3 } from "@/components/ui/spinner";
 import electronApi from "@/config/electronApi";
 import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from "@/states/usePlaylistData";
 import { makeUrls, usePlaylistUrl } from "@/states/usePlaylistUrl";
@@ -57,9 +56,9 @@ export function SplashLoading() {
 
   return (
     <div className="w-full h-screen flex flex-col gap-1 text-sm items-center justify-center">
-      <Fade>
+      <Fade duration={2000}>
         <div className="flex items-center space-x-2">
-          <Dots_v3 />
+          <h1 className="text-4xl">JOY</h1>
         </div>
       </Fade>
     </div>

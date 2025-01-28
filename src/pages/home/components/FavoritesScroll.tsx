@@ -5,6 +5,7 @@ import { VodProps } from "electron/core/models/VodModels"
 import { useEffect, useState } from "react"
 import { Fade } from "react-awesome-reveal"
 import { FaStar } from "react-icons/fa"
+import { HomeCover } from "./HomeCover"
 
 interface WatchingScrollProps {
   favoritesVod: VodProps[]
@@ -56,7 +57,7 @@ export function FavoritesScroll({ favoritesVod, favoritesSeries, setSelectedSeri
                 key={series.series_id}
               >
                 <div onClick={() => setSelectedSeries(series)}>
-                  <Cover src={series.cover} title={series.name} />
+                  <HomeCover src={series.cover} title={series.name} />
                 </div>
                 <FaStar onClick={() => updateFavorites(series.series_id.toString(), 'series')} size={20} strokeWidth={0} className={`absolute fill-yellow-400 top-3 right-4`} />
               </div>
@@ -69,7 +70,7 @@ export function FavoritesScroll({ favoritesVod, favoritesSeries, setSelectedSeri
                   key={movie.num}
                   >
                   <div onClick={() => setSelectedVod(movie)}>
-                    <Cover src={movie.stream_icon} title={movie.name} />
+                    <HomeCover src={movie.stream_icon} title={movie.name} />
                   </div>
                   <FaStar onClick={() => updateFavorites(movie.stream_id.toString(), 'vod')} size={20} strokeWidth={0} className={`absolute fill-yellow-400 top-3 right-4`} />
                 </div>

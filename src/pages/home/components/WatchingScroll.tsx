@@ -4,6 +4,7 @@ import { SeriesProps } from "electron/core/models/SeriesModels"
 import { VodProps } from "electron/core/models/VodModels"
 import { useEffect, useState } from "react"
 import { Fade } from "react-awesome-reveal"
+import { HomeCover } from "./HomeCover"
 
 interface WatchingScrollProps {
   watchingVod: VodProps[]
@@ -54,7 +55,7 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
                 key={series.series_id}
                 onClick={() => setSelectedSeries(series)}
               >
-                <Cover src={series.cover} title={series.name} />
+                <HomeCover src={series.cover} title={series.name} />
               </div>
               )
             })}
@@ -65,7 +66,7 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
                   key={movie.num}
                   onClick={() => setSelectedVod(movie)}
                   >
-                  <Cover src={movie.stream_icon} title={movie.name} />
+                  <HomeCover src={movie.stream_icon} title={movie.name} />
                 </div>
               )
             })}

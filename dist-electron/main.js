@@ -26694,7 +26694,7 @@ var ExternalId;
 })(dist);
 async function fetchTmdbTrending({ apiKey, playlistName }) {
   const moviedb2 = new dist.MovieDb(apiKey);
-  const res = await moviedb2.trending({ media_type: "all", time_window: "week", language: "pt-BR" });
+  const res = await moviedb2.trending({ media_type: "movie", time_window: "week", language: "pt-BR" });
   const tmdbData = res.results;
   const vodData = await getLocalVodPlaylist(playlistName);
   const seriesData = await getLocalSeriesPlaylist(playlistName);

@@ -5,14 +5,15 @@ import { QueryFilters, useQuery, useQueryClient } from "@tanstack/react-query"
 import { LoaderCircle } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 import { Fade } from "react-awesome-reveal"
-import { FaPlay } from "react-icons/fa"
+import { FaPlay, FaStar } from "react-icons/fa"
 import { useUserData } from "@/states/useUserData"
 import { VodPlayer } from "./VodPlayer"
 import { Badge } from "@/components/ui/badge"
 import { Cross2Icon } from "@radix-ui/react-icons"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { VodPlayerDialog } from "./VodPlayerDialog"
-import { MovieDb } from "moviedb-promise"
+import { MovieDb, TitleLogo } from "moviedb-promise"
+import { Button } from "@/components/ui/button"
 
 interface Props {
   streamId: string
@@ -23,12 +24,24 @@ interface Props {
 export function VodInfo({ streamId, cover }: Props) {
   const queryClient = useQueryClient()
 
+  const moviedb = new MovieDb(import.meta.env.VITE_TMDB_API_KEY)
+
   const [isDialog, setIsDialog] = useState(false)
   const [isCover, setIsCover] = useState(true)
   const userVodData = useUserData(state => state.userData.vod?.find(v => v.id == streamId))
   const removeVodStatus = useUserData(state => state.removeVodStatus)
-  const { data, isSuccess } = useQuery({ queryKey: [`vodInfo`], queryFn: async () => await electronApi.getVodInfo(urls.getVodInfoUrl + streamId) })
+  const { data, isSuccess } = useQuery({ queryKey: [`vodInfo`], queryFn: async () => await fetchMovieData() })
   const { urls } = usePlaylistUrl()
+
+  async function fetchMovieData() {
+    const vodInfo = await electronApi.getVodInfo(urls.getVodInfoUrl + streamId)
+    if (!vodInfo) return
+    if (vodInfo.info.tmdb_id) {
+      const tmdbData = await moviedb.movieImages({ id: vodInfo.info.tmdb_id })
+      return { ...vodInfo, tmdbImages: tmdbData }
+    }
+    return vodInfo
+  }
 
   useEffect(() => {
     return () => {
@@ -41,94 +54,158 @@ export function VodInfo({ streamId, cover }: Props) {
       if (data.info.genre) {
         return data!.info.genre.replaceAll(/^\s+|\s+$/g, "").split(/[^\w\sÀ-ÿ-]/g)
       }
-    } 
+    }
     return []
   }, [isSuccess])
-  
+
   const extensions = ['mp4', 'ogg', 'ogv', 'webm', 'mov', 'm4v']
 
-  return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="flex items-center gap-6 absolute h-fit max-w-6xl rounded-xl p-8 xl:scale-90 2xl:scale-100">
-          {isSuccess ? (
-            <div className="relative w-full max-w-72">
-              <div className="transition flex hover:scale-95">
-                {extensions.includes(data!.movie_data.container_extension) ? (
-                  <div className="items-center justify-center cursor-pointer flex" onClick={() => setIsDialog(true)}>
-                    { isCover ?
-                      <img onError={() => setIsCover(false)} className="shadow-xl w-72 rounded-xl" src={cover!}/> :
-                      <div className="bg-secondary w-72 h-44 shadow-xl rounded-xl" />
-                    }
-                    <FaPlay className="absolute" size={50} />
-                  </div>
-                ) : (
-                  <div className="flex relative justify-center items-center">
-                    <div className="bg-black w-full rounded-xl opacity-70 h-full absolute" />
-                    <img className="rounded-xl shadow-xl" src={cover!}/>
-                    <Badge className="absolute text-sm mt-2 font-normal bg-secondary text-muted-foreground hover:bg-secondary">unsupported</Badge>
-                  </div>
-                )}
-              </div>
-              { isCover ?
-                <img src={cover!} className="absolute top-0 rounded-3xl blur-3xl -z-10"/> : 
-                <div className="bg-secondary w-72 h-44 absolute top-0 rounded-3xl blur-3xl -z-10" />
-              }
-            </div>
-          ) : (
-          <div className="flex items-center justify-center rounded-lg">
-            <img className="h-full max-h-[500px] rounded-xl shadow-xl opacity-50" src={cover!} />
-            <LoaderCircle size={48} className={`animate-spin fixed`} />
-          </div>
-          )}
-          {data && (
-            <div className={`flex flex-col h-full transition`}>
-              <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-                {data.info.name || data.info.title || data.movie_data.name}
-              </h1>
-              <p className="leading-7 max-w-4xl [&:not(:first-child)]:mt-4">
-                {data?.info.description || data?.info.plot}
-              </p>
-
-              <div className="flex gap-2">
-                {data.info.genre && genres.map(g => <Badge key={g} className="text-sm mt-2 font-normal bg-primary text-background hover:bg-secodary hover:opacity-80">{g}</Badge>)}
-              </div>
-              <div className="mt-6">
-                <p className="truncate max-w-xl text-sm text-muted-foreground">
-                  {data?.info.cast}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {data?.info.director && 'Directed by ' + data?.info.director}
-                </p>
-              </div>
-              <AlertDialog>
-                <AlertDialogTrigger>
-                  { userVodData && <p className="text-muted-foreground text-right opacity-70 hover:opacity-100 cursor-pointer transition mt-2">Clear data</p> }
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This will erase all related data like where you stopped watching and favorite.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => removeVodStatus(streamId)}>Clear</AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-
-              <VodPlayerDialog
-                name={data.info.name}
-                container_extension={data?.movie_data.container_extension}
-                currentTime={userVodData ? userVodData!.currentTime : undefined}
-                streamId={streamId}
-                open={isDialog}
-                setIsOpen={setIsDialog}
-              />
-            </div>
-          )}
+  if (!data) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+          <img key='loading' src={cover} className="max-w-80 rounded-2xl animate-pulse -z-20" />
       </div>
-    </div>
+    )
+  }
+
+  const description = data.info.description || data.info.plot
+  const title = data.info.title || data.info.name || data.movie_data.name
+
+  if (data && data.tmdbImages) {
+    function getRightLogo(logos: TitleLogo[]) {
+      if (!logos) return
+      if (logos.length === 0) return
+      const logo = logos.filter(l => l.aspect_ratio! > 1.5 && (l.iso_639_1 === 'pt-BR' || l.iso_639_1 === 'en'))
+      if (logo.length === 0) return `https://image.tmdb.org/t/p/w500${logos[0].file_path}`
+      return `https://image.tmdb.org/t/p/w500${logo[0].file_path}`
+    }
+
+    const backdropPath = data.tmdbImages!.backdrops!.length === 0 ? undefined
+      : `https://image.tmdb.org/t/p/original${data.tmdbImages.backdrops![0].file_path}`
+
+    const logoPath = getRightLogo(data.tmdbImages.logos!)
+
+    return (
+      <>
+        <div className="w-full h-screen flex bg-background">
+        { backdropPath !== undefined && (
+          <img
+            className="w-full h-full object-cover fixed top-0 z-10"
+            src={`https://image.tmdb.org/t/p/original${backdropPath}`}
+          />
+        )}
+        <div className="inset-0 w-full h-full z-10 fixed bg-gradient-to-l from-transparent to-background/95" />
+
+        <div className="p-16 z-20">
+          <div className="max-w-96 h-fit">
+            { logoPath !== undefined ? (<img className="object-contain max-h-40" src={logoPath} alt="" />) : <h1 className="text-5xl">{title}</h1>}
+          </div>
+          <div className="max-w-screen-md 2xl:max-w-screen-lg mt-8 flex flex-col gap-4">
+          {description && <span className="text-base 2xl:text-xl text-primary line-clamp-6">{description}</span>}
+            
+            <div className="flex gap-2">
+              {data.info.genre && genres.map(g => <span className="text-muted-foreground italic">{g}</span>)}
+            </div>
+            <div>
+              <p className="truncate max-w-xl text-muted-foreground">
+                {data?.info.cast}
+              </p>
+              <p className="text-muted-foreground">
+                {data?.info.director && 'Directed by ' + data?.info.director}
+              </p>
+            </div>
+            <span className="text-primary/90">Title: {title}</span>
+
+            <div className="flex gap-2">
+              { extensions.includes(data.movie_data.container_extension) ? (
+                <Button onClick={() => setIsDialog(true)} size={"lg"} className="flex gap-2 items-center bg-primary">
+                  <FaPlay className="size-4" />
+                  <span className="leading-none text-base">Watch</span>
+                </Button>
+              ) : (
+                <Button disabled size={"lg"} className="flex gap-2 items-center bg-primary">
+                  <span className="leading-none text-base">Unsupported</span>
+                </Button>
+              )}
+              <Button variant={'ghost'} size={"lg"} className="flex gap-2 items-center hover:bg-primary/10">
+                <FaStar className="size-4" />
+                <span className="leading-none text-base">Add to favorites</span>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <VodPlayerDialog
+        name={title}
+        container_extension={data?.movie_data.container_extension}
+        currentTime={userVodData ? userVodData!.currentTime : undefined}
+        streamId={streamId}
+        open={isDialog}
+        setIsOpen={setIsDialog}
+      />
+    </>
+    )
+  }
+
+  return (
+    <>
+      <div className="w-full h-screen flex">
+        { data.info.backdrop_path && data.info.backdrop_path.length > 0 ? (
+          <img
+            className="w-full h-full object-cover fixed top-0 -z-10"
+            src={data.info.backdrop_path[0]}
+          />
+        ) : (
+          <img
+            className="w-full h-full object-cover fixed top-0 blur-lg -z-10"
+            src={cover}
+          />
+        )}
+        <div className="inset-0 w-full h-full -z-10 fixed bg-gradient-to-l from-transparent to-background/95" />
+
+        <div className="p-16">
+          <div className="max-w-96">
+            <h1 className="text-5xl font-semibold">{title}</h1>
+          </div>
+          <div className="max-w-screen-lg mt-6 flex flex-col gap-4">
+            {description && <span className="text-base 2xl:text-xl text-primary line-clamp-6">{description}</span>}
+            <div className="flex gap-2">
+              {data.info.genre && genres.map(g => <span className="text-muted-foreground italic">{g}</span>)}
+            </div>
+            <div>
+              <p className="truncate max-w-xl text-muted-foreground">
+                {data?.info.cast}
+              </p>
+              <p className="text-muted-foreground">
+                {data?.info.director && 'Directed by ' + data?.info.director}
+              </p>
+            </div>
+            <span className="text-primary/90">Title: {title}</span>
+
+            <div className="flex gap-2">
+              <Button onClick={() => setIsDialog(true)} size={"lg"} className="flex gap-2 items-center bg-primary">
+                <FaPlay className="size-4" />
+                <span className="leading-none text-base">Watch</span>
+              </Button>
+              <Button variant={'ghost'} size={"lg"} className="flex gap-2 items-center">
+                <FaStar className="size-4" />
+                <span className="leading-none text-base">Add to favorites</span>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <VodPlayerDialog
+        name={title}
+        container_extension={data?.movie_data.container_extension}
+        currentTime={userVodData ? userVodData!.currentTime : undefined}
+        streamId={streamId}
+        open={isDialog}
+        setIsOpen={setIsDialog}
+      />
+    </>
   )
+
 }

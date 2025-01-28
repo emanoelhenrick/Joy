@@ -13,6 +13,7 @@ import { VodInfo } from '../dashboard/components/vod/VodInfo';
 import { WatchingScroll } from './components/WatchingScroll';
 import { FavoritesScroll } from './components/FavoritesScroll';
 import { Trending } from './components/Trending';
+import { HomeCover } from './components/HomeCover';
 
 export function HomeDashboard() {
   const vodData = useVodPlaylist(state => state.data)
@@ -148,8 +149,8 @@ export function HomeDashboard() {
         {selectedVod && (
           <Dialog open={selectedVod && true}>
             <DialogContent className="w-fit items-center justify-center" aria-describedby={undefined}>
-              <div onClick={() => setSelectedVod(undefined)} className="cursor-pointer absolute right-14 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-                <Cross2Icon className="h-8 w-8" />
+              <div onClick={() => setSelectedVod(undefined)} className="cursor-pointer absolute right-14 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-30">
+                <Cross2Icon className="size-8 p-1 rounded-md bg-background/30 backdrop-blur-lg" />
               </div>
               <DialogTitle className="invisible">{selectedVod!.name}</DialogTitle>
               <div className="w-screen">
@@ -179,7 +180,7 @@ export function HomeDashboard() {
                         key={series.series_id}
                         onClick={() => setSelectedSeries(series)}
                       >
-                        <Cover src={series.cover} title={series.name} />
+                        <HomeCover src={series.cover} title={series.name} />
                       </div>
                       )
                     })}
@@ -193,7 +194,7 @@ export function HomeDashboard() {
                 Recently added movies
               </p>
               <ScrollArea className="w-full rounded-md">
-                <div className="flex w-max gap-3 pb-5 pr-4 rounded-md">
+                <div className="flex h-full w-max gap-3 pb-5 pr-4 rounded-md">
                 <Fade duration={200} triggerOnce>
                 {vodByDate!.map(movie => {
                   return (
@@ -202,7 +203,7 @@ export function HomeDashboard() {
                     key={movie.num}
                     onClick={() => setSelectedVod(movie)}
                     >
-                    <Cover src={movie.stream_icon} title={movie.name} />
+                    <HomeCover src={movie.stream_icon} title={movie.name} />
                   </div>
                   )
                 })}
