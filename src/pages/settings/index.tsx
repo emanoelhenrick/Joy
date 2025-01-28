@@ -46,10 +46,8 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu }: { currentPlay
   }, [isSuccess])
 
   useEffect(() => {
-    return () => {
-      if (selectedPlaylist != currentPlaylist) {
-        navigate('/')
-      }
+    if (selectedPlaylist != currentPlaylist) {
+      navigate('/')
     }
   }, [selectedPlaylist])
 
@@ -89,8 +87,6 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu }: { currentPlay
   }
 
   async function removePlaylist() {
-    console.log('ouch');
-    
     await electronApi.removePlaylist(selectedPlaylist)
     navigate('/')
   }
@@ -123,7 +119,7 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu }: { currentPlay
       </h3>
 
       <AlertDialog>
-        <AlertDialogTrigger>
+        <AlertDialogTrigger className="w-fit">
           <h3 className="scroll-m-20  w-fit text-red-400 opacity-80 tracking-tight cursor-pointer hover:text-red-600 transition">
             Remove playlist
           </h3>

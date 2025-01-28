@@ -5,6 +5,7 @@ import { VodProps } from "electron/core/models/VodModels"
 import { useEffect, useState } from "react"
 import { Fade } from "react-awesome-reveal"
 import { HomeCover } from "./HomeCover"
+import { ScrollBarStyled } from "@/components/ScrollBarStyled"
 
 interface WatchingScrollProps {
   watchingVod: VodProps[]
@@ -72,7 +73,7 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
             })}
           </Fade>
         </div>
-        <ScrollBar color="blue" orientation="horizontal" />
+        <ScrollBarStyled orientation="horizontal" />
       </ScrollArea>
   </div>
   )

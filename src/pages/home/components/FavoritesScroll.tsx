@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import { Fade } from "react-awesome-reveal"
 import { FaStar } from "react-icons/fa"
 import { HomeCover } from "./HomeCover"
+import { ScrollBarStyled } from "@/components/ScrollBarStyled"
 
 interface WatchingScrollProps {
   favoritesVod: VodProps[]
@@ -78,7 +79,7 @@ export function FavoritesScroll({ favoritesVod, favoritesSeries, setSelectedSeri
             })}
           </Fade>
         </div>
-        <ScrollBar color="blue" orientation="horizontal" />
+        <ScrollBarStyled orientation="horizontal" />
       </ScrollArea>
   </div>
   )

@@ -37,6 +37,7 @@ export interface SerieInfoProps {
     cast: string
     genre: string
     backdrop_path: string[]
+    releaseDate: string
   }
   episodes: {
     [key: string]: EpisodeProps[]

@@ -17,6 +17,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Button } from "@/components/ui/button";
 import { Slide } from "react-awesome-reveal";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { ScrollBarStyled } from "@/components/ScrollBarStyled";
+import { format } from "date-fns";
 
 export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title: string, cover: string }) {
   const queryClient = useQueryClient();
@@ -131,6 +133,7 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
               <p className="text-sm 2xl:text-base text-muted-foreground">
                 {data?.info.director && 'Directed by ' + data?.info.director}
               </p>
+              { data.info.releaseDate && <span className="text-sm 2xl:text-base text-muted-foreground">Released in {format(data.info.releaseDate, 'u')}</span>}
             </div>
           </div>
         </div>
@@ -151,7 +154,7 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
             <AlertDialogTrigger>
               { userSeriesData && <div className="text-primary/60 text-right hover:text-primary cursor-pointer transition mt-2">Clear data</div> }
             </AlertDialogTrigger>
-            <AlertDialogContent className="border-none bg-primary-foreground/50">
+            <AlertDialogContent className="border-none bg-primary-foreground">
               <AlertDialogHeader>
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
@@ -159,8 +162,8 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
                 </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-                <AlertDialogAction className="border-none shadow-none" onClick={() => removeSeriesStatus(seriesId)}>Clear</AlertDialogAction>
                 <AlertDialogCancel className="bg-transparent border-none shadow-none">Cancel</AlertDialogCancel>
+                <AlertDialogAction className="border-none shadow-none" onClick={() => removeSeriesStatus(seriesId)}>Clear</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -174,7 +177,7 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
                     <div onClick={() => setCurrentSeason(s)} className={`px-2 py-1 hover:opacity-80 cursor-pointer ${currentSeason === s ? 'border-b-4 border-primary' : 'text-muted-foreground'}`}>Season {s}</div>
                 ))}
               </div>
-              <ScrollBar color="blue" orientation="horizontal" />
+              <ScrollBarStyled orientation="horizontal" />
             </ScrollArea>
           </div>
 
@@ -189,7 +192,7 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
                     return (
                       <Dialog onOpenChange={() => setUpdated(prev => !prev)} key={currentSeason + '.' + ep.id}>
                         <DialogTrigger asChild>
-                          <div className="w-64 cursor-pointer hover:opacity-80">
+                          <div className="w-56 2xl:w-64 cursor-pointer hover:opacity-80">
                             <div className="relative shadow-lg flex items-center aspect-video justify-center overflow-hidden rounded-lg">
                               { ep.info.movie_image ?
                                 <LazyLoadImage src={ep.info.movie_image} width={256} className="h-full object-cover" />
@@ -233,129 +236,9 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
                   }
                 })}
             </div>
-            <ScrollBar orientation="horizontal" />
+            <ScrollBarStyled orientation="horizontal" />
           </ScrollArea>
         </section>
       </div>
-
     </>)
-
-  // return (
-  //   <div className="flex items-center justify-center h-screen">
-  //     <div className="flex gap-6 h-fit max-w-7xl rounded-xl p-12 xl:scale-90 2xl:scale-100">
-  //       {isSuccess ? (
-  //         <div className="relative w-full max-w-72">
-  //           <div className="items-center overflow-hidden rounded-xl justify-center transition flex">
-  //             <img onClick={() => setIsDialog(true)} className="shadow-xl" src={cover!}/>
-  //           </div>
-  //         <img src={cover!} className="absolute top-0 rounded-3xl blur-2xl -z-10"/>
-  //       </div>
-  //       ) : (
-  //         <div className="flex items-center justify-center rounded-lg">
-  //           <img className="h-full max-h-[500px] rounded-xl shadow-xl opacity-50" src={cover!} />
-  //           <LoaderCircle size={48} className={`animate-spin fixed`} />
-  //         </div>
-  //       )}
-  //       {isSuccess && (
-  //         <div className={`flex flex-col h-full transition max-w-3xl`}>
-  //           <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-  //             {data?.info.name}
-  //           </h1>
-
-  //           {data?.info.plot && (
-  //             <p className="leading-7 [&:not(:first-child)]:mt-4 text-md">
-  //               {data?.info.plot}
-  //             </p>
-  //           )}
-
-  //           <div className="flex gap-2">
-  //             {genres[0].length > 0 && genres.map(g => <Badge key={g} className="text-sm mt-2 font-normal bg-primary text-background hover:opacity-90">{g}</Badge>)}
-  //           </div>
-
-  //           <div className="mt-6">
-  //             {data?.info.cast && (
-  //               <p className="text-sm text-muted-foreground">
-  //                 {data?.info.cast}
-  //               </p>
-  //             )}
-
-  //             <p className="mb-6 text-sm text-muted-foreground">
-  //               {data?.info.director && 'Directed by ' + data?.info.director}
-  //             </p>
-  //           </div>
-
-  //           {Object.getOwnPropertyNames(data?.episodes).length > 1 && (
-  //             <Select onValueChange={(value) => setCurrentSeason(value)} value={currentSeason}>
-  //             <SelectTrigger  className="w-fit gap-2">
-  //               <SelectValue  placeholder="Season 1" />
-  //             </SelectTrigger>
-  //             <SelectContent>
-  //               <SelectGroup>
-  //                 { seasons && seasons.map((c) => <SelectItem value={c} key={c}>{`Season ${c}`}</SelectItem>)}
-  //               </SelectGroup>
-  //             </SelectContent>
-  //           </Select>
-  //           )}
-  //           <ScrollArea className="w-full whitespace-nowrap rounded-md">
-  //             <div className="flex w-max space-x-4 pb-6 whitespace-nowrap rounded-md">
-  //                 {episodes && episodes.map((ep, index) => {
-  //                   let progress = 0;
-  //                   const epUserData = episodesData?.find(e => e.episodeId == ep.id)
-  //                   if (epUserData) progress = parseFloat(((epUserData.currentTime / epUserData.duration) * 100).toFixed(2))
-  //                   const extensions = ['mp4', 'ogg', 'ogv', 'webm', 'mov', 'm4v']
-  //                   if (extensions.includes(ep.container_extension)) {
-  //                     return (
-  //                       <Dialog onOpenChange={() => setUpdated(prev => !prev)} key={currentSeason + '.' + ep.id}>
-  //                       <DialogTrigger asChild>
-  //                         <div className="flex flex-col space-y-2 w-44 cursor-pointer hover:opacity-80">
-  //                           <div className="relative flex items-center aspect-video justify-center overflow-hidden rounded-lg">
-  //                             { ep.info.movie_image ?
-  //                               <img src={ep.info.movie_image} className="object-cover opacity-70" />
-  //                               : 
-  //                               <div key={ep.id} className="py-11 w-full h-full text-lg bg-secondary opacity-40"/>
-  //                             }
-  //                             <FaPlay size={22} className="absolute opacity-80" />
-  //                             {progress > 0 &&
-  //                             <Progress value={progress} className="absolute w-full transition bottom-0 rounded-none h-0.5" />
-  //                             }
-  //                           </div>
-  //                           <p className="whitespace-normal text-muted-foreground text-sm">{`Episode ${index + 1}`}</p>
-  //                         </div>
-  //                       </DialogTrigger>
-  //                       <DialogContent className="w-fit border-none bg-transparent items-center justify-center" aria-describedby={undefined}>
-  //                         <DialogTitle className="hidden">{title}</DialogTitle>
-  //                         <div className="w-screen">
-  //                           <VideoPlayer
-  //                             baseUrl={urls.getSeriesStreamUrl}
-  //                             episodeNumStart={ep.episode_num}
-  //                             info={data!}
-  //                             seriesId={seriesId}
-  //                             seasonNumStart={currentSeason}
-  //                             currentTimeStated={epUserData?.currentTime!}
-  //                           />
-  //                         </div>
-  //                       </DialogContent>
-  //                     </Dialog>
-  //                     )
-  //                   } else {
-  //                     return (
-  //                       <div key={currentSeason + '.' + ep.id} className="flex flex-col cursor-default space-y-2 w-36 opacity-50">
-  //                         <div className="relative flex items-center justify-center overflow-hidden rounded-lg">
-  //                           <div className="py-11 w-full text-lg bg-secondary opacity-40"/>
-  //                           <p className="whitespace-normal absolute text-sm">unsupported</p>
-  //                         </div>
-  //                         <p className="whitespace-normal text-muted-foreground text-sm">{`Episode ${index + 1}`}</p>
-  //                       </div>
-  //                     )
-  //                   }
-  //                 })}
-  //             </div>
-  //             <ScrollBar color="blue" orientation="horizontal" />
-  //           </ScrollArea>
-  
-  //         </div>
-  //       )}
-  //     </div>
-  //   </div>
-  // )
 }

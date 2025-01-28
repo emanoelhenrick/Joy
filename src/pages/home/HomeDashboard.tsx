@@ -14,6 +14,7 @@ import { WatchingScroll } from './components/WatchingScroll';
 import { FavoritesScroll } from './components/FavoritesScroll';
 import { Trending } from './components/Trending';
 import { HomeCover } from './components/HomeCover';
+import { ScrollBarStyled } from '@/components/ScrollBarStyled';
 
 export function HomeDashboard() {
   const vodData = useVodPlaylist(state => state.data)
@@ -186,7 +187,7 @@ export function HomeDashboard() {
                     })}
                   </Fade>
                 </div>
-                <ScrollBar color="blue" orientation="horizontal" />
+                <ScrollBarStyled orientation="horizontal" />
               </ScrollArea>
             </div>
             <div>
@@ -209,7 +210,7 @@ export function HomeDashboard() {
                 })}
                 </Fade>
                 </div>
-                <ScrollBar color="blue" orientation="horizontal" />
+                <ScrollBarStyled orientation="horizontal" />
               </ScrollArea>
             </div>
           </div>

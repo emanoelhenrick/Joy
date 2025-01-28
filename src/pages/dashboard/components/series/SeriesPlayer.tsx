@@ -138,13 +138,13 @@ export function VideoPlayer({ info, seriesId, episodeNumStart = '1', seasonNumSt
             </Button>}
 
           <AlertDialog open={isAlert}>
-            <AlertDialogContent>
+            <AlertDialogContent className='border-none bg-primary-foreground'>
               <AlertDialogHeader>
                 <AlertDialogTitle>{`Would you like to continue where you left off at ${formatTime(currentTimeStated)}?`}</AlertDialogTitle>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel onClick={() => setIsAlert(false)}>from start</AlertDialogCancel>
-                <AlertDialogAction onClick={continueWatchingTheVideo}>continue</AlertDialogAction>
+                <AlertDialogCancel className="bg-transparent border-none shadow-none" onClick={() => setIsAlert(false)}>from start</AlertDialogCancel>
+                <AlertDialogAction className="border-none shadow-none"  onClick={continueWatchingTheVideo}>continue</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
