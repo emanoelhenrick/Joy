@@ -56,13 +56,13 @@ export function Trending() {
                 
                 <span className="text-base 2xl:text-lg line-clamp-5 text-muted-foreground max-w-screen-sm">{info.overview}</span>
                 <div className="flex gap-3 items-center">
-                  <div className="mt-2 flex gap-3 bg-primary/5 backdrop-blur-3xl shadow-lg p-3 rounded-lg pr-4 relative">
-                    <img className="w-16 rounded-md " src={perfectMatch.stream_icon || perfectMatch.cover} alt="" />
+                  <div className="mt-2 flex gap-3 bg-primary/5 backdrop-blur-3xl shadow-lg p-3 rounded-xl pr-4 relative">
+                    <img className="w-16 rounded-md" src={perfectMatch.stream_icon || perfectMatch.cover} alt="" />
 
                     <div className="flex flex-col justify-between">
                       <div>
                         <h1 className="text-xs text-muted-foreground">Perfect match</h1>
-                        <span className="text-xl">{perfectMatch.name}</span>
+                        <span className="text-xl line-clamp-1 max-w-96">{perfectMatch.name}</span>
                       </div>
                       <div className="flex gap-2">
                         <Button

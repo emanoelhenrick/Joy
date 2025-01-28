@@ -190,7 +190,7 @@ export function MenuBar() {
                 <PiGearSixFill className='size-6' />
               </Button>
             </DialogTrigger>
-            <DialogContent className="w-1/2 max-w-[700px] items-center p-8" aria-describedby={undefined}>
+            <DialogContent className="w-1/2 max-w-[700px] items-center p-8 border-none bg-primary-foreground/90" aria-describedby={undefined}>
               <DialogTitle className="hidden">Settings</DialogTitle>
               {playlistName && <SettingsPage currentPlaylist={playlistName} setUpdatingMenu={setUpdating} />}
             </DialogContent>

@@ -2,7 +2,7 @@ import electronApi from "@/config/electronApi"
 import { usePlaylistUrl } from "@/states/usePlaylistUrl"
 import { EpisodeProps, UserEpisodeProps } from "electron/core/models/SeriesModels"
 import { LoaderCircle } from "lucide-react"
-import { FaPlay } from "react-icons/fa";
+import { FaPlay, FaStar } from "react-icons/fa";
 import { useEffect, useState } from "react"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./SelectSeason"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
@@ -14,6 +14,9 @@ import { useDebounce } from "use-debounce";
 import { VideoPlayer } from "./SeriesPlayer";
 import { Badge } from "@/components/ui/badge";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Slide } from "react-awesome-reveal";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title: string, cover: string }) {
   const queryClient = useQueryClient();
@@ -73,138 +76,286 @@ export function SeriesInfo({ seriesId, title, cover }: { seriesId: string, title
 
   const genres = data?.info.genre.replaceAll(/^\s+|\s+$/g, "").split(/[^\w\sÀ-ÿ-]/g) || ['']
 
+  if (!data) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+          <img key='loading' src={cover} className="max-w-80 rounded-2xl animate-pulse -z-20" />
+      </div>
+    )
+  }
+
+  function getRightBackdrop(backdropList: string[]) {
+    if (!backdropList) return
+    if (backdropList.length === 0) return
+    const url = backdropList[0]
+    if (url.includes('tmdb')) {
+      const list = url.split('/')
+      const path = list[list.length - 1]
+      return `https://image.tmdb.org/t/p/original/${path}`
+    }
+    return url
+  }
+
+  const backdropPath = getRightBackdrop(data.info.backdrop_path)
+  const description = data.info.plot
+  const name = data.info.name
+
   return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="flex gap-6 h-fit max-w-7xl rounded-xl p-12 xl:scale-90 2xl:scale-100">
-        {isSuccess ? (
-          <div className="relative w-full max-w-72">
-            <div className="items-center overflow-hidden rounded-xl justify-center transition flex">
-              <img onClick={() => setIsDialog(true)} className="shadow-xl" src={cover!}/>
-            </div>
-          <img src={cover!} className="absolute top-0 rounded-3xl blur-2xl -z-10"/>
-        </div>
+    <>
+      <div className="w-full h-screen flex flex-col justify-end">
+        { backdropPath ? (
+          <img
+            className="w-full h-full object-cover fixed top-0 -z-10"
+            src={backdropPath}
+          />
         ) : (
-          <div className="flex items-center justify-center rounded-lg">
-            <img className="h-full max-h-[500px] rounded-xl shadow-xl opacity-50" src={cover!} />
-            <LoaderCircle size={48} className={`animate-spin fixed`} />
-          </div>
+          <img
+            className="w-full h-full object-cover fixed top-0 blur-lg -z-10"
+            src={cover}
+          />
         )}
-        {isSuccess && (
-          <div className={`flex flex-col h-full transition max-w-3xl`}>
-            <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-              {data?.info.name}
-            </h1>
+        <div className="inset-0 w-full h-full -z-10 fixed bg-gradient-to-l from-transparent to-background/95" />
+        <div className="inset-0 w-full h-full -z-10 fixed bg-gradient-to-b from-transparent to-background/50" />
 
-            {data?.info.plot && (
-              <p className="leading-7 [&:not(:first-child)]:mt-4 text-md">
-                {data?.info.plot}
-              </p>
-            )}
-
+        <div className="p-16 pb-0 h-fit">
+          <h1 className="text-5xl font-semibold line-clamp-1 max-w-screen-xl">{name}</h1>
+          <div className="max-w-screen-lg mt-4 flex flex-col gap-2">
+            {description && <span className="text-base 2xl:text-xl text-primary line-clamp-4 2xl:line-clamp-6">{description}</span>}
             <div className="flex gap-2">
-              {genres[0].length > 0 && genres.map(g => <Badge key={g} className="text-sm mt-2 font-normal bg-primary text-background hover:opacity-90">{g}</Badge>)}
+              {data.info.genre && genres.map(g => <span className="text-sm 2xl:text-base text-muted-foreground italic">{g}</span>)}
             </div>
-
-            <div className="mt-6">
-              {data?.info.cast && (
-                <p className="text-sm text-muted-foreground">
-                  {data?.info.cast}
-                </p>
-              )}
-
-              <p className="mb-6 text-sm text-muted-foreground">
+            <div>
+              <p className="text-sm 2xl:text-base truncate max-w-xl text-muted-foreground">
+                {data?.info.cast}
+              </p>
+              <p className="text-sm 2xl:text-base text-muted-foreground">
                 {data?.info.director && 'Directed by ' + data?.info.director}
               </p>
             </div>
+          </div>
+        </div>
 
-            {Object.getOwnPropertyNames(data?.episodes).length > 1 && (
-              <Select onValueChange={(value) => setCurrentSeason(value)} value={currentSeason}>
-              <SelectTrigger  className="w-fit gap-2">
-                <SelectValue  placeholder="Season 1" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  { seasons && seasons.map((c) => <SelectItem value={c} key={c}>{`Season ${c}`}</SelectItem>)}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            )}
-            <ScrollArea className="w-full whitespace-nowrap rounded-md">
-              <div className="flex w-max space-x-4 pb-6 whitespace-nowrap rounded-md">
-                  {episodes && episodes.map((ep, index) => {
-                    let progress = 0;
-                    const epUserData = episodesData?.find(e => e.episodeId == ep.id)
-                    if (epUserData) progress = parseFloat(((epUserData.currentTime / epUserData.duration) * 100).toFixed(2))
-                    const extensions = ['mp4', 'ogg', 'ogv', 'webm', 'mov', 'm4v']
-                    if (extensions.includes(ep.container_extension)) {
-                      return (
-                        <Dialog onOpenChange={() => setUpdated(prev => !prev)} key={currentSeason + '.' + ep.id}>
+        <div className="px-16 justify-between items-end flex gap-2 mt-4 w-full mb-8">
+          <div className="flex gap-2">
+            <Button size={"lg"} className="flex gap-2 items-center bg-primary">
+              <FaPlay className="size-4" />
+              <span className="leading-none text-base">Watch</span>
+            </Button>
+            <Button variant={'ghost'} size={"lg"} className="flex gap-2 items-center">
+              <FaStar className="size-4" />
+              <span className="leading-none text-base">Add to favorites</span>
+            </Button>
+          </div>
+
+          <AlertDialog onOpenChange={() => setUpdated(prev => !prev)}>
+            <AlertDialogTrigger>
+              { userSeriesData && <div className="text-primary/60 text-right hover:text-primary cursor-pointer transition mt-2">Clear data</div> }
+            </AlertDialogTrigger>
+            <AlertDialogContent className="border-none bg-primary-foreground/50">
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will erase all related data like where you stopped watching and favorite.
+                </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+                <AlertDialogAction className="border-none shadow-none" onClick={() => removeSeriesStatus(seriesId)}>Clear</AlertDialogAction>
+                <AlertDialogCancel className="bg-transparent border-none shadow-none">Cancel</AlertDialogCancel>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+
+        <section className="mx-8 mb-8 space-y-3 backdrop-blur-3xl bg-background/70 p-6 rounded-3xl">
+          <div>
+            <ScrollArea className="w-full pb-4">
+              <div className="flex gap-6 text-nowrap">
+                { seasons && seasons.map(s => (
+                    <div onClick={() => setCurrentSeason(s)} className={`px-2 py-1 hover:opacity-80 cursor-pointer ${currentSeason === s ? 'border-b-4 border-primary' : 'text-muted-foreground'}`}>Season {s}</div>
+                ))}
+              </div>
+              <ScrollBar color="blue" orientation="horizontal" />
+            </ScrollArea>
+          </div>
+
+          <ScrollArea className="w-full whitespace-nowrap rounded-lg">
+              <div className="flex w-max space-x-6 pb-6 whitespace-nowrap rounded-md">
+                {episodes && episodes.map((ep, index) => {
+                  let progress = 0;
+                  const epUserData = episodesData?.find(e => e.episodeId == ep.id)
+                  if (epUserData) progress = parseFloat(((epUserData.currentTime / epUserData.duration) * 100).toFixed(2))
+                  const extensions = ['mp4', 'ogg', 'ogv', 'webm', 'mov', 'm4v']
+                  if (extensions.includes(ep.container_extension)) {
+                    return (
+                      <Dialog onOpenChange={() => setUpdated(prev => !prev)} key={currentSeason + '.' + ep.id}>
                         <DialogTrigger asChild>
-                          <div className="flex flex-col space-y-2 w-44 cursor-pointer hover:opacity-80">
-                            <div className="relative flex items-center aspect-video justify-center overflow-hidden rounded-lg">
+                          <div className="w-64 cursor-pointer hover:opacity-80">
+                            <div className="relative shadow-lg flex items-center aspect-video justify-center overflow-hidden rounded-lg">
                               { ep.info.movie_image ?
-                                <img src={ep.info.movie_image} className="object-cover opacity-70" />
-                                : 
-                                <div key={ep.id} className="py-11 w-full h-full text-lg bg-secondary opacity-40"/>
+                                <LazyLoadImage src={ep.info.movie_image} width={256} className="h-full object-cover" />
+                                :
+                                <img src={cover} className="object-cover w-full h-full" />
                               }
-                              <FaPlay size={22} className="absolute opacity-80" />
+                              <FaPlay className="absolute opacity-80 size-8" />
                               {progress > 0 &&
                               <Progress value={progress} className="absolute w-full transition bottom-0 rounded-none h-0.5" />
                               }
                             </div>
-                            <p className="whitespace-normal text-muted-foreground text-sm">{`Episode ${index + 1}`}</p>
+                            <p className="whitespace-normal text-base mt-3">{`Episode ${index + 1}`}</p>
+                            <span className="text-wrap text-xs text-muted-foreground line-clamp-2 2xl:line-clamp-3">{ep.info.plot}</span>
                           </div>
                         </DialogTrigger>
-                        <DialogContent className="w-fit border-none bg-transparent items-center justify-center" aria-describedby={undefined}>
-                          <DialogTitle className="hidden">{title}</DialogTitle>
-                          <div className="w-screen">
-                            <VideoPlayer
-                              baseUrl={urls.getSeriesStreamUrl}
-                              episodeNumStart={ep.episode_num}
-                              info={data!}
-                              seriesId={seriesId}
-                              seasonNumStart={currentSeason}
-                              currentTimeStated={epUserData?.currentTime!}
-                            />
-                          </div>
-                        </DialogContent>
-                      </Dialog>
-                      )
-                    } else {
-                      return (
-                        <div key={currentSeason + '.' + ep.id} className="flex flex-col cursor-default space-y-2 w-36 opacity-50">
-                          <div className="relative flex items-center justify-center overflow-hidden rounded-lg">
-                            <div className="py-11 w-full text-lg bg-secondary opacity-40"/>
-                            <p className="whitespace-normal absolute text-sm">unsupported</p>
-                          </div>
-                          <p className="whitespace-normal text-muted-foreground text-sm">{`Episode ${index + 1}`}</p>
+                      <DialogContent className="w-fit border-none bg-transparent items-center justify-center" aria-describedby={undefined}>
+                        <DialogTitle className="hidden">{title}</DialogTitle>
+                        <div className="w-screen">
+                          <VideoPlayer
+                            baseUrl={urls.getSeriesStreamUrl}
+                            episodeNumStart={ep.episode_num}
+                            info={data!}
+                            seriesId={seriesId}
+                            seasonNumStart={currentSeason}
+                            currentTimeStated={epUserData?.currentTime!}
+                          />
                         </div>
-                      )
-                    }
-                  })}
-              </div>
-              <ScrollBar color="blue" orientation="horizontal" />
-            </ScrollArea>
-            <AlertDialog onOpenChange={() => setUpdated(prev => !prev)}>
-              <AlertDialogTrigger>
-                { userSeriesData && <p className="text-muted-foreground text-right opacity-70 hover:opacity-100 cursor-pointer transition mt-2">Clear data</p> }
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This will erase all related data like where you stopped watching and favorite.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => removeSeriesStatus(seriesId)}>Clear</AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
-        )}
+                      </DialogContent>
+                    </Dialog>
+                    )
+                  } else {
+                    return (
+                      <div key={currentSeason + '.' + ep.id} className="flex flex-col cursor-default space-y-2 w-64 opacity-50">
+                        <div className="relative flex items-center justify-center overflow-hidden rounded-lg">
+                          <div className="py-11 aspect-video w-full h-full text-lg bg-secondary opacity-40"/>
+                          <p className="whitespace-normal absolute text-base">unsupported</p>
+                        </div>
+                        <p className="whitespace-normal text-muted-foreground text-sm">{`Episode ${index + 1}`}</p>
+                      </div>
+                    )
+                  }
+                })}
+            </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
+        </section>
       </div>
-    </div>
-  )
+
+    </>)
+
+  // return (
+  //   <div className="flex items-center justify-center h-screen">
+  //     <div className="flex gap-6 h-fit max-w-7xl rounded-xl p-12 xl:scale-90 2xl:scale-100">
+  //       {isSuccess ? (
+  //         <div className="relative w-full max-w-72">
+  //           <div className="items-center overflow-hidden rounded-xl justify-center transition flex">
+  //             <img onClick={() => setIsDialog(true)} className="shadow-xl" src={cover!}/>
+  //           </div>
+  //         <img src={cover!} className="absolute top-0 rounded-3xl blur-2xl -z-10"/>
+  //       </div>
+  //       ) : (
+  //         <div className="flex items-center justify-center rounded-lg">
+  //           <img className="h-full max-h-[500px] rounded-xl shadow-xl opacity-50" src={cover!} />
+  //           <LoaderCircle size={48} className={`animate-spin fixed`} />
+  //         </div>
+  //       )}
+  //       {isSuccess && (
+  //         <div className={`flex flex-col h-full transition max-w-3xl`}>
+  //           <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+  //             {data?.info.name}
+  //           </h1>
+
+  //           {data?.info.plot && (
+  //             <p className="leading-7 [&:not(:first-child)]:mt-4 text-md">
+  //               {data?.info.plot}
+  //             </p>
+  //           )}
+
+  //           <div className="flex gap-2">
+  //             {genres[0].length > 0 && genres.map(g => <Badge key={g} className="text-sm mt-2 font-normal bg-primary text-background hover:opacity-90">{g}</Badge>)}
+  //           </div>
+
+  //           <div className="mt-6">
+  //             {data?.info.cast && (
+  //               <p className="text-sm text-muted-foreground">
+  //                 {data?.info.cast}
+  //               </p>
+  //             )}
+
+  //             <p className="mb-6 text-sm text-muted-foreground">
+  //               {data?.info.director && 'Directed by ' + data?.info.director}
+  //             </p>
+  //           </div>
+
+  //           {Object.getOwnPropertyNames(data?.episodes).length > 1 && (
+  //             <Select onValueChange={(value) => setCurrentSeason(value)} value={currentSeason}>
+  //             <SelectTrigger  className="w-fit gap-2">
+  //               <SelectValue  placeholder="Season 1" />
+  //             </SelectTrigger>
+  //             <SelectContent>
+  //               <SelectGroup>
+  //                 { seasons && seasons.map((c) => <SelectItem value={c} key={c}>{`Season ${c}`}</SelectItem>)}
+  //               </SelectGroup>
+  //             </SelectContent>
+  //           </Select>
+  //           )}
+  //           <ScrollArea className="w-full whitespace-nowrap rounded-md">
+  //             <div className="flex w-max space-x-4 pb-6 whitespace-nowrap rounded-md">
+  //                 {episodes && episodes.map((ep, index) => {
+  //                   let progress = 0;
+  //                   const epUserData = episodesData?.find(e => e.episodeId == ep.id)
+  //                   if (epUserData) progress = parseFloat(((epUserData.currentTime / epUserData.duration) * 100).toFixed(2))
+  //                   const extensions = ['mp4', 'ogg', 'ogv', 'webm', 'mov', 'm4v']
+  //                   if (extensions.includes(ep.container_extension)) {
+  //                     return (
+  //                       <Dialog onOpenChange={() => setUpdated(prev => !prev)} key={currentSeason + '.' + ep.id}>
+  //                       <DialogTrigger asChild>
+  //                         <div className="flex flex-col space-y-2 w-44 cursor-pointer hover:opacity-80">
+  //                           <div className="relative flex items-center aspect-video justify-center overflow-hidden rounded-lg">
+  //                             { ep.info.movie_image ?
+  //                               <img src={ep.info.movie_image} className="object-cover opacity-70" />
+  //                               : 
+  //                               <div key={ep.id} className="py-11 w-full h-full text-lg bg-secondary opacity-40"/>
+  //                             }
+  //                             <FaPlay size={22} className="absolute opacity-80" />
+  //                             {progress > 0 &&
+  //                             <Progress value={progress} className="absolute w-full transition bottom-0 rounded-none h-0.5" />
+  //                             }
+  //                           </div>
+  //                           <p className="whitespace-normal text-muted-foreground text-sm">{`Episode ${index + 1}`}</p>
+  //                         </div>
+  //                       </DialogTrigger>
+  //                       <DialogContent className="w-fit border-none bg-transparent items-center justify-center" aria-describedby={undefined}>
+  //                         <DialogTitle className="hidden">{title}</DialogTitle>
+  //                         <div className="w-screen">
+  //                           <VideoPlayer
+  //                             baseUrl={urls.getSeriesStreamUrl}
+  //                             episodeNumStart={ep.episode_num}
+  //                             info={data!}
+  //                             seriesId={seriesId}
+  //                             seasonNumStart={currentSeason}
+  //                             currentTimeStated={epUserData?.currentTime!}
+  //                           />
+  //                         </div>
+  //                       </DialogContent>
+  //                     </Dialog>
+  //                     )
+  //                   } else {
+  //                     return (
+  //                       <div key={currentSeason + '.' + ep.id} className="flex flex-col cursor-default space-y-2 w-36 opacity-50">
+  //                         <div className="relative flex items-center justify-center overflow-hidden rounded-lg">
+  //                           <div className="py-11 w-full text-lg bg-secondary opacity-40"/>
+  //                           <p className="whitespace-normal absolute text-sm">unsupported</p>
+  //                         </div>
+  //                         <p className="whitespace-normal text-muted-foreground text-sm">{`Episode ${index + 1}`}</p>
+  //                       </div>
+  //                     )
+  //                   }
+  //                 })}
+  //             </div>
+  //             <ScrollBar color="blue" orientation="horizontal" />
+  //           </ScrollArea>
+  
+  //         </div>
+  //       )}
+  //     </div>
+  //   </div>
+  // )
 }

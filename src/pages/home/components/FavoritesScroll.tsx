@@ -47,7 +47,7 @@ export function FavoritesScroll({ favoritesVod, favoritesSeries, setSelectedSeri
           </span>
         )}
       </div>
-      <ScrollArea className="w-full rounded-md">
+      <ScrollArea className="w-full rounded-md ">
         <div className="flex w-max space-x-3 pb-5 pr-4 rounded-md">
           <Fade duration={200} triggerOnce>
             {(favoritesTab == 0 && favoritesSeries) && favoritesSeries!.map(series => {

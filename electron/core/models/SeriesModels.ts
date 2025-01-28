@@ -25,6 +25,7 @@ export interface EpisodeProps {
   episode_num: string
   info: {
     movie_image?: string
+    plot: string
   }
 }
 
@@ -35,6 +36,7 @@ export interface SerieInfoProps {
     director: string
     cast: string
     genre: string
+    backdrop_path: string[]
   }
   episodes: {
     [key: string]: EpisodeProps[]

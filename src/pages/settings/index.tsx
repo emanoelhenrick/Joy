@@ -128,7 +128,7 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu }: { currentPlay
             Remove playlist
           </h3>
         </AlertDialogTrigger>
-        <AlertDialogContent>
+        <AlertDialogContent className="border-none bg-primary-foreground/50">
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -136,8 +136,8 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu }: { currentPlay
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction className="bg-red-500 text-primary" onClick={removePlaylist}>Remove</AlertDialogAction>
+            <AlertDialogCancel className="bg-transparent border-none shadow-none">Cancel</AlertDialogCancel>
+            <AlertDialogAction className="bg-red-500 hover:bg-red-700 border-none text-primary" onClick={removePlaylist}>Remove</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
