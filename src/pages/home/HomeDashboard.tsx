@@ -141,7 +141,7 @@ export function HomeDashboard() {
               </div>
               <DialogTitle className="hidden" />
               <div className="w-screen">
-                <SeriesPage seriesId={selectedSeries!.series_id.toString()} title={selectedSeries!.title} cover={selectedSeries!.cover} />
+                <SeriesPage seriesId={selectedSeries!.series_id.toString()} cover={selectedSeries!.cover} />
               </div>
             </DialogContent>
           </Dialog>

@@ -4,14 +4,21 @@ import { useState } from "react";
 export function HomeCover({ src, title }: { src: string, title: string }) {
   const [img, setImg] = useState(src ? true : false)
 
+  function getImageTmdb() {
+    if (!src) return
+    if (!src.includes('tmdb')) return src
+    const stringList = src.split('/')
+    return `https://image.tmdb.org/t/p/w185/${stringList[stringList.length - 1]}`
+  }
+
+  const imagePath = getImageTmdb()
+
   return (
-    <div  className={`group w-full`}>
-      <div style={{ width: 150, height: 225 }} className="bg-secondary rounded-lg overflow-hidden">
+    <div className={`group w-full`}>
+      <div style={{ width: 150, aspectRatio: '2/3' }} className="bg-secondary rounded-lg overflow-hidden">
         {img ? (
           <LazyLoadImage
-            width={150}
-            height={300}
-            src={src}
+            src={imagePath}
             onError={() => setImg(false)}
             className={`bg-secondary object-cover h-full w-full`}
           />

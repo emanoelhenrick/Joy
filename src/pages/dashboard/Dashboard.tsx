@@ -1,4 +1,3 @@
-import { Search, X } from 'lucide-react'
 import {
   Select,
   SelectContent,
@@ -9,8 +8,6 @@ import {
 } from "../../components/dashboard/SelectCategories"
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { useDebounce } from 'use-debounce';
-import { VodProps } from 'electron/core/models/VodModels';
-import { Input } from '@/components/dashboard/input';
 import { useSeriesPlaylist, useVodPlaylist } from '@/states/usePlaylistData';
 import { MenuTab } from './components/MenuTab';
 import { useMeasure } from "@uidotdev/usehooks";
@@ -27,17 +24,15 @@ export function Dashboard() {
   const seriesData = useSeriesPlaylist((state => state.data))
 
   const [ref, { width }] = useMeasure();
+  const itemsPerPage = Math.floor(width! / 156) * 10
 
   const [searchParams] = useSearchParams()
 
   const initialTab = searchParams.get('type') || 'vod'
   const initialSearch = searchParams.get('search') || ''
   
-  const [playlist, setPlaylist] = useState<VodProps[]>([]);
   const [currentCategory, setCurrentCategory] = useState('all')
-  const [enoughItems, setEnoughItems] = useState(false)
   const [page, setPage] = useState(1)
-  const [pages, setPages] = useState(0)
   const [tab, setTab] = useState(initialTab)
   const [searchValue, setSearchValue] = useState(initialSearch)
   const [search, { flush }] = useDebounce(searchValue, 500)
@@ -76,13 +71,21 @@ export function Dashboard() {
     
   }, [search, currentCategory, data, tab])
 
+  const pages = useMemo(() => {
+    if (!filtered) return 0
+    return Math.ceil(filtered!.length / itemsPerPage)
+  }, [width, filtered])
+
+  const playlist = useMemo(() => {
+    return paginate(page, itemsPerPage)
+  }, [search, currentCategory, page, data, tab, width, filtered])
+
   function paginate(page: number, elements: number) {
     if (!filtered) return []
     const startIndex = (page - 1) * elements
     const endIndex = (page * elements) > filtered.length ? (filtered.length) : (page * elements)
     const paginated = filtered.length === 1 ? filtered : filtered.slice(startIndex, endIndex)
-    if (playlist.length > 0) return setPlaylist(paginated)
-    return setPlaylist(paginated)
+    return paginated
   }
 
   useEffect(() => {
@@ -98,14 +101,6 @@ export function Dashboard() {
   useEffect(() => {
     handleScrollToTop()
   }, [page])
-
-  useEffect(() => {
-    const itemsPerPage = Math.floor(width! / 156) * 10
-    setPages(Math.ceil(filtered!.length / itemsPerPage))
-    setEnoughItems(filtered!.length < itemsPerPage)
-    setPlaylist([])
-    paginate(page, itemsPerPage)
-  }, [search, currentCategory, page, data, tab, width])
 
   return (
     <div className="h-fit w-full">
@@ -138,7 +133,7 @@ export function Dashboard() {
         }
       </div>
       <div className='flex justify-center mb-8'>
-      {(!enoughItems && playlist.length > 0) && (
+      {(!(filtered!.length < itemsPerPage) && playlist.length > 0) && (
           <PaginationComponent currentPage={page} totalPages={pages} setPage={setPage} />
         )}
       </div>

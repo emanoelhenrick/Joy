@@ -65,15 +65,15 @@ export default function SeriesPlaylistScroll({ data }: any) {
             <div onClick={() => setSelectedSeries(undefined)} className="cursor-pointer absolute right-14 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
               <Cross2Icon className="size-8 p-1 rounded-md bg-background/30 backdrop-blur-lg" />
             </div>
-            <DialogTitle className="invisible">{selectedSeries!.title}</DialogTitle>
+            <DialogTitle className="hidden" />
             <div className="w-screen">
-              <SeriesPage seriesId={selectedSeries!.series_id.toString()} title={selectedSeries!.title} cover={selectedSeries!.cover} />
+              <SeriesPage seriesId={selectedSeries!.series_id.toString()} cover={selectedSeries!.cover} />
             </div>
           </DialogContent>
         </Dialog>
       )}
         <div className={`w-full flex h-full pr-4`}>
-          <div ref={ref} style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }} className={`grid w-full h-fit gap-2`}>
+          <div ref={ref} style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }} className={`grid w-full h-fit gap-3`}>
             <Fade triggerOnce duration={200}>
               {playlist.map((series) => renderItem(series))}
             </Fade>

@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { EpisodesSection } from "./EpisodesSection";
 import { ClearDataAlertDialog } from "./ClearDataAlertDialog";
 import { InfoSection } from "./InfoSection";
+import { Fade } from "react-awesome-reveal";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: string }) {
   const queryClient = useQueryClient();
@@ -20,6 +22,10 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
 
   const [_refresh, setRefresh] = useState(false)
 
+  function refresh() {
+    setRefresh(prev => !prev)
+  }
+
   useEffect(() => {
     return () => {
       queryClient.removeQueries({ queryKey: ['seriesInfo'], exact: true } as QueryFilters)
@@ -29,7 +35,8 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
   if (!data) {
     return (
       <div className="w-full h-screen flex items-center justify-center">
-          <img key='loading' src={cover} className="max-w-80 rounded-2xl animate-pulse -z-20" />
+          <img key='loading' src={cover} className="max-w-80 rounded-2xl animate-pulse -z-10" />
+          <img key='backdropLoading' src={cover} className="w-full h-full object-cover blur-3xl opacity-10 fixed -z-20" />
       </div>
     )
   }
@@ -69,7 +76,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
             </Button>
           </div>
 
-          {userSeriesData && <ClearDataAlertDialog setUpdate={setRefresh} removeSeriesData={() => removeSeriesStatus(seriesId)}  />}
+          {userSeriesData && <ClearDataAlertDialog refresh={refresh} removeSeriesData={() => removeSeriesStatus(seriesId)}  />}
         </div>
 
         <EpisodesSection
@@ -83,23 +90,58 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
 }
 
 function Backdrop({ backdropPath, cover }: { backdropPath: string, cover: string }) {
+  const imageSrc = backdropPath || cover
+
+  if (!imageSrc.includes('tmdb')) {
+    return (
+      <>
+        <Fade>
+          <img
+            className="w-full h-full object-cover fixed top-0 -z-10"
+            src={imageSrc}
+          />
+        </Fade>
+        <div className="inset-0 w-full h-full z-10 fixed bg-gradient-to-l from-transparent to-background/95" />
+        <div className="inset-0 w-full h-full z-10 fixed bg-gradient-to-b from-transparent to-background/60" />
+      </>
+    )
+  }
+
+  function getLowImageTmdb() {
+    const stringList = imageSrc.split('/')
+    return `https://image.tmdb.org/t/p/w780/${stringList[stringList.length - 1]}`
+  }
+
+  function getOriginalImageTmdb() {
+    const stringList = imageSrc.split('/')
+    return `https://image.tmdb.org/t/p/original/${stringList[stringList.length - 1]}`
+  }
+
+  const [imageLoaded, setImageLoaded] = useState(false)
+
+  const lowImage = getLowImageTmdb()
+  const highImage = getOriginalImageTmdb()
+
   return (
-    <>
-    { backdropPath ? (
+    <div className="-z-10">
+      <Fade triggerOnce>
         <img
-          className="w-full h-full object-cover fixed top-0 -z-10"
-          src={backdropPath}
+          className={`w-full h-full object-cover fixed top-0`}
+          src={lowImage}
         />
-      ) : (
-        <img
-          className="w-full h-full object-cover fixed top-0 blur-lg -z-10"
-          src={cover}
+        <LazyLoadImage
+          onLoad={() => setImageLoaded(true)}
+          src={highImage}
+          className={`w-full h-full object-cover fixed top-0 ${imageLoaded ? 'block' : 'hidden'}`}
         />
-      )}
-      <div className="inset-0 w-full h-full -z-10 fixed bg-gradient-to-l from-transparent to-background/95" />
-      <div className="inset-0 w-full h-full -z-10 fixed bg-gradient-to-b from-transparent to-background/50" />
-    </>
+      </Fade>
+      <div className="inset-0 w-full h-full fixed bg-gradient-to-l from-transparent to-background/95" />
+    </div>
   )
+
+
+
+  
 }
 
 function getRightBackdrop(backdropList: string[]) {

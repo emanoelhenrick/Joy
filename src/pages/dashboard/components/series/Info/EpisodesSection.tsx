@@ -1,12 +1,13 @@
 import { ScrollBarStyled } from "@/components/ScrollBarStyled";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { EpisodeProps, SerieInfoProps, UserEpisodeProps, UserSeriesDataProps } from "electron/core/models/SeriesModels";
-import { useCallback, useEffect, useState } from "react";
+import { EpisodeProps, SerieInfoProps, UserSeriesDataProps } from "electron/core/models/SeriesModels";
+import { useCallback, useMemo, useState } from "react";
 import { Episode } from "./Episode";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { SeriesPlayer } from './SeriesPlayer'
 import { usePlaylistUrl } from "@/states/usePlaylistUrl";
 import { useUserData } from "@/states/useUserData";
+import { Fade } from "react-awesome-reveal";
 
 interface SeasonsListProps {
   seasons: string[]
@@ -17,7 +18,6 @@ interface SeasonsListProps {
 interface EpisodesListProps {
   data: SerieInfoProps
   episodes: EpisodeProps[]
-  userEpisodesData: UserEpisodeProps[]
   seriesId: string
   currentSeason: string
   seriesCover: string
@@ -33,45 +33,25 @@ interface EpisodesSection {
 
 export function EpisodesSection({ seriesId, seriesCover, data, userSeriesData }: EpisodesSection) {
   const { urls } = usePlaylistUrl()
-  const updateDefaultSeason = useUserData(state => state.updateSeason)
 
-  const [seasons, setSeasons] = useState<string[]>(['1'])
-  const [currentSeason, setCurrentSeason] = useState(userSeriesData?.season || '')
-  const [episodes, setEpisodes] = useState<EpisodeProps[]>([])
-  const [userEpisodesData, setUserEpisodesData] = useState<UserEpisodeProps[]>()
-
-  useEffect(() => {
-    if (data) {
-      const seasonsList = []
-      for (const key in data!.episodes) seasonsList.push(key)
-      setSeasons(seasonsList)
-      setCurrentSeason(userSeriesData?.season || seasonsList[0])
-      setEpisodes(data!.episodes[currentSeason])
-    }
+  const seasonsList = useMemo(() => {
+    const seasonsList = []
+    for (const key in data.episodes) seasonsList.push(key)
+    return seasonsList
   }, [data])
 
-  useEffect(() => {
-    if (data) {
-      const episodesList = data!.episodes[currentSeason]
-      setEpisodes(episodesList)
-      updateDefaultSeason(seriesId, currentSeason)
-    }
-  }, [currentSeason, data, userSeriesData])
-
-  useEffect(() => {
-    if (userSeriesData) {
-      if (!userSeriesData.episodes) return
-      const seasonEpisodes = userSeriesData.episodes!.filter(e => e.season == currentSeason)
-      if (!seasonEpisodes) return
-      setUserEpisodesData(seasonEpisodes)
-    } else {
-      setUserEpisodesData(undefined)
-    }
-  }, [userSeriesData, currentSeason])
+  const [currentSeason, setCurrentSeason] = useState(userSeriesData?.season || seasonsList[0])
+  const episodes = useMemo(() => {
+    return data.episodes[currentSeason]
+  }, [data, currentSeason])
 
   return (
     <section className="mx-8 mb-8 space-y-3 backdrop-blur-3xl bg-background/70 p-6 rounded-3xl">
-      <SeasonsList currentSeason={currentSeason} seasons={seasons} setCurrentSeason={setCurrentSeason} />
+      <SeasonsList
+        currentSeason={currentSeason}
+        seasons={seasonsList}
+        setCurrentSeason={setCurrentSeason}
+      />
       <EpisodesList
         currentSeason={currentSeason}
         data={data!}
@@ -79,7 +59,6 @@ export function EpisodesSection({ seriesId, seriesCover, data, userSeriesData }:
         episodes={episodes}
         seriesCover={seriesCover}
         seriesId={seriesId}
-        userEpisodesData={userEpisodesData!} 
       />
     </section>
   )
@@ -100,18 +79,25 @@ function SeasonsList({ seasons, currentSeason, setCurrentSeason }: SeasonsListPr
   )
 }
 
-function EpisodesList({ data, episodes, userEpisodesData, seriesId, currentSeason, seriesCover, episodeStreamBaseUrl }: EpisodesListProps) {
+function EpisodesList({ data, episodes, seriesId, currentSeason, seriesCover, episodeStreamBaseUrl}: EpisodesListProps) {
+  const userEpisodesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))?.episodes
+  const updateDefaultSeason = useUserData(state => state.updateSeason)
+
+  const updateSeason = useCallback((progress: number) => {
+    if (progress > 0) updateDefaultSeason(seriesId, currentSeason)
+  }, [currentSeason])
+  
   const renderItem = useCallback((ep: EpisodeProps, seriesCover: string, index: number) => {
     let progress = 0;
     const epUserData = userEpisodesData?.find(e => e.episodeId == ep.id)
+    
     if (epUserData) progress = parseFloat(((epUserData.currentTime / epUserData.duration) * 100).toFixed(2))
-
     const supportedExtensions = ['mp4', 'ogg', 'ogv', 'webm', 'mov', 'm4v']
     const isSupported = supportedExtensions.includes(ep.container_extension)
 
     if (isSupported) {
       return (
-        <Dialog key={currentSeason + '.' + ep.id}>
+        <Dialog key={currentSeason + '.' + ep.id} onOpenChange={() => updateSeason(progress)}>
           <DialogTrigger asChild>
             <div>
               <Episode
@@ -139,7 +125,7 @@ function EpisodesList({ data, episodes, userEpisodesData, seriesId, currentSeaso
       )
     } else {
       return (
-        <div key={currentSeason + '.' + ep.id} className="flex flex-col cursor-default space-y-2 w-64 opacity-50">
+        <div key={currentSeason + '.' + ep.id} className="flex flex-col cursor-default space-y-2 w-56 2xl:w-64 opacity-50">
           <div className="relative flex items-center justify-center overflow-hidden rounded-lg">
             <div className="py-11 aspect-video w-full h-full text-lg bg-secondary opacity-40"/>
             <p className="whitespace-normal absolute text-base">unsupported</p>
@@ -153,7 +139,7 @@ function EpisodesList({ data, episodes, userEpisodesData, seriesId, currentSeaso
   return (
     <ScrollArea className="w-full whitespace-nowrap rounded-lg">
       <div className="flex w-max space-x-6 pb-6 whitespace-nowrap rounded-md">
-        {episodes && episodes.map((ep, index) => renderItem(ep, seriesCover, index))}
+          {episodes && episodes.map((ep, index) => renderItem(ep, seriesCover, index))}
       </div>
       <ScrollBarStyled orientation="horizontal" />
     </ScrollArea>

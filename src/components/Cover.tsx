@@ -1,28 +1,36 @@
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { Skeleton } from "./ui/skeleton";
 import { useState } from "react";
-import { useMeasure } from "@uidotdev/usehooks";
 
 export function Cover({ src, title }: { src: string, title: string }) {
   const [img, setImg] = useState(src ? true : false)
-  const [ref, { width }] = useMeasure();
+
+  function getImageTmdb() {
+    if (!src) return
+    if (!src.includes('tmdb')) return src
+    const stringList = src.split('/')
+    return `https://image.tmdb.org/t/p/w185/${stringList[stringList.length - 1]}`
+  }
+
+  const imagePath = getImageTmdb()
 
   return (
-    <div ref={ref} style={{ height: width ? width * 1.5 : '100%' }} className={`relative group w-full`}>
-      <div className="w-full h-full relative bg-secondary rounded-lg overflow-hidden flex">
+    <div style={{ aspectRatio: '2/3' }} className={`group w-full`}>
+      <div className="w-full h-full bg-secondary rounded-lg overflow-hidden flex">
         {img ? (
           <LazyLoadImage
             width={150}
             height={300}
-            src={src}
-            onError={() => setImg(false)}
-            className={`relative bg-secondary w-full h-full object-cover`}
+            src={imagePath}
+            onError={() => setImg(true)}
+            className={`w-full h-full object-cover`}
           />
-        ) : <div className="bg-secondary w-full h-full p-4">
-          <h1 className="text-md line-clamp-6 text-muted-foreground">
-            {title}
-          </h1>
-        </div>}
+        ) : (
+          <div className="bg-secondary w-full h-full p-4">
+            <h1 className="text-md line-clamp-6 text-muted-foreground">
+              {title}
+            </h1>
+          </div>
+        ) }
       </div>
     </div>
   )

@@ -15,6 +15,7 @@ import { VodPlayerDialog } from "./VodPlayerDialog"
 import { MovieDb, TitleLogo } from "moviedb-promise"
 import { Button } from "@/components/ui/button"
 import { format } from "date-fns"
+import { LazyLoadImage } from "react-lazy-load-image-component"
 
 interface Props {
   streamId: string
@@ -92,16 +93,9 @@ export function VodInfo({ streamId, cover }: Props) {
     return (
       <>
         <div className="w-full h-screen flex bg-background flex-col justify-end">
-        { backdropPath !== undefined && (
-          <img
-            className="w-full h-full object-cover fixed top-0 z-10"
-            src={`https://image.tmdb.org/t/p/original${backdropPath}`}
-          />
-        )}
-        <div className="inset-0 w-full h-full z-10 fixed bg-gradient-to-l from-transparent to-background/95" />
-        <div className="inset-0 w-full h-full z-10 fixed bg-gradient-to-b from-transparent to-background/60" />
+        <Backdrop backdropPath={backdropPath!} cover={cover} />
 
-        <div className="p-16 z-20 h-fit">
+        <div className="p-16 z-20 h-fit w-full">
           <div className="max-w-96 h-fit">
             { logoPath !== undefined ? (<img className="object-contain max-h-40" src={logoPath} alt="" />) : <h1 className="text-5xl">{title}</h1>}
           </div>
@@ -112,17 +106,17 @@ export function VodInfo({ streamId, cover }: Props) {
             {data.info.genre && <span className="text-base 2xl:text-lg text-muted-foreground">{genres[0]}</span>}
           </div>
           
-          <div className="max-w-screen-md 2xl:max-w-screen-lg mt-2 flex flex-col gap-4">
-          {description && <span className="text-base 2xl:text-xl text-primary line-clamp-6">{description}</span>}
+          <div className=" mt-2 flex flex-col gap-4">
+          {description && <span className="text-base 2xl:text-xl max-w-screen-md 2xl:max-w-screen-lg text-primary line-clamp-6">{description}</span>}
             <div>
               <p className="truncate max-w-xl text-muted-foreground">
                 {data?.info.cast}
               </p>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground max-w-screen-md 2xl:max-w-screen-lg">
                 {data?.info.director && 'Directed by ' + data?.info.director}
               </p>
             </div>
-            <span className="text-primary/90">Title: {title}</span>
+            <span className="text-primary/90 max-w-screen-md 2xl:max-w-screen-lg">Title: {title}</span>
 
             <div className="flex justify-between items-center">
               <div className="flex gap-2 items-center">
@@ -181,18 +175,7 @@ export function VodInfo({ streamId, cover }: Props) {
   return (
     <>
       <div className="w-full h-screen flex flex-col justify-end">
-        { data.info.backdrop_path && data.info.backdrop_path.length > 0 ? (
-          <img
-            className="w-full h-full object-cover fixed top-0 -z-10"
-            src={data.info.backdrop_path[0]}
-          />
-        ) : (
-          <img
-            className="w-full h-full object-cover fixed top-0 blur-lg -z-10"
-            src={cover}
-          />
-        )}
-        <div className="inset-0 w-full h-full -z-10 fixed bg-gradient-to-l from-transparent to-background/95" />
+        
 
         <div className="p-16 h-fit">
           <div className="max-w-96">
@@ -250,4 +233,62 @@ export function VodInfo({ streamId, cover }: Props) {
     </>
   )
 
+}
+
+function Backdrop({ backdropPath, cover }: { backdropPath: string, cover: string }) {
+  const imageSrc = backdropPath || cover
+
+  if (!imageSrc.includes('tmdb')) {
+    return (
+      <>
+        <Fade>
+          <img
+            className="w-full h-full object-cover fixed top-0 -z-10"
+            src={imageSrc}
+          />
+        </Fade>
+        <div className="inset-0 w-full h-full z-10 fixed bg-gradient-to-l from-transparent to-background/95" />
+        <div className="inset-0 w-full h-full z-10 fixed bg-gradient-to-b from-transparent to-background/60" />
+      </>
+    )
+  }
+
+  function getLowImageTmdb() {
+    const stringList = imageSrc.split('/')
+    return `https://image.tmdb.org/t/p/w780/${stringList[stringList.length - 1]}`
+  }
+
+  function getOriginalImageTmdb() {
+    const stringList = imageSrc.split('/')
+    return `https://image.tmdb.org/t/p/original/${stringList[stringList.length - 1]}`
+  }
+
+  const [imageLoaded, setImageLoaded] = useState(false)
+
+  const lowImage = getLowImageTmdb()
+  const highImage = getOriginalImageTmdb()
+
+  return (
+    <>
+      <Fade>
+        <img
+          className={`w-full h-full object-cover fixed top-0 -z-20`}
+          src={lowImage}
+        />
+        <Fade duration={500}>
+          <LazyLoadImage
+            onLoad={() => setImageLoaded(true)}
+            src={highImage}
+            className={`w-full h-full object-cover fixed top-0 -z-10 ${imageLoaded ? 'block' : 'hidden'}`}
+          />
+        </Fade>
+      </Fade>
+      <div className="inset-0 w-full h-full z-10 fixed bg-gradient-to-l from-transparent to-background/95" />
+      <div className="inset-0 w-full h-full z-10 fixed bg-gradient-to-b from-transparent to-background/60" />
+    </>
+  )
+
+
+
+  
 }

@@ -66,10 +66,8 @@ export default function VodPlaylistScroll({ data }: any) {
         </Dialog>
       )}
       <div className={`w-full flex`}>
-        <div ref={ref} style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }} className={`grid w-full h-fit gap-3 mr-4`}>
-          <Fade triggerOnce duration={200}>
-            {playlist!.map((movie) => renderItem(movie))}
-          </Fade>
+        <div ref={ref} style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }} className={`grid w-full gap-3 h-fit mr-4`}>
+          {playlist!.map((movie) => renderItem(movie))}
         </div>
       </div>
     </div>

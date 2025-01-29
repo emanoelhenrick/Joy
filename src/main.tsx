@@ -12,14 +12,14 @@ import '@vidstack/react/player/styles/default/layouts/video.css';
 const queryClient = new QueryClient()
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
       <Toaster />
     </QueryClientProvider>
     </ThemeProvider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );
 
 // Use contextBridge

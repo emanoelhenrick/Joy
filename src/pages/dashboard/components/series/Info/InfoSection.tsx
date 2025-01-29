@@ -12,7 +12,7 @@ interface Props {
 export function InfoSection({ title, releaseDate, genre, description, cast, director }: Props) {
 
   return (
-    <div className="p-16 pb-0 h-fit">
+    <div className="p-16 pb-0 h-fit -z-10">
       <h1 className="text-5xl font-semibold line-clamp-1 max-w-screen-xl">{title}</h1>
 
       <div className="flex items-center gap-4 mt-2">

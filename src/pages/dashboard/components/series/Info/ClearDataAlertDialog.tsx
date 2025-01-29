@@ -1,9 +1,9 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
-export function ClearDataAlertDialog({ removeSeriesData, setUpdate }: { removeSeriesData: () => void, setUpdate: (b: any) => void }) {
+export function ClearDataAlertDialog({ removeSeriesData, refresh }: { removeSeriesData: () => void, refresh: () => void }) {
 
   return (
-    <AlertDialog onOpenChange={() => setUpdate((prev: any) => !prev)}>
+    <AlertDialog onOpenChange={refresh}>
       <AlertDialogTrigger>
         <div className="text-primary/60 text-right hover:text-primary cursor-pointer transition mt-2">Clear data</div>
       </AlertDialogTrigger>
