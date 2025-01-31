@@ -6,8 +6,6 @@ import { RouterProvider } from 'react-router-dom';
 import { router } from './pages/router';
 import { Toaster } from './components/ui/toaster';
 import React from 'react';
-import '@vidstack/react/player/styles/default/theme.css';
-import '@vidstack/react/player/styles/default/layouts/video.css';
 
 const queryClient = new QueryClient()
 

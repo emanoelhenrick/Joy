@@ -33,10 +33,7 @@ export function FavoritesScroll({ favoritesVod, favoritesSeries, setSelectedSeri
           key={series.series_id}
           onClick={() => setSelectedSeries(series)}
         >
-          <div className="group-hover:opacity-70">
-            <HomeCover src={series.cover} title={series.name} />
-          </div>
-          <FaStar onClick={() => updateFavorites(series.series_id.toString(), 'series')} size={20} strokeWidth={0} className={`absolute fill-yellow-400 top-3 right-4`} />
+          <HomeCover src={series.cover} title={series.name} />
         </div>
         )
     }, [favoritesSeries])
@@ -49,9 +46,7 @@ export function FavoritesScroll({ favoritesVod, favoritesSeries, setSelectedSeri
           key={movie.num}
           onClick={() => setSelectedVod(movie)}
         >
-          <div className="group-hover:opacity-70">
-            <HomeCover src={movie.stream_icon} title={movie.name} />
-          </div>
+          <HomeCover src={movie.stream_icon} title={movie.name} />
         </div>
         )
     }, [favoritesVod])

@@ -30,6 +30,7 @@ export function VodPage({ streamId, cover }: Props) {
   const removeVodStatus = useUserData(state => state.removeVodStatus)
   const { data, isSuccess } = useQuery({ queryKey: [`vodInfo`], queryFn: async () => await fetchMovieData() })
   const { urls } = usePlaylistUrl()
+  const [_refresh, setRefresh] = useState(false)
 
   const [state, setState] = useState<any>(undefined)
   
@@ -156,7 +157,7 @@ export function VodPage({ streamId, cover }: Props) {
               </Button>
             </div>
 
-            {userVodData && <ClearDataAlertDialog removeVodData={() => removeVodStatus(streamId)}  />}
+            {userVodData && <ClearDataAlertDialog removeVodData={() => removeVodStatus(streamId)} refresh={() => setRefresh(p => !p)}  />}
           </div>
         </div>
       </div>

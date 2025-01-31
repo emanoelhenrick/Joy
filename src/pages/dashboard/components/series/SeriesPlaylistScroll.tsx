@@ -41,10 +41,10 @@ export default function SeriesPlaylistScroll({ data }: any) {
 
     return (
       <div
-        className="w-full h-fit hover:scale-95 transition cursor-pointer relative group"
+        className="w-full h-fit cursor-pointer relative group"
         key={series.series_id + '-' + series.num}
         >
-        <div onClick={() => setSelectedSeries(series)} className="group-hover:opacity-70">
+        <div onClick={() => setSelectedSeries(series)} className="group-hover:opacity-70 transition-transform group-hover:scale-95">
           <Cover src={series.cover} title={series.name} />
         </div>
         {isFavorite ? (

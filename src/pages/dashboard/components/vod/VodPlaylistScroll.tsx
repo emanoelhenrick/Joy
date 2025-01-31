@@ -37,10 +37,10 @@ export default function VodPlaylistScroll({ data }: any) {
 
     return (
       <div
-        className="w-full h-fit hover:scale-95 transition cursor-pointer relative group"
+        className="w-full h-fit transition cursor-pointer relative group"
         key={movie.num}
         >
-        <div onClick={() => setSelectedMovie(movie)} className="group-hover:opacity-70">
+        <div onClick={() => setSelectedMovie(movie)} className="group-hover:opacity-70 transition-transform group-hover:scale-95">
           <Cover src={movie.stream_icon} title={movie.title || movie.name} />
         </div>
           {isFavorite ? (

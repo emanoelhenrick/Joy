@@ -138,9 +138,7 @@ export function HomeDashboard() {
         key={series.series_id}
         onClick={() => setSelectedSeries(series)}
       >
-        <div className="group-hover:opacity-70">
-          <HomeCover src={series.cover} title={series.name} />
-        </div>
+        <HomeCover src={series.cover} title={series.name} />
       </div>
       )
   }, [seriesData])
@@ -149,13 +147,11 @@ export function HomeDashboard() {
     if (!vodData) return
     return (
       <div
-        className="hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative hover:opacity-70"
+        className="hover:scale-95 hover:opacity-70 transition gap-3 w-fit h-fit cursor-pointer relative"
         key={movie.num}
         onClick={() => setSelectedVod(movie)}
       >
-        <div className="group-hover:opacity-70">
         <HomeCover src={movie.stream_icon} title={movie.name} />
-        </div>
       </div>
       )
   }, [vodData])

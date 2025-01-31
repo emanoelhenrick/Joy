@@ -1,6 +1,11 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
-export function ClearDataAlertDialog({ removeVodData }: { removeVodData: () => void }) {
+export function ClearDataAlertDialog({ removeVodData, refresh }: { removeVodData: () => void, refresh: () => void }) {
+
+  function handleClear() {
+    removeVodData()
+    setTimeout(refresh, 100)
+  }
 
   return (
     <AlertDialog>
@@ -16,7 +21,7 @@ export function ClearDataAlertDialog({ removeVodData }: { removeVodData: () => v
       </AlertDialogHeader>
       <AlertDialogFooter>
           <AlertDialogCancel className="bg-transparent border-none shadow-none">Cancel</AlertDialogCancel>
-          <AlertDialogAction className="border-none shadow-none" onClick={removeVodData}>Clear</AlertDialogAction>
+          <AlertDialogAction className="border-none shadow-none" onClick={handleClear}>Clear</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
