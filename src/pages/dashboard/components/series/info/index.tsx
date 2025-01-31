@@ -10,17 +10,24 @@ import { InfoSection } from "./InfoSection";
 import { Fade } from "react-awesome-reveal";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { ImSpinner8 } from "react-icons/im";
+import { useUserData } from "@/states/useUserData";
 
 export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: string }) {
   const queryClient = useQueryClient();
 
   const { urls } = usePlaylistUrl()
   const { data, isFetching } = useQuery({ queryKey: [`seriesInfo`], queryFn: async () => await electronApi.getSerieInfo(urls.getSeriesInfoUrl + seriesId) })
-
+  const updateFavorite = useUserData(state => state.updateFavorite)
+  const userSeriesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))
   const [_refresh, setRefresh] = useState(false)
 
   function refresh() {
     setRefresh(prev => !prev)
+  }
+
+  function handleFavorite() {
+    updateFavorite(seriesId, 'series')
+    setTimeout(() => setRefresh(p => !p), 100)
   }
 
   useEffect(() => {
@@ -28,16 +35,6 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
       queryClient.removeQueries({ queryKey: ['seriesInfo'], exact: true } as QueryFilters)
     }
   }, [])
-
-  // if (!data) {
-  //   return (
-  //     <Fade>
-  //       <div className="w-full h-screen flex items-center justify-center">
-  //         <ImSpinner8 className="size-8 animate-spin text-muted-foreground" />
-  //       </div>
-  //     </Fade>
-  //   )
-  // }
 
   const backdropPath = getRightBackdrop(data ? data.info.backdrop_path : [])
 
@@ -81,9 +78,11 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
                 <FaPlay className="size-4" />
                 <span className="leading-none text-base">Watch</span>
               </Button>
-              <Button variant={'ghost'} size={"lg"} className="flex gap-2 items-center hover:bg-primary/10 transition-none">
-                <FaStar className="size-4" />
-                <span className="leading-none text-base">Add to favorites</span>
+              <Button variant={'ghost'} onClick={handleFavorite} disabled={isFetching} size={"lg"} className="flex gap-2 items-center hover:bg-primary/10 transition-none">
+                <FaStar className={`size-4 ${userSeriesData?.favorite && 'text-yellow-400'}`} />
+                <span className="leading-none text-base">
+                  {userSeriesData?.favorite ? 'Remove from favorites' : 'Add to favorites'}
+                </span>
               </Button>
             </div>
 
