@@ -40,8 +40,9 @@ export function VlcDialog({ open, closeDialog, updateUserStatus }: VlcDialogProp
       if (args.error) {
         toast({
           variant: "destructive",
-          title: 'Media cannot be loaded.',
-          description: 'There was an error connecting to the server, try again and if the problem persists, contact your playlist support'
+          duration: 10000,
+          title: 'Unable to connect to the server',
+          description: 'Please try again later. If the issue persists, consider contacting your playlist support'
         })
       }
     });
@@ -56,7 +57,7 @@ export function VlcDialog({ open, closeDialog, updateUserStatus }: VlcDialogProp
     <Dialog key='vlc-dialog' open={open}>
       <DialogTrigger asChild>
       </DialogTrigger>
-      <DialogContent className="w-fit items-center justify-center bg-transparent border-none z-50" aria-describedby={undefined}>
+      <DialogContent className="w-fit items-center justify-center bg-transparent border-none shadow-none z-50" aria-describedby={undefined}>
         <DialogTitle className="hidden" />
         <div className="flex flex-col justify-center items-center gap-4">
           <SiVlcmediaplayer className={`size-16 transition-colors ${isRunning ? 'text-orange-400' : 'animate-pulse'}`} />

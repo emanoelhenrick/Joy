@@ -4,6 +4,7 @@ import { VodProps } from "electron/core/models/VodModels"
 import { useCallback, useEffect, useState } from "react"
 import { HomeCover } from "./HomeCover"
 import { ScrollBarStyled } from "@/components/ScrollBarStyled"
+import { Fade } from "react-awesome-reveal"
 
 interface WatchingScrollProps {
   watchingVod: VodProps[]
@@ -40,7 +41,7 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
     if (!watchingVod) return
     return (
       <div
-        className="hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative hover:opacity-70"
+        className="hover:scale-95 transition duration-75 gap-3 w-fit h-fit cursor-pointer relative hover:opacity-70"
         key={movie.num}
         onClick={() => setSelectedVod(movie)}
       >
@@ -50,33 +51,35 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
   }, [watchingVod])
 
   return ((watchingVod.length > 0) || (watchingSeries.length > 0)) && (
-  <div>
-    <div className='flex gap-2 items-center mb-3'>
-     <span className={`h-fit text-secondary bg-primary text-sm py-0.5 px-3 w-fit rounded-md transition gap-2`}>
-       Continue watching
-      </span>
-      {watchingSeries!.length > 0 && (
-        <span
-          onClick={() => setWatchingTab(0)}
-          className={`h-fit ${watchingTab == 0 ? 'bg-secondary text-primary' : 'text-muted-foreground'} cursor-pointer text-sm py-0.5 px-3 w-fit rounded-md transition gap-2 hover:opacity-80`}>
-          Series
+  <Fade duration={500} triggerOnce>
+    <div>
+      <div className='flex gap-2 items-center mb-3'>
+      <span className={`h-fit text-secondary bg-primary text-sm py-0.5 px-3 w-fit rounded-md transition gap-2`}>
+        Continue watching
         </span>
-      )}
-      {watchingVod!.length > 0 && (
-        <span
-          onClick={() => setWatchingTab(1)}
-          className={`h-fit ${watchingTab == 1 ? 'bg-secondary text-primary' : 'text-muted-foreground'} cursor-pointer text-sm py-0.5 px-3 w-fit rounded-md transition gap-2 hover:opacity-80`}>
-          Movies
-        </span>
-      )}
+        {watchingSeries!.length > 0 && (
+          <span
+            onClick={() => setWatchingTab(0)}
+            className={`h-fit ${watchingTab == 0 ? 'bg-secondary text-primary' : 'text-muted-foreground'} cursor-pointer text-sm py-0.5 px-3 w-fit rounded-md transition gap-2 hover:opacity-80`}>
+            Series
+          </span>
+        )}
+        {watchingVod!.length > 0 && (
+          <span
+            onClick={() => setWatchingTab(1)}
+            className={`h-fit ${watchingTab == 1 ? 'bg-secondary text-primary' : 'text-muted-foreground'} cursor-pointer text-sm py-0.5 px-3 w-fit rounded-md transition gap-2 hover:opacity-80`}>
+            Movies
+          </span>
+        )}
+      </div>
+        <ScrollArea className="w-full rounded-md">
+          <div className="flex w-max space-x-3 pb-5 pr-4 rounded-md">
+            {(watchingTab == 0 && watchingSeries) && watchingSeries!.sort((a, b) => b.updatedAt! - a.updatedAt!).map(series => renderSeriesItem(series))}
+            {(watchingTab == 1 && watchingVod) && watchingVod!.sort((a, b) => b.updatedAt! - a.updatedAt!).map(movie => renderVodItem(movie))}
+          </div>
+          <ScrollBarStyled orientation="horizontal" />
+        </ScrollArea>
     </div>
-      <ScrollArea className="w-full rounded-md">
-        <div className="flex w-max space-x-3 pb-5 pr-4 rounded-md">
-          {(watchingTab == 0 && watchingSeries) && watchingSeries!.sort((a, b) => b.updatedAt! - a.updatedAt!).map(series => renderSeriesItem(series))}
-          {(watchingTab == 1 && watchingVod) && watchingVod!.sort((a, b) => b.updatedAt! - a.updatedAt!).map(movie => renderVodItem(movie))}
-        </div>
-        <ScrollBarStyled orientation="horizontal" />
-      </ScrollArea>
-  </div>
+  </Fade>
   )
 }

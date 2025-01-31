@@ -6,7 +6,7 @@ export interface UserDataState {
   userData: UserDataProps
   reset: () => void
   updateUserData: (data: UserDataProps) => void
-  updateFavorite: (id: string, type: string) => void
+  updateFavorite: (id: string, type: 'vod' | 'series' | 'live') => void
   updateVodStatus: (id: string, currentTime: number, duration: number, watching: boolean) => void
   updateSeriesStatus: (id: string, season: string, episodeId: string, currentTime: number, duration: number, watching: boolean) => void
   updateSeason: (id: string, season: string) => void

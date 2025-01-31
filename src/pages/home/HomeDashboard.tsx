@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DialogContent, DialogTitle, Dialog } from '@/components/MediaInfoDialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
@@ -13,6 +13,7 @@ import { Trending } from './components/Trending';
 import { HomeCover } from './components/HomeCover';
 import { ScrollBarStyled } from '@/components/ScrollBarStyled';
 import { VodPage } from '../dashboard/components/vod/info';
+import { Fade } from 'react-awesome-reveal';
 
 export function HomeDashboard() {
   const vodData = useVodPlaylist(state => state.data)
@@ -22,14 +23,7 @@ export function HomeDashboard() {
   const [selectedSeries, setSelectedSeries] = useState<SeriesProps | undefined>(undefined)
   const userDataSeries = useUserData(state => state.userData.series)
   const userDataVod = useUserData(state => state.userData.vod)
-
-  const updateFavorite = useUserData(state => state.updateFavorite)
   const [_update, setUpdate] = useState(false)
-  
-  async function updateRender(streamId: string, type: string) {
-    updateFavorite(streamId, type)
-    setUpdate(prev => !prev)
-  }
 
   const vodByDate = useMemo(() => {
     if (vodData && vodData.playlist) {
@@ -153,6 +147,10 @@ export function HomeDashboard() {
       )
   }, [vodData])
 
+  useEffect(() => {
+    setTimeout(() => setUpdate(p => !p), 100)
+  }, [selectedSeries, selectedVod])
+
   if (vodData && seriesData) {
 
     return (
@@ -186,33 +184,54 @@ export function HomeDashboard() {
         )}
         <div className='mb-6 mt-5'>
           <div className="flex flex-col gap-2">
-            <Trending slideActive={(!selectedSeries && !selectedVod)} refresh={() => setUpdate(p => !p)} />
-            <WatchingScroll watchingVod={watchingVod} watchingSeries={watchingSeries} setSelectedSeries={setSelectedSeries} setSelectedVod={setSelectedVod} />
-            <FavoritesScroll favoritesSeries={favoritesSeries} favoritesVod={favoritesVod} setSelectedSeries={setSelectedSeries} setSelectedVod={setSelectedVod} updateFavorites={updateRender} />
-            
-            <div>
-              <p className={`h-fit text-secondary bg-primary text-sm py-0.5 px-3 w-fit rounded-md transition gap-2 mb-3`}>
-                Recently updated series
-              </p>
-              <ScrollArea className="w-full rounded-md">
-                <div className="flex w-max gap-3 pb-5 pr-4 rounded-md">
-                  {seriesByDate!.map(series => renderSeriesItem(series))}
-                </div>
-                <ScrollBarStyled orientation="horizontal" />
-              </ScrollArea>
-            </div>
+            <Fade duration={500} triggerOnce>
+              <Trending
+                slideActive={(!selectedSeries && !selectedVod)}
+                refresh={() => setUpdate(p => !p)}
+              />
+            </Fade>
 
-            <div>
-              <p className={`h-fit text-secondary bg-primary text-sm py-0.5 px-4 w-fit rounded-md transition gap-2 mb-3`}>
-                Recently added movies
-              </p>
-              <ScrollArea className="w-full rounded-md">
-                <div className="flex h-full w-max gap-3 pb-5 pr-4 rounded-md">
-                 {vodByDate!.map(movie => renderVodItem(movie))}
-                </div>
-                <ScrollBarStyled orientation="horizontal" />
-              </ScrollArea>
-            </div>
+            <WatchingScroll
+              watchingVod={watchingVod}
+              watchingSeries={watchingSeries}
+              setSelectedSeries={setSelectedSeries}
+              setSelectedVod={setSelectedVod}
+            />
+
+            <FavoritesScroll
+              favoritesSeries={favoritesSeries}
+              favoritesVod={favoritesVod}
+              setSelectedSeries={setSelectedSeries}
+              setSelectedVod={setSelectedVod}
+            />
+            
+            <Fade duration={500} triggerOnce>
+              <div>
+                <p className={`h-fit text-secondary bg-primary text-sm py-0.5 px-3 w-fit rounded-md transition gap-2 mb-3`}>
+                  Recently updated series
+                </p>
+                <ScrollArea className="w-full rounded-md">
+                  <div className="flex w-max gap-3 pb-5 pr-4 rounded-md">
+                    {seriesByDate!.map(series => renderSeriesItem(series))}
+                  </div>
+                  <ScrollBarStyled orientation="horizontal" />
+                </ScrollArea>
+              </div>
+            </Fade>
+
+            <Fade duration={500} triggerOnce>
+              <div>
+                <p className={`h-fit text-secondary bg-primary text-sm py-0.5 px-4 w-fit rounded-md transition gap-2 mb-3`}>
+                  Recently added movies
+                </p>
+                <ScrollArea className="w-full rounded-md">
+                  <div className="flex h-full w-max gap-3 pb-5 pr-4 rounded-md">
+                  {vodByDate!.map(movie => renderVodItem(movie))}
+                  </div>
+                  <ScrollBarStyled orientation="horizontal" />
+                </ScrollArea>
+              </div>
+            </Fade>
           </div>
         </div>
       </div>

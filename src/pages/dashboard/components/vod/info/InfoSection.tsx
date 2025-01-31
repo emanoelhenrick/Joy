@@ -1,4 +1,7 @@
+import { Skeleton } from "@/components/ui/skeleton"
 import { TitleLogo } from "moviedb-promise"
+import { Fade } from "react-awesome-reveal"
+import { LazyLoadImage } from "react-lazy-load-image-component"
 
 interface Props {
   title: string
@@ -8,9 +11,10 @@ interface Props {
   cast: string
   director: string
   logos: TitleLogo[]
+  isFetching: boolean
 }
 
-export function InfoSection({ title, releaseDate, cast, description, director, genre, logos  }: Props) {
+export function InfoSection({ title, releaseDate, cast, description, director, genre, logos, isFetching  }: Props) {
 
   function getRightLogo(logos: TitleLogo[]) {
     if (!logos) return
@@ -26,26 +30,33 @@ export function InfoSection({ title, releaseDate, cast, description, director, g
 
   return (
     <div>
-      <div className="max-w-96 h-fit">
-        { logoPath !== undefined ? (<img className="object-contain max-h-40" src={logoPath} alt="" />) : <h1 className="text-5xl">{title}</h1>}
-      </div>
-
-      <div className="flex items-center gap-4 mt-4">
-        { releaseDate && <span className="text-base 2xl:text-lg text-muted-foreground">{releaseDate}</span>}
-
-        {genre && <span className="text-base 2xl:text-lg text-muted-foreground">{genre}</span>}
-      </div>
-      
-      <div className=" mt-2 flex flex-col gap-4">
-      {description && <span className="text-base 2xl:text-xl max-w-screen-md 2xl:max-w-screen-lg text-primary line-clamp-6">{description}</span>}
-        <div>
-          <p className="truncate max-w-xl text-muted-foreground">
-            {cast}
-          </p>
-          <p className="text-muted-foreground max-w-screen-md 2xl:max-w-screen-lg">
-            {director && 'Directed by ' + director}
-          </p>
+        <div className="max-w-96 h-fit">
+          {logoPath !== undefined ? (
+              <img className="object-contain max-h-40" src={logoPath} alt="" />
+          ) : <h1 className="text-5xl">{title || <Skeleton className="h-16" />}</h1>}
         </div>
+
+        {(releaseDate || genre) && (
+          <div className="flex items-center gap-4 mt-4">
+            {releaseDate && <span className="text-base 2xl:text-lg text-muted-foreground">{releaseDate}</span>}
+            {genre && <span className="text-base 2xl:text-lg text-muted-foreground">{genre}</span>}
+          </div>
+        )}
+      
+      <div className="mt-2 flex flex-col gap-4">
+        {description && <span className="text-base 2xl:text-xl max-w-screen-md 2xl:max-w-screen-lg text-primary line-clamp-6">{description}</span>}
+        
+        {(cast || director) && (
+          <div>
+            <p className="truncate max-w-xl text-muted-foreground">
+              {cast}
+            </p>
+            <p className="text-muted-foreground max-w-screen-md 2xl:max-w-screen-lg">
+              {director && 'Directed by ' + director}
+            </p>
+          </div>
+        )}
+        
         <span className="text-primary/90 max-w-screen-md 2xl:max-w-screen-lg">Title: {title}</span>
       </div>
     </div>

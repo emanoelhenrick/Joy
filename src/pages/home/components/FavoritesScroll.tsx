@@ -5,16 +5,16 @@ import { useCallback, useEffect, useState } from "react"
 import { FaStar } from "react-icons/fa"
 import { HomeCover } from "./HomeCover"
 import { ScrollBarStyled } from "@/components/ScrollBarStyled"
+import { Fade } from "react-awesome-reveal"
 
 interface WatchingScrollProps {
   favoritesVod: VodProps[]
   favoritesSeries: SeriesProps[]
   setSelectedSeries: (series: SeriesProps) => void
   setSelectedVod: (vod: VodProps) => void
-  updateFavorites: (id: string, type: string) => void
 }
 
-export function FavoritesScroll({ favoritesVod, favoritesSeries, setSelectedSeries, setSelectedVod, updateFavorites }: WatchingScrollProps) {
+export function FavoritesScroll({ favoritesVod, favoritesSeries, setSelectedSeries, setSelectedVod }: WatchingScrollProps) {
   const [favoritesTab, setFavoritesTab] = useState(0)
 
   const isSeries = favoritesSeries.length > 0
@@ -42,7 +42,7 @@ export function FavoritesScroll({ favoritesVod, favoritesSeries, setSelectedSeri
       if (!favoritesVod) return
       return (
         <div
-          className="hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative hover:opacity-70"
+          className="hover:scale-95 transition duration-75 gap-3 w-fit h-fit cursor-pointer relative hover:opacity-70"
           key={movie.num}
           onClick={() => setSelectedVod(movie)}
         >
@@ -52,7 +52,8 @@ export function FavoritesScroll({ favoritesVod, favoritesSeries, setSelectedSeri
     }, [favoritesVod])
 
   return ((favoritesVod.length > 0) || (favoritesSeries.length > 0)) && (
-    <div>
+    <Fade duration={500} triggerOnce>
+      <div>
       <div className='flex gap-2 items-center mb-3'>
         <span className={`h-fit text-secondary bg-primary text-sm py-0.5 px-3 w-fit rounded-md transition gap-2`}>
           Favorites
@@ -79,6 +80,7 @@ export function FavoritesScroll({ favoritesVod, favoritesSeries, setSelectedSeri
         </div>
         <ScrollBarStyled orientation="horizontal" />
       </ScrollArea>
-  </div>
+    </div>
+    </Fade>
   )
 }

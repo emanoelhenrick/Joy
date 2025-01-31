@@ -19,7 +19,7 @@ export function Episode({ imageSrc, cover, progress, episodeNumber, description 
         <div className="relative shadow-lg flex items-center aspect-video justify-center overflow-hidden rounded-lg">
           {
             imageSrc ? <LazyLoadImage src={imageSrc} width={256} className="h-full object-cover opacity-70" />
-            : <img src={cover} className="object-cover w-full h-full opacity-70" />
+            : <LazyLoadImage src={cover} className="object-cover w-full h-full opacity-70" />
           }
           <FaPlay className="absolute  size-8" />
           {

@@ -33,6 +33,7 @@ export function EpisodesSection({ seriesId, seriesCover, data }: EpisodesSection
   const userSeriesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))
 
   const seasonsList = useMemo(() => {
+    if (!data) return []
     const seasonsList = []
     for (const key in data.episodes) seasonsList.push(key)
     return seasonsList
@@ -40,11 +41,12 @@ export function EpisodesSection({ seriesId, seriesCover, data }: EpisodesSection
 
   const [currentSeason, setCurrentSeason] = useState(userSeriesData?.season || seasonsList[0])
   const episodes = useMemo(() => {
+    if (!data) return []
     return data.episodes[currentSeason]
   }, [data, currentSeason])
 
   return (
-    <section className="mx-8 mb-8 space-y-3 backdrop-blur-3xl bg-background/70 p-6 rounded-3xl z-10">
+    <section className="mx-8 mb-8 space-y-3 bg-background p-6 rounded-3xl z-10">
       <SeasonsList
         currentSeason={currentSeason}
         seasons={seasonsList}

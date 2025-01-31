@@ -56,7 +56,7 @@ export default function VodPlaylistScroll({ data }: any) {
     <div className="h-fit rounded-xl">
       {selectedMovie && (
         <Dialog open={selectedMovie && true}>
-          <DialogContent className="w-screen items-center justify-center bg-background" aria-describedby={undefined}>
+          <DialogContent className="w-screen h-screen items-center justify-center" aria-describedby={undefined}>
             <div
               onClick={() => setSelectedMovie(undefined)}
               className="cursor-pointer absolute right-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
