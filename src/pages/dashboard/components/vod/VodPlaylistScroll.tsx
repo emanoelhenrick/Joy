@@ -37,7 +37,7 @@ export default function VodPlaylistScroll({ data }: any) {
 
     return (
       <div
-        className="w-full h-fit transition cursor-pointer relative group"
+        className="w-full h-fit cursor-pointer relative group"
         key={movie.num}
         >
         <div onClick={() => setSelectedMovie(movie)} className="group-hover:opacity-70 transition-transform group-hover:scale-95">
@@ -56,7 +56,7 @@ export default function VodPlaylistScroll({ data }: any) {
     <div className="h-fit rounded-xl">
       {selectedMovie && (
         <Dialog open={selectedMovie && true}>
-          <DialogContent className="w-fit items-center justify-center" aria-describedby={undefined}>
+          <DialogContent className="w-screen items-center justify-center bg-background" aria-describedby={undefined}>
             <div
               onClick={() => setSelectedMovie(undefined)}
               className="cursor-pointer absolute right-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">

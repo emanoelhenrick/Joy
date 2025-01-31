@@ -28,7 +28,7 @@ export function VodPage({ streamId, cover }: Props) {
   const userVodData = useUserData(state => state.userData.vod?.find(v => v.id == streamId))
   const updateVodStatus = useUserData(state => state.updateVodStatus)
   const removeVodStatus = useUserData(state => state.removeVodStatus)
-  const { data, isSuccess } = useQuery({ queryKey: [`vodInfo`], queryFn: async () => await fetchMovieData() })
+  const { data, isSuccess, isFetching } = useQuery({ queryKey: [`vodInfo`], queryFn: async () => await fetchMovieData() })
   const { urls } = usePlaylistUrl()
   const [_refresh, setRefresh] = useState(false)
 
@@ -88,20 +88,31 @@ export function VodPage({ streamId, cover }: Props) {
     return []
   }, [isSuccess])
 
-  if (!data) {
+  if (isFetching) {
     return (
-      <div className="w-full h-screen flex items-center justify-center">
-        <img key='loading' src={cover} className="max-w-80 rounded-2xl animate-pulse" />
-        <img key='backdropLoading' src={cover} className="w-full h-full object-cover blur-3xl opacity-10 fixed" />
+      <div className="w-full h-screen flex items-center justify-center z-50">
+        <img key='loading' src={cover} className="max-w-80 w-full rounded-2xl animate-pulse" />
+        <img key='backdropLoading' src={cover} className="w-full bg-background h-full object-cover blur-3xl opacity-10 fixed" />
       </div>
     )
   }
 
+  if (!data) return
+
+  function getString(str: string) {
+    if (!str) return undefined
+    const newStr = str.trim()
+    if (newStr.length > 1) return newStr
+  }
+
   const cast = data.info.cast
   const director = data?.info.director
-  const releaseDate = format(data.info.releasedate, 'u')
+  const releaseDate = data.info.releasedate && format(data.info.releasedate, 'u')
   const description = data.info.description || data.info.plot
-  const title = data.info.title || data.info.name
+  const title = getString(data.info.title)  || getString(data.movie_data.name)
+
+  console.log(data);
+  
 
   function duration(seconds: number) {
     const hours = Math.floor(seconds / 3600);
@@ -135,15 +146,15 @@ export function VodPage({ streamId, cover }: Props) {
           genre={genres[0]}
           logos={data.tmdbImages ? data.tmdbImages.logos! : []}
           releaseDate={releaseDate}
-          title={title}
+          title={title!}
         />
         
         <div className="mt-2 flex flex-col gap-4 z-10">
           <div className="flex justify-between items-center">
             <div className="flex gap-2 items-center">
               <Button key='vlc' onClick={launchVlc} size={"lg"} className="bg-primary duration-100">
-                {userVodData?.currentTime ?
-                  <span className="leading-none text-base">{`Resume from ${duration(userVodData?.currentTime)}`}</span>
+                {userVodData && userVodData.currentTime ?
+                  <span className="leading-none text-base">{`Resume from ${duration(userVodData.currentTime)}`}</span>
                   : (
                     <div className="flex gap-2">
                       <FaPlay />
@@ -194,7 +205,7 @@ function Backdrop({ backdrops, cover }: { backdrops: BackdropType[], cover: stri
 
   function getLowImageTmdb() {
     const stringList = imageSrc.split('/')
-    return `https://image.tmdb.org/t/p/w780/${stringList[stringList.length - 1]}`
+    return `https://image.tmdb.org/t/p/w1280/${stringList[stringList.length - 1]}`
   }
 
   function getOriginalImageTmdb() {
@@ -214,13 +225,11 @@ function Backdrop({ backdrops, cover }: { backdrops: BackdropType[], cover: stri
           className={`w-full h-full object-cover fixed top-0 -z-20`}
           src={lowImage}
         />
-        <Fade duration={500}>
-          <LazyLoadImage
-            onLoad={() => setImageLoaded(true)}
-            src={highImage}
-            className={`w-full h-full object-cover fixed top-0 -z-10 ${imageLoaded ? 'block' : 'hidden'}`}
-          />
-        </Fade>
+        <LazyLoadImage
+          onLoad={() => setImageLoaded(true)}
+          src={highImage}
+          className={`w-full h-full object-cover fixed top-0 -z-10 ${imageLoaded ? 'block' : 'hidden'}`}
+        />
       </Fade>
       <div className="inset-0 w-full h-full z-10 fixed bg-gradient-to-l from-transparent to-background/95" />
       <div className="inset-0 w-full h-full z-10 fixed bg-gradient-to-b from-transparent to-background/60" />

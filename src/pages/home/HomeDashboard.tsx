@@ -31,9 +31,6 @@ export function HomeDashboard() {
     setUpdate(prev => !prev)
   }
 
-  console.log('render');
-  
-
   const vodByDate = useMemo(() => {
     if (vodData && vodData.playlist) {
       return vodData!.playlist.slice(0, 25)
