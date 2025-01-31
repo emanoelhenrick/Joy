@@ -5,9 +5,8 @@ import { useUserData } from "@/states/useUserData";
 import { Dialog, DialogContent, DialogTitle } from "@/components/MediaInfoDialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { useDebounce } from "use-debounce";
-import { Fade } from "react-awesome-reveal";
 import { FaStar } from "react-icons/fa";
-import { SeriesPage } from "./Info";
+import { SeriesPage } from "./info";
 import { useMeasure } from "@uidotdev/usehooks";
 
 export default function SeriesPlaylistScroll({ data }: any) {
@@ -44,8 +43,8 @@ export default function SeriesPlaylistScroll({ data }: any) {
       <div
         className="w-full h-fit hover:scale-95 transition cursor-pointer relative group"
         key={series.series_id + '-' + series.num}
-      >
-        <div onClick={() => setSelectedSeries(series)}>
+        >
+        <div onClick={() => setSelectedSeries(series)} className="group-hover:opacity-70">
           <Cover src={series.cover} title={series.name} />
         </div>
         {isFavorite ? (
@@ -62,7 +61,9 @@ export default function SeriesPlaylistScroll({ data }: any) {
       {selectedSeries && (
         <Dialog open={selectedSeries && true}>
           <DialogContent className="w-fit items-center justify-center" aria-describedby={undefined}>
-            <div onClick={() => setSelectedSeries(undefined)} className="cursor-pointer absolute right-14 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+            <div
+              onClick={() => setSelectedSeries(undefined)}
+              className="cursor-pointer absolute right-14 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
               <Cross2Icon className="size-8 p-1 rounded-md bg-background/30 backdrop-blur-lg" />
             </div>
             <DialogTitle className="hidden" />
@@ -72,11 +73,13 @@ export default function SeriesPlaylistScroll({ data }: any) {
           </DialogContent>
         </Dialog>
       )}
-        <div className={`w-full flex h-full pr-4`}>
-          <div ref={ref} style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }} className={`grid w-full h-fit gap-3`}>
-            <Fade triggerOnce duration={200}>
-              {playlist.map((series) => renderItem(series))}
-            </Fade>
+        <div className={`w-full flex`}>
+          <div
+            ref={ref}
+            style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
+            className={`grid w-full h-fit gap-3`}
+            >
+            {playlist.map((series) => renderItem(series))}
           </div>
         </div>
     </div>

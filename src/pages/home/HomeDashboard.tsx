@@ -1,19 +1,18 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DialogContent, DialogTitle, Dialog } from '@/components/MediaInfoDialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { SeriesProps } from 'electron/core/models/SeriesModels';
 import { VodProps } from 'electron/core/models/VodModels';
-import { Fade } from 'react-awesome-reveal';
 import { useUserData } from '@/states/useUserData';
 import { useSeriesPlaylist, useVodPlaylist } from '@/states/usePlaylistData';
-import { SeriesPage } from '../dashboard/components/series/Info';
-import { VodInfo } from '../dashboard/components/vod/VodInfo';
+import { SeriesPage } from '../dashboard/components/series/info';
 import { WatchingScroll } from './components/WatchingScroll';
 import { FavoritesScroll } from './components/FavoritesScroll';
 import { Trending } from './components/Trending';
 import { HomeCover } from './components/HomeCover';
 import { ScrollBarStyled } from '@/components/ScrollBarStyled';
+import { VodPage } from '../dashboard/components/vod/info';
 
 export function HomeDashboard() {
   const vodData = useVodPlaylist(state => state.data)
@@ -31,6 +30,9 @@ export function HomeDashboard() {
     updateFavorite(streamId, type)
     setUpdate(prev => !prev)
   }
+
+  console.log('render');
+  
 
   const vodByDate = useMemo(() => {
     if (vodData && vodData.playlist) {
@@ -128,6 +130,36 @@ export function HomeDashboard() {
   const { watchingSeries, favoritesSeries } = userSeries
   const { watchingVod, favoritesVod } = userVod
 
+  const renderSeriesItem = useCallback((series: SeriesProps) => {
+    if (!seriesData) return
+    return (
+      <div
+        className="hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative hover:opacity-70"
+        key={series.series_id}
+        onClick={() => setSelectedSeries(series)}
+      >
+        <div className="group-hover:opacity-70">
+          <HomeCover src={series.cover} title={series.name} />
+        </div>
+      </div>
+      )
+  }, [seriesData])
+
+  const renderVodItem = useCallback((movie: VodProps) => {
+    if (!vodData) return
+    return (
+      <div
+        className="hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative hover:opacity-70"
+        key={movie.num}
+        onClick={() => setSelectedVod(movie)}
+      >
+        <div className="group-hover:opacity-70">
+        <HomeCover src={movie.stream_icon} title={movie.name} />
+        </div>
+      </div>
+      )
+  }, [vodData])
+
   if (vodData && seriesData) {
 
     return (
@@ -136,8 +168,8 @@ export function HomeDashboard() {
         {selectedSeries && (
           <Dialog open={selectedSeries && true}>
             <DialogContent className="w-fit items-center justify-center" aria-describedby={undefined}>
-              <div onClick={() => setSelectedSeries(undefined)} className="cursor-pointer absolute right-14 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-                <Cross2Icon className="h-8 w-8" />
+              <div onClick={() => setSelectedSeries(undefined)} className="cursor-pointer absolute right-14 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
+                <Cross2Icon className="size-8 p-1 rounded-md bg-background/30 backdrop-blur-lg" />
               </div>
               <DialogTitle className="hidden" />
               <div className="w-screen">
@@ -149,20 +181,19 @@ export function HomeDashboard() {
         {selectedVod && (
           <Dialog open={selectedVod && true}>
             <DialogContent className="w-fit items-center justify-center" aria-describedby={undefined}>
-              <div onClick={() => setSelectedVod(undefined)} className="cursor-pointer absolute right-14 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-30">
+              <div onClick={() => setSelectedVod(undefined)} className="cursor-pointer absolute right-14 top-20 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
                 <Cross2Icon className="size-8 p-1 rounded-md bg-background/30 backdrop-blur-lg" />
               </div>
               <DialogTitle className="invisible">{selectedVod!.name}</DialogTitle>
               <div className="w-screen">
-                <VodInfo streamId={selectedVod!.stream_id.toString()} title={selectedVod!.title} cover={selectedVod!.stream_icon} />
+                <VodPage streamId={selectedVod!.stream_id.toString()} cover={selectedVod!.stream_icon} />
               </div>
             </DialogContent>
           </Dialog>
         )}
         <div className='mb-6 mt-5'>
           <div className="flex flex-col gap-2">
-            <Trending />
-
+            <Trending slideActive={(!selectedSeries && !selectedVod)} refresh={() => setUpdate(p => !p)} />
             <WatchingScroll watchingVod={watchingVod} watchingSeries={watchingSeries} setSelectedSeries={setSelectedSeries} setSelectedVod={setSelectedVod} />
             <FavoritesScroll favoritesSeries={favoritesSeries} favoritesVod={favoritesVod} setSelectedSeries={setSelectedSeries} setSelectedVod={setSelectedVod} updateFavorites={updateRender} />
             
@@ -172,42 +203,19 @@ export function HomeDashboard() {
               </p>
               <ScrollArea className="w-full rounded-md">
                 <div className="flex w-max gap-3 pb-5 pr-4 rounded-md">
-                  <Fade duration={200} triggerOnce>
-                    {seriesByDate!.map(series => {
-                      return (
-                      <div
-                        className="flex flex-col hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative group"
-                        key={series.series_id}
-                        onClick={() => setSelectedSeries(series)}
-                      >
-                        <HomeCover src={series.cover} title={series.name} />
-                      </div>
-                      )
-                    })}
-                  </Fade>
+                  {seriesByDate!.map(series => renderSeriesItem(series))}
                 </div>
                 <ScrollBarStyled orientation="horizontal" />
               </ScrollArea>
             </div>
+
             <div>
               <p className={`h-fit text-secondary bg-primary text-sm py-0.5 px-4 w-fit rounded-md transition gap-2 mb-3`}>
                 Recently added movies
               </p>
               <ScrollArea className="w-full rounded-md">
                 <div className="flex h-full w-max gap-3 pb-5 pr-4 rounded-md">
-                <Fade duration={200} triggerOnce>
-                {vodByDate!.map(movie => {
-                  return (
-                  <div
-                    className="flex flex-col hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative group"
-                    key={movie.num}
-                    onClick={() => setSelectedVod(movie)}
-                    >
-                    <HomeCover src={movie.stream_icon} title={movie.name} />
-                  </div>
-                  )
-                })}
-                </Fade>
+                 {vodByDate!.map(movie => renderVodItem(movie))}
                 </div>
                 <ScrollBarStyled orientation="horizontal" />
               </ScrollArea>

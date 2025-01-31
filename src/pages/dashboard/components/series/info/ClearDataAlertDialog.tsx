@@ -1,6 +1,11 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { useUserData } from "@/states/useUserData";
 
-export function ClearDataAlertDialog({ removeSeriesData, refresh }: { removeSeriesData: () => void, refresh: () => void }) {
+export function ClearDataAlertDialog({ seriesId, refresh }: { seriesId: string, refresh: () => void }) {
+  const userSeriesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))
+  const removeSeriesStatus = useUserData(state => state.removeSeriesStatus)
+
+  if (!userSeriesData) return <></>
 
   return (
     <AlertDialog onOpenChange={refresh}>
@@ -16,7 +21,7 @@ export function ClearDataAlertDialog({ removeSeriesData, refresh }: { removeSeri
       </AlertDialogHeader>
       <AlertDialogFooter>
           <AlertDialogCancel className="bg-transparent border-none shadow-none">Cancel</AlertDialogCancel>
-          <AlertDialogAction className="border-none shadow-none" onClick={removeSeriesData}>Clear</AlertDialogAction>
+          <AlertDialogAction className="border-none shadow-none" onClick={() => removeSeriesStatus(seriesId)}>Clear</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

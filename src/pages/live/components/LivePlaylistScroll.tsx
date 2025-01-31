@@ -3,7 +3,6 @@ import { usePlaylistUrl } from "@/states/usePlaylistUrl";
 import { useEffect, useState } from "react";
 import { useUserData } from "@/states/useUserData";
 import { LiveImage } from "./Image";
-import { LivePlayer } from "./LivePlayer";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useInView } from "react-intersection-observer";
 import axios from "axios";
@@ -91,13 +90,7 @@ export default function LivePlaylistScroll({ playlist, fetchMore, hasMore, first
             </ScrollArea>
           </div>
           <div className="w-full pr-4 h-fit flex flex-col max-w-screen-xl">
-            { isSupported ? (
-              <LivePlayer url={selectedLiveUrl!} setIsSupported={setIsSupported} title={live.name} />
-            ) : (
-              <div className="bg-secondary relative flex items-center justify-center rounded-lg aspect-video">
-                <p className="absolute text-muted-foreground">unsupported</p>
-              </div>
-            )}
+            
             <div className="flex gap-3 items-center mt-4">
               <LiveImage src={live.stream_icon} /> 
               <h3 className="text-md">{live.name}</h3>
@@ -113,14 +106,6 @@ export default function LivePlaylistScroll({ playlist, fetchMore, hasMore, first
             )}
             
             </div>
-            {/* <ScrollArea className="whitespace-nowrap rounded-md">
-              <div className="flex w-96 mt-2 space-x-2 pb-4 whitespace-nowrap rounded-md">
-                {data?.data.epg_listings && data?.data.epg_listings.map(p =>
-                  <p className="bg-secondary text-sm text-muted-foreground py-1 px-3 rounded-md">{decode(p.title)}</p>
-                )}
-              </div>
-             <ScrollBar color="blue" orientation="horizontal" />
-            </ScrollArea> */}
           </div>
         </div>
       </div>

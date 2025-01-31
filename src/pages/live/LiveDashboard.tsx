@@ -1,4 +1,3 @@
-import { Search, X } from 'lucide-react'
 import {
   Select,
   SelectContent,
@@ -9,7 +8,6 @@ import {
 } from "../../components/dashboard/SelectCategories"
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { useDebounce } from 'use-debounce';
-import { Input } from '@/components/dashboard/input';
 import { useLivePlaylist } from '@/states/usePlaylistData';
 import { LiveProps } from 'electron/core/models/LiveModels';
 import Fuse from "fuse.js"

@@ -8,7 +8,7 @@ export interface UserDataState {
   updateUserData: (data: UserDataProps) => void
   updateFavorite: (id: string, type: string) => void
   updateVodStatus: (id: string, currentTime: number, duration: number, watching: boolean) => void
-  updateSeriesStatus: (id: string, season: string, episodeId: string, currentTime: number, number: number, watching: boolean) => void
+  updateSeriesStatus: (id: string, season: string, episodeId: string, currentTime: number, duration: number, watching: boolean) => void
   updateSeason: (id: string, season: string) => void
 
   removeVodStatus: (id: string) => void
@@ -29,6 +29,7 @@ export const useUserData = create<UserDataState>((set, get) => ({
             writable: true,
             value: [{ id, favorite: true }],
           })
+          electronApi.updateUserData(prev.userData)
           return { ...prev }
         }
         const list = Object.getOwnPropertyDescriptor(prev.userData, type)!.value
@@ -64,12 +65,14 @@ export const useUserData = create<UserDataState>((set, get) => ({
     set(prev => {
       if (!prev.userData.vod) {
         prev.userData.vod = [{ id, currentTime, duration, favorite: false, updatedAt: Date.now() }]
+        electronApi.updateUserData(prev.userData)
         return { ...prev }
       }
 
       const vod = prev.userData.vod.find(v => v.id == id)
       if (!vod) {
         prev.userData.vod.push({ id, currentTime, duration, favorite: false, watching, updatedAt: Date.now() })
+        electronApi.updateUserData(prev.userData)
         return { ...prev }
       }
 

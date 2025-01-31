@@ -77,7 +77,6 @@ app.on('activate', () => {
 })
 
 app.whenReady().then(() => {
-  CoreControllers()
   createWindow()
-  
+  CoreControllers(win!)
 })

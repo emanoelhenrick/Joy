@@ -18,10 +18,10 @@ export function Episode({ imageSrc, cover, progress, episodeNumber, description 
       <Fade duration={500}>
         <div className="relative shadow-lg flex items-center aspect-video justify-center overflow-hidden rounded-lg">
           {
-            imageSrc ? <LazyLoadImage src={imageSrc} width={256} className="h-full object-cover" />
-            : <img src={cover} className="object-cover w-full h-full" />
+            imageSrc ? <LazyLoadImage src={imageSrc} width={256} className="h-full object-cover opacity-70" />
+            : <img src={cover} className="object-cover w-full h-full opacity-70" />
           }
-          <FaPlay className="absolute opacity-80 size-8" />
+          <FaPlay className="absolute  size-8" />
           {
             progress > 0 &&
             <div className="absolute w-full transition bottom-0 h-fit">

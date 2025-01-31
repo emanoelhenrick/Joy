@@ -1,15 +1,19 @@
 import Fuse from "fuse.js"
-import { MovieDb } from "moviedb-promise"
+import { MovieDb, MovieImagesResponse, MovieResult } from "moviedb-promise"
 import { getLocalVodPlaylist } from "./vod/getLocalVodPlaylist"
-import { getLocalSeriesPlaylist } from "./series/getLocalSeriesPlaylist"
+import { VodProps } from "../models/VodModels"
 
-export async function fetchTmdbTrending({ apiKey, playlistName }: any) {
+export interface MovieMatch extends MovieResult {
+  matches?: VodProps[]
+  images?: MovieImagesResponse
+}
+
+export async function fetchTmdbTrending({ apiKey, playlistName }: any): Promise<MovieMatch[]> {
   const moviedb = new MovieDb(apiKey)
   const res = await moviedb.trending({ media_type: 'movie', time_window: 'week', language: 'pt-BR'})
-  const tmdbData = res.results!
+  const tmdbData = res.results! as MovieResult[]
 
   const vodData = await getLocalVodPlaylist(playlistName)
-  const seriesData = await getLocalSeriesPlaylist(playlistName)
 
   if (tmdbData.length === 0) return []
 
@@ -19,24 +23,15 @@ export async function fetchTmdbTrending({ apiKey, playlistName }: any) {
     minMatchCharLength: 2
   })
 
-  const fuseSeries = new Fuse(seriesData.playlist, {
-    keys: ['name'],
-    threshold: 0.2,
-    minMatchCharLength: 2
-  })
-
-  const filtered: any[] = []
-  tmdbData.forEach(info => {
-    if (info.media_type === 'movie') {
-      const query = info.title! + info.release_date!.split('-')[0]
-      const matchesList = fuseMovies.search(query).map(i => i.item)
-      if (matchesList.length > 0) filtered.push({ ...info, matches: matchesList }) 
-    } else if (info.media_type === 'tv') {
-      const query = info.name! + info.first_air_date!.split('-')[0]
-      const matchesList = fuseSeries.search(query).map(i => i.item)
-      if (matchesList.length > 0) filtered.push({ ...info, matches: matchesList }) 
-    }
-  })
+  const filtered: MovieMatch[] = []
+  for (const movie of tmdbData) {
+    const query = movie.title! + movie.release_date!.split('-')[0]
+    const matchesList = fuseMovies.search(query).map(i => i.item)
+    if (matchesList.length > 0) {
+      const images = await moviedb.movieImages({ id: movie.id! })
+      filtered.push({ ...movie, matches: matchesList, images })
+    } 
+  }
 
   return filtered
 }

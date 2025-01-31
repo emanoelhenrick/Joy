@@ -1,4 +1,4 @@
-import { ipcMain } from "electron";
+import { BrowserWindow, ipcMain } from "electron";
 import { getMetadata } from "./services/getMetadata";
 import { updateVod } from "./services/vod/updateVod";
 import { updateSeries } from "./services/series/updateSeries";
@@ -21,8 +21,11 @@ import { renameProfile } from "./services/userdata/renameProfile";
 import { removeProfile } from "./services/userdata/removeProfile";
 import { removePlaylist } from "./services/removePlaylist";
 import { fetchTmdbTrending } from "./services/fetchTmdbTrending";
+import { launchVLC } from "./services/vlc/launchVLC";
+import { getVLCState } from "./services/vlc/getVLCState";
+import { killProcess } from "./services/vlc/killProcess";
 
-export default function CoreControllers() {
+export default function CoreControllers(win: BrowserWindow) {
   ipcMain.handle('get-metadata', getMetadata)
   ipcMain.handle('authenticate-user', async (_event, args) => await authenticateUser(args))
   ipcMain.handle('fetch-tmdb-trending', async (_event, args) => await fetchTmdbTrending(args))
@@ -52,4 +55,8 @@ export default function CoreControllers() {
   ipcMain.handle('switch-profile', async (_event, args) => await switchProfile(args))
   ipcMain.handle('rename-profile', async (_event, args) => await renameProfile(args))
   ipcMain.handle('remove-profile', async (_event, args) => await removeProfile(args))
+
+  ipcMain.handle('launch-vlc', async (_event, args) => launchVLC(args, win))
+  ipcMain.handle('get-vlc-state', async (_event) => await getVLCState())
+  ipcMain.handle('kill-process', async (_event, args) => killProcess(args))
 }

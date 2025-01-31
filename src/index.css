@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@media (max-width: 1500px) {
+  * {
+    font-size: 14px;
+  }
+}
+
+
 body {
   font-family: Inter, Helvetica, sans-serif;
 }

@@ -50,5 +50,10 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   createProfile: async (args: any) => await ipcRenderer.invoke('create-profile', args),
   switchProfile: async (args: any) => await ipcRenderer.invoke('switch-profile', args),
   renameProfile: async (args: any) => await ipcRenderer.invoke('rename-profile', args),
-  removeProfile: async (args: any) => await ipcRenderer.invoke('remove-profile', args)
+  removeProfile: async (args: any) => await ipcRenderer.invoke('remove-profile', args),
+
+  launchVLC: async (args: any) => await ipcRenderer.invoke('launch-vlc', args),
+  getVLCState: async (args: any) => await ipcRenderer.invoke('get-vlc-state', args),
+  killProcess: async (args: any) => await ipcRenderer.invoke('kill-process', args),
+  removeAllListeners: (args: any) => ipcRenderer.removeAllListeners(args),
 })

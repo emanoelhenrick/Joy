@@ -1,13 +1,12 @@
 import { ScrollBarStyled } from "@/components/ScrollBarStyled";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { EpisodeProps, SerieInfoProps, UserSeriesDataProps } from "electron/core/models/SeriesModels";
-import { useCallback, useMemo, useState } from "react";
+import { EpisodeProps, SerieInfoProps, UserEpisodeProps, UserSeriesDataProps } from "electron/core/models/SeriesModels";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Episode } from "./Episode";
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { SeriesPlayer } from './SeriesPlayer'
 import { usePlaylistUrl } from "@/states/usePlaylistUrl";
 import { useUserData } from "@/states/useUserData";
-import { Fade } from "react-awesome-reveal";
+import { VlcDialog } from "../../VlcDialog";
+import electronApi from "@/config/electronApi";
 
 interface SeasonsListProps {
   seasons: string[]
@@ -16,7 +15,6 @@ interface SeasonsListProps {
 }
 
 interface EpisodesListProps {
-  data: SerieInfoProps
   episodes: EpisodeProps[]
   seriesId: string
   currentSeason: string
@@ -28,11 +26,11 @@ interface EpisodesSection {
   seriesId: string
   seriesCover: string
   data: SerieInfoProps
-  userSeriesData: UserSeriesDataProps
 }
 
-export function EpisodesSection({ seriesId, seriesCover, data, userSeriesData }: EpisodesSection) {
+export function EpisodesSection({ seriesId, seriesCover, data }: EpisodesSection) {
   const { urls } = usePlaylistUrl()
+  const userSeriesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))
 
   const seasonsList = useMemo(() => {
     const seasonsList = []
@@ -46,7 +44,7 @@ export function EpisodesSection({ seriesId, seriesCover, data, userSeriesData }:
   }, [data, currentSeason])
 
   return (
-    <section className="mx-8 mb-8 space-y-3 backdrop-blur-3xl bg-background/70 p-6 rounded-3xl">
+    <section className="mx-8 mb-8 space-y-3 backdrop-blur-3xl bg-background/70 p-6 rounded-3xl z-10">
       <SeasonsList
         currentSeason={currentSeason}
         seasons={seasonsList}
@@ -54,7 +52,6 @@ export function EpisodesSection({ seriesId, seriesCover, data, userSeriesData }:
       />
       <EpisodesList
         currentSeason={currentSeason}
-        data={data!}
         episodeStreamBaseUrl={urls.getSeriesStreamUrl}
         episodes={episodes}
         seriesCover={seriesCover}
@@ -79,69 +76,88 @@ function SeasonsList({ seasons, currentSeason, setCurrentSeason }: SeasonsListPr
   )
 }
 
-function EpisodesList({ data, episodes, seriesId, currentSeason, seriesCover, episodeStreamBaseUrl}: EpisodesListProps) {
+function EpisodesList({ episodes, seriesId, currentSeason, seriesCover, episodeStreamBaseUrl}: EpisodesListProps) {
+  
   const userEpisodesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))?.episodes
+
+  const updateSeriesStatus = useUserData(state => state.updateSeriesStatus)
   const updateDefaultSeason = useUserData(state => state.updateSeason)
+
+  const [state, setState] = useState<any>(undefined)
+  const [episodeRunning, setEpisodeRunning] = useState<EpisodeProps | undefined>()
+
+  function updateUserStatus(dataState: { length: number, time: number }) {
+    if (!episodeRunning) return
+    setState({
+      id: episodeRunning.id,
+      data: dataState
+    })
+  }
 
   const updateSeason = useCallback((progress: number) => {
     if (progress > 0) updateDefaultSeason(seriesId, currentSeason)
   }, [currentSeason])
-  
+
+  useEffect(() => {
+    if (!episodeRunning && state) {
+      const ep = episodes?.find(e => e.id == state.id)
+      if (!ep || !state) return
+      const { time, length } = state.data
+      updateSeriesStatus(
+        seriesId,
+        currentSeason,
+        state.id,
+        time,
+        length,
+        (time / length) > 0
+      )
+      updateSeason(time / length)
+      setState(undefined)
+    }
+    
+  }, [episodeRunning, episodes, updateSeriesStatus])
+
   const renderItem = useCallback((ep: EpisodeProps, seriesCover: string, index: number) => {
     let progress = 0;
     const epUserData = userEpisodesData?.find(e => e.episodeId == ep.id)
-    
     if (epUserData) progress = parseFloat(((epUserData.currentTime / epUserData.duration) * 100).toFixed(2))
-    const supportedExtensions = ['mp4', 'ogg', 'ogv', 'webm', 'mov', 'm4v']
-    const isSupported = supportedExtensions.includes(ep.container_extension)
+    const currentTime = (epUserData && epUserData.currentTime) ? epUserData.currentTime : 0
 
-    if (isSupported) {
-      return (
-        <Dialog key={currentSeason + '.' + ep.id} onOpenChange={() => updateSeason(progress)}>
-          <DialogTrigger asChild>
-            <div>
-              <Episode
-                cover={seriesCover}
-                imageSrc={ep.info.movie_image!}
-                progress={progress} description={ep.info.plot}
-                episodeNumber={index + 1} 
-              />
-            </div>
-          </DialogTrigger>
-        <DialogContent className="w-fit border-none bg-transparent items-center justify-center">
-          <DialogTitle className="hidden" />
-          <div className="w-screen">
-            <SeriesPlayer
-              baseUrl={episodeStreamBaseUrl}
-              episodeNumStart={ep.episode_num}
-              info={data!}
-              seriesId={seriesId}
-              seasonNumStart={currentSeason}
-              currentTimeStated={epUserData?.currentTime!}
-            />
-          </div>
-        </DialogContent>
-      </Dialog>
-      )
-    } else {
-      return (
-        <div key={currentSeason + '.' + ep.id} className="flex flex-col cursor-default space-y-2 w-56 2xl:w-64 opacity-50">
-          <div className="relative flex items-center justify-center overflow-hidden rounded-lg">
-            <div className="py-11 aspect-video w-full h-full text-lg bg-secondary opacity-40"/>
-            <p className="whitespace-normal absolute text-base">unsupported</p>
-          </div>
-          <p className="whitespace-normal text-muted-foreground text-sm">{`Episode ${index + 1}`}</p>
-        </div>
-      )
+    async function launchVlc(episodeId: string, currentTime: number, containerExtension: string) {
+      const props = {
+        path: `${episodeStreamBaseUrl}${episodeId}.${containerExtension}`,
+        startTime: currentTime
+      }
+      await electronApi.launchVLC(props)
+      setEpisodeRunning(ep)
     }
-  }, [userEpisodesData, episodes])
+
+    return (
+      <div key={ep.id} onClick={async () => await launchVlc(ep.id, currentTime, ep.container_extension)}>
+          <Episode
+            cover={seriesCover}
+            imageSrc={ep.info.movie_image!}
+            progress={progress} description={ep.info.plot}
+            episodeNumber={index + 1} 
+          />
+      </div>
+    )
+  }, [episodes, userEpisodesData])
 
   return (
     <ScrollArea className="w-full whitespace-nowrap rounded-lg">
-      <div className="flex w-max space-x-6 pb-6 whitespace-nowrap rounded-md">
-          {episodes && episodes.map((ep, index) => renderItem(ep, seriesCover, index))}
+      <div className="flex w-max space-x-6 pb-4 whitespace-nowrap rounded-md">
+        {episodes && episodes.map((ep, index) => renderItem(ep, seriesCover, index))}
       </div>
       <ScrollBarStyled orientation="horizontal" />
+
+      {episodeRunning && (
+        <VlcDialog
+          updateUserStatus={updateUserStatus}
+          open={episodeRunning ? true : false}
+          closeDialog={() => setEpisodeRunning(undefined)}
+        />
+      )}
     </ScrollArea>
   )
 }

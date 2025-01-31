@@ -1,8 +1,9 @@
+import { MovieMatch } from "electron/core/services/fetchTmdbTrending";
 import { create } from "zustand";
 
 interface TrendingProps {
-  matches: any[]
-  updateMatches: (matches: any[]) => void
+  matches: MovieMatch[]
+  updateMatches: (matches: MovieMatch[]) => void
 }
 
 export const useTrending = create<TrendingProps>((set) => ({

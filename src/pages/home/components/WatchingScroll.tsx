@@ -1,9 +1,7 @@
-import { Cover } from "@/components/Cover"
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { SeriesProps } from "electron/core/models/SeriesModels"
 import { VodProps } from "electron/core/models/VodModels"
-import { useEffect, useState } from "react"
-import { Fade } from "react-awesome-reveal"
+import { useCallback, useEffect, useState } from "react"
 import { HomeCover } from "./HomeCover"
 import { ScrollBarStyled } from "@/components/ScrollBarStyled"
 
@@ -24,6 +22,36 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
     if (!isSeries && isVod) return setWatchingTab(1)
     return setWatchingTab(0)
   }, [isSeries, isVod])
+
+  const renderSeriesItem = useCallback((series: SeriesProps) => {
+    if (!watchingSeries) return
+    return (
+      <div
+        className="hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative hover:opacity-70"
+        key={series.series_id}
+        onClick={() => setSelectedSeries(series)}
+      >
+        <div className="group-hover:opacity-70">
+          <HomeCover src={series.cover} title={series.name} />
+        </div>
+      </div>
+      )
+  }, [watchingSeries])
+  
+  const renderVodItem = useCallback((movie: VodProps) => {
+    if (!watchingVod) return
+    return (
+      <div
+        className="hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative hover:opacity-70"
+        key={movie.num}
+        onClick={() => setSelectedVod(movie)}
+      >
+        <div className="group-hover:opacity-70">
+        <HomeCover src={movie.stream_icon} title={movie.name} />
+        </div>
+      </div>
+      )
+  }, [watchingVod])
 
   return ((watchingVod.length > 0) || (watchingSeries.length > 0)) && (
   <div>
@@ -48,30 +76,8 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
     </div>
       <ScrollArea className="w-full rounded-md">
         <div className="flex w-max space-x-3 pb-5 pr-4 rounded-md">
-          <Fade duration={200} triggerOnce>
-            {(watchingTab == 0 && watchingSeries) && watchingSeries!.sort((a, b) => b.updatedAt! - a.updatedAt!).map(series => {
-              return (
-              <div
-                className="flex flex-col hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative"
-                key={series.series_id}
-                onClick={() => setSelectedSeries(series)}
-              >
-                <HomeCover src={series.cover} title={series.name} />
-              </div>
-              )
-            })}
-            {(watchingTab == 1 && watchingVod) && watchingVod!.sort((a, b) => b.updatedAt! - a.updatedAt!).map(movie => {
-              return (
-                <div
-                  className="flex flex-col hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative"
-                  key={movie.num}
-                  onClick={() => setSelectedVod(movie)}
-                  >
-                  <HomeCover src={movie.stream_icon} title={movie.name} />
-                </div>
-              )
-            })}
-          </Fade>
+          {(watchingTab == 0 && watchingSeries) && watchingSeries!.sort((a, b) => b.updatedAt! - a.updatedAt!).map(series => renderSeriesItem(series))}
+          {(watchingTab == 1 && watchingVod) && watchingVod!.sort((a, b) => b.updatedAt! - a.updatedAt!).map(movie => renderVodItem(movie))}
         </div>
         <ScrollBarStyled orientation="horizontal" />
       </ScrollArea>

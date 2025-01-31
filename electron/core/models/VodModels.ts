@@ -6,6 +6,7 @@ export interface VodPlaylistProps {
 }
 
 export interface VodProps {
+  container_extension: any
   title: string
   num: string | number
   name: string

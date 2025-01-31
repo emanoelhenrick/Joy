@@ -3,7 +3,6 @@ import { usePlaylistUrl } from "@/states/usePlaylistUrl"
 import { FaPlay, FaStar } from "react-icons/fa";
 import { useEffect, useState } from "react"
 import { QueryFilters, useQuery, useQueryClient } from "@tanstack/react-query"
-import { useUserData } from "@/states/useUserData";
 import { Button } from "@/components/ui/button";
 import { EpisodesSection } from "./EpisodesSection";
 import { ClearDataAlertDialog } from "./ClearDataAlertDialog";
@@ -16,9 +15,6 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
 
   const { urls } = usePlaylistUrl()
   const { data } = useQuery({ queryKey: [`seriesInfo`], queryFn: async () => await electronApi.getSerieInfo(urls.getSeriesInfoUrl + seriesId) })
-
-  const userSeriesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))
-  const removeSeriesStatus = useUserData(state => state.removeSeriesStatus)
 
   const [_refresh, setRefresh] = useState(false)
 
@@ -35,8 +31,8 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
   if (!data) {
     return (
       <div className="w-full h-screen flex items-center justify-center">
-          <img key='loading' src={cover} className="max-w-80 rounded-2xl animate-pulse -z-10" />
-          <img key='backdropLoading' src={cover} className="w-full h-full object-cover blur-3xl opacity-10 fixed -z-20" />
+        <img key='loading' src={cover} className="max-w-80 rounded-2xl animate-pulse -z-10" />
+        <img key='backdropLoading' src={cover} className="w-full h-full object-cover blur-3xl opacity-10 fixed -z-20" />
       </div>
     )
   }
@@ -44,7 +40,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
   const backdropPath = getRightBackdrop(data.info.backdrop_path)
 
   const description = data.info.plot
-  const title = data.info.name
+  const title = data.info.name.replace(/\[\d+\]|\(\d+\)/g, '')
   const releaseDate = data.info.releaseDate
   const cast = data.info.cast
   const director = data.info.director
@@ -57,33 +53,33 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
         <Backdrop backdropPath={backdropPath!} cover={cover} />
 
         <InfoSection
-          title={title} releaseDate={releaseDate}
+          title={title}
+          releaseDate={releaseDate}
           genre={genre}
           description={description}
           cast={cast}
           director={director}
         />
 
-        <div className="px-16 justify-between items-end flex gap-2 mt-4 w-full mb-8">
+        <div className="px-16 justify-between items-end flex gap-2 mt-4 w-full mb-6 z-10">
           <div className="flex gap-2">
-            <Button size={"lg"} className="flex gap-2 items-center bg-primary">
+            <Button size={"lg"} className="flex gap-2 items-center bg-primary transition-none">
               <FaPlay className="size-4" />
               <span className="leading-none text-base">Watch</span>
             </Button>
-            <Button variant={'ghost'} size={"lg"} className="flex gap-2 items-center">
+            <Button variant={'ghost'} size={"lg"} className="flex gap-2 items-center hover:bg-primary/10 transition-none">
               <FaStar className="size-4" />
               <span className="leading-none text-base">Add to favorites</span>
             </Button>
           </div>
 
-          {userSeriesData && <ClearDataAlertDialog refresh={refresh} removeSeriesData={() => removeSeriesStatus(seriesId)}  />}
+          <ClearDataAlertDialog refresh={refresh} seriesId={seriesId}  />
         </div>
 
         <EpisodesSection
           seriesCover={cover}
           seriesId={seriesId}
           data={data}
-          userSeriesData={userSeriesData!}
         />
       </div>
     )
@@ -138,10 +134,6 @@ function Backdrop({ backdropPath, cover }: { backdropPath: string, cover: string
       <div className="inset-0 w-full h-full fixed bg-gradient-to-l from-transparent to-background/95" />
     </div>
   )
-
-
-
-  
 }
 
 function getRightBackdrop(backdropList: string[]) {
