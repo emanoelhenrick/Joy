@@ -41,7 +41,7 @@ export function InfoSection({ title, releaseDate, cast, description, director, g
         )}
       
       <div className="mt-2 flex flex-col gap-4">
-        {description && <span className="text-base 2xl:text-xl max-w-screen-md 2xl:max-w-screen-lg text-primary line-clamp-6">{description}</span>}
+        {description && <span className="text-base 2xl:text-lg max-w-screen-md 2xl:max-w-screen-lg text-primary line-clamp-6">{description}</span>}
         
         {(cast || director) && (
           <div>

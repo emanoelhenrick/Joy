@@ -11,7 +11,7 @@ import { RotateCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export function SettingsPage({ currentPlaylist, setUpdatingMenu }: { currentPlaylist: string, setUpdatingMenu: (bool: boolean) => void }) {
+export function SettingsPage({ currentPlaylist, setUpdatingMenu, setUpdatingError }: { currentPlaylist: string, setUpdatingMenu: (bool: boolean) => void, setUpdatingError: (b: boolean) => void }) {
   const navigate = useNavigate()
   const [selectedPlaylist, setSelectedPlaylist] = useState<string>(currentPlaylist)
   const [playlists, setPlaylists] = useState<PlaylistInfo[]>()
@@ -62,12 +62,14 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu }: { currentPlay
       const isValidated = await electronApi.authenticateUser(urls.getAuthenticateUrl)
       if (!isValidated) {
         setUpdating(false)
+        setUpdatingError(true)
         return toast({
           title: 'The playlist could not be updated',
           description: 'Check if the playlist data is correct.',
           variant: "destructive"
         })
       }
+      setUpdatingError(false)
       toast({ title: `Updating playlist ${playlistName}`})
       const vodData = await electronApi.updateVod({ playlistUrl: urls.getAllVodUrl, categoriesUrl: urls.getAllVodCategoriesUrl, name: playlistName })
       const seriesData = await electronApi.updateSeries({ playlistUrl: urls.getAllSeriesUrl, categoriesUrl: urls.getAllSeriesCategoriesUrl, name: playlistName })

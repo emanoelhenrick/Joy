@@ -113,7 +113,7 @@ function Backdrop({ backdropPath, cover }: { backdropPath: string, cover: string
             src={imageSrc}
           />
         </Fade>
-        <div className="inset-0 w-full h-full z-0 fixed bg-gradient-to-l from-transparent to-background/95" />
+        <div className="inset-0 w-full h-full z-0 scale-105 fixed bg-gradient-to-l from-transparent to-background/95" />
       </div>
     )
   }
@@ -143,10 +143,10 @@ function Backdrop({ backdropPath, cover }: { backdropPath: string, cover: string
         <LazyLoadImage
           onLoad={() => setImageLoaded(true)}
           src={highImage}
-          className={`w-full h-full object-cover fixed transition top-0 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+          className={`w-full h-full object-cover scale-105 fixed transition top-0 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
         />
       </Fade>
-      <div className="inset-0 w-full h-full fixed bg-gradient-to-l from-transparent to-background/95" />
+      <div className="inset-0 w-full h-full fixed scale-105 bg-gradient-to-l from-transparent to-background/95" />
     </>
   )
 }

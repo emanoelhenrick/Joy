@@ -43,11 +43,6 @@ export default function VodPlaylistScroll({ data }: any) {
         <div onClick={() => setSelectedMovie(movie)} className="group-hover:opacity-70 transition-transform group-hover:scale-95">
           <Cover src={movie.stream_icon} title={movie.title || movie.name} />
         </div>
-          {isFavorite ? (
-            <FaStar onClick={() => updateRender(movie.stream_id.toString())} strokeWidth={0} className={`absolute size-5 fill-yellow-400 top-3 right-4 ${isFavorite ? 'visible' : 'invisible' }`}  />
-          ) : (
-            <FaStar onClick={() => updateRender(movie.stream_id.toString())} className={`absolute fill-primary size-5 top-3 right-4 opacity-0 group-hover:opacity-100 transition hover:scale-110`}  />
-          )}
       </div>
     )
   }, [playlist, favorites])

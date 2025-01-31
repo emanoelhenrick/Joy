@@ -86,11 +86,12 @@ export function MenuBar() {
     if (!isValidated) {
       setUpdatingError(true)
       setUpdating(false)
-      return toast({
+      toast({
         title: 'The playlist could not be updated',
         description: 'Check if the playlist data is correct.',
         variant: "destructive"
       })
+      return
     }
 
     setUpdatingError(false)
@@ -167,6 +168,7 @@ export function MenuBar() {
                 isRemoving={isRemoving}
                 setIsRemoving={setIsRemoving}
                 setUpdateRender={setUpdateRender}
+
               />
             </DialogContent>
           </Dialog>
@@ -192,7 +194,7 @@ export function MenuBar() {
             </DialogTrigger>
             <DialogContent className="w-1/2 max-w-[700px] items-center p-8 border-none bg-primary-foreground" aria-describedby={undefined}>
               <DialogTitle className="hidden">Settings</DialogTitle>
-              {playlistName && <SettingsPage currentPlaylist={playlistName} setUpdatingMenu={setUpdating} />}
+              {playlistName && <SettingsPage currentPlaylist={playlistName} setUpdatingMenu={setUpdating} setUpdatingError={setUpdatingError} />}
             </DialogContent>
           </Dialog>
         </Fade>

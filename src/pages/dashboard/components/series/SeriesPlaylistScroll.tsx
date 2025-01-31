@@ -47,11 +47,6 @@ export default function SeriesPlaylistScroll({ data }: any) {
         <div onClick={() => setSelectedSeries(series)} className="group-hover:opacity-70 transition-transform group-hover:scale-95">
           <Cover src={series.cover} title={series.name} />
         </div>
-        {isFavorite ? (
-            <FaStar onClick={() => updateRender(series.series_id.toString())} size={20} strokeWidth={0} className={`absolute fill-yellow-400 top-3 right-4 ${isFavorite ? 'visible' : 'invisible' }`}  />
-          ) : (
-            <FaStar onClick={() => updateRender(series.series_id.toString())} size={20} className={`absolute fill-primary top-3 right-4 opacity-0 group-hover:opacity-100 transition hover:scale-110`}  />
-          )}
       </div>
       )
     }, [playlist, favorites])
