@@ -1,7 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton"
 import { TitleLogo } from "moviedb-promise"
-import { Fade } from "react-awesome-reveal"
-import { LazyLoadImage } from "react-lazy-load-image-component"
 
 interface Props {
   title: string
@@ -11,10 +9,9 @@ interface Props {
   cast: string
   director: string
   logos: TitleLogo[]
-  isFetching: boolean
 }
 
-export function InfoSection({ title, releaseDate, cast, description, director, genre, logos, isFetching  }: Props) {
+export function InfoSection({ title, releaseDate, cast, description, director, genre, logos }: Props) {
 
   function getRightLogo(logos: TitleLogo[]) {
     if (!logos) return
@@ -32,7 +29,7 @@ export function InfoSection({ title, releaseDate, cast, description, director, g
     <div>
         <div className="max-w-96 h-fit">
           {logoPath !== undefined ? (
-              <img className="object-contain max-h-40" src={logoPath} alt="" />
+              <img key={'logo'} className="object-contain max-h-40" src={logoPath} alt="" />
           ) : <h1 className="text-5xl">{title || <Skeleton className="h-16" />}</h1>}
         </div>
 

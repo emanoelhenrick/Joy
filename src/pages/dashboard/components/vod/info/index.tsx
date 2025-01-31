@@ -151,7 +151,6 @@ export function VodPage({ streamId, cover }: Props) {
               logos={data && data.tmdbImages ? data.tmdbImages.logos! : []}
               releaseDate={releaseDate!}
               title={title!}
-              isFetching={isFetching}
             />
             
             <div className="mt-2 flex flex-col gap-4 z-10">
