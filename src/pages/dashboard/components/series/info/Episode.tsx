@@ -9,13 +9,13 @@ interface Props {
   cover: string
   progress: number
   episodeNumber: number
-  description: string
+  duration: string
 }
 
-export function Episode({ imageSrc, cover, progress, episodeNumber, description }: Props) {
+export function Episode({ imageSrc, cover, progress, episodeNumber, duration }: Props) {
 
   return (
-    <div className="w-80 2xl:w-80 cursor-pointer group relative">
+    <div className="w-72 2xl:w-80 cursor-pointer group relative">
       <Fade duration={500} className="z-10">
         <div className="relative shadow-lg group-hover:opacity-80 flex items-center aspect-video justify-center overflow-hidden rounded-lg">
           {
@@ -27,8 +27,8 @@ export function Episode({ imageSrc, cover, progress, episodeNumber, description 
           <div className="inset-0 w-full absolute bg-gradient-to-b from-transparent to-background/80" />
         </div>
         <div className="flex flex-col absolute bottom-5 left-5 z-10">
-          <span className="text-muted-foreground">43m</span>
-          <span className="whitespace-normal text-lg font-bold">{`Episode ${episodeNumber}`}</span>
+          <span className="text-muted-foreground text-sm 2xl:text-base">{duration}</span>
+          <span className="whitespace-normal text-base 2xl:text-lg font-bold">{`Episode ${episodeNumber}`}</span>
         </div>
           {
           progress > 0 &&

@@ -2,8 +2,8 @@ import electronApi from "@/config/electronApi"
 import { usePlaylistUrl } from "@/states/usePlaylistUrl"
 import { QueryFilters, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useMemo, useState } from "react"
-import { Fade, Slide, Zoom } from "react-awesome-reveal"
-import { FaPlay, FaSpinner, FaStar } from "react-icons/fa"
+import { Fade } from "react-awesome-reveal"
+import { FaPlay, FaStar } from "react-icons/fa"
 import { useUserData } from "@/states/useUserData"
 import { Backdrop as BackdropType, MovieDb, } from "moviedb-promise"
 import { Button } from "@/components/ui/button"
@@ -12,8 +12,8 @@ import { LazyLoadImage } from "react-lazy-load-image-component"
 import { VlcDialog } from "../../VlcDialog"
 import { ClearDataAlertDialog } from "./ClearDataAlertDialog"
 import { InfoSection } from "./InfoSection"
-import { formatDuration } from "date-fns"
 import { ImSpinner8 } from "react-icons/im";
+import { formatDurationFromSeconds } from "@/utils/formatDuration"
 
 interface Props {
   streamId: string
@@ -86,8 +86,6 @@ export function VodPage({ streamId, cover }: Props) {
     }
   }, [])
 
-  
-
   const genres: string[] = useMemo(() => {
     if (data) {
       if (data.info.genre) {
@@ -109,32 +107,11 @@ export function VodPage({ streamId, cover }: Props) {
   const description = data ? (data.info.description || data.info.plot).trim() : undefined
   const title = data ? getString(data!.info.title)  || getString(data!.movie_data.name) : undefined
   const rating = data ? data.info.rating || data.info.rating_kinopoisk : undefined
-
-  function duration(seconds: number) {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = seconds % 60;
-  
-    // Construir a string no formato "1h 32m" ou "45s"
-    let result = '';
-    if (hours > 0) {
-      result += `${hours}h `;
-    }
-    if (minutes > 0 || hours > 0) { // Incluir minutos se houver horas ou minutos
-      result += `${minutes}m `;
-    }
-    if (seconds < 60) { // Mostrar segundos apenas se for menos de 1 minuto
-      result += `${remainingSeconds}s`;
-    }
-  
-    // Remover espaço extra no final, se houver
-    return result.trim();
-  }
+  const resumeDuration = formatDurationFromSeconds(userVodData && userVodData.currentTime)
+  const duration = formatDurationFromSeconds(data && data.info.duration_secs)
 
   return (
     <div className="w-full h-screen flex flex-col justify-end">
-      
-      
       {isFetching ? (
         <Fade>
           <div className="w-full h-full fixed flex items-center justify-center top-0 z-20">
@@ -160,6 +137,7 @@ export function VodPage({ streamId, cover }: Props) {
               releaseDate={releaseDate!}
               title={title!}
               rating={rating!}
+              duration={duration!}
             />
             
             <div className="mt-2 flex flex-col gap-4 z-10">
@@ -168,7 +146,7 @@ export function VodPage({ streamId, cover }: Props) {
                     <Button key='vlc' disabled={isFetching} onClick={launchVlc} size={"lg"} className="bg-primary transition-none relative overflow-hidden">
                     {userVodData && userVodData.currentTime ?
                     <div>
-                      <span className="leading-none text-base">{`Resume from ${duration(userVodData.currentTime)}`}</span>
+                      <span className="leading-none text-base">{`Resume from ${resumeDuration}`}</span>
                       <div className="h-1 w-full absolute left-0 right-0 bottom-0">
                       </div>
                     </div>
@@ -207,10 +185,18 @@ export function VodPage({ streamId, cover }: Props) {
 }
 
 function Backdrop({ backdrops, cover }: { backdrops: BackdropType[], cover: string }) {
-  let images = (backdrops && backdrops.length > 0) && backdrops.filter(b => !b.iso_639_1)
-  if (!images) images = backdrops
-  const imageSrc = images && images.length === 0 ? cover
-      : `https://image.tmdb.org/t/p/original${images[0].file_path}`
+  let imageSrc = ''
+  let filteredByIso = (backdrops && backdrops.length > 0) && backdrops.filter(b => !b.iso_639_1)
+  if (filteredByIso && filteredByIso.length > 0) {
+    const filteredByWidth = filteredByIso.filter(b => b.width && b.width > 1920)
+    if (filteredByWidth.length > 0) {
+      imageSrc = `https://image.tmdb.org/t/p/original${filteredByWidth[0].file_path}`
+    } else {
+      imageSrc = `https://image.tmdb.org/t/p/original${filteredByIso[0].file_path!}`
+    } 
+  } else {
+    imageSrc = cover
+  }
 
   if (!imageSrc.includes('tmdb')) {
     return (
@@ -243,7 +229,7 @@ function Backdrop({ backdrops, cover }: { backdrops: BackdropType[], cover: stri
   const highImage = getOriginalImageTmdb()
 
   return (
-    <>
+    <div>
       <Fade duration={500} triggerOnce>
         <img
           className={`w-full h-full object-cover fixed top-0 -z-20`}
@@ -257,7 +243,7 @@ function Backdrop({ backdrops, cover }: { backdrops: BackdropType[], cover: stri
       </Fade>
       <div className="inset-0 w-full h-full z-10 fixed scale-105 bg-gradient-to-l from-transparent to-background/80" />
       <div className="inset-0 w-full h-full z-10 fixed scale-105 bg-gradient-to-b from-transparent to-background/50" />
-    </>
+    </div>
   )
 
 }

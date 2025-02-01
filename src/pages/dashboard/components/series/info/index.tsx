@@ -131,7 +131,7 @@ function Backdrop({ backdropPath, cover }: { backdropPath: string, cover: string
 
   if (!imageSrc.includes('tmdb')) {
     return (
-      <div>
+      <div className="fixed">
         <Fade triggerOnce>
           <img
             className="w-full h-full object-cover fixed top-0 -z-10"
@@ -159,7 +159,7 @@ function Backdrop({ backdropPath, cover }: { backdropPath: string, cover: string
   const highImage = getOriginalImageTmdb()
 
   return (
-    <div>
+    <div className="fixed">
       <Fade triggerOnce duration={500}>
         <img
           className={`w-full h-full object-cover fixed top-0`}

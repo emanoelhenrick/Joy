@@ -17,6 +17,8 @@ interface WatchingScrollProps {
 export function FavoritesScroll({ favoritesVod, favoritesSeries, setSelectedSeries, setSelectedVod }: WatchingScrollProps) {
   const [favoritesTab, setFavoritesTab] = useState(0)
 
+  const favoritesList = [ ...favoritesVod, ...favoritesSeries ]
+
   const isSeries = favoritesSeries.length > 0
   const isVod = favoritesVod.length > 0
 
@@ -54,29 +56,15 @@ export function FavoritesScroll({ favoritesVod, favoritesSeries, setSelectedSeri
   return ((favoritesVod.length > 0) || (favoritesSeries.length > 0)) && (
     <Fade duration={500} triggerOnce>
       <div>
-      <div className='flex gap-2 items-center mb-3'>
-        <span className={`h-fit text-secondary bg-primary text-sm py-0.5 px-3 w-fit rounded-md transition gap-2`}>
-          Favorites
-        </span>
-        {favoritesSeries!.length > 0 && (
-          <span
-            onClick={() => setFavoritesTab(0)}
-            className={`h-fit ${favoritesTab == 0 ? 'bg-secondary text-primary' : 'text-muted-foreground'} cursor-pointer text-sm py-0.5 px-3 w-fit rounded-md transition gap-2 hover:opacity-80`}>
-            Series
-          </span>
-        )}
-        {favoritesVod!.length > 0 && (
-          <span
-            onClick={() => setFavoritesTab(1)}
-            className={`h-fit ${favoritesTab == 1 ? 'bg-secondary text-primary' : 'text-muted-foreground'} cursor-pointer text-sm py-0.5 px-3 w-fit rounded-md transition gap-2 hover:opacity-80`}>
-            Movies
-          </span>
-        )}
+      <div className='flex gap-2 items-center mb-2'>
+        <h1 className="text-2xl font-bold">Favorites</h1>
       </div>
       <ScrollArea className="w-full rounded-md ">
         <div className="flex w-max space-x-3 pb-5 pr-4 rounded-md">
-          {(favoritesTab == 0 && favoritesSeries) && favoritesSeries!.map(series => renderSeriesItem(series))}
-          {(favoritesTab == 1 && favoritesVod) && favoritesVod!.map(movie => renderVodItem(movie))}
+          {favoritesList && favoritesList.map((m: any) => {
+            if (m.stream_id) return renderVodItem(m as VodProps)
+            return renderSeriesItem(m as SeriesProps)
+          })}
         </div>
         <ScrollBarStyled orientation="horizontal" />
       </ScrollArea>

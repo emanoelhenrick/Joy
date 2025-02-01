@@ -32,28 +32,28 @@ export function InfoSection({ title, releaseDate, genre, description, cast, dire
 
   return (
     <div className="p-16 pb-0 h-fit z-10">
-      <div className="max-w-[500px]  h-fit">
+      <div className="max-w-96 2xl:max-w-[500px] h-fit">
         {logoPath !== undefined ? (
-            <img key={'logo'} className="object-contain max-h-40" src={logoPath} alt="" />
+            <img key={'logo'} className="object-contain max-h-32 2xl:max-h-40" src={logoPath} alt="" />
         ) : <h1 className="text-5xl">{title}</h1>}
       </div>
 
       {((releaseDate && releaseDate != 0) || genre || rating) && (
         <div className="flex items-center gap-4 mt-4 py-1">
-          {releaseDate && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{releaseDate}</span>}
+          {(releaseDate && releaseDate != 0) && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{releaseDate}</span>}
           {genre && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{genre}</span>}
           {rating && <RatingStars rating={rating} />}
         </div>
       )}
 
       <div className="max-w-screen-lg mt-2 flex flex-col gap-2">
-        {description && <span className="text-lg 2xl:text-xl text-primary line-clamp-4 2xl:line-clamp-6">{description}</span>}
+        {description && <span className="text-base 2xl:text-lg text-primary line-clamp-4 2xl:line-clamp-6">{description}</span>}
         <div>
           <p className="text-sm 2xl:text-base truncate max-w-xl text-muted-foreground">{cast}</p>
           <p className="text-sm 2xl:text-base text-muted-foreground">{director && 'Directed by ' + director}</p>
         </div>
       </div>
-      <span className="">Title: {title}</span>
+      <span className="text-sm 2xl:text-base">Title: {title}</span>
     </div>
   )
 }

@@ -7,6 +7,7 @@ import { usePlaylistUrl } from "@/states/usePlaylistUrl";
 import { useUserData } from "@/states/useUserData";
 import { VlcDialog } from "../../VlcDialog";
 import electronApi from "@/config/electronApi";
+import { formatDurationFromSeconds } from "@/utils/formatDuration";
 
 interface SeasonsListProps {
   seasons: string[]
@@ -69,7 +70,7 @@ function SeasonsList({ seasons, currentSeason, setCurrentSeason }: SeasonsListPr
       <ScrollArea className="w-full pb-4">
         <div className="flex gap-6 text-nowrap">
           { seasons && seasons.map(s => (
-              <div key={s} onClick={() => setCurrentSeason(s)} className={`px-2 py-1 hover:opacity-80 cursor-pointer ${currentSeason === s ? 'border-b-4 border-primary' : 'text-muted-foreground'}`}>Season {s}</div>
+              <div key={s} onClick={() => setCurrentSeason(s)} className={`px-2 py-1 hover:opacity-80 text-sm 2xl:text-base cursor-pointer ${currentSeason === s ? 'border-b-4 border-primary' : 'text-muted-foreground'}`}>Season {s}</div>
           ))}
         </div>
         <ScrollBarStyled orientation="horizontal" />
@@ -134,13 +135,16 @@ function EpisodesList({ episodes, seriesId, currentSeason, seriesCover, episodeS
       setEpisodeRunning(ep)
     }
 
+    const duration = formatDurationFromSeconds(ep.info.duration_secs || undefined) 
+
     return (
       <div key={ep.id} onClick={async () => await launchVlc(ep.id, currentTime, ep.container_extension)}>
           <Episode
             cover={seriesCover}
             imageSrc={ep.info.movie_image!}
-            progress={progress} description={ep.info.plot}
-            episodeNumber={index + 1} 
+            progress={progress}
+            episodeNumber={index + 1}
+            duration={duration!}
           />
       </div>
     )

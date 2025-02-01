@@ -60,7 +60,9 @@ export function HomeDashboard() {
             return (s.series_id.toString() == ser.id!.toString()) && watchingList.includes(ser.id!)
           })
           if (series) {
-            watchingSeries.push({ ...s, updatedAt: series.updatedAt })
+            const episode = series.episodes![series.episodes!.length - 1]
+            const progress = episode.currentTime / episode.duration
+            watchingSeries.push({ ...s, updatedAt: series.updatedAt, progress })
           }
         })
       }
@@ -100,7 +102,7 @@ export function HomeDashboard() {
             return (v.stream_id.toString() == vd.id!.toString()) && watchingList.includes(vd.id!)
           })
           if (vod) {
-            watchingVod.push({ ...v, updatedAt: vod.updatedAt })
+            watchingVod.push({ ...v, updatedAt: vod.updatedAt, progress: (vod.currentTime! / vod.duration!) })
           }
         })
       }
@@ -183,7 +185,7 @@ export function HomeDashboard() {
           </Dialog>
         )}
         <div className='mb-6 mt-5'>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-8">
             <Fade duration={500} triggerOnce>
               <Trending
                 slideActive={(!selectedSeries && !selectedVod)}
@@ -207,9 +209,9 @@ export function HomeDashboard() {
             
             <Fade duration={500} triggerOnce>
               <div>
-                <p className={`h-fit text-secondary bg-primary text-sm py-0.5 px-3 w-fit rounded-md transition gap-2 mb-3`}>
-                  Recently updated series
-                </p>
+                <div className='flex gap-2 items-center mb-2'>
+                  <h1 className="text-2xl font-bold">Recently updated series</h1>
+                </div>
                 <ScrollArea className="w-full rounded-md">
                   <div className="flex w-max gap-3 pb-5 pr-4 rounded-md">
                     {seriesByDate!.map(series => renderSeriesItem(series))}
@@ -221,9 +223,9 @@ export function HomeDashboard() {
 
             <Fade duration={500} triggerOnce>
               <div>
-                <p className={`h-fit text-secondary bg-primary text-sm py-0.5 px-4 w-fit rounded-md transition gap-2 mb-3`}>
-                  Recently added movies
-                </p>
+                <div className='flex gap-2 items-center mb-2'>
+                  <h1 className="text-2xl font-bold">Recently updated movies</h1>
+                </div>
                 <ScrollArea className="w-full rounded-md">
                   <div className="flex h-full w-max gap-3 pb-5 pr-4 rounded-md">
                   {vodByDate!.map(movie => renderVodItem(movie))}

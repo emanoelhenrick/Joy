@@ -18,6 +18,7 @@ export interface SeriesProps {
   category_id: string
   cover: string
   updatedAt?: number
+  progress?: number
 }
 
 export interface EpisodeProps {
@@ -28,6 +29,7 @@ export interface EpisodeProps {
   info: {
     movie_image?: string
     plot: string
+    duration_secs: number
   }
 }
 

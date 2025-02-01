@@ -19,6 +19,7 @@ export interface VodProps {
   category_id: string
   stream_icon: string
   updatedAt?: number
+  progress?: number
 }
 
 export interface VodInfoProps {
@@ -35,6 +36,7 @@ export interface VodInfoProps {
     backdrop_path: string[]
     releasedate: string
     tmdb_id?: number
+    duration_secs: number
   },
   movie_data: {
     container_extension: string
