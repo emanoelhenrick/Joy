@@ -10,7 +10,7 @@ export interface MovieMatch extends MovieResult {
 
 export async function fetchTmdbTrending({ apiKey, playlistName }: any): Promise<MovieMatch[]> {
   const moviedb = new MovieDb(apiKey)
-  const res = await moviedb.trending({ media_type: 'movie', time_window: 'week', language: 'pt-BR'})
+  const res = await moviedb.moviePopular({ language: 'pt' })
   const tmdbData = res.results! as MovieResult[]
 
   const vodData = await getLocalVodPlaylist(playlistName)

@@ -254,9 +254,9 @@ function Backdrop({ backdrops, cover }: { backdrops: BackdropType[], cover: stri
         src={highImage}
         className={`w-full h-full object-cover fixed top-0 transition -z-10 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
         />
+      </Fade>
       <div className="inset-0 w-full h-full z-10 fixed scale-105 bg-gradient-to-l from-transparent to-background/80" />
       <div className="inset-0 w-full h-full z-10 fixed scale-105 bg-gradient-to-b from-transparent to-background/50" />
-      </Fade>
     </>
   )
 

@@ -48,8 +48,6 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
     }
   }, [selectedMovie, updateVodStatus])
 
-  
-
   function handleSearchForMatch(mediaType: string, search: string) {
     const type = mediaType === 'movie' ? 'vod' : 'series'
     navigate(`/dashboard/explore?type=${type}&search=${search}`)
@@ -130,7 +128,7 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
                           <FaPlay className="size-3 opacity-90" />
                           <span>Watch</span>
                         </Button>
-                        <Button onClick={() => handleSearchForMatch(info.media_type, info.title!)} variant={"ghost"} className="hover:bg-primary/10">See matches</Button>
+                        <Button onClick={() => handleSearchForMatch('vod', info.title!)} variant={"ghost"} className="hover:bg-primary/10">See matches</Button>
                       </div>
                     </div>
                   </div>
