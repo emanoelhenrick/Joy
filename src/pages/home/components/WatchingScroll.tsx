@@ -14,17 +14,7 @@ interface WatchingScrollProps {
 }
 
 export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries, setSelectedVod }: WatchingScrollProps) {
-  const [watchingTab, setWatchingTab] = useState((watchingSeries.length < 1) && (watchingVod.length > 0) ? 1 : 0)
-
-  const isSeries = watchingSeries.length > 0
-  const isVod = watchingVod.length > 0
-
   const watchingList = [ ...watchingVod, ...watchingSeries ].sort((a, b) => b.updatedAt! - a.updatedAt!)
-
-  useEffect(() => {
-    if (!isSeries && isVod) return setWatchingTab(1)
-    return setWatchingTab(0)
-  }, [isSeries, isVod])
 
   const renderSeriesItem = useCallback((series: SeriesProps) => {
     if (!watchingSeries) return
