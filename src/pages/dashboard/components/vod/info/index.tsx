@@ -2,7 +2,7 @@ import electronApi from "@/config/electronApi"
 import { usePlaylistUrl } from "@/states/usePlaylistUrl"
 import { QueryFilters, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useMemo, useState } from "react"
-import { Fade, Zoom } from "react-awesome-reveal"
+import { Fade, Slide, Zoom } from "react-awesome-reveal"
 import { FaPlay, FaSpinner, FaStar } from "react-icons/fa"
 import { useUserData } from "@/states/useUserData"
 import { Backdrop as BackdropType, MovieDb, } from "moviedb-promise"
@@ -86,6 +86,8 @@ export function VodPage({ streamId, cover }: Props) {
     }
   }, [])
 
+  
+
   const genres: string[] = useMemo(() => {
     if (data) {
       if (data.info.genre) {
@@ -106,38 +108,44 @@ export function VodPage({ streamId, cover }: Props) {
   const releaseDate = data ? data.info.releasedate && format(data?.info.releasedate, 'u') :  undefined
   const description = data ? (data.info.description || data.info.plot).trim() : undefined
   const title = data ? getString(data!.info.title)  || getString(data!.movie_data.name) : undefined
+  const rating = data ? data.info.rating || data.info.rating_kinopoisk : undefined
 
   function duration(seconds: number) {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
   
-    const duration: any = {};
-  
-    if (hours === 0 && minutes === 0) {
-      duration.seconds = remainingSeconds;
-    } else {
-      duration.hours = hours;
-      duration.minutes = minutes;
+    // Construir a string no formato "1h 32m" ou "45s"
+    let result = '';
+    if (hours > 0) {
+      result += `${hours}h `;
+    }
+    if (minutes > 0 || hours > 0) { // Incluir minutos se houver horas ou minutos
+      result += `${minutes}m `;
+    }
+    if (seconds < 60) { // Mostrar segundos apenas se for menos de 1 minuto
+      result += `${remainingSeconds}s`;
     }
   
-    return formatDuration(duration, { delimiter: ' and '});
+    // Remover espaço extra no final, se houver
+    return result.trim();
   }
 
   return (
     <div className="w-full h-screen flex flex-col justify-end">
       
+      
       {isFetching ? (
         <Fade>
           <div className="w-full h-full fixed flex items-center justify-center top-0 z-20">
-            <ImSpinner8 className="size-8 animate-spin text-muted-foreground" />
+            <ImSpinner8 className="size-10 animate-spin text-muted-foreground" />
           </div>
         </Fade>
       ) : (
-        <Backdrop
-          backdrops={data && data.tmdbImages ? data.tmdbImages.backdrops! : []}
-          cover={cover}
-        />
+          <Backdrop
+            backdrops={data && data.tmdbImages ? data.tmdbImages.backdrops! : []}
+            cover={cover}
+          />
       )}
 
       <Fade className="z-10">
@@ -151,14 +159,19 @@ export function VodPage({ streamId, cover }: Props) {
               logos={data && data.tmdbImages ? data.tmdbImages.logos! : []}
               releaseDate={releaseDate!}
               title={title!}
+              rating={rating!}
             />
             
             <div className="mt-2 flex flex-col gap-4 z-10">
               <div className="flex justify-between items-center">
                   <div className="flex gap-2 items-center">
-                    <Button key='vlc' disabled={isFetching} onClick={launchVlc} size={"lg"} className="bg-primary transition-none">
+                    <Button key='vlc' disabled={isFetching} onClick={launchVlc} size={"lg"} className="bg-primary transition-none relative overflow-hidden">
                     {userVodData && userVodData.currentTime ?
+                    <div>
                       <span className="leading-none text-base">{`Resume from ${duration(userVodData.currentTime)}`}</span>
+                      <div className="h-1 w-full absolute left-0 right-0 bottom-0">
+                      </div>
+                    </div>
                       : (
                         <div className="flex gap-2">
                           <FaPlay />
@@ -171,6 +184,7 @@ export function VodPage({ streamId, cover }: Props) {
                     <span className="leading-none text-base">
                       {userVodData?.favorite ? 'Remove from favorites' : 'Add to favorites'}
                     </span>
+                    
                   </Button>
                 </div>
 
@@ -193,13 +207,15 @@ export function VodPage({ streamId, cover }: Props) {
 }
 
 function Backdrop({ backdrops, cover }: { backdrops: BackdropType[], cover: string }) {
-  const imageSrc = backdrops.length === 0 ? cover
-      : `https://image.tmdb.org/t/p/original${backdrops[0].file_path}`
+  let images = (backdrops && backdrops.length > 0) && backdrops.filter(b => !b.iso_639_1)
+  if (!images) images = backdrops
+  const imageSrc = images && images.length === 0 ? cover
+      : `https://image.tmdb.org/t/p/original${images[0].file_path}`
 
   if (!imageSrc.includes('tmdb')) {
     return (
       <div>
-        <Fade>
+        <Fade triggerOnce>
           <img
             className="w-full h-full object-cover fixed top-0 -z-10"
             src={imageSrc}
@@ -213,7 +229,7 @@ function Backdrop({ backdrops, cover }: { backdrops: BackdropType[], cover: stri
 
   function getLowImageTmdb() {
     const stringList = imageSrc.split('/')
-    return `https://image.tmdb.org/t/p/w780/${stringList[stringList.length - 1]}`
+    return `https://image.tmdb.org/t/p/w1280/${stringList[stringList.length - 1]}`
   }
 
   function getOriginalImageTmdb() {
@@ -228,7 +244,7 @@ function Backdrop({ backdrops, cover }: { backdrops: BackdropType[], cover: stri
 
   return (
     <>
-      <Fade>
+      <Fade duration={500} triggerOnce>
         <img
           className={`w-full h-full object-cover fixed top-0 -z-20`}
           src={lowImage}
@@ -238,9 +254,9 @@ function Backdrop({ backdrops, cover }: { backdrops: BackdropType[], cover: stri
         src={highImage}
         className={`w-full h-full object-cover fixed top-0 transition -z-10 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
         />
-      </Fade>
       <div className="inset-0 w-full h-full z-10 fixed scale-105 bg-gradient-to-l from-transparent to-background/80" />
       <div className="inset-0 w-full h-full z-10 fixed scale-105 bg-gradient-to-b from-transparent to-background/50" />
+      </Fade>
     </>
   )
 

@@ -1,3 +1,4 @@
+import { RatingStars } from "@/components/RatingStars"
 import { Skeleton } from "@/components/ui/skeleton"
 import { TitleLogo } from "moviedb-promise"
 
@@ -9,14 +10,15 @@ interface Props {
   cast: string
   director: string
   logos: TitleLogo[]
+  rating: number
 }
 
-export function InfoSection({ title, releaseDate, cast, description, director, genre, logos }: Props) {
+export function InfoSection({ title, releaseDate, cast, description, director, genre, logos, rating }: Props) {
 
   function getRightLogo(logos: TitleLogo[]) {
     if (!logos) return
     if (logos.length === 0) return
-    const filteredByIso = logos.filter(l => l.iso_639_1 === 'pt-BR' || l.iso_639_1 === 'en')
+    const filteredByIso = logos.filter(l => l.iso_639_1 === 'en')
     if (filteredByIso.length === 0) return `https://image.tmdb.org/t/p/w500${logos[0].file_path}`
     const filteredByAspectRatio = filteredByIso.filter(l => l.aspect_ratio! > 1.5 )
     if (filteredByAspectRatio.length === 0) return `https://image.tmdb.org/t/p/w500${filteredByIso[0].file_path}`
@@ -33,10 +35,11 @@ export function InfoSection({ title, releaseDate, cast, description, director, g
           ) : <h1 className="text-5xl">{title || <Skeleton className="h-16" />}</h1>}
         </div>
 
-        {(releaseDate || genre) && (
-          <div className="flex items-center gap-4 mt-4">
-            {releaseDate && <span className="text-base 2xl:text-lg text-muted-foreground">{releaseDate}</span>}
-            {genre && <span className="text-base 2xl:text-lg text-muted-foreground">{genre}</span>}
+        {(releaseDate || genre || rating) && (
+          <div className="flex items-center gap-4 mt-4 py-1">
+            {releaseDate && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{releaseDate}</span>}
+            {genre && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{genre}</span>}
+            {rating && <RatingStars rating={rating} />}
           </div>
         )}
       

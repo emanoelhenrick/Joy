@@ -1,3 +1,5 @@
+import { TvImagesResponse } from "moviedb-promise"
+
 export interface SeriesPlaylistProps {
   playlist: SeriesProps[] 
   categories: CategoriesProps[]
@@ -38,10 +40,14 @@ export interface SerieInfoProps {
     genre: string
     backdrop_path: string[]
     releaseDate: string
+    rating: number
+    rating_5based: number
+    year: number
   }
   episodes: {
     [key: string]: EpisodeProps[]
-  }
+  },
+  tmdbImages: TvImagesResponse
 }
 
 export interface CategoriesProps {

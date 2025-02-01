@@ -1,24 +1,50 @@
-import { format } from "date-fns"
+import { RatingStars } from "@/components/RatingStars"
+import { TitleLogo } from "moviedb-promise"
 
 interface Props {
   title: string
-  releaseDate: string
+  releaseDate: number
   genre: string
   description: string
   cast: string
   director: string
+  rating: number
+  logos: TitleLogo[]
 }
 
-export function InfoSection({ title, releaseDate, genre, description, cast, director }: Props) {
+export function InfoSection({ title, releaseDate, genre, description, cast, director, rating, logos }: Props) {
+
+  function getRightLogo(logos: TitleLogo[]) {
+    if (!logos) return
+    if (logos.length === 0) return
+    const filteredByAspectRatio = logos.filter(l => l.aspect_ratio! > 1.3 && l.aspect_ratio! < 8)
+    if (filteredByAspectRatio.length > 0) {
+      const filteredByIso = filteredByAspectRatio.filter(l => l.iso_639_1 === 'en')
+      if (filteredByIso.length === 0) return `https://image.tmdb.org/t/p/w500${logos[0].file_path}`
+      return `https://image.tmdb.org/t/p/w500${filteredByIso[0].file_path}`
+    }
+    const filteredByIso = logos.filter(l => l.iso_639_1 === 'en')
+    if (filteredByIso.length === 0) return `https://image.tmdb.org/t/p/w500${logos[0].file_path}`
+    return `https://image.tmdb.org/t/p/w500${filteredByIso[0].file_path}`
+  }
+
+  const logoPath = getRightLogo(logos)
 
   return (
     <div className="p-16 pb-0 h-fit z-10">
-      <h1 className="text-5xl font-semibold line-clamp-1 max-w-screen-xl">{title}</h1>
-
-      <div className="flex items-center gap-4 mt-2">
-        { releaseDate && <span className="text-base 2xl:text-lg text-muted-foreground">{format(releaseDate, 'u')}</span>}
-        {genre && <span className="text-base 2xl:text-lg text-muted-foreground">{genre}</span>}
+      <div className="max-w-[500px]  h-fit">
+        {logoPath !== undefined ? (
+            <img key={'logo'} className="object-contain max-h-40" src={logoPath} alt="" />
+        ) : <h1 className="text-5xl">{title}</h1>}
       </div>
+
+      {((releaseDate && releaseDate != 0) || genre || rating) && (
+        <div className="flex items-center gap-4 mt-4 py-1">
+          {releaseDate && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{releaseDate}</span>}
+          {genre && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{genre}</span>}
+          {rating && <RatingStars rating={rating} />}
+        </div>
+      )}
 
       <div className="max-w-screen-lg mt-2 flex flex-col gap-2">
         {description && <span className="text-lg 2xl:text-xl text-primary line-clamp-4 2xl:line-clamp-6">{description}</span>}
@@ -27,6 +53,7 @@ export function InfoSection({ title, releaseDate, genre, description, cast, dire
           <p className="text-sm 2xl:text-base text-muted-foreground">{director && 'Directed by ' + director}</p>
         </div>
       </div>
+      <span className="">Title: {title}</span>
     </div>
   )
 }

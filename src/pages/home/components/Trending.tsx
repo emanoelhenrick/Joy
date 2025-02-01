@@ -139,7 +139,7 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
             </div>
           </div>
 
-          <div className="z-10 w-full h-full absolute flex items-center justify-start">
+          <div className="z-10 w-full h-full absolute flex items-end justify-start">
             <div className="inset-0 w-full h-full bg-gradient-to-l from-transparent to-background/95" />
           </div>
           <img className="absolute h-full w-full object-cover" src={`https://image.tmdb.org/t/p/original${info.backdrop_path}`} />

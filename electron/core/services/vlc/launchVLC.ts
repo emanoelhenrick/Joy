@@ -15,6 +15,8 @@ export function launchVLC({ path, startTime }: LaunchVlcProps, win: BrowserWindo
     '--http-password joyplayer',
     '--fullscreen',
     `--start-time=${startTime}`,
+    '--no-snapshot-preview',
+    '--no-osd',
     path
   ], { shell: true });
   vlc.setMaxListeners(2)

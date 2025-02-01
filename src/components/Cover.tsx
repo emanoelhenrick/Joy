@@ -21,7 +21,7 @@ export function Cover({ src, title }: { src: string, title: string }) {
             width={150}
             height={300}
             src={imagePath}
-            onError={() => setImg(true)}
+            onError={() => setImg(false)}
             className={`w-full h-full object-cover`}
           />
         ) : (

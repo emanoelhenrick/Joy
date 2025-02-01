@@ -29,6 +29,8 @@ export interface VodInfoProps {
     cast: string
     plot: string
     genre: string
+    rating?: number
+    rating_kinopoisk?: number
     description: string
     backdrop_path: string[]
     releasedate: string

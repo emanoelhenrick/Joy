@@ -4,10 +4,11 @@ import { useCallback, useEffect, useState } from "react";
 import { Cover } from "@/components/Cover";
 import { Dialog, DialogContent, DialogTitle } from "../../../../components/MediaInfoDialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { Fade } from "react-awesome-reveal";
+import { Fade, Slide } from "react-awesome-reveal";
 import { FaStar } from "react-icons/fa";
 import { useMeasure } from "@uidotdev/usehooks";
 import { VodPage } from "./info";
+import { AnimatePresence, motion } from 'framer-motion'
 
 export default function VodPlaylistScroll({ data }: any) {
   const [ref, { width }] = useMeasure();
@@ -49,21 +50,21 @@ export default function VodPlaylistScroll({ data }: any) {
 
   return (
     <div className="h-fit rounded-xl">
-      {selectedMovie && (
-        <Dialog open={selectedMovie && true}>
-          <DialogContent className="w-screen h-screen items-center justify-center" aria-describedby={undefined}>
-            <div
-              onClick={() => setSelectedMovie(undefined)}
-              className="cursor-pointer absolute right-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
-              <Cross2Icon className="size-8 p-1 rounded-md bg-background/30 backdrop-blur-lg" />
-            </div>
-            <DialogTitle className="hidden" />
-            <div className="w-screen">
-              <VodPage streamId={selectedMovie!.stream_id.toString()} cover={selectedMovie!.stream_icon} />
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
+      {/* {selectedMovie && ( */}
+          <Dialog open={selectedMovie && true}>
+            <DialogContent className="w-screen h-screen items-center justify-center" aria-describedby={undefined}>
+              <div
+                onClick={() => setSelectedMovie(undefined)}
+                className="cursor-pointer absolute right-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
+                <Cross2Icon className="size-8 p-1 rounded-md bg-background/30 backdrop-blur-lg" />
+              </div>
+              <DialogTitle className="hidden" />
+              <div className="w-screen">
+                <VodPage streamId={selectedMovie! && selectedMovie!.stream_id.toString()} cover={selectedMovie! ? selectedMovie!.stream_icon : ''} />
+              </div>
+            </DialogContent>
+          </Dialog>
+      {/* )} */}
       <div className={`w-full flex`}>
         <div
           ref={ref}

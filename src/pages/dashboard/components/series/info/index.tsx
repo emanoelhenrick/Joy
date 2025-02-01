@@ -11,15 +11,37 @@ import { Fade } from "react-awesome-reveal";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { ImSpinner8 } from "react-icons/im";
 import { useUserData } from "@/states/useUserData";
+import { MovieDb } from "moviedb-promise";
+import { format } from "date-fns";
 
 export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: string }) {
   const queryClient = useQueryClient();
+  const moviedb = new MovieDb(import.meta.env.VITE_TMDB_API_KEY)
 
   const { urls } = usePlaylistUrl()
-  const { data, isFetching } = useQuery({ queryKey: [`seriesInfo`], queryFn: async () => await electronApi.getSerieInfo(urls.getSeriesInfoUrl + seriesId) })
+  const { data, isFetching } = useQuery({ queryKey: [`seriesInfo`], queryFn: fetchSeriesData})
   const updateFavorite = useUserData(state => state.updateFavorite)
   const userSeriesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))
   const [_refresh, setRefresh] = useState(false)
+
+  async function fetchSeriesData() {
+    const seriesInfo = await electronApi.getSerieInfo(urls.getSeriesInfoUrl + seriesId)
+    if (!seriesInfo) return
+    if (!seriesInfo.info) return
+
+    const title = seriesInfo.info.name.replace(/\[\d+\]|\(\d+\)/g, '').split('-')
+    const releaseDate = seriesInfo ? (seriesInfo.info.releaseDate && parseInt(format(seriesInfo.info.releaseDate, 'u'))) || seriesInfo.info.year : undefined
+    if (!releaseDate) return seriesInfo
+
+    const res = await moviedb.searchTv({ query: title[0], first_air_date_year: releaseDate })
+    if (!res.results) return seriesInfo
+    if (res.results && res.results.length === 0) return seriesInfo
+    
+    seriesInfo.info.backdrop_path = [`https://image.tmdb.org/t/p/w1280/${res.results[0].backdrop_path}`] 
+    const tmdbId = res.results[0].id
+    const images = await moviedb.tvImages({ id: tmdbId! })
+    return { ...seriesInfo, tmdbImages: images }
+  } 
 
   function refresh() {
     setRefresh(prev => !prev)
@@ -35,16 +57,17 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
       queryClient.removeQueries({ queryKey: ['seriesInfo'], exact: true } as QueryFilters)
     }
   }, [])
-
+  
   const backdropPath = getRightBackdrop(data ? data.info.backdrop_path : [])
 
   const description = data ? data.info.plot : undefined
   const title = data ? data.info.name.replace(/\[\d+\]|\(\d+\)/g, '') : undefined
-  const releaseDate = data ? data.info.releaseDate : undefined
-  const cast = data ? data.info.cast : undefined
-  const director = data ? data.info.director : undefined
+  const releaseDate = data ? (data.info.releaseDate && parseInt(format(data.info.releaseDate, 'u'))) || data.info.year : undefined
+  const cast = data ? (data.info.cast && data.info.cast.trim()) : undefined
+  const director = data ? (data.info.director && data.info.director.trim()) : undefined
 
   const genres = data ? data.info.genre.replaceAll(/^\s+|\s+$/g, "").split(/[^\w\sÀ-ÿ-]/g) : ['']
+  const rating = data ? data.info.rating || (data.info.rating_5based && data.info.rating_5based * 2) : undefined
 
   return (
     <div className="w-full h-screen flex flex-col justify-end">
@@ -70,6 +93,8 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
             description={description!}
             cast={cast!}
             director={director!}
+            rating={rating!}
+            logos={data && data.tmdbImages ? data.tmdbImages.logos! : []}
           />
 
           <div className="px-16 justify-between items-end flex gap-2 mt-4 w-full mb-6 z-10">
@@ -107,7 +132,7 @@ function Backdrop({ backdropPath, cover }: { backdropPath: string, cover: string
   if (!imageSrc.includes('tmdb')) {
     return (
       <div>
-        <Fade>
+        <Fade triggerOnce>
           <img
             className="w-full h-full object-cover fixed top-0 -z-10"
             src={imageSrc}
@@ -134,8 +159,8 @@ function Backdrop({ backdropPath, cover }: { backdropPath: string, cover: string
   const highImage = getOriginalImageTmdb()
 
   return (
-    <>
-      <Fade>
+    <div>
+      <Fade triggerOnce duration={500}>
         <img
           className={`w-full h-full object-cover fixed top-0`}
           src={lowImage}
@@ -143,11 +168,11 @@ function Backdrop({ backdropPath, cover }: { backdropPath: string, cover: string
         <LazyLoadImage
           onLoad={() => setImageLoaded(true)}
           src={highImage}
-          className={`w-full h-full object-cover scale-105 fixed transition top-0 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+          className={`w-full h-full object-cover fixed transition top-0 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
         />
       </Fade>
       <div className="inset-0 w-full h-full fixed scale-105 bg-gradient-to-l from-transparent to-background/95" />
-    </>
+    </div>
   )
 }
 

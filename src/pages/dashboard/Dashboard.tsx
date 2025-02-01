@@ -71,6 +71,9 @@ export function Dashboard() {
     
   }, [search, currentCategory, data, tab])
 
+  
+  
+
   const pages = useMemo(() => {
     if (!filtered) return 0
     return Math.ceil(filtered!.length / itemsPerPage)
@@ -79,7 +82,7 @@ export function Dashboard() {
   const playlist = useMemo(() => {
     return paginate(page, itemsPerPage)
   }, [search, currentCategory, page, data, tab, width, filtered])
-
+  
   function paginate(page: number, elements: number) {
     if (!filtered) return []
     const startIndex = (page - 1) * elements
