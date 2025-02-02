@@ -22,6 +22,7 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   // You can expose other APTs you need here.
   // ...
   getMetadata: () => ipcRenderer.invoke('get-metadata'),
+  updateFirstTime: () => ipcRenderer.invoke('update-first-time'),
 
   updateVod: async (args: any) => await ipcRenderer.invoke('update-vod', args),
   updateSeries: async (args: any) => await ipcRenderer.invoke('update-series', args),

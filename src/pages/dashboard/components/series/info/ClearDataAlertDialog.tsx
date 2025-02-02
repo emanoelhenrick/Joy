@@ -9,7 +9,7 @@ export function ClearDataAlertDialog({ seriesId, refresh }: { seriesId: string, 
 
   return (
     <AlertDialog onOpenChange={refresh}>
-      <AlertDialogTrigger>
+      <AlertDialogTrigger className="outline-none ring-none border-none">
         <div className="text-primary/60 text-right hover:text-primary cursor-pointer transition mt-2">Clear data</div>
       </AlertDialogTrigger>
       <AlertDialogContent className="border-none bg-primary-foreground">

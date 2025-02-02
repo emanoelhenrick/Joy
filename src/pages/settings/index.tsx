@@ -10,6 +10,7 @@ import { PlaylistInfo } from "electron/core/models/PlaylistInfo";
 import { RotateCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { NewPLaylistDialog } from "./NewPlaylistDialog";
 
 export function SettingsPage({ currentPlaylist, setUpdatingMenu, setUpdatingError }: { currentPlaylist: string, setUpdatingMenu: (bool: boolean) => void, setUpdatingError: (b: boolean) => void }) {
   const navigate = useNavigate()
@@ -103,22 +104,16 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu, setUpdatingErro
             <RotateCw size={15} className={`text-muted-foreground ${updating && 'animate-spin'}`} />
           </div>
           <Select value={selectedPlaylist} onValueChange={(value) => setSelectedPlaylist(value)}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[180px] hover:bg-secondary">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {playlists && playlists.map(p => <SelectItem key={p.url} value={p.name}>{p.name}</SelectItem>)}
+              {playlists && playlists.map(p => <SelectItem className="hover:bg-secondary cursor-pointer" key={p.url} value={p.name}>{p.name}</SelectItem>)}
             </SelectContent>
           </Select>
         </div>
       </div>
-
-      <h3
-        onClick={() => navigate('/initial')}
-        className="scroll-m-20 w-fit text-muted-foreground tracking-tight cursor-pointer hover:text-primary transition"
-        >
-          New playlist
-      </h3>
+      <NewPLaylistDialog />
 
       <AlertDialog>
         <AlertDialogTrigger className="w-fit">

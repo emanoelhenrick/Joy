@@ -17,10 +17,10 @@ export function Episode({ imageSrc, cover, progress, episodeNumber, duration }: 
   return (
     <div className="w-72 2xl:w-80 cursor-pointer group relative">
       <Fade duration={500} className="z-10">
-        <div className="relative shadow-lg group-hover:opacity-80 flex items-center aspect-video justify-center overflow-hidden rounded-lg">
+        <div className="relative shadow-lg group-hover:opacity-90 transition ease-out flex items-center aspect-video justify-center overflow-hidden rounded-lg">
           {
-            imageSrc ? <LazyLoadImage src={imageSrc} className="w-full object-cover opacity-70" />
-            : <LazyLoadImage src={cover} className="object-cover w-full h-full opacity-70" />
+            imageSrc ? <LazyLoadImage src={imageSrc} className="w-full group-hover:scale-105 transition ease-out object-cover opacity-70" />
+            : <LazyLoadImage src={cover} className="object-cover w-full h-full group-hover:scale-105 transition ease-out opacity-70" />
           }
           <FaPlay className="absolute  size-8" />
           

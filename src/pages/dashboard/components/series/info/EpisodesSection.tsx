@@ -1,6 +1,6 @@
 import { ScrollBarStyled } from "@/components/ScrollBarStyled";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { EpisodeProps, SerieInfoProps, UserEpisodeProps, UserSeriesDataProps } from "electron/core/models/SeriesModels";
+import { EpisodeProps, SerieInfoProps } from "electron/core/models/SeriesModels";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Episode } from "./Episode";
 import { usePlaylistUrl } from "@/states/usePlaylistUrl";
@@ -27,9 +27,10 @@ interface EpisodesSection {
   seriesId: string
   seriesCover: string
   data: SerieInfoProps
+  setBlur: (v: boolean) => void
 }
 
-export function EpisodesSection({ seriesId, seriesCover, data }: EpisodesSection) {
+export function EpisodesSection({ seriesId, seriesCover, data, setBlur }: EpisodesSection) {
   const { urls } = usePlaylistUrl()
   const userSeriesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))
 
@@ -47,7 +48,7 @@ export function EpisodesSection({ seriesId, seriesCover, data }: EpisodesSection
   }, [data, currentSeason])
 
   return (
-    <section className="mx-8 mb-8 space-y-3 bg-background p-6 rounded-3xl z-10">
+    <section onMouseEnter={() => setBlur(true)} onMouseLeave={() => setBlur(false)} className="mx-8 mb-8 space-y-1 bg-background p-5 pb-4 2xl:p-6 2xl:pb-4 rounded-3xl">
       <SeasonsList
         currentSeason={currentSeason}
         seasons={seasonsList}
@@ -65,12 +66,13 @@ export function EpisodesSection({ seriesId, seriesCover, data }: EpisodesSection
 }
 
 function SeasonsList({ seasons, currentSeason, setCurrentSeason }: SeasonsListProps) {
+
   return (
     <div>
       <ScrollArea className="w-full pb-4">
         <div className="flex gap-6 text-nowrap">
           { seasons && seasons.map(s => (
-              <div key={s} onClick={() => setCurrentSeason(s)} className={`px-2 py-1 hover:opacity-80 text-sm 2xl:text-base cursor-pointer ${currentSeason === s ? 'border-b-4 border-primary' : 'text-muted-foreground'}`}>Season {s}</div>
+              <div key={s} onClick={() => setCurrentSeason(s)} className={`px-2 py-1 hover:opacity-80 border-b-2 transition ease-in-out text-sm 2xl:text-base cursor-pointer ${currentSeason === s ? 'border-b-2 border-primary' : 'text-muted-foreground border-transparent'}`}>Season {s}</div>
           ))}
         </div>
         <ScrollBarStyled orientation="horizontal" />
@@ -152,7 +154,7 @@ function EpisodesList({ episodes, seriesId, currentSeason, seriesCover, episodeS
 
   return (
     <ScrollArea className="w-full whitespace-nowrap rounded-lg">
-      <div className="flex w-max space-x-6 pb-4 whitespace-nowrap rounded-md">
+      <div className="flex w-max space-x-4 2xl:space-x-6 pb-4 whitespace-nowrap rounded-md">
         {episodes && episodes.map((ep, index) => renderItem(ep, seriesCover, index))}
       </div>
       <ScrollBarStyled orientation="horizontal" />

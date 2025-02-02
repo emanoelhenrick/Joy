@@ -128,7 +128,7 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
                           <FaPlay className="size-3 opacity-90" />
                           <span>Watch</span>
                         </Button>
-                        <Button onClick={() => handleSearchForMatch('vod', info.title!)} variant={"ghost"} className="hover:bg-primary/10">See matches</Button>
+                        <Button onClick={() => handleSearchForMatch('movie', info.title!)} variant={"ghost"} className="hover:bg-primary/10">See matches</Button>
                       </div>
                     </div>
                   </div>

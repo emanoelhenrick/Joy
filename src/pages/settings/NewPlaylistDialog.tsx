@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { useEffect, useState } from "react"
-import { ReloadIcon } from "@radix-ui/react-icons"
+import { Cross2Icon, ReloadIcon } from "@radix-ui/react-icons"
 import { useNavigate } from "react-router-dom"
 import { useToast } from "@/hooks/use-toast"
 import { Progress } from "@/components/ui/progress"
@@ -14,11 +14,11 @@ import electronApi from "@/config/electronApi"
 import { PlaylistInfo } from "electron/core/models/PlaylistInfo"
 import { makeUrls, PlaylistUrls, usePlaylistUrl } from "@/states/usePlaylistUrl"
 import { useQueryClient } from "@tanstack/react-query"
-import { Fade } from "react-awesome-reveal"
 import { useUserData } from "@/states/useUserData"
 import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from "@/states/usePlaylistData"
-import { useTrending } from "@/states/useTrending"
- 
+import { Dialog, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { DialogContent } from "@/components/menubar/dialog"
+
 const formSchema = z.object({
   name: z.string().min(1),
   username: z.string().min(1),
@@ -31,7 +31,9 @@ interface ProgressProps {
   value: number
 }
 
-export function Initial() {
+
+export function NewPLaylistDialog() {
+
   const navigate = useNavigate();
   const queryClient = useQueryClient()
   const { updateUrls } = usePlaylistUrl()
@@ -47,7 +49,6 @@ export function Initial() {
   const updateVodPlaylistState = useVodPlaylist(state => state.update)
   const updateSeriesPlaylistState = useSeriesPlaylist(state => state.update)
   const updateLivePlaylistState = useLivePlaylist(state => state.update)
-  const updateMatches = useTrending(state => state.updateMatches)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema)
@@ -80,12 +81,6 @@ export function Initial() {
     updateLivePlaylistState(liveData)
     resetUserData()
 
-    const filteredTrending = await electronApi.fetchTmdbTrending({
-      apiKey: import.meta.env.VITE_TMDB_API_KEY,
-      playlistName: formValue!.name
-    })
-    updateMatches(filteredTrending!)
-
     setProgress({ msg: 'Finished.', value: 100})
     setIsSuccess(true)
   }
@@ -107,35 +102,37 @@ export function Initial() {
       title: 'Playlist cannot be added.',
       description: 'Check if the data is correct and try again.'
     })
-}
-
+  }
   
   useEffect(() => {
     if (submitted) validate()
   }, [submitted])
-  
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden'
     if (isSuccess) {
       queryClient.removeQueries()
       setSubmitted(false)
-      document.body.style.overflow = 'auto';
       navigate(`/dashboard/home/${formValue!.name}`)
     }
     
   }, [isSuccess])
 
+
   return (
-    <div className="w-full h-screen flex justify-center items-center">
-      <img className="fixed w-full h-full object-cover blur-3xl opacity-30" src="https://images.unsplash.com/photo-1606054512716-fb198b6686c9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDN8fGFic3RyYWN0fGVufDB8MHwwfHx8Mg%3D%3D" alt="" />
-      <Fade direction="up" duration={500}>
-      <div className="flex items-center justify-center p-8 rounded-lg w-fit bg-primary-foreground/60 backdrop-blur-3xl">
-        <div className="mx-auto grid w-[350px] gap-6">
-          <div className="grid gap-2 text-center">
-            <h1 className="text-3xl font-bold">Add a playlist</h1>
-          </div>
-          <Form {...form}>
+    <Dialog open={isSuccess && submitted ? true : undefined}>
+      <DialogTrigger asChild>
+        <h3 className="scroll-m-20 w-fit text-muted-foreground tracking-tight cursor-pointer hover:text-primary transition">
+          New playlist
+        </h3>
+      </DialogTrigger>
+      <DialogContent className="w-fit bg-primary-foreground/50 border-none" aria-describedby={undefined}>
+        <DialogTitle className="hidden" />
+        <div className="flex items-center justify-center rounded-lg w-fit">
+          <div className="mx-auto grid w-[350px] gap-6">
+            <div className="grid gap-2 text-center">
+              <h1 className="text-3xl font-bold">Add a playlist</h1>
+            </div>
+            <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="grid gap-4">
                 <div className="grid gap-2">
@@ -206,15 +203,9 @@ export function Initial() {
               </div>
             </form>
           </Form>
+          </div>
         </div>
-        
-      </div>
-      <div className="hidden bg-muted lg:block">
-        <div className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"/>
-      </div>
-      </Fade>
-
-      <h1 className="fixed bottom-8 text-xl">JOY Client</h1>
-    </div>
+      </DialogContent>
+    </Dialog>
   )
 }

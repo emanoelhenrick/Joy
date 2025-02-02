@@ -16,6 +16,7 @@ import { SelectProfile } from "../select-profile/SelectProfile";
 import { useUserData } from "@/states/useUserData";
 import { PiHouseFill, PiMonitorFill, PiBroadcastFill, PiGearSixFill } from "react-icons/pi";
 import { useMeasure } from "@uidotdev/usehooks";
+import { OnboardingWelcome } from "../OnboardingWelcome";
 
 interface ProfilesProps {
   current: string
@@ -156,7 +157,7 @@ export function MenuBar() {
                 </span>
               </div>
             </DialogTrigger>
-            <DialogContent ref={ref} onKeyDown={key => key.key == 'Escape' && setProfileDialog(false)} className="w-fit items-center focus:outline-none outline-none" aria-describedby={undefined}>
+            <DialogContent ref={ref} onKeyDown={key => key.key == 'Escape' && setProfileDialog(false)} className="w-fit items-center focus:outline-none outline-none border-none bg-primary-foreground" aria-describedby={undefined}>
               <DialogTitle className="text-center text-muted-foreground">Select profile</DialogTitle>
               <SelectProfile
                 changeProfile={changeProfile}
@@ -197,6 +198,7 @@ export function MenuBar() {
               {playlistName && <SettingsPage currentPlaylist={playlistName} setUpdatingMenu={setUpdating} setUpdatingError={setUpdatingError} />}
             </DialogContent>
           </Dialog>
+
         </Fade>
       </div>
     </div>

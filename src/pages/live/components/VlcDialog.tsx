@@ -4,16 +4,13 @@ import { useEffect, useState } from "react"
 import { SiVlcmediaplayer } from "react-icons/si"
 import { useToast } from "@/hooks/use-toast"
 import { QueryFilters, useQuery, useQueryClient } from "@tanstack/react-query"
-import { VlcState } from "electron/core/services/vlc/getVLCState"
-import { ImSpinner8 } from "react-icons/im"
 
 interface VlcDialogProps {
   open: boolean
   closeDialog: () => void
-  updateUserStatus: (state: VlcState) => void
 }
 
-export function VlcDialog({ open, closeDialog, updateUserStatus }: VlcDialogProps) {
+export function VlcDialog({ open, closeDialog }: VlcDialogProps) {
   const queryClient = useQueryClient()
   const { toast } = useToast()
   const [isRunning, setIsRunning] = useState(false)
@@ -21,17 +18,14 @@ export function VlcDialog({ open, closeDialog, updateUserStatus }: VlcDialogProp
   const { data } = useQuery({
     queryKey: [`vlcState`],
     queryFn: async () => await electronApi.getVLCState(),
-    refetchInterval: 1000,
+    refetchInterval: 2000,
     retry: false,
     refetchIntervalInBackground: true,
     enabled: open
   })
 
   useEffect(() => {
-    if (data && data.length > 0) {
-      setIsRunning(true)
-      updateUserStatus(data)
-    }
+    if (data && data.length > 0) setIsRunning(true)
   }, [data])
 
   useEffect(() => {
@@ -57,11 +51,10 @@ export function VlcDialog({ open, closeDialog, updateUserStatus }: VlcDialogProp
     <Dialog key='vlc-dialog' open={open}>
       <DialogTrigger asChild>
       </DialogTrigger>
-      <DialogContent className="w-fit h-screen items-center justify-center bg-transparent border-none shadow-none z-50" aria-describedby={undefined}>
+      <DialogContent className="w-fit items-center justify-center bg-transparent border-none shadow-none z-50" aria-describedby={undefined}>
         <DialogTitle className="hidden" />
-        <div className="flex h-full flex-col justify-center items-center gap-4 relative">
-          {!isRunning && <ImSpinner8 className="size-8 animate-spin text-muted-foreground fixed bottom-16" />}
-          <SiVlcmediaplayer className={`size-16 transition-colors ${isRunning && 'text-orange-400'}`} />
+        <div className="flex flex-col justify-center items-center gap-4">
+          <SiVlcmediaplayer className={`size-16 transition-colors ${isRunning ? 'text-orange-400' : 'animate-pulse'}`} />
         </div>
       </DialogContent>
     </Dialog>

@@ -50,21 +50,19 @@ export default function VodPlaylistScroll({ data }: any) {
 
   return (
     <div className="h-fit rounded-xl">
-      {/* {selectedMovie && ( */}
-          <Dialog open={selectedMovie && true}>
-            <DialogContent className="w-screen h-screen items-center justify-center" aria-describedby={undefined}>
-              <div
-                onClick={() => setSelectedMovie(undefined)}
-                className="cursor-pointer absolute right-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
-                <Cross2Icon className="size-8 p-1 rounded-md bg-background/30 backdrop-blur-lg" />
-              </div>
-              <DialogTitle className="hidden" />
-              <div className="w-screen">
-                <VodPage streamId={selectedMovie! && selectedMovie!.stream_id.toString()} cover={selectedMovie! ? selectedMovie!.stream_icon : ''} />
-              </div>
-            </DialogContent>
-          </Dialog>
-      {/* )} */}
+      <Dialog open={selectedMovie && true}>
+        <DialogContent className="w-screen h-screen items-center justify-center" aria-describedby={undefined}>
+          <div
+            onClick={() => setSelectedMovie(undefined)}
+            className="cursor-pointer absolute right-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
+            <Cross2Icon className="size-8 p-1 rounded-md bg-background/50" />
+          </div>
+          <DialogTitle className="hidden" />
+          <div className="w-screen">
+            <VodPage streamId={selectedMovie! && selectedMovie!.stream_id.toString()} cover={selectedMovie! ? selectedMovie!.stream_icon : ''} />
+          </div>
+        </DialogContent>
+      </Dialog>
       <div className={`w-full flex`}>
         <div
           ref={ref}

@@ -98,41 +98,41 @@ export function SelectProfile({ changeProfile, data, setIsCreating, isCreating, 
         <Plus size={42} className="text-muted-foreground transition" />
       </div>
       <AlertDialog open={isCreating}>
-        <AlertDialogContent>
+        <AlertDialogContent className="border-none bg-primary-foreground">
           <AlertDialogHeader>
             <AlertDialogTitle>{`New profile`}</AlertDialogTitle>
           </AlertDialogHeader>
-          <Input placeholder='Name' onChange={(e) => setInputValue(e.target.value)} value={inputValue} />
+          <Input className="border-none bg-secondary" placeholder='Name' onChange={(e) => setInputValue(e.target.value)} value={inputValue} />
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setIsCreating(false)}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="border-none bg-primary-foreground" onClick={() => setIsCreating(false)}>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={createNewProfile}>Create</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
       <AlertDialog open={isEditing}>
-        <AlertDialogContent>
+        <AlertDialogContent className="border-none bg-primary-foreground">
           <AlertDialogHeader>
             <AlertDialogTitle>{`Edit profile`}</AlertDialogTitle>
           </AlertDialogHeader>
-          <Input onChange={(e) => setInputValue(e.target.value)} value={inputValue} />
+          <Input className="border-none bg-secondary" onChange={(e) => setInputValue(e.target.value)} value={inputValue} />
           <p onClick={() => setIsRemoving(true)} className="text-sm flex gap-1 w-fit text-red-500 hover:opacity-80 transition cursor-pointer items-center">Remove profile</p>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setIsEditing(false)}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="border-none bg-primary-foreground" onClick={() => setIsEditing(false)}>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={editProfile}>Confirm</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
       <AlertDialog open={isRemoving}>
-        <AlertDialogContent>
+        <AlertDialogContent className="border-none bg-primary-foreground">
           <AlertDialogHeader>
-            <AlertDialogTitle>{`Are you absolutely sure?`}</AlertDialogTitle>
+            <AlertDialogTitle className="font-bold">{`Are you absolutely sure?`}</AlertDialogTitle>
           </AlertDialogHeader>
-          <p>This action will remove the entire user data</p>
+          <p className="text-muted-foreground">This action will remove the entire user data</p>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setIsRemoving(false)}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={removeProfile}>Confirm</AlertDialogAction>
+            <AlertDialogCancel className="border-none bg-primary-foreground" onClick={() => setIsRemoving(false)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction className="bg-red-500 text-primary" onClick={removeProfile}>Confirm</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

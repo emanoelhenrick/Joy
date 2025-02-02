@@ -20,7 +20,7 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
     if (!watchingSeries) return
     return (
       <div
-        className="hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative hover:opacity-70"
+        className="hover:scale-95 transition duration-75 gap-3 w-fit h-fit cursor-pointer relative hover:opacity-70"
         key={series.series_id}
         onClick={() => setSelectedSeries(series)}
       >
@@ -40,7 +40,7 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
     if (!watchingVod) return
     return (
       <div
-        className="gap-3 w-fit h-fit cursor-pointer relative hover:opacity-70"
+        className="hover:scale-95 transition duration-75 gap-3 w-fit h-fit cursor-pointer relative hover:opacity-70"
         key={movie.num}
         onClick={() => setSelectedVod(movie)}
       >

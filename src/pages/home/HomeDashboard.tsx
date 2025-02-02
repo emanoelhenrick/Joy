@@ -127,7 +127,7 @@ export function HomeDashboard() {
     if (!seriesData) return
     return (
       <div
-        className="hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative hover:opacity-70"
+        className="hover:scale-95 transition duration-75 gap-3 w-fit h-fit cursor-pointer relative hover:opacity-70"
         key={series.series_id}
         onClick={() => setSelectedSeries(series)}
       >
@@ -140,7 +140,7 @@ export function HomeDashboard() {
     if (!vodData) return
     return (
       <div
-        className="hover:scale-95 hover:opacity-70 transition gap-3 w-fit h-fit cursor-pointer relative"
+        className="hover:scale-95 hover:opacity-70 duration-75 transition gap-3 w-fit h-fit cursor-pointer relative"
         key={movie.num}
         onClick={() => setSelectedVod(movie)}
       >
@@ -158,32 +158,28 @@ export function HomeDashboard() {
     return (
       <ScrollArea>
       <div className="h-fit z-0">
-        {selectedSeries && (
-          <Dialog open={selectedSeries && true}>
-            <DialogContent className="w-fit items-center justify-center" aria-describedby={undefined}>
-              <div onClick={() => setSelectedSeries(undefined)} className="cursor-pointer absolute right-14 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
-                <Cross2Icon className="size-8 p-1 rounded-md bg-background/30 backdrop-blur-lg" />
-              </div>
-              <DialogTitle className="hidden" />
-              <div className="w-screen">
-                <SeriesPage seriesId={selectedSeries!.series_id.toString()} cover={selectedSeries!.cover} />
-              </div>
-            </DialogContent>
-          </Dialog>
-        )}
-        {selectedVod && (
-          <Dialog open={selectedVod && true}>
-            <DialogContent className="w-fit items-center justify-center" aria-describedby={undefined}>
-              <div onClick={() => setSelectedVod(undefined)} className="cursor-pointer absolute right-14 top-20 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
-                <Cross2Icon className="size-8 p-1 rounded-md bg-background/30 backdrop-blur-lg" />
-              </div>
-              <DialogTitle className="invisible">{selectedVod!.name}</DialogTitle>
-              <div className="w-screen">
-                <VodPage streamId={selectedVod!.stream_id.toString()} cover={selectedVod!.stream_icon} />
-              </div>
-            </DialogContent>
-          </Dialog>
-        )}
+        <Dialog open={selectedSeries && true}>
+          <DialogContent className="w-screen items-center justify-center" aria-describedby={undefined}>
+            <div onClick={() => setSelectedSeries(undefined)} className="cursor-pointer absolute right-14 top-20 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
+              <Cross2Icon className="size-8 p-1 rounded-md bg-background/50" />
+            </div>
+            <DialogTitle className="hidden" />
+            <div className="w-screen">
+              <SeriesPage seriesId={selectedSeries ? selectedSeries!.series_id.toString() : ''} cover={selectedSeries ? selectedSeries!.cover : ''} />
+            </div>
+          </DialogContent>
+        </Dialog>
+        <Dialog open={selectedVod && true}>
+          <DialogContent className="w-screen h-screen items-center justify-center" aria-describedby={undefined}>
+            <div onClick={() => setSelectedVod(undefined)} className="cursor-pointer absolute right-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
+              <Cross2Icon className="size-8 p-1 rounded-md bg-background/50" />
+            </div>
+            <DialogTitle className="hidden" />
+            <div className="w-screen">
+              <VodPage streamId={selectedVod ? selectedVod!.stream_id.toString() : ''} cover={selectedVod ? selectedVod!.stream_icon : ''} />
+            </div>
+          </DialogContent>
+        </Dialog>
         <div className='mb-6 mt-5'>
           <div className="flex flex-col gap-8">
             <Fade duration={500} triggerOnce>

@@ -31,7 +31,7 @@ export function FavoritesScroll({ favoritesVod, favoritesSeries, setSelectedSeri
       if (!favoritesSeries) return
       return (
         <div
-          className="hover:scale-95 transition gap-3 w-fit h-fit cursor-pointer relative hover:opacity-70"
+          className="hover:scale-95 duration-75 transition gap-3 w-fit h-fit cursor-pointer relative hover:opacity-70"
           key={series.series_id}
           onClick={() => setSelectedSeries(series)}
         >

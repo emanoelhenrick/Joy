@@ -104,7 +104,7 @@ export function VodPage({ streamId, cover }: Props) {
   const cast = data ? data.info.cast : undefined
   const director = data ? data.info.director : undefined
   const releaseDate = data ? data.info.releasedate && format(data?.info.releasedate, 'u') :  undefined
-  const description = data ? (data.info.description || data.info.plot).trim() : undefined
+  const description = data ? (data.info.description || data.info.plot) : undefined
   const title = data ? getString(data!.info.title)  || getString(data!.movie_data.name) : undefined
   const rating = data ? data.info.rating || data.info.rating_kinopoisk : undefined
   const resumeDuration = formatDurationFromSeconds(userVodData && userVodData.currentTime)
@@ -142,28 +142,25 @@ export function VodPage({ streamId, cover }: Props) {
             
             <div className="mt-2 flex flex-col gap-4 z-10">
               <div className="flex justify-between items-center">
-                  <div className="flex gap-2 items-center">
-                    <Button key='vlc' disabled={isFetching} onClick={launchVlc} size={"lg"} className="bg-primary transition-none relative overflow-hidden">
-                    {userVodData && userVodData.currentTime ?
-                    <div>
-                      <span className="leading-none text-base">{`Resume from ${resumeDuration}`}</span>
-                      <div className="h-1 w-full absolute left-0 right-0 bottom-0">
+                  <div className="flex gap-2">
+                    <Button key='vlc' disabled={isFetching} onClick={launchVlc} variant={"default"} size={"lg"} className="transition-none relative overflow-hidden">
+                      {userVodData && userVodData.currentTime ?
+                      <div>
+                        <span className="leading-none text-base">{`Resume from ${resumeDuration}`}</span>
                       </div>
-                    </div>
-                      : (
-                        <div className="flex gap-2">
-                          <FaPlay />
-                          <span className="leading-none text-base">Watch</span>
-                        </div>
-                      )}
-                  </Button>
-                  <Button variant={'ghost'} onClick={handleFavorite} disabled={isFetching} size={"lg"} className="flex gap-2 items-center hover:bg-primary/10 transition-none">
-                    <FaStar className={`size-4 ${userVodData?.favorite && 'text-yellow-400'}`} />
-                    <span className="leading-none text-base">
-                      {userVodData?.favorite ? 'Remove from favorites' : 'Add to favorites'}
-                    </span>
-                    
-                  </Button>
+                        : (
+                          <div className="flex gap-2">
+                            <FaPlay />
+                            <span className="leading-none text-base">Watch</span>
+                          </div>
+                        )}
+                    </Button>
+                    <Button variant={'ghost'} onClick={handleFavorite} disabled={isFetching} size={"lg"} className="flex gap-2 items-center hover:bg-primary/10 transition-none">
+                      <FaStar className={`size-4 ${userVodData?.favorite && 'text-yellow-400'}`} />
+                      <span className="leading-none text-base">
+                        {userVodData?.favorite ? 'Remove from favorites' : 'Add to favorites'}
+                      </span>
+                    </Button>
                 </div>
 
                 {userVodData && <ClearDataAlertDialog removeVodData={() => removeVodStatus(streamId)} refresh={() => setRefresh(p => !p)}  />}

@@ -24,9 +24,11 @@ import { fetchTmdbTrending } from "./services/fetchTmdbTrending";
 import { launchVLC } from "./services/vlc/launchVLC";
 import { getVLCState } from "./services/vlc/getVLCState";
 import { killProcess } from "./services/vlc/killProcess";
+import { updateFirstTime } from "./services/updateFirstTime";
 
 export default function CoreControllers(win: BrowserWindow) {
   ipcMain.handle('get-metadata', getMetadata)
+  ipcMain.handle('update-first-time', updateFirstTime)
   ipcMain.handle('authenticate-user', async (_event, args) => await authenticateUser(args))
   ipcMain.handle('fetch-tmdb-trending', async (_event, args) => await fetchTmdbTrending(args))
 

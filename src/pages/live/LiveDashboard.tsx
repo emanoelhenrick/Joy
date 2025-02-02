@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../components/dashboard/SelectCategories"
-import { lazy, Suspense, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useDebounce } from 'use-debounce';
 import { useLivePlaylist } from '@/states/usePlaylistData';
 import { LiveProps } from 'electron/core/models/LiveModels';
@@ -23,6 +23,7 @@ export function LiveDashboard() {
   const [playlist, setPlaylist] = useState<LiveProps[]>([]);
   const [currentCategory, setCurrentCategory] = useState('all')
   const [hasMore, setHasMore] = useState(true)
+  const ref = useRef()
 
   let data: { categories: any[], playlist: any[] } = liveData;
 

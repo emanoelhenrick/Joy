@@ -23,6 +23,11 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
   const updateFavorite = useUserData(state => state.updateFavorite)
   const userSeriesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))
   const [_refresh, setRefresh] = useState(false)
+  const [blurBackdrop, setBlurBackdrop] = useState(false)
+
+  function setBlur(v: boolean) {
+    setBlurBackdrop(v) 
+  }
 
   async function fetchSeriesData() {
     const seriesInfo = await electronApi.getSerieInfo(urls.getSeriesInfoUrl + seriesId)
@@ -68,7 +73,9 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
 
   const genres = data ? data.info.genre.replaceAll(/^\s+|\s+$/g, "").split(/[^\w\sÀ-ÿ-]/g) : ['']
   const rating = data ? data.info.rating || (data.info.rating_5based && data.info.rating_5based * 2) : undefined
-
+  
+  console.log(blurBackdrop);
+  
   return (
     <div className="w-full h-screen flex flex-col justify-end">
         
@@ -79,10 +86,13 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
               </div>
             </Fade>
           ) : (
-            <Backdrop
+              <div className="-z-10">
+                <Backdrop
               backdropPath={backdropPath!}
               cover={cover}
+              blur={blurBackdrop}
             />
+              </div>
           )}
 
         <div className={`transition duration-500 flex flex-col ${isFetching ? 'opacity-0' : 'opacity-100'}`}>
@@ -97,13 +107,9 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
             logos={data && data.tmdbImages ? data.tmdbImages.logos! : []}
           />
 
-          <div className="px-16 justify-between items-end flex gap-2 mt-4 w-full mb-6 z-10">
+          <div className="px-16 justify-between items-end flex gap-2 mt-4 w-full mb-4 z-10">
             <div className="flex gap-2">
-              <Button size={"lg"} className="flex gap-2 items-center bg-primary transition-none">
-                <FaPlay className="size-4" />
-                <span className="leading-none text-base">Watch</span>
-              </Button>
-              <Button variant={'ghost'} onClick={handleFavorite} disabled={isFetching} size={"lg"} className="flex gap-2 items-center hover:bg-primary/10 transition-none">
+              <Button variant={'ghost'} onClick={handleFavorite} disabled={isFetching} size={"lg"} className="flex gap-2 items-center bg-primary/10 border-none hover:bg-primary/5 transition-none">
                 <FaStar className={`size-4 ${userSeriesData?.favorite && 'text-yellow-400'}`} />
                 <span className="leading-none text-base">
                   {userSeriesData?.favorite ? 'Remove from favorites' : 'Add to favorites'}
@@ -115,18 +121,19 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
           </div>
 
         {data && (
-          <EpisodesSection
-            seriesCover={cover}
-            seriesId={seriesId}
-            data={data}
-          />
+            <EpisodesSection
+              seriesCover={cover}
+              seriesId={seriesId}
+              data={data}
+              setBlur={setBlur}
+            />
         )}
         </div>
       </div>
     )
 }
 
-function Backdrop({ backdropPath, cover }: { backdropPath: string, cover: string }) {
+function Backdrop({ backdropPath, cover, blur }: { backdropPath: string, cover: string, blur: boolean }) {
   const imageSrc = backdropPath || cover
 
   if (!imageSrc.includes('tmdb')) {
@@ -162,13 +169,13 @@ function Backdrop({ backdropPath, cover }: { backdropPath: string, cover: string
     <div className="fixed">
       <Fade triggerOnce duration={500}>
         <img
-          className={`w-full h-full object-cover fixed top-0`}
+          className={`w-full h-full object-cover fixed top-0 invisible`}
           src={lowImage}
         />
         <LazyLoadImage
           onLoad={() => setImageLoaded(true)}
           src={highImage}
-          className={`w-full h-full object-cover fixed transition top-0 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+          className={`w-full h-full ${blur ? 'blur-sm brightness-75 scale-100' : 'scale-105'} duration-700 object-cover fixed transition ease-out top-0 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
         />
       </Fade>
       <div className="inset-0 w-full h-full fixed scale-105 bg-gradient-to-l from-transparent to-background/95" />
