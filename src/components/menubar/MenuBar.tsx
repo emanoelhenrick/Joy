@@ -142,7 +142,7 @@ export function MenuBar() {
     <div>
       <div style={{ width: width ? width : 95 }} className="block" />
     
-      <div ref={menuRef} className="flex flex-col fixed bg-background left-0 justify-between items-center px-5 py-4 h-screen z-10">
+      <div ref={menuRef} className="flex flex-col fixed bg-background left-0 justify-between items-center px-6 py-4 h-screen z-10">
         <Fade cascade direction="up" triggerOnce duration={500}>
           <Dialog open={profileDialog} >
             <DialogTrigger onClick={() => setProfileDialog(true)} asChild>

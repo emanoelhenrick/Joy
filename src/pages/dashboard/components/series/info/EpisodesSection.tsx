@@ -51,7 +51,7 @@ export function EpisodesSection({ seriesId, seriesCover, data, setBlur }: Episod
     <section 
       onMouseEnter={() => setBlur(true)}
       onMouseLeave={() => setBlur(false)}
-      className="mx-8 mb-8 space-y-1 bg-background p-5 pb-4 2xl:p-6 2xl:pb-4 rounded-3xl shadow-lg"
+      className="mx-8 mb-8 space-y-1 bg-background p-5 pb-4 2xl:p-6 2xl:pb-4 rounded-2xl shadow-lg"
       >
       {data.episodes ? (
         <div>

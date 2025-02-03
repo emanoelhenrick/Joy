@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, Menu } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import CoreControllers from './core/controllers'
@@ -36,11 +36,11 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
       webSecurity: false,
-      spellcheck: false
+      spellcheck: false,
     },
   })
 
-  win.menuBarVisible = false
+  // win.menuBarVisible = false
 
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
@@ -58,6 +58,7 @@ function createWindow() {
   })
 }
 
+Menu.setApplicationMenu(null)
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.

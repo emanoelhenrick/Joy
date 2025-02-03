@@ -1,7 +1,7 @@
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-import require$$3$1, { app as app$1, ipcMain, BrowserWindow } from "electron";
+import require$$3$1, { app as app$1, ipcMain, Menu, BrowserWindow } from "electron";
 import { fileURLToPath } from "node:url";
 import path$4 from "node:path";
 import require$$1$1, { TextEncoder as TextEncoder$1 } from "util";
@@ -27262,7 +27262,6 @@ function createWindow() {
       spellcheck: false
     }
   });
-  win.menuBarVisible = false;
   win.webContents.on("did-finish-load", () => {
     win == null ? void 0 : win.webContents.send("main-process-message", (/* @__PURE__ */ new Date()).toLocaleString());
   });
@@ -27275,6 +27274,7 @@ function createWindow() {
     win == null ? void 0 : win.maximize();
   });
 }
+Menu.setApplicationMenu(null);
 app$1.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app$1.quit();

@@ -44,12 +44,15 @@ export const useUserData = create<UserDataState>((set, get) => ({
           })
         } else {
           exists.favorite = exists.favorite ? false : true
-          const newVod = list.map((v: { id: string }) => {
-            if (v.id == id) {
-              return exists
-            }
-            return v
-          })
+          let newVod = []
+          if (exists.watching) {
+            newVod = list.map((v: { id: string }) => {
+              if (v.id == id) return exists
+              return v
+            })
+          } else {
+            newVod = list.filter((v: { id: string }) => v.id != id)
+          }
           Object.defineProperty(prev.userData, type, {
             enumerable: true,
             configurable: true,

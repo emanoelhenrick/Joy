@@ -1,8 +1,7 @@
-import { Progress } from "@/components/ui/progress"
 import { Fade } from "react-awesome-reveal"
 import { FaPlay } from "react-icons/fa"
 import { LazyLoadImage } from "react-lazy-load-image-component"
-import { motion } from 'framer-motion'
+import { useMemo } from "react"
 
 interface Props {
   imageSrc: string
@@ -14,13 +13,17 @@ interface Props {
 
 export function Episode({ imageSrc, cover, progress, episodeNumber, duration }: Props) {
 
+  const statedCover = useMemo(() => {
+    return cover
+  }, [])
+
   return (
     <div className="w-72 2xl:w-80 cursor-pointer group relative">
       <Fade duration={500} className="z-10">
         <div className="relative shadow-lg group-hover:opacity-90 transition ease-out flex items-center aspect-video justify-center overflow-hidden rounded-lg">
           {
             imageSrc ? <LazyLoadImage src={imageSrc} className="w-full group-hover:scale-105 transition ease-out object-cover opacity-70" />
-            : <img src={cover} className="object-cover w-full h-full group-hover:scale-105 transition ease-out opacity-70" />
+            : <LazyLoadImage src={statedCover} className="object-cover w-full h-full group-hover:scale-105 transition ease-out opacity-70" />
           }
           <FaPlay className="absolute  size-8" />
           
