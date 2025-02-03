@@ -1,12 +1,13 @@
 {
-  "name": "joy-xtream-player",
+  "name": "joy-xtream-client",
   "private": true,
-  "version": "0.1.4",
+  "version": "0.2.1",
   "type": "module",
+  "author": "Emanoel Henrick",
   "build": {
-    "appId": "emhk.joy.player"
+    "appId": "emhk.joy.client"
   },
-  "description": "Player that consumes Xtream API made with modern web technologies.",
+  "description": "Client that consumes Xtream API made with modern web technologies.",
   "license": "UNLICENSED",
   "scripts": {
     "dev": "vite",
