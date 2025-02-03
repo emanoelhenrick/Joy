@@ -58,7 +58,7 @@ export function SplashLoading() {
     <div className="w-full h-screen flex flex-col gap-1 text-sm items-center justify-center">
       <Fade duration={2000}>
         <div className="flex items-center space-x-2">
-          <h1 className="text-4xl">JOY</h1>
+          <h1 className="text-4xl">JOI</h1>
         </div>
       </Fade>
     </div>

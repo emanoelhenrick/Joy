@@ -1,2 +1,2 @@
-# Joy Xtream Player
+# JOI Xtream Client
 ## Em desenvolvimento...

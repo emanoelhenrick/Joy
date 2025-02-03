@@ -10,7 +10,7 @@ export async function getVLCState(): Promise<VlcState | undefined> {
   const res = await axios.get('http://127.0.0.1:9090/requests/status.json', {
     auth: {
       username: '',
-      password: 'joyplayer'
+      password: 'joi'
     },
     timeout: 500
   })

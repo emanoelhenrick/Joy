@@ -214,7 +214,7 @@ export function Initial() {
       </div>
       </Fade>
 
-      <h1 className="fixed bottom-8 text-xl">JOY Client</h1>
+      <h1 className="fixed bottom-8 text-xl">JOI Client</h1>
     </div>
   )
 }

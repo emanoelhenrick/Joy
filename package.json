@@ -1,17 +1,17 @@
 {
-  "name": "joy-xtream-client",
+  "name": "joi-xtream-client",
   "private": true,
   "version": "0.2.1",
   "type": "module",
   "author": "Emanoel Henrick",
   "build": {
-    "appId": "emhk.joy.client"
+    "appId": "emhk.joi.client"
   },
   "description": "Client that consumes Xtream API made with modern web technologies.",
   "license": "UNLICENSED",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && package && make",
+    "build": "vite build && npm run package && npm run make",
     "preview": "vite preview",
     "start": "electron-forge start",
     "package": "electron-forge package",

@@ -12,7 +12,7 @@ export function launchVLC({ path, startTime }: LaunchVlcProps, win: BrowserWindo
     'http',
     '--http-host 127.0.0.1',
     '--http-port 9090',
-    '--http-password joyplayer',
+    '--http-password joi',
     '--fullscreen',
     `--start-time=${startTime}`,
     '--qt-start-minimized',
