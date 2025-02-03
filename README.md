@@ -1,2 +1,2 @@
-# JOI Xtream Client
+# JOI Client
 ## Em desenvolvimento...
