@@ -111,7 +111,7 @@ export function VodPage({ streamId, cover }: Props) {
   const duration = formatDurationFromSeconds(data && data.info.duration_secs)
 
   return (
-    <div className="w-full h-screen flex flex-col justify-end">
+    <div className="w-screen h-screen flex flex-col justify-end">
       {isFetching ? (
         <Fade>
           <div className="w-full h-full fixed flex items-center justify-center top-0 z-20">

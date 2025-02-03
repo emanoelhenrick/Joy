@@ -20,7 +20,7 @@ export function Episode({ imageSrc, cover, progress, episodeNumber, duration }: 
         <div className="relative shadow-lg group-hover:opacity-90 transition ease-out flex items-center aspect-video justify-center overflow-hidden rounded-lg">
           {
             imageSrc ? <LazyLoadImage src={imageSrc} className="w-full group-hover:scale-105 transition ease-out object-cover opacity-70" />
-            : <LazyLoadImage src={cover} className="object-cover w-full h-full group-hover:scale-105 transition ease-out opacity-70" />
+            : <img src={cover} className="object-cover w-full h-full group-hover:scale-105 transition ease-out opacity-70" />
           }
           <FaPlay className="absolute  size-8" />
           
@@ -32,8 +32,11 @@ export function Episode({ imageSrc, cover, progress, episodeNumber, duration }: 
         </div>
           {
           progress > 0 &&
-          <div className="absolute w-full bottom-3 h-0.5 z-10 px-5">
-            <div style={{ width: `${progress}%`}} className="w-1/2 transition h-full bg-primary rounded-full" />
+          <div className="absolute w-full bottom-3 h-1 z-10 px-5">
+            <div className="relative w-full h-full">
+              <div style={{ width: `${progress}%`}} className="transition absolute z-10 h-full bg-primary rounded-full" />
+              <div className="w-full transition h-full absolute bottom-0 bg-primary-foreground rounded-full" />
+            </div>
           </div>
           }
       </Fade>

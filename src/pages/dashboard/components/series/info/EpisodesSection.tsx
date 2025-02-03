@@ -43,24 +43,32 @@ export function EpisodesSection({ seriesId, seriesCover, data, setBlur }: Episod
 
   const [currentSeason, setCurrentSeason] = useState(userSeriesData?.season || seasonsList[0])
   const episodes = useMemo(() => {
-    if (!data) return []
+    if (!data || !data.episodes) return []
     return data.episodes[currentSeason]
   }, [data, currentSeason])
 
   return (
-    <section onMouseEnter={() => setBlur(true)} onMouseLeave={() => setBlur(false)} className="mx-8 mb-8 space-y-1 bg-background p-5 pb-4 2xl:p-6 2xl:pb-4 rounded-3xl">
-      <SeasonsList
-        currentSeason={currentSeason}
-        seasons={seasonsList}
-        setCurrentSeason={setCurrentSeason}
-      />
-      <EpisodesList
-        currentSeason={currentSeason}
-        episodeStreamBaseUrl={urls.getSeriesStreamUrl}
-        episodes={episodes}
-        seriesCover={seriesCover}
-        seriesId={seriesId}
-      />
+    <section 
+      onMouseEnter={() => setBlur(true)}
+      onMouseLeave={() => setBlur(false)}
+      className="mx-8 mb-8 space-y-1 bg-background p-5 pb-4 2xl:p-6 2xl:pb-4 rounded-3xl shadow-lg"
+      >
+      {data.episodes ? (
+        <div>
+          <SeasonsList
+            currentSeason={currentSeason}
+            seasons={seasonsList}
+            setCurrentSeason={setCurrentSeason}
+          />
+          <EpisodesList
+            currentSeason={currentSeason}
+            episodeStreamBaseUrl={urls.getSeriesStreamUrl}
+            episodes={episodes}
+            seriesCover={seriesCover}
+            seriesId={seriesId}
+          />
+        </div>
+      ) : <h1 className="text-muted-foreground">Episodes not found</h1>}
     </section>
   )
 }
@@ -69,7 +77,7 @@ function SeasonsList({ seasons, currentSeason, setCurrentSeason }: SeasonsListPr
 
   return (
     <div>
-      <ScrollArea className="w-full pb-4">
+      <ScrollArea className="w-full pb-4 mb-2">
         <div className="flex gap-6 text-nowrap">
           { seasons && seasons.map(s => (
               <div key={s} onClick={() => setCurrentSeason(s)} className={`px-2 py-1 hover:opacity-80 border-b-2 transition ease-in-out text-sm 2xl:text-base cursor-pointer ${currentSeason === s ? 'border-b-2 border-primary' : 'text-muted-foreground border-transparent'}`}>Season {s}</div>

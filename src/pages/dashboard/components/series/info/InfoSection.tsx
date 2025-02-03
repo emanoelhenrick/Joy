@@ -31,7 +31,7 @@ export function InfoSection({ title, releaseDate, genre, description, cast, dire
   const logoPath = getRightLogo(logos)
 
   return (
-    <div className="p-16 pb-0 h-fit z-10">
+    <div className="px-16 py-0 h-fit z-10">
       <div className="max-w-96 2xl:max-w-[500px] h-fit">
         {logoPath !== undefined ? (
             <img key={'logo'} className="object-contain max-h-32 2xl:max-h-40" src={logoPath} alt="" />

@@ -1,6 +1,6 @@
 import electronApi from "@/config/electronApi"
 import { usePlaylistUrl } from "@/states/usePlaylistUrl"
-import { FaPlay, FaStar } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 import { useEffect, useState } from "react"
 import { QueryFilters, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Button } from "@/components/ui/button";
@@ -74,28 +74,26 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
   const genres = data ? data.info.genre.replaceAll(/^\s+|\s+$/g, "").split(/[^\w\sÀ-ÿ-]/g) : ['']
   const rating = data ? data.info.rating || (data.info.rating_5based && data.info.rating_5based * 2) : undefined
   
-  console.log(blurBackdrop);
-  
   return (
-    <div className="w-full h-screen flex flex-col justify-end">
+    <div className="w-screen h-screen flex flex-col justify-end">
         
           {isFetching ? (
             <Fade>
-              <div className="w-full h-full fixed flex items-center justify-center top-0 z-20">
+              <div className="w-screen h-screen fixed flex items-center justify-center top-0 z-20">
                 <ImSpinner8 className="size-8 animate-spin text-muted-foreground" />
               </div>
             </Fade>
           ) : (
               <div className="-z-10">
                 <Backdrop
-              backdropPath={backdropPath!}
-              cover={cover}
-              blur={blurBackdrop}
-            />
+                  backdropPath={backdropPath!}
+                  cover={cover}
+                  blur={blurBackdrop}
+                />
               </div>
           )}
 
-        <div className={`transition duration-500 flex flex-col ${isFetching ? 'opacity-0' : 'opacity-100'}`}>
+        <div className={`transition pb-4 duration-500 flex flex-col ${isFetching ? 'opacity-0' : 'opacity-100'}`}>
           <InfoSection
             title={title!}
             releaseDate={releaseDate!}
@@ -109,7 +107,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
 
           <div className="px-16 justify-between items-end flex gap-2 mt-4 w-full mb-4 z-10">
             <div className="flex gap-2">
-              <Button variant={'ghost'} onClick={handleFavorite} disabled={isFetching} size={"lg"} className="flex gap-2 items-center bg-primary/10 border-none hover:bg-primary/5 transition-none">
+              <Button variant={'ghost'} onClick={handleFavorite} disabled={isFetching} size={"lg"} className="flex gap-2 items-center bg-primary/10 border-none hover:bg-primary/5">
                 <FaStar className={`size-4 ${userSeriesData?.favorite && 'text-yellow-400'}`} />
                 <span className="leading-none text-base">
                   {userSeriesData?.favorite ? 'Remove from favorites' : 'Add to favorites'}
@@ -166,16 +164,16 @@ function Backdrop({ backdropPath, cover, blur }: { backdropPath: string, cover: 
   const highImage = getOriginalImageTmdb()
 
   return (
-    <div className="fixed">
+    <div className="fixed top-0 w-screen h-screen">
       <Fade triggerOnce duration={500}>
         <img
-          className={`w-full h-full object-cover fixed top-0 invisible`}
+          className={`w-full h-full object-cover fixed top-0 scale-105`}
           src={lowImage}
         />
         <LazyLoadImage
           onLoad={() => setImageLoaded(true)}
           src={highImage}
-          className={`w-full h-full ${blur ? 'blur-sm brightness-75 scale-100' : 'scale-105'} duration-700 object-cover fixed transition ease-out top-0 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+          className={`w-full h-full ${blur ? 'brightness-75 scale-100' : 'scale-105'} duration-700 object-cover fixed transition ease-out top-0 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
         />
       </Fade>
       <div className="inset-0 w-full h-full fixed scale-105 bg-gradient-to-l from-transparent to-background/95" />

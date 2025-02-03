@@ -58,9 +58,10 @@ export default function VodPlaylistScroll({ data }: any) {
             <Cross2Icon className="size-8 p-1 rounded-md bg-background/50" />
           </div>
           <DialogTitle className="hidden" />
-          <div className="w-screen">
-            <VodPage streamId={selectedMovie! && selectedMovie!.stream_id.toString()} cover={selectedMovie! ? selectedMovie!.stream_icon : ''} />
+          <div className="h-screen">
+          <VodPage streamId={selectedMovie! && selectedMovie!.stream_id.toString()} cover={selectedMovie! ? selectedMovie!.stream_icon : ''} />
           </div>
+
         </DialogContent>
       </Dialog>
       <div className={`w-full flex`}>

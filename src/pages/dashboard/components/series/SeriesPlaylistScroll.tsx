@@ -7,6 +7,7 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import { useDebounce } from "use-debounce";
 import { SeriesPage } from "./info";
 import { useMeasure } from "@uidotdev/usehooks";
+import { Fade } from "react-awesome-reveal";
 
 export default function SeriesPlaylistScroll({ data }: any) {
   const [ref, { width }] = useMeasure();
@@ -47,16 +48,14 @@ export default function SeriesPlaylistScroll({ data }: any) {
   return (
     <div className="h-fit rounded-xl">
       <Dialog open={selectedSeries && true}>
-        <DialogContent className="w-screen items-center justify-center" aria-describedby={undefined}>
+        <DialogContent className="w-screen h-screen items-center justify-center" aria-describedby={undefined}>
           <div
             onClick={() => setSelectedSeries(undefined)}
-            className="cursor-pointer absolute right-16 top-20 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
+            className="cursor-pointer absolute right-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
             <Cross2Icon className="size-8 p-1 rounded-md bg-background/50" />
           </div>
           <DialogTitle className="hidden" />
-          <div className="w-screen">
-            <SeriesPage seriesId={selectedSeries ? selectedSeries!.series_id.toString() : ''} cover={selectedSeries ? selectedSeries!.cover : ''} />
-          </div>
+          <SeriesPage seriesId={selectedSeries ? selectedSeries!.series_id.toString() : ''} cover={selectedSeries ? selectedSeries!.cover : ''} />
         </DialogContent>
       </Dialog>
       <div className={`w-full flex`}>
@@ -65,7 +64,9 @@ export default function SeriesPlaylistScroll({ data }: any) {
           style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
           className={`grid w-full h-fit gap-3 mr-4`}
           >
+          <Fade triggerOnce duration={250}>
           {playlist.map((series) => renderItem(series))}
+          </Fade>
         </div>
       </div>
     </div>

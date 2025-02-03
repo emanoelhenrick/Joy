@@ -160,7 +160,7 @@ export function HomeDashboard() {
       <div className="h-fit z-0">
         <Dialog open={selectedSeries && true}>
           <DialogContent className="w-screen items-center justify-center" aria-describedby={undefined}>
-            <div onClick={() => setSelectedSeries(undefined)} className="cursor-pointer absolute right-14 top-20 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
+            <div onClick={() => setSelectedSeries(undefined)} className="cursor-pointer absolute right-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
               <Cross2Icon className="size-8 p-1 rounded-md bg-background/50" />
             </div>
             <DialogTitle className="hidden" />

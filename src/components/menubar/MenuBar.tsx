@@ -6,7 +6,7 @@ import { Fade } from "react-awesome-reveal";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./dialog";
 import { SettingsPage } from "@/pages/settings";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar } from "../ui/avatar";
 import { usePlaylistUrl } from "@/states/usePlaylistUrl";
 import { toast } from "@/hooks/use-toast";
 import { MetaProps } from "electron/core/models/MetaProps";
@@ -16,7 +16,6 @@ import { SelectProfile } from "../select-profile/SelectProfile";
 import { useUserData } from "@/states/useUserData";
 import { PiHouseFill, PiMonitorFill, PiBroadcastFill, PiGearSixFill } from "react-icons/pi";
 import { useMeasure } from "@uidotdev/usehooks";
-import { OnboardingWelcome } from "../OnboardingWelcome";
 
 interface ProfilesProps {
   current: string

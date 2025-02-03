@@ -57,7 +57,7 @@ export function VlcDialog({ open, closeDialog, updateUserStatus }: VlcDialogProp
     <Dialog key='vlc-dialog' open={open}>
       <DialogTrigger asChild>
       </DialogTrigger>
-      <DialogContent className="w-fit h-screen items-center justify-center bg-transparent border-none shadow-none z-50" aria-describedby={undefined}>
+      <DialogContent className="w-screen h-screen items-center justify-center bg-transparent border-none shadow-none z-50" aria-describedby={undefined}>
         <DialogTitle className="hidden" />
         <div className="flex h-full flex-col justify-center items-center gap-4 relative">
           {!isRunning && <ImSpinner8 className="size-8 animate-spin text-muted-foreground fixed bottom-16" />}
