@@ -17,10 +17,10 @@ export function InfoSection({ title, releaseDate, genre, description, cast, dire
   function getRightLogo(logos: TitleLogo[]) {
     if (!logos) return
     if (logos.length === 0) return
-    const filteredByAspectRatio = logos.filter(l => l.aspect_ratio! > 1.3 && l.aspect_ratio! < 8)
+    const filteredByAspectRatio = logos.filter(l => l.aspect_ratio! > 1.3 && l.aspect_ratio! < 12)
     if (filteredByAspectRatio.length > 0) {
       const filteredByIso = filteredByAspectRatio.filter(l => l.iso_639_1 === 'en')
-      if (filteredByIso.length === 0) return `https://image.tmdb.org/t/p/w500${logos[0].file_path}`
+      if (filteredByIso.length === 0) return `https://image.tmdb.org/t/p/w500${filteredByAspectRatio[0].file_path}`
       return `https://image.tmdb.org/t/p/w500${filteredByIso[0].file_path}`
     }
     const filteredByIso = logos.filter(l => l.iso_639_1 === 'en')

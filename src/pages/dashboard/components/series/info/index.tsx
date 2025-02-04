@@ -139,7 +139,7 @@ function Backdrop({ backdropPath, cover, blur }: { backdropPath: string, cover: 
       <div className="fixed">
         <Fade triggerOnce>
           <img
-            className="w-full h-full object-cover fixed top-0 -z-10"
+            className={`w-full h-full object-cover fixed top-0 -z-10 ${blur ? 'brightness-75' : 'scale-105'}`}
             src={imageSrc}
           />
         </Fade>
@@ -173,7 +173,7 @@ function Backdrop({ backdropPath, cover, blur }: { backdropPath: string, cover: 
         <LazyLoadImage
           onLoad={() => setImageLoaded(true)}
           src={highImage}
-          className={`w-full h-full ${blur ? 'blur-sm brightness-75 scale-100' : 'scale-105'} duration-700 object-cover fixed transition ease-out top-0 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+          className={`w-full h-full ${blur ? 'brightness-75' : 'scale-105'} duration-700 object-cover fixed transition ease-out top-0 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
         />
       </Fade>
       <div className="inset-0 w-full h-full fixed scale-105 bg-gradient-to-l from-transparent to-background/95" />
