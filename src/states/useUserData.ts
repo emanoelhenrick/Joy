@@ -8,7 +8,7 @@ export interface UserDataState {
   updateUserData: (data: UserDataProps) => void
   updateFavorite: (id: string, type: 'vod' | 'series' | 'live') => void
   updateVodStatus: (id: string, currentTime: number, duration: number, watching: boolean) => void
-  updateSeriesStatus: (id: string, season: string, episodeId: string, currentTime: number, duration: number, watching: boolean) => void
+  updateSeriesStatus: (id: string, episodeNum: number, season: string, episodeId: string, currentTime: number, duration: number, watching: boolean) => void
   updateSeason: (id: string, season: string) => void
 
   removeVodStatus: (id: string) => void
@@ -91,16 +91,16 @@ export const useUserData = create<UserDataState>((set, get) => ({
       return { ...prev }
     })
   },
-  updateSeriesStatus: (id, season, episodeId, currentTime, duration, watching) => {
+  updateSeriesStatus: (id, episodeNum, season, episodeId, currentTime, duration, watching) => {
     let prevSeries = get().userData.series
     const calculateSeries = () => {
       if (!prevSeries) {
-        return [{ id, updatedAt: Date.now(), favorite: false, watching, episodes: [{ season, episodeId, currentTime, duration }] }]
+        return [{ id, updatedAt: Date.now(), favorite: false, watching, episodes: [{ season, episodeId, currentTime, duration, episodeNum }] }]
       }
 
       const series = prevSeries.find(s => s.id == id)
       if (!series) {
-        prevSeries.push({ id, updatedAt: Date.now(), favorite: false, watching, episodes: [{ season, episodeId, currentTime, duration }] })
+        prevSeries.push({ id, updatedAt: Date.now(), favorite: false, watching, episodes: [{ season, episodeId, currentTime, duration, episodeNum }] })
         return prevSeries
       }
 
@@ -110,12 +110,12 @@ export const useUserData = create<UserDataState>((set, get) => ({
           s.watching = watching
 
           if (!s.episodes) {
-            s.episodes = [{ season, episodeId, currentTime, duration }]
+            s.episodes = [{ season, episodeId, currentTime, duration, episodeNum }]
           }
 
           const episode = s.episodes.find(e => (e.episodeId == episodeId) && (e.season == season))
           if (!episode) {
-            s.episodes.push({ season, episodeId, currentTime, duration })
+            s.episodes.push({ season, episodeId, currentTime, duration, episodeNum })
           }
 
           const updated = s.episodes.map(e => {

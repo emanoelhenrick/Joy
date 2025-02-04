@@ -41,6 +41,7 @@ export function RatingStars({ rating }: { rating: number }) {
           if (star < 1) return <HalfStar value={star} />
           return <FaStar className="text-primary size-3.5" />
         })}
+        <span className="ml-1 leading-none font-medium text-muted-foreground text-sm">{fiveRating.toFixed(1)}</span>
       </Fade>
     </div>
   )

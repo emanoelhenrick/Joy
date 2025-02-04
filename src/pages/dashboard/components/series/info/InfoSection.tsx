@@ -34,12 +34,12 @@ export function InfoSection({ title, releaseDate, genre, description, cast, dire
     <div className="px-16 py-0 h-fit z-10">
       <div className="max-w-96 2xl:max-w-[500px] h-fit">
         {logoPath !== undefined ? (
-            <img key={'logo'} className="object-contain max-h-32 2xl:max-h-40" src={logoPath} alt="" />
-        ) : <h1 className="text-5xl">{title}</h1>}
+            <img key={'logo'} className="object-cover max-h-32 2xl:max-h-40" src={logoPath} alt="" />
+        ) : <h1 className="text-4xl 2xl:text-5xl">{title}</h1>}
       </div>
 
       {((releaseDate && releaseDate != 0) || genre || rating) && (
-        <div className="flex items-center gap-4 mt-4 py-1">
+        <div className="flex items-center gap-4 mt-2 py-1">
           {(releaseDate && releaseDate != 0) && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{releaseDate}</span>}
           {genre && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{genre}</span>}
           {rating && <RatingStars rating={rating} />}
@@ -53,7 +53,7 @@ export function InfoSection({ title, releaseDate, genre, description, cast, dire
           <p className="text-sm 2xl:text-base text-muted-foreground">{director && 'Directed by ' + director}</p>
         </div>
       </div>
-      <span className="text-sm 2xl:text-base">Title: {title}</span>
+      <span className="text-sm 2xl:text-base text-muted-foreground">Title: {title}</span>
     </div>
   )
 }

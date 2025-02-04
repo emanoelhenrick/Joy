@@ -1,7 +1,7 @@
 import { Fade } from "react-awesome-reveal"
 import { FaPlay } from "react-icons/fa"
 import { LazyLoadImage } from "react-lazy-load-image-component"
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 
 interface Props {
   imageSrc: string
@@ -13,6 +13,8 @@ interface Props {
 
 export function Episode({ imageSrc, cover, progress, episodeNumber, duration }: Props) {
 
+  const [isError, setIsError] = useState(false)
+
   const statedCover = useMemo(() => {
     return cover
   }, [])
@@ -20,10 +22,10 @@ export function Episode({ imageSrc, cover, progress, episodeNumber, duration }: 
   return (
     <div className="w-72 2xl:w-80 cursor-pointer group relative">
       <Fade duration={500} className="z-10">
-        <div className="relative shadow-lg group-hover:opacity-90 transition ease-out flex items-center aspect-video justify-center overflow-hidden rounded-lg">
+        <div className="relative shadow-lg group-hover:opacity-80 duration-300 transition ease-out flex items-center aspect-video justify-center overflow-hidden rounded-lg">
           {
-            imageSrc ? <LazyLoadImage src={imageSrc} className="w-full group-hover:scale-105 transition ease-out object-cover opacity-70" />
-            : <LazyLoadImage src={statedCover} className="object-cover w-full h-full group-hover:scale-105 transition ease-out opacity-70" />
+            (imageSrc && !isError) ? <LazyLoadImage onError={() => setIsError(true)} src={imageSrc} className="w-full group-hover:scale-100 scale-105 duration-300 transition ease-out object-cover opacity-70" />
+            : <LazyLoadImage src={statedCover} className="object-cover w-full h-full group-hover:scale-100 scale-105 duration-300 transition ease-out opacity-70" />
           }
           <FaPlay className="absolute  size-8" />
           
@@ -31,7 +33,7 @@ export function Episode({ imageSrc, cover, progress, episodeNumber, duration }: 
         </div>
         <div className="flex flex-col absolute bottom-5 left-5 z-10">
           <span className="text-muted-foreground text-sm 2xl:text-base">{duration}</span>
-          <span className="whitespace-normal text-base 2xl:text-lg font-bold">{`Episode ${episodeNumber}`}</span>
+          <h1 className="whitespace-normal text-sm 2xl:text-base font-semibold">{`Episode ${episodeNumber}`}</h1>
         </div>
           {
           progress > 0 &&

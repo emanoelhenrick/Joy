@@ -25,13 +25,14 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
         onClick={() => setSelectedSeries(series)}
       >
         <HomeCover src={series.cover} title={series.name} />
+        <span className="absolute bottom-5 left-3 z-10 opacity-60 font-medium">{series.watchingNow?.episode}</span>
         <div className="absolute w-full h-1 bottom-3 px-3 z-10">
           <div className="relative w-full h-full">
-            <div style={{ width: `${(series.progress! * 100)}%`}} className="h-full absolute bg-primary rounded-full z-10" />
+            <div style={{ width: `${(series.watchingNow!.progress! * 100)}%`}} className="h-full absolute bg-primary rounded-full z-10" />
             <div className="h-full bg-primary-foreground w-full absolute rounded-full" />
           </div>
         </div>
-        <div className="inset-0 w-full absolute h-full bg-gradient-to-b from-transparent to-background/50" />
+        <div className="inset-0 w-full absolute h-full bg-gradient-to-b from-transparent to-background/90" />
       </div>
       )
   }, [watchingSeries])

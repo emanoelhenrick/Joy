@@ -10,7 +10,7 @@ module.exports = {
     {
       "name": "@electron-forge/maker-squirrel",
       "config": {
-        "name": "joi-xtream-client",
+        "name": "joi-client",
         "noMsi": true,
         "shortcutName": "JXC",
         "createDesktopShortcut": true

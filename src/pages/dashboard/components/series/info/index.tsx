@@ -1,6 +1,6 @@
 import electronApi from "@/config/electronApi"
 import { usePlaylistUrl } from "@/states/usePlaylistUrl"
-import { FaStar } from "react-icons/fa";
+import { FaPlay, FaStar } from "react-icons/fa";
 import { useEffect, useState } from "react"
 import { QueryFilters, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Button } from "@/components/ui/button";
@@ -36,7 +36,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
 
     const title = seriesInfo.info.name.replace(/\[\d+\]|\(\d+\)/g, '').split('-')
     const releaseDate = seriesInfo ? (seriesInfo.info.releaseDate && parseInt(format(seriesInfo.info.releaseDate, 'u'))) || seriesInfo.info.year : undefined
-    if (!releaseDate) return seriesInfo
+    if (!releaseDate || releaseDate === '0' as unknown as number) return seriesInfo
 
     const res = await moviedb.searchTv({ query: title[0], first_air_date_year: releaseDate })
     if (!res.results) return seriesInfo
@@ -105,10 +105,10 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
             logos={data && data.tmdbImages ? data.tmdbImages.logos! : []}
           />
 
-          <div className="px-16 justify-between items-end flex gap-2 mt-4 w-full mb-4 z-10">
+          <div className="px-16 justify-between items-end flex gap-2 mt-3 w-full mb-4 z-10">
             <div className="flex gap-2">
               <Button variant={'ghost'} onClick={handleFavorite} disabled={isFetching} size={"lg"} className="flex gap-2 items-center bg-primary/10 border-none hover:bg-primary/5">
-                <FaStar className={`size-4 ${userSeriesData?.favorite && 'text-yellow-400'}`} />
+                <FaStar className={`size-4 transition duration-300 ease-in-out ${userSeriesData?.favorite && 'text-amber-300'}`} />
                 <span className="leading-none text-base">
                   {userSeriesData?.favorite ? 'Remove from favorites' : 'Add to favorites'}
                 </span>

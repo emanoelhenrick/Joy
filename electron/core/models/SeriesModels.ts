@@ -18,7 +18,10 @@ export interface SeriesProps {
   category_id: string
   cover: string
   updatedAt?: number
-  progress?: number
+  watchingNow?: {
+    episode: string
+    progress: number
+  }
 }
 
 export interface EpisodeProps {
@@ -59,6 +62,7 @@ export interface CategoriesProps {
 
 export interface UserEpisodeProps {
   episodeId: string
+  episodeNum: number,
   season: string
   currentTime: number
   duration: number

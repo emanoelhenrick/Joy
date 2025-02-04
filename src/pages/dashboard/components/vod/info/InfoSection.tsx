@@ -63,7 +63,7 @@ export function InfoSection({ title, releaseDate, cast, description, director, g
           </div>
         )}
         
-        <span className="text-sm 2xl:text-base text-primary/90 max-w-screen-md 2xl:max-w-screen-lg">Title: {title}</span>
+        <span className="text-sm 2xl:text-base text-muted-foreground max-w-screen-md 2xl:max-w-screen-lg">Title: {title}</span>
       </div>
     </div>
   )

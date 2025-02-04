@@ -21,7 +21,6 @@ interface RenameProfileProps {
 
 export interface Api {
   getMetadata: () => Promise<MetaProps>
-  updateFirstTime: () => Promise<void>
   updateVod: (playlistUrls: PlaylistUrlsProps) => Promise<VodPlaylistProps>
   updateSeries: (playlistUrls: PlaylistUrlsProps) => Promise<SeriesPlaylistProps>
   updateLive: (playlistUrls: PlaylistUrlsProps) => Promise<LivePlaylistProps>
@@ -45,7 +44,6 @@ export interface Api {
   removeProfile: (profile: string) => Promise<void>
   launchVLC: (props: LaunchVlcProps) => Promise<number>
   getVLCState: () => Promise<VlcState>
-  killProcess: (pid: number) => Promise<void>
   removeAllListeners: (listenerName: string) => void
 }
 

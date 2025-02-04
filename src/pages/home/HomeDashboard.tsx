@@ -61,8 +61,11 @@ export function HomeDashboard() {
           })
           if (series) {
             const episode = series.episodes![series.episodes!.length - 1]
-            const progress = episode.currentTime / episode.duration
-            watchingSeries.push({ ...s, updatedAt: series.updatedAt, progress })
+            const watchingNow = {
+              episode: `S${episode.season} E${episode.episodeNum}`,
+              progress: episode.currentTime / episode.duration
+            }
+            watchingSeries.push({ ...s, updatedAt: series.updatedAt, watchingNow })
           }
         })
       }

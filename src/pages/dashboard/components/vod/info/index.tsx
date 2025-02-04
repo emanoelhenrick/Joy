@@ -115,7 +115,7 @@ export function VodPage({ streamId, cover }: Props) {
       {isFetching ? (
         <Fade>
           <div className="w-full h-full fixed flex items-center justify-center top-0 z-20">
-            <ImSpinner8 className="size-10 animate-spin text-muted-foreground" />
+            <ImSpinner8 className="size-8 animate-spin text-muted-foreground" />
           </div>
         </Fade>
       ) : (

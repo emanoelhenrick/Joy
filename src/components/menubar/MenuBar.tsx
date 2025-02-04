@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import electronApi from "@/config/electronApi";
-import { House, Radio, Settings, TvMinimal } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Fade } from "react-awesome-reveal";
 import { useLocation, useNavigate } from "react-router-dom";

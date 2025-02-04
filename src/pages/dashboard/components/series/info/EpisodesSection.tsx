@@ -118,6 +118,7 @@ function EpisodesList({ episodes, seriesId, currentSeason, seriesCover, episodeS
       const { time, length } = state.data
       updateSeriesStatus(
         seriesId,
+        parseInt(ep.episode_num),
         currentSeason,
         state.id,
         time,
