@@ -14,6 +14,7 @@ import { HomeCover } from './components/HomeCover';
 import { ScrollBarStyled } from '@/components/ScrollBarStyled';
 import { VodPage } from '../dashboard/components/vod/info';
 import { Fade } from 'react-awesome-reveal';
+import { toast } from '@/hooks/use-toast';
 
 export function HomeDashboard() {
   const vodData = useVodPlaylist(state => state.data)
@@ -23,7 +24,7 @@ export function HomeDashboard() {
   const [selectedSeries, setSelectedSeries] = useState<SeriesProps | undefined>(undefined)
   const userDataSeries = useUserData(state => state.userData.series)
   const userDataVod = useUserData(state => state.userData.vod)
-  const [_update, setUpdate] = useState(false)
+  const [update, setUpdate] = useState(false)
 
   const vodByDate = useMemo(() => {
     if (vodData && vodData.playlist) {
@@ -82,7 +83,7 @@ export function HomeDashboard() {
       return { watchingSeries, favoritesSeries }
     }
     return { watchingSeries: [], favoritesSeries: [] }
-  }, [userDataSeries, seriesData])
+  }, [userDataSeries, seriesData, update])
 
   const userVod = useMemo(() => {
     if (userDataVod && vodData) {
@@ -121,7 +122,7 @@ export function HomeDashboard() {
       return { watchingVod, favoritesVod }
     }
     return { watchingVod: [], favoritesVod: [] }
-  }, [userDataVod, vodData])
+  }, [userDataVod, vodData, update])
 
   const { watchingSeries, favoritesSeries } = userSeries
   const { watchingVod, favoritesVod } = userVod
@@ -153,7 +154,7 @@ export function HomeDashboard() {
   }, [vodData])
 
   useEffect(() => {
-    setTimeout(() => setUpdate(p => !p), 100)
+    setTimeout(() => setUpdate(p => !p), 50)
   }, [selectedSeries, selectedVod])
 
   if (vodData && seriesData) {

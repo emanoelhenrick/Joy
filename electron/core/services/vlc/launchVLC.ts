@@ -15,7 +15,6 @@ export function launchVLC({ path, startTime }: LaunchVlcProps, win: BrowserWindo
     '--http-password joi',
     '--fullscreen',
     `--start-time=${startTime}`,
-    '--qt-start-minimized',
     '--no-snapshot-preview',
     '--no-osd',
     path

@@ -112,7 +112,7 @@ export function NewPLaylistDialog() {
     if (isSuccess) {
       queryClient.removeQueries()
       setSubmitted(false)
-      navigate(`/dashboard/home/${formValue!.name}`)
+      navigate(`/`)
     }
     
   }, [isSuccess])

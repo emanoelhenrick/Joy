@@ -83,7 +83,7 @@ export function SelectProfile({ changeProfile, data, setIsCreating, isCreating, 
   return (
     <div className="flex gap-6 p-4">
       {data.profiles.map(p => (
-        <div onClick={() => data.current === p ? setIsEditing(true) : changeProfile(p)} className={`flex hover:scale-105 relative ${data.current !== p && 'opacity-50'} flex-col cursor-pointer group transition items-center gap-1`}>
+        <div key={p} onClick={() => data.current === p ? setIsEditing(true) : changeProfile(p)} className={`flex hover:scale-105 relative ${data.current !== p && 'opacity-50'} flex-col cursor-pointer group transition items-center gap-1`}>
           <Avatar className={`relative transition bg-secondary flex items-center justify-center w-24 h-24 `}>
             <p className={`absolute ${data.current !== p && 'group-hover:opacity-100'} text-muted-foreground opacity-100 group-hover:opacity-0 transition text-4xl`}>{getInitials(p)}</p>
             <PiGearSixFill className={`absolute size-8 ${data.current !== p && 'invisible'} opacity-0 group-hover:opacity-100 text-muted-foreground transition`}/>

@@ -26723,7 +26723,6 @@ function launchVLC({ path: path2, startTime }, win2) {
     "--http-password joi",
     "--fullscreen",
     `--start-time=${startTime}`,
-    "--qt-start-minimized",
     "--no-snapshot-preview",
     "--no-osd",
     path2

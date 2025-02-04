@@ -51,7 +51,7 @@ export function VlcDialog({ open, closeDialog }: VlcDialogProps) {
     <Dialog key='vlc-dialog' open={open}>
       <DialogTrigger asChild>
       </DialogTrigger>
-      <DialogContent className="w-fit items-center justify-center bg-transparent border-none shadow-none z-50" aria-describedby={undefined}>
+      <DialogContent className="w-screen h-screen items-center justify-center bg-transparent border-none shadow-none z-50" aria-describedby={undefined}>
         <DialogTitle className="hidden" />
         <div className="flex flex-col justify-center items-center gap-4">
           <SiVlcmediaplayer className={`size-16 transition-colors ${isRunning ? 'text-orange-400' : 'animate-pulse'}`} />

@@ -1,7 +1,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { SeriesProps } from "electron/core/models/SeriesModels"
 import { VodProps } from "electron/core/models/VodModels"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { FaStar } from "react-icons/fa"
 import { HomeCover } from "./HomeCover"
 import { ScrollBarStyled } from "@/components/ScrollBarStyled"
@@ -15,17 +15,7 @@ interface WatchingScrollProps {
 }
 
 export function FavoritesScroll({ favoritesVod, favoritesSeries, setSelectedSeries, setSelectedVod }: WatchingScrollProps) {
-  const [favoritesTab, setFavoritesTab] = useState(0)
-
   const favoritesList = [ ...favoritesVod, ...favoritesSeries ]
-
-  const isSeries = favoritesSeries.length > 0
-  const isVod = favoritesVod.length > 0
-
-  useEffect(() => {
-    if (!isSeries && isVod) return setFavoritesTab(1)
-    return setFavoritesTab(0)
-  }, [isSeries, isVod])
 
   const renderSeriesItem = useCallback((series: SeriesProps) => {
       if (!favoritesSeries) return
