@@ -24,6 +24,7 @@ import { fetchTmdbTrending } from "./services/fetchTmdbTrending";
 import { launchVLC } from "./services/vlc/launchVLC";
 import { getVLCState } from "./services/vlc/getVLCState";
 import { killProcess } from "./services/vlc/killProcess";
+import { editPlaylistInfo } from "./services/editPlaylistInfo";
 
 export default function CoreControllers(win: BrowserWindow) {
   ipcMain.handle('get-metadata', getMetadata)
@@ -35,6 +36,7 @@ export default function CoreControllers(win: BrowserWindow) {
   ipcMain.handle('update-live', async (_event, args) => await updateLive(args))
   
   ipcMain.handle('add-playlist-to-meta', async (_event, args) => await addPlaylistToMeta(args))
+  ipcMain.handle('edit-playlist-info', async (_event, args) => await editPlaylistInfo(args))
   ipcMain.handle('remove-playlist', async (_event, args) => await removePlaylist(args))
 
   ipcMain.handle('get-local-vod-playlist', async (_event, args) => await getLocalVodPlaylist(args))

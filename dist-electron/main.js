@@ -26752,6 +26752,17 @@ async function getVLCState() {
 function killProcess(pid) {
   process.kill(pid, "SIGINT");
 }
+async function editPlaylistInfo({ playlistName, newPlaylistInfo }) {
+  const metadata = await main$1.readAsync(META_PATH, "json");
+  const updatedPlaylists = metadata.playlists.map((playlist) => {
+    if (playlist.name === playlistName) return newPlaylistInfo;
+    return playlist;
+  });
+  metadata.currentPlaylist = { name: newPlaylistInfo.name, profile: "Default" };
+  metadata.playlists = updatedPlaylists;
+  await main$1.renameAsync(getPlaylistFolderPath(playlistName), newPlaylistInfo.name);
+  return await main$1.writeAsync(META_PATH, metadata);
+}
 function CoreControllers(win2) {
   ipcMain.handle("get-metadata", getMetadata);
   ipcMain.handle("authenticate-user", async (_event, args) => await authenticateUser(args));
@@ -26760,6 +26771,7 @@ function CoreControllers(win2) {
   ipcMain.handle("update-series", async (_event, args) => await updateSeries(args));
   ipcMain.handle("update-live", async (_event, args) => await updateLive(args));
   ipcMain.handle("add-playlist-to-meta", async (_event, args) => await addPlaylistToMeta(args));
+  ipcMain.handle("edit-playlist-info", async (_event, args) => await editPlaylistInfo(args));
   ipcMain.handle("remove-playlist", async (_event, args) => await removePlaylist(args));
   ipcMain.handle("get-local-vod-playlist", async (_event, args) => await getLocalVodPlaylist(args));
   ipcMain.handle("get-local-series-playlist", async (_event, args) => await getLocalSeriesPlaylist(args));

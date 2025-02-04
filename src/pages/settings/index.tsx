@@ -10,7 +10,9 @@ import { PlaylistInfo } from "electron/core/models/PlaylistInfo";
 import { RotateCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { NewPLaylistDialog } from "./NewPlaylistDialog";
+import { NewPlaylistDialog } from "./NewPlaylistDialog";
+import { EditPlaylistDialog } from "./EditPlaylistDialog";
+import { MetaProps } from "electron/core/models/MetaProps";
 
 export function SettingsPage({ currentPlaylist, setUpdatingMenu, setUpdatingError }: { currentPlaylist: string, setUpdatingMenu: (bool: boolean) => void, setUpdatingError: (b: boolean) => void }) {
   const navigate = useNavigate()
@@ -20,6 +22,7 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu, setUpdatingErro
   const queryClient = useQueryClient()
   const [updating, setUpdating] = useState(false)
   const [playlistName, setPlaylistName] = useState<string>()
+  const [playlistInfo, setPlaylistInfo] = useState<PlaylistInfo>()
   const [lastUpdated, setLastUpdated] = useState<any>()
   const { urls } = usePlaylistUrl()
   const { toast } = useToast()
@@ -30,7 +33,9 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu, setUpdatingErro
 
   async function getPlaylistName() {
     const metadata = await electronApi.getMetadata()
-    setLastUpdated(metadata.playlists.find(p => p.name === metadata.currentPlaylist.name)!.updatedAt)
+    const playlistInfo = metadata.playlists.find(p => p.name === metadata.currentPlaylist.name)
+    setPlaylistInfo(playlistInfo)
+    setLastUpdated(playlistInfo!.updatedAt)
     setPlaylistName(metadata.currentPlaylist.name)
   }
 
@@ -113,7 +118,8 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu, setUpdatingErro
           </Select>
         </div>
       </div>
-      <NewPLaylistDialog />
+      <NewPlaylistDialog />
+      <EditPlaylistDialog playlistInfo={playlistInfo!} />
 
       <AlertDialog>
         <AlertDialogTrigger className="w-fit">

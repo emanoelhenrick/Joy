@@ -31,6 +31,7 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   fetchTmdbTrending: async (args: any) => await ipcRenderer.invoke('fetch-tmdb-trending', args),
 
   addPlaylistToMeta: async (args: any) => await ipcRenderer.invoke('add-playlist-to-meta', args),
+  editPlaylistInfo: async (args: any) => await ipcRenderer.invoke('edit-playlist-info', args),
   removePlaylist: async (args: any) => await ipcRenderer.invoke('remove-playlist', args),
 
   getLocalVodPlaylist: async (args: any) => await ipcRenderer.invoke('get-local-vod-playlist', args),

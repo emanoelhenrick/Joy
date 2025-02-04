@@ -3,19 +3,15 @@ import { Input } from "@/components/ui/input"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
 import { useEffect, useState } from "react"
-import { Cross2Icon, ReloadIcon } from "@radix-ui/react-icons"
+import { ReloadIcon } from "@radix-ui/react-icons"
 import { useNavigate } from "react-router-dom"
 import { useToast } from "@/hooks/use-toast"
-import { Progress } from "@/components/ui/progress"
-import { Label } from "@/components/ui/label"
 import electronApi from "@/config/electronApi"
 import { PlaylistInfo } from "electron/core/models/PlaylistInfo"
-import { makeUrls, PlaylistUrls, usePlaylistUrl } from "@/states/usePlaylistUrl"
+import { makeUrls } from "@/states/usePlaylistUrl"
 import { useQueryClient } from "@tanstack/react-query"
-import { useUserData } from "@/states/useUserData"
-import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from "@/states/usePlaylistData"
 import { Dialog, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { DialogContent } from "@/components/menubar/dialog"
 
@@ -26,29 +22,14 @@ const formSchema = z.object({
   url: z.string().url()
 })
 
-interface ProgressProps {
-  msg: string
-  value: number
-}
-
-
-export function NewPlaylistDialog() {
-
+export function EditPlaylistDialog({ playlistInfo }: { playlistInfo: PlaylistInfo }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient()
-  const { updateUrls } = usePlaylistUrl()
 
   const [formValue, setFormValue] = useState<PlaylistInfo>()
   const [submitted, setSubmitted] = useState(false)
   const [validated, setValidated] = useState(false)
-  const [isSuccess, setIsSuccess] = useState(false)
-  const [progress, setProgress] = useState<ProgressProps>({ msg: 'Loading...', value: 0})
   const { toast } = useToast()
-
-  const resetUserData = useUserData(state => state.reset)
-  const updateVodPlaylistState = useVodPlaylist(state => state.update)
-  const updateSeriesPlaylistState = useSeriesPlaylist(state => state.update)
-  const updateLivePlaylistState = useLivePlaylist(state => state.update)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema)
@@ -56,50 +37,24 @@ export function NewPlaylistDialog() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setSubmitted(true)
-    const value = { ...values, profiles: [] }
-    setFormValue(value)
-  }
-
-  async function handleNewPLaylist(urls: PlaylistUrls) {
-    setProgress({ msg: 'Downloading VOD playlist...', value: 20})
-    const vodData = await electronApi.updateVod({ playlistUrl: urls.getAllVodUrl, categoriesUrl: urls.getAllVodCategoriesUrl, name: formValue!.name })
-    
-    setProgress({ msg: 'Downloading Series playlist...', value: 50})
-    const seriesData = await electronApi.updateSeries({ playlistUrl: urls.getAllSeriesUrl, categoriesUrl: urls.getAllSeriesCategoriesUrl, name: formValue!.name })
-
-    setProgress({ msg: 'Downloading Live playlist...', value: 80})
-    const liveData = await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: formValue!.name })
-
-    setProgress({ msg: 'Updating configs...', value: 90})
-    formValue!.updatedAt = Date.now()
-    await electronApi.addPlaylistToMeta(formValue!)
-    await electronApi.createProfile('Default')
-    updateUrls(urls)
-
-    updateVodPlaylistState(vodData)
-    updateSeriesPlaylistState(seriesData)
-    updateLivePlaylistState(liveData)
-    resetUserData()
-
-    setProgress({ msg: 'Finished.', value: 100})
-    setIsSuccess(true)
+    setFormValue(values as PlaylistInfo)
   }
 
   async function validate() {
     const urls = makeUrls(formValue!)
     const isValidated = await electronApi.authenticateUser(urls.getAuthenticateUrl)
     if (isValidated) {
+      if (!formValue) return
+      await electronApi.editPlaylistInfo({ playlistName: playlistInfo.name, newPlaylistInfo: formValue })
       setValidated(true)
-      handleNewPLaylist(urls)
       return toast({
-        title: 'Playlist added successfully.',
-        description: 'Please wait while we are configuring your details, this may take a few seconds'
+        title: 'Playlist edited successfully.'
       })
     }
     setSubmitted(false)
     toast({
       variant: "destructive",
-      title: 'Playlist cannot be added.',
+      title: 'Playlist cannot be edited.',
       description: 'Check if the data is correct and try again.'
     })
   }
@@ -109,20 +64,20 @@ export function NewPlaylistDialog() {
   }, [submitted])
 
   useEffect(() => {
-    if (isSuccess) {
+    if (validated) {
       queryClient.removeQueries()
       setSubmitted(false)
       navigate(`/`)
     }
     
-  }, [isSuccess])
+  }, [validated])
 
 
   return (
-    <Dialog open={isSuccess && submitted ? true : undefined}>
+    <Dialog open={validated && submitted ? true : undefined}>
       <DialogTrigger asChild>
         <h3 className="scroll-m-20 w-fit text-muted-foreground tracking-tight cursor-pointer hover:text-primary transition">
-          New playlist
+          Edit playlist
         </h3>
       </DialogTrigger>
       <DialogContent className="w-fit bg-primary-foreground/50 border-none" aria-describedby={undefined}>
@@ -138,6 +93,7 @@ export function NewPlaylistDialog() {
                 <div className="grid gap-2">
                   <FormField
                     control={form.control}
+                    defaultValue={playlistInfo && playlistInfo.name}
                     name="name"
                     render={({ field }) => (
                       <FormItem>
@@ -153,6 +109,7 @@ export function NewPlaylistDialog() {
                 <div className="grid gap-2">
                   <FormField
                     control={form.control}
+                    defaultValue={playlistInfo && playlistInfo.username}
                     name="username"
                     render={({ field }) => (
                       <FormItem>
@@ -167,6 +124,7 @@ export function NewPlaylistDialog() {
                 <div className="grid gap-2">
                   <FormField
                     control={form.control}
+                    defaultValue={playlistInfo && playlistInfo.password}
                     name="password"
                     render={({ field }) => (
                       <FormItem>
@@ -181,6 +139,7 @@ export function NewPlaylistDialog() {
                 <div className="grid gap-2">
                   <FormField
                     control={form.control}
+                    defaultValue={playlistInfo && playlistInfo.url}
                     name="url"
                     render={({ field }) => (
                       <FormItem>
@@ -192,14 +151,7 @@ export function NewPlaylistDialog() {
                     )}
                   />
                 </div>
-                {submitted ? <Button disabled><ReloadIcon className="mr-2 h-4 w-4 animate-spin" />Loading playlist</Button> : <Button type="submit" className="w-full">Add</Button>}
-                {validated && (
-                  <>
-                  <Progress className="transition" value={progress?.value} />
-                  <Label className="animate-pulse">{progress.msg}</Label>
-                  </>
-                )}
-                
+                {submitted ? <Button disabled><ReloadIcon className="mr-2 h-4 w-4 animate-spin" />Saving playlist</Button> : <Button type="submit" className="w-full">Save</Button>}
               </div>
             </form>
           </Form>
