@@ -1,6 +1,6 @@
 import electronApi from "@/config/electronApi"
 import { usePlaylistUrl } from "@/states/usePlaylistUrl"
-import { FaPlay, FaStar } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 import { useEffect, useState } from "react"
 import { QueryFilters, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Button } from "@/components/ui/button";
@@ -41,10 +41,24 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
     const res = await moviedb.searchTv({ query: title[0], first_air_date_year: releaseDate })
     if (!res.results) return seriesInfo
     if (res.results && res.results.length === 0) return seriesInfo
-    
-    seriesInfo.info.backdrop_path = [`https://image.tmdb.org/t/p/w1280/${res.results[0].backdrop_path}`] 
+
     const tmdbId = res.results[0].id
     const images = await moviedb.tvImages({ id: tmdbId! })
+
+    let imageSrc = ''
+    let filteredByIso = (images.backdrops && images.backdrops.length > 0) && images.backdrops.filter(b => !b.iso_639_1)
+    if (filteredByIso && filteredByIso.length > 0) {
+      const filteredByWidth = filteredByIso.filter(b => b.width && b.width > 1920)
+      if (filteredByWidth.length > 0) {
+        imageSrc = `https://image.tmdb.org/t/p/original${filteredByWidth[0].file_path}`
+      } else {
+        imageSrc = `https://image.tmdb.org/t/p/original${filteredByIso[0].file_path!}`
+      } 
+    } else {
+      imageSrc = cover
+    }
+
+    seriesInfo.info.backdrop_path = [imageSrc] 
     return { ...seriesInfo, tmdbImages: images }
   } 
 

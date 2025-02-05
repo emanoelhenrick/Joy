@@ -42,8 +42,8 @@ export function EditPlaylistDialog({ playlistInfo }: { playlistInfo: PlaylistInf
 
   async function validate() {
     const urls = makeUrls(formValue!)
-    const isValidated = await electronApi.authenticateUser(urls.getAuthenticateUrl)
-    if (isValidated) {
+    const authResponse = await electronApi.authenticateUser(urls.getAuthenticateUrl)
+    if (authResponse.status) {
       if (!formValue) return
       await electronApi.editPlaylistInfo({ playlistName: playlistInfo.name, newPlaylistInfo: formValue })
       setValidated(true)
@@ -55,7 +55,7 @@ export function EditPlaylistDialog({ playlistInfo }: { playlistInfo: PlaylistInf
     toast({
       variant: "destructive",
       title: 'Playlist cannot be edited.',
-      description: 'Check if the data is correct and try again.'
+      description: authResponse.message
     })
   }
   
@@ -80,7 +80,7 @@ export function EditPlaylistDialog({ playlistInfo }: { playlistInfo: PlaylistInf
           Edit playlist
         </h3>
       </DialogTrigger>
-      <DialogContent className="w-fit bg-primary-foreground/50 border-none" aria-describedby={undefined}>
+      <DialogContent className="w-fit bg-primary-foreground border-none" aria-describedby={undefined}>
         <DialogTitle className="hidden" />
         <div className="flex items-center justify-center rounded-lg w-fit">
           <div className="mx-auto grid w-[350px] gap-6">

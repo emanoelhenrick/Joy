@@ -62,9 +62,6 @@ export default function LivePlaylistScroll({ playlist, fetchMore, hasMore, first
 
   }, [userData, update])
 
-  console.log(data);
-  
-
   useEffect(() => {
     if (inView && hasMore) fetchMore()
   }, [inView])
@@ -102,7 +99,7 @@ export default function LivePlaylistScroll({ playlist, fetchMore, hasMore, first
             <span className="text-2xl block leading-none">{live.name}</span>
           </div>
 
-          {(!isFetching && data!.data.epg_listings[0]) && (
+          {(!isFetching && data && data.data.epg_listings[0]) && (
             <div className="mt-3 space-y-1">
               <span className="text-xl">{data?.data.epg_listings[0] && decode(data?.data.epg_listings[0].title)}</span>
               {data?.data.epg_listings[0] && (

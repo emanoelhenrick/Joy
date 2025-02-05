@@ -4,6 +4,7 @@ import { PlaylistInfo } from "electron/core/models/PlaylistInfo";
 import { SerieInfoProps, SeriesPlaylistProps } from "electron/core/models/SeriesModels";
 import { UserDataProps } from "electron/core/models/UserData";
 import { VodInfoProps, VodPlaylistProps } from "electron/core/models/VodModels";
+import { AuthRes } from "electron/core/services/authenticateUser";
 import { EditPlaylistInfoProps } from "electron/core/services/editPlaylistInfo";
 import { MovieMatch } from "electron/core/services/fetchTmdbTrending";
 import { VlcState } from "electron/core/services/vlc/getVLCState";
@@ -25,7 +26,7 @@ export interface Api {
   updateVod: (playlistUrls: PlaylistUrlsProps) => Promise<VodPlaylistProps>
   updateSeries: (playlistUrls: PlaylistUrlsProps) => Promise<SeriesPlaylistProps>
   updateLive: (playlistUrls: PlaylistUrlsProps) => Promise<LivePlaylistProps>
-  authenticateUser: (url: string) => Promise<Boolean>
+  authenticateUser: (url: string) => Promise<AuthRes>
   fetchTmdbTrending: ({ apiKey, playlistName }: { apiKey: string, playlistName: string}) => Promise<MovieMatch[]>
   addPlaylistToMeta: (playlistInfo: PlaylistInfo) => Promise<Boolean>
   editPlaylistInfo: (data: EditPlaylistInfoProps) => Promise<void>

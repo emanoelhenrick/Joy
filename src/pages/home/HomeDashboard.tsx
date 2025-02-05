@@ -14,7 +14,6 @@ import { HomeCover } from './components/HomeCover';
 import { ScrollBarStyled } from '@/components/ScrollBarStyled';
 import { VodPage } from '../dashboard/components/vod/info';
 import { Fade } from 'react-awesome-reveal';
-import { toast } from '@/hooks/use-toast';
 
 export function HomeDashboard() {
   const vodData = useVodPlaylist(state => state.data)

@@ -108,12 +108,12 @@ export function Dashboard() {
   return (
     <div className="h-fit w-full">
       <div className='flex flex-col gap-2'>
-        <div ref={ref} className='flex items-center justify-between mt-4'>
+        <div ref={ref} className='flex items-center justify-between mt-4 mb-1'>
           <div className='flex items-center gap-2'>
             <MenuTab tab={tab} switchTab={switchTab} />
             <Select onValueChange={(value) => setCurrentCategory(value)} value={currentCategory}>
               <SelectTrigger className="w-fit gap-2">
-                <SelectValue  placeholder="All" />
+                <SelectValue placeholder="All" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>

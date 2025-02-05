@@ -22,7 +22,7 @@ export function SearchInput({ searchValue, setSearchValue }: any) {
       <div className="relative">
         <Input
           id={id}
-          className="peer pe-9 ps-9"
+          className="peer pe-9 ps-9 bg-secondary border-none"
           placeholder="Search..."
           type="search"
           value={searchValue}

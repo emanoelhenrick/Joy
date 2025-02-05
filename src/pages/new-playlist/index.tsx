@@ -92,8 +92,8 @@ export function Initial() {
 
   async function validate() {
     const urls = makeUrls(formValue!)
-    const isValidated = await electronApi.authenticateUser(urls.getAuthenticateUrl)
-    if (isValidated) {
+    const authResponse = await electronApi.authenticateUser(urls.getAuthenticateUrl)
+    if (authResponse.status) {
       setValidated(true)
       handleNewPLaylist(urls)
       return toast({
@@ -105,10 +105,9 @@ export function Initial() {
     toast({
       variant: "destructive",
       title: 'Playlist cannot be added.',
-      description: 'Check if the data is correct and try again.'
+      description: authResponse.message
     })
-}
-
+  }
   
   useEffect(() => {
     if (submitted) validate()

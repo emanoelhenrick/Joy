@@ -12,7 +12,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { NewPlaylistDialog } from "./NewPlaylistDialog";
 import { EditPlaylistDialog } from "./EditPlaylistDialog";
-import { MetaProps } from "electron/core/models/MetaProps";
 
 export function SettingsPage({ currentPlaylist, setUpdatingMenu, setUpdatingError }: { currentPlaylist: string, setUpdatingMenu: (bool: boolean) => void, setUpdatingError: (b: boolean) => void }) {
   const navigate = useNavigate()
@@ -65,18 +64,18 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu, setUpdatingErro
     if (playlistName) {
       setUpdatingMenu(true)
       setUpdating(true)
-      const isValidated = await electronApi.authenticateUser(urls.getAuthenticateUrl)
-      if (!isValidated) {
+      toast({ title: `Updating playlist ${playlistName}`})
+      const authResponse = await electronApi.authenticateUser(urls.getAuthenticateUrl)
+      if (!authResponse.status) {
         setUpdating(false)
         setUpdatingError(true)
         return toast({
           title: 'The playlist could not be updated',
-          description: 'Check if the playlist data is correct.',
+          description: authResponse.message,
           variant: "destructive"
         })
       }
       setUpdatingError(false)
-      toast({ title: `Updating playlist ${playlistName}`})
       const vodData = await electronApi.updateVod({ playlistUrl: urls.getAllVodUrl, categoriesUrl: urls.getAllVodCategoriesUrl, name: playlistName })
       const seriesData = await electronApi.updateSeries({ playlistUrl: urls.getAllSeriesUrl, categoriesUrl: urls.getAllSeriesCategoriesUrl, name: playlistName })
       const liveData = await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: playlistName })
@@ -127,7 +126,7 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu, setUpdatingErro
             Remove playlist
           </h3>
         </AlertDialogTrigger>
-        <AlertDialogContent className="border-none bg-primary-foreground/50">
+        <AlertDialogContent className="border-none bg-primary-foreground">
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>

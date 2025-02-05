@@ -55,16 +55,14 @@ export function MenuBar() {
   }
 
   async function verifyAuth() {
-    try {
-      await electronApi.authenticateUser(urls.getAuthenticateUrl)
-    } catch (error) {
-      setUpdatingError(true)
-      return toast({
-        title: 'The playlist could not be updated',
-        description: 'Check if the playlist data is correct.',
-        variant: "destructive"
-      })
-    }
+    const authResponse = await electronApi.authenticateUser(urls.getAuthenticateUrl)
+    if (authResponse.status) return
+    setUpdatingError(true)
+    return toast({
+      title: 'The playlist could not be updated',
+      description: authResponse.message,
+      variant: "destructive"
+    })
   }
 
   async function changeProfile(selectedProfile: string) {
@@ -81,20 +79,20 @@ export function MenuBar() {
     const difference = differenceInHours(Date.now(), new Date(playlist!.updatedAt!))
     if (difference < 12) return
     setUpdating(true)
-    const isValidated = await electronApi.authenticateUser(urls.getAuthenticateUrl)
-    if (!isValidated) {
+    toast({ title: `Updating playlist ${metadata.currentPlaylist.name}`})
+    const authResponse = await electronApi.authenticateUser(urls.getAuthenticateUrl)
+    if (!authResponse.status) {
       setUpdatingError(true)
       setUpdating(false)
       toast({
         title: 'The playlist could not be updated',
-        description: 'Check if the playlist data is correct.',
+        description: authResponse.message,
         variant: "destructive"
       })
       return
     }
 
     setUpdatingError(false)
-    toast({ title: `Updating playlist ${metadata.currentPlaylist.name}`})
     const updatedVod = await electronApi.updateVod({ playlistUrl: urls.getAllVodUrl, categoriesUrl: urls.getAllVodCategoriesUrl, name: metadata.currentPlaylist.name })
     const updatedSeries = await electronApi.updateSeries({ playlistUrl: urls.getAllSeriesUrl, categoriesUrl: urls.getAllSeriesCategoriesUrl, name: metadata.currentPlaylist.name })
     const updatedLive = await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: metadata.currentPlaylist.name })

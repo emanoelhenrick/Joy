@@ -19114,9 +19114,9 @@ async function updateLive({ playlistUrl, categoriesUrl, name }) {
 }
 async function authenticateUser(url2) {
   const res = await axios$1.get(url2);
-  if (res.status !== 200) return false;
-  if (res.data.user_info.status === "Expired") return false;
-  return true;
+  if (res.status !== 200) return { status: false, message: res.statusText };
+  if (res.data.user_info.status === "Expired") return { status: false, message: "Access denied, account expired." };
+  return { status: true, message: "Validated" };
 }
 async function addPlaylistToMeta(playlistInfo) {
   const metadata = await main$1.readAsync(META_PATH, "json");
@@ -26725,6 +26725,8 @@ function launchVLC({ path: path2, startTime }, win2) {
     `--start-time=${startTime}`,
     "--no-snapshot-preview",
     "--no-osd",
+    "--network-caching=5000",
+    "--loop",
     path2
   ], { shell: true });
   vlc.setMaxListeners(2);
