@@ -8,6 +8,7 @@ import { useUserData } from "@/states/useUserData";
 import { VlcDialog } from "../../VlcDialog";
 import electronApi from "@/config/electronApi";
 import { formatDurationFromSeconds } from "@/utils/formatDuration";
+import { Bounce, Fade, Slide } from "react-awesome-reveal";
 
 interface SeasonsListProps {
   seasons: string[]
@@ -51,7 +52,7 @@ export function EpisodesSection({ seriesId, seriesCover, data, setBlur }: Episod
     <section 
       onMouseEnter={() => setBlur(true)}
       onMouseLeave={() => setBlur(false)}
-      className="mx-8 mb-8 space-y-1 bg-background p-5 pb-4 2xl:p-6 2xl:pb-4 rounded-2xl shadow-lg"
+      className="mb-8 space-y-1 mt-2 pb-4 2xl:pb-4"
       >
       {data.episodes ? (
         <div>
@@ -78,7 +79,7 @@ function SeasonsList({ seasons, currentSeason, setCurrentSeason }: SeasonsListPr
   return (
     <div>
       <ScrollArea className="w-full pb-4 mb-2">
-        <div className="flex gap-6 text-nowrap">
+        <div className="flex gap-6 text-nowrap ml-16 mr-6">
           { seasons && seasons.map(s => (
               <div key={s} onClick={() => setCurrentSeason(s)} className={`px-2 py-1 hover:opacity-80 border-b-2 transition ease-in-out text-sm 2xl:text-base cursor-pointer ${currentSeason === s ? 'border-b-2 border-primary' : 'text-muted-foreground border-transparent'}`}>Season {s}</div>
           ))}
@@ -162,8 +163,8 @@ function EpisodesList({ episodes, seriesId, currentSeason, seriesCover, episodeS
   }, [episodes, userEpisodesData])
 
   return (
-    <ScrollArea className="w-full whitespace-nowrap rounded-lg">
-      <div className="flex w-max space-x-4 2xl:space-x-6 pb-4 whitespace-nowrap rounded-md">
+    <ScrollArea className="w-full whitespace-nowrap">
+      <div className="flex w-max space-x-6 2xl:space-x-6 pb-4 whitespace-nowrap mr-6 ml-16">
         {episodes && episodes.map((ep, index) => renderItem(ep, seriesCover, index))}
       </div>
       <ScrollBarStyled orientation="horizontal" />

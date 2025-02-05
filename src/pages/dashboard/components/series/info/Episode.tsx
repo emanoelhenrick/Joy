@@ -22,12 +22,12 @@ export function Episode({ imageSrc, cover, progress, episodeNumber, duration }: 
   return (
     <div className="w-72 2xl:w-80 cursor-pointer group relative">
       <Fade duration={500} className="z-10">
-        <div className="relative shadow-lg group-hover:opacity-80 duration-300 transition ease-out flex items-center aspect-video justify-center overflow-hidden rounded-lg">
+        <div className="relative shadow-lg group-hover:opacity-80 duration-300 bg-secondary transition ease-out flex items-center aspect-video justify-center overflow-hidden rounded-lg ">
           {
-            (imageSrc && !isError) ? <LazyLoadImage onError={() => setIsError(true)} src={imageSrc} className="w-full h-full group-hover:scale-100 scale-105 duration-300 transition ease-out object-cover opacity-70" />
-            : <LazyLoadImage src={statedCover} className="object-cover w-full h-full group-hover:scale-100 scale-105 duration-300 transition ease-out opacity-70" />
+            (imageSrc && !isError) ? <LazyLoadImage onError={() => setIsError(true)} src={imageSrc} className="w-full h-full group-hover:scale-100 scale-105 duration-300 transition ease-out object-cover opacity-90" />
+            : <LazyLoadImage src={statedCover} className="object-cover w-full h-full group-hover:scale-100 scale-105 duration-300 transition ease-out opacity-90" />
           }
-          <FaPlay className="absolute  size-8" />
+          <FaPlay className="absolute size-8 z-10 opacity-80" />
           
           <div className="inset-0 w-full absolute bg-gradient-to-b from-transparent to-background/80" />
         </div>

@@ -83,9 +83,6 @@ export default function LivePlaylistScroll({ playlist, fetchMore, hasMore, first
     )
   }, [])
 
-  console.log(data);
-  
-
   return (
     <div className={`w-full flex mb-6 ml-2`}>
       <div className={`grid grid-cols-[1fr_2fr] w-full gap-3 h-fit mr-6`}>
@@ -98,10 +95,10 @@ export default function LivePlaylistScroll({ playlist, fetchMore, hasMore, first
             <ScrollBar color="blue" />
           </ScrollArea>
         </div>
-        <div className="w-full pr-4 h-fit flex flex-col max-w-screen-xl rounded-lg p-4 bg-primary-foreground">
+        <div className="w-full pr-4 h-fit flex flex-col rounded-lg p-4 bg-primary-foreground">
           <div className="flex items-center justify-between">
             <div className="flex gap-4 items-center">
-              <LiveImage src={live.stream_icon} />
+              <LiveImage key={live.stream_icon} src={live.stream_icon} />
               <span className="text-2xl block leading-none line-clamp-1 text-nowrap">{live.name}</span>
             </div>
 
@@ -116,12 +113,12 @@ export default function LivePlaylistScroll({ playlist, fetchMore, hasMore, first
           {(!isFetching && data && data.data.epg_listings[0]) && (
           <Fade duration={500}>
             <div className="mt-4 space-y-1 p-4 rounded-lg bg-secondary">
-              <div className="flex items-center justify-between">
-                <span className="text-xl font-bold">{data?.data.epg_listings[0] && decode(data?.data.epg_listings[0].title)}</span>
+              <div className="flex items-center gap-4 justify-between">
+                <span className="text-xl line-clamp-1 text-nowrap font-bold">{data?.data.epg_listings[0] && decode(data?.data.epg_listings[0].title)}</span>
                 <div className="flex gap-2 items-center">
-                  <span className="text-sm text-muted-foreground">{format(data?.data.epg_listings[0].start, 'p')}</span>
+                  <span className="text-sm text-muted-foreground">{data && format(data?.data.epg_listings[0].start, 'p')}</span>
                   <span className="text-sm text-muted-foreground">-</span>
-                  <span className="text-sm text-muted-foreground">{format(data?.data.epg_listings[0].stop, 'p')}</span>
+                  <span className="text-sm text-muted-foreground">{data && format(data?.data.epg_listings[0].stop || data?.data.epg_listings[0].end, 'p')}</span>
                 </div>
               </div>
               {data?.data.epg_listings[0] && (

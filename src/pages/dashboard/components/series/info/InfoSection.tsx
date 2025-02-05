@@ -49,7 +49,7 @@ export function InfoSection({ title, releaseDate, genre, description, cast, dire
         </div>
       )}
 
-      <div className="max-w-screen-md 2xl:max-w-screen-lg mt-2 flex flex-col gap-2">
+      <div className="max-w-screen-md 2xl:max-w-screen-lg mt-1 flex flex-col gap-2">
         {description && <span className="text-base 2xl:text-lg text-primary line-clamp-4 2xl:line-clamp-6">{description}</span>}
         <div>
           <p className="text-sm 2xl:text-base truncate max-w-xl text-muted-foreground">{cast}</p>
