@@ -19113,10 +19113,16 @@ async function updateLive({ playlistUrl, categoriesUrl, name }) {
   return data;
 }
 async function authenticateUser(url2) {
-  const res = await axios$1.get(url2);
-  if (res.status !== 200) return { status: false, message: res.statusText };
-  if (res.data.user_info.status === "Expired") return { status: false, message: "Access denied, account expired." };
-  return { status: true, message: "Validated" };
+  try {
+    const res = await axios$1.get(url2);
+    if (res.status !== 200) return { status: false, message: res.statusText };
+    if (res.data.user_info.status === "Expired") return { status: false, message: "Access denied, account expired." };
+    return { status: true, message: "Validated" };
+  } catch (error) {
+    if (error instanceof Error) {
+      return { status: false, message: error.message };
+    }
+  }
 }
 async function addPlaylistToMeta(playlistInfo) {
   const metadata = await main$1.readAsync(META_PATH, "json");
