@@ -87,16 +87,9 @@ export function LiveDashboard() {
   return (
     <div className="max-h-screen overflow-hidden w-full flex flex-col">
       <div className="flex flex-col w-full">
-        <div className='flex flex-col gap-2'>
+        <div className='flex flex-col gap-3'>
           <div className='flex ml-2 items-center justify-between mt-4'>
             <div className='flex items-center justify-between gap-4'>
-              <div className={`h-fit text-sm py-1 px-4 rounded-md transition hover:opacity-90 gap-2 bg-secondary text-primary relative flex items-center`}>
-                <p>Live</p>
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
-                  <span className={`relative inline-flex rounded-full h-2 w-2 bg-red-500`}/>
-                </span>
-              </div>
               
               <Select onValueChange={(value) => setCurrentCategory(value)} value={currentCategory}>
                 <SelectTrigger  className="w-fit gap-2">

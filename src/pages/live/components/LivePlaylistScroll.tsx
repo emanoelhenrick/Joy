@@ -12,6 +12,8 @@ import { Button } from "@/components/ui/button";
 import { FaPlay } from "react-icons/fa";
 import electronApi from "@/config/electronApi";
 import { VlcDialog } from "./VlcDialog";
+import { Fade } from "react-awesome-reveal";
+import { format } from "date-fns";
 
 export default function LivePlaylistScroll({ playlist, fetchMore, hasMore, firstChannel }: { playlist: LiveProps[], fetchMore: () => void, hasMore: boolean, firstChannel: LiveProps }) {
   const queryClient = useQueryClient()
@@ -69,7 +71,7 @@ export default function LivePlaylistScroll({ playlist, fetchMore, hasMore, first
   const renderItem = useCallback((live: LiveProps) => {
     return (
       <div
-        className="flex hover:scale-95 transition bg-primary-foreground w-full p-3 rounded-sm gap-3 cursor-pointer relative group"
+        className="flex hover:bg-secondary transition w-full p-3 gap-3 cursor-pointer relative group"
         key={live.stream_id}
         onClick={() => handleChannel(live)}
       >
@@ -81,39 +83,55 @@ export default function LivePlaylistScroll({ playlist, fetchMore, hasMore, first
     )
   }, [])
 
+  console.log(data);
+  
+
   return (
     <div className={`w-full flex mb-6 ml-2`}>
-      <div className={`grid grid-cols-[1fr_2fr] w-full gap-2 pr-2 h-fit`}>
+      <div className={`grid grid-cols-[1fr_2fr] w-full gap-3 h-fit mr-6`}>
         <div className="w-full pb-4">
-          <ScrollArea className="w-full h-[90vh] rounded-md">
-            <div className="flex flex-col mb-4 gap-2 pr-4">
+          <ScrollArea className="w-full h-[90vh] bg-primary-foreground rounded-lg">
+            <div className="flex flex-col mb-4">
               {playlist.map((live) => renderItem(live))}
               <div ref={ref} className="w-full h-1" />
             </div>
             <ScrollBar color="blue" />
           </ScrollArea>
         </div>
-        <div className="w-full pr-4 h-fit flex flex-col max-w-screen-xl">
-          <div className="flex gap-3 items-center">
-            <LiveImage src={live.stream_icon} />
-            <span className="text-2xl block leading-none">{live.name}</span>
+        <div className="w-full pr-4 h-fit flex flex-col max-w-screen-xl rounded-lg p-4 bg-primary-foreground">
+          <div className="flex items-center justify-between">
+            <div className="flex gap-4 items-center">
+              <LiveImage src={live.stream_icon} />
+              <span className="text-2xl block leading-none line-clamp-1 text-nowrap">{live.name}</span>
+            </div>
+
+            <Button key='vlc' onClick={launchVlc} size={"lg"} className="bg-primary transition-none relative overflow-hidden w-fit">
+              <div className="flex gap-2">
+                <FaPlay />
+                <span className="leading-none text-base">Watch</span>
+              </div>
+            </Button>
           </div>
 
           {(!isFetching && data && data.data.epg_listings[0]) && (
-            <div className="mt-3 space-y-1">
-              <span className="text-xl">{data?.data.epg_listings[0] && decode(data?.data.epg_listings[0].title)}</span>
+          <Fade duration={500}>
+            <div className="mt-4 space-y-1 p-4 rounded-lg bg-secondary">
+              <div className="flex items-center justify-between">
+                <span className="text-xl font-bold">{data?.data.epg_listings[0] && decode(data?.data.epg_listings[0].title)}</span>
+                <div className="flex gap-2 items-center">
+                  <span className="text-sm text-muted-foreground">{format(data?.data.epg_listings[0].start, 'p')}</span>
+                  <span className="text-sm text-muted-foreground">-</span>
+                  <span className="text-sm text-muted-foreground">{format(data?.data.epg_listings[0].stop, 'p')}</span>
+                </div>
+              </div>
               {data?.data.epg_listings[0] && (
                 <p className="rounded-md text-muted-foreground">{decode(data?.data.epg_listings[0].description)}</p>
               )}
             </div>
+          </Fade>
           )}
 
-          <Button key='vlc' onClick={launchVlc} size={"lg"} className="bg-primary transition-none relative overflow-hidden w-fit mt-2">
-            <div className="flex gap-2">
-              <FaPlay />
-              <span className="leading-none text-base">Watch</span>
-            </div>
-          </Button>
+          
         </div>
       </div>
 

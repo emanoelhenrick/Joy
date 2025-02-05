@@ -85,7 +85,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
   const cast = data ? (data.info.cast && data.info.cast.trim()) : undefined
   const director = data ? (data.info.director && data.info.director.trim()) : undefined
 
-  const genres = data ? data.info.genre.replaceAll(/^\s+|\s+$/g, "").split(/[^\w\sÀ-ÿ-]/g) : ['']
+  const genres = (data && data.info.genre) ? data.info.genre.replaceAll(/^\s+|\s+$/g, "").split(/[^\w\sÀ-ÿ-]/g) : ['']
   const rating = data ? data.info.rating || (data.info.rating_5based && data.info.rating_5based * 2) : undefined
   
   return (
