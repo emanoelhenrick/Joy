@@ -11,7 +11,7 @@ export interface EditPlaylistInfoProps {
 export async function editPlaylistInfo({ playlistName, newPlaylistInfo }: EditPlaylistInfoProps) {
   const metadata: MetaProps = await readAsync(META_PATH, 'json')
   const updatedPlaylists = metadata.playlists.map(playlist => {
-    if (playlist.name === playlistName) return newPlaylistInfo
+    if (playlist.name === playlistName) return { ...newPlaylistInfo, profiles: playlist.profiles }
     return playlist
   })
   metadata.currentPlaylist = { name: newPlaylistInfo.name, profile: 'Default' }
