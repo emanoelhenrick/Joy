@@ -21296,7 +21296,7 @@ function JA(i) {
   process.kill(i, "SIGINT");
 }
 async function VA({ playlistName: i, newPlaylistInfo: e }) {
-  const t = await ue.readAsync(De, "json"), s = t.playlists.map((o) => o.name === i ? e : o);
+  const t = await ue.readAsync(De, "json"), s = t.playlists.map((o) => o.name === i ? { ...e, profiles: o.profiles } : o);
   return t.currentPlaylist = { name: e.name, profile: "Default" }, t.playlists = s, await ue.renameAsync(Kf(i), e.name), await ue.writeAsync(De, t);
 }
 function XA(i) {
@@ -21606,7 +21606,7 @@ let Ze;
 aT && ti.quit();
 function Qm() {
   Ze = new Ld({
-    icon: pt.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
+    icon: pt.join(process.env.VITE_PUBLIC, "icons/icon.png"),
     webPreferences: {
       preload: pt.join(Ym, "preload.mjs"),
       nodeIntegration: !1,
