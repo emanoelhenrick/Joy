@@ -13,6 +13,7 @@ interface Props {
 }
 
 export function InfoSection({ title, releaseDate, genre, description, cast, director, rating, logos }: Props) {
+  
   function getRightLogo(logos: TitleLogo[]) {
     if (!logos) return
     if (logos.length === 0) return
