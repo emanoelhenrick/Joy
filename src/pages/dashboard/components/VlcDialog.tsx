@@ -28,7 +28,7 @@ export function VlcDialog({ open, closeDialog, updateUserStatus }: VlcDialogProp
   })
 
   useEffect(() => {
-    if (data && data.length > 0) {
+    if (data && data.length > 0 && data.time > 0) {
       setIsRunning(true)
       updateUserStatus(data)
     }
