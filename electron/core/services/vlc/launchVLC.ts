@@ -18,7 +18,6 @@ export function launchVLC({ path, startTime }: LaunchVlcProps, win: BrowserWindo
     '--no-snapshot-preview',
     '--no-osd',
     '--network-caching=5000',
-    '--loop',
     path
   ], { shell: true });
   vlc.setMaxListeners(2)
