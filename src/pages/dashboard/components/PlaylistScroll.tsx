@@ -35,7 +35,7 @@ export default function PlaylistScroll({ data }: any) {
   return (
     <div className="h-fit rounded-xl">
       <Dialog open={selectedMovie && true}>
-        <DialogContent className="w-screen bg-background h-screen items-center justify-center" aria-describedby={undefined}>
+        <DialogContent className="w-screen h-screen items-center justify-center" aria-describedby={undefined}>
           <div
             onClick={() => setSelectedMovie(undefined)}
             className="cursor-pointer absolute right-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
@@ -52,7 +52,7 @@ export default function PlaylistScroll({ data }: any) {
       </Dialog>
 
       <Dialog open={selectedSeries && true}>
-        <DialogContent className="w-screen bg-background h-screen items-center justify-center" aria-describedby={undefined}>
+        <DialogContent className="w-screen h-screen items-center justify-center" aria-describedby={undefined}>
           <div
             onClick={() => setSelectedSeries(undefined)}
             className="cursor-pointer absolute right-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">

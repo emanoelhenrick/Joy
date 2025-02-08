@@ -20,7 +20,12 @@ import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from "@/states/use
 import { useTrending } from "@/states/useTrending"
  
 const formSchema = z.object({
-  name: z.string().min(1),
+  name: z.string()
+    .min(1)
+    .trim()
+    .regex(/^[A-Za-z0-9 ]*$/, {
+    message: "Special characters are not allowed",
+    }),
   username: z.string().min(1),
   password: z.string().min(1),
   url: z.string().url()

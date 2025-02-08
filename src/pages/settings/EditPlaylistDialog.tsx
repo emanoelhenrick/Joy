@@ -16,7 +16,12 @@ import { Dialog, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { DialogContent } from "@/components/menubar/dialog"
 
 const formSchema = z.object({
-  name: z.string().min(1),
+  name: z.string()
+    .min(1)
+    .trim()
+    .regex(/^[A-Za-z0-9 ]*$/, {
+    message: "Special characters are not allowed",
+    }),
   username: z.string().min(1),
   password: z.string().min(1),
   url: z.string().url()
