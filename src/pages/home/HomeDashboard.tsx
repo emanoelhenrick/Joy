@@ -45,13 +45,8 @@ export function HomeDashboard() {
       const favoritesList: string[] = []
       for (const s of userDataSeries) {
         if(s.watching) watchingList.push(s.id!)
+        if (s.favorite) favoritesList.push(s.id!)
       }
-
-      userDataSeries.forEach(s => {
-        if (s.favorite) {
-          favoritesList.push(s.id!)
-        }
-      })
 
       const watchingSeries: SeriesProps[] | undefined = []
       if (seriesData!.playlist.length > 0) {
@@ -90,13 +85,8 @@ export function HomeDashboard() {
       const favoritesList: string[] = []
       for (const v of userDataVod) {
         if (v.watching) watchingList.push(v.id!.toString())
+        if (v.favorite) favoritesList.push(v.id!)
       }
-
-      userDataVod.forEach(s => {
-        if (s.favorite) {
-          favoritesList.push(s.id!)
-        }
-      })
 
       const watchingVod: VodProps[] | undefined = []
       if (vodData!.playlist.length > 0) {
