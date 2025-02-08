@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Episode } from "./Episode";
 import { usePlaylistUrl } from "@/states/usePlaylistUrl";
 import { useUserData } from "@/states/useUserData";
-import { VlcDialog } from "../../VlcDialog";
+import { VlcDialog } from "../VlcDialog";
 import electronApi from "@/config/electronApi";
 import { formatDurationFromSeconds } from "@/utils/formatDuration";
 import { Bounce, Fade, Slide } from "react-awesome-reveal";

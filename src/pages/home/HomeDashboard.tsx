@@ -6,13 +6,13 @@ import { SeriesProps } from 'electron/core/models/SeriesModels';
 import { VodProps } from 'electron/core/models/VodModels';
 import { useUserData } from '@/states/useUserData';
 import { useSeriesPlaylist, useVodPlaylist } from '@/states/usePlaylistData';
-import { SeriesPage } from '../dashboard/components/series/info';
+import { SeriesPage } from '../dashboard/components/series';
 import { WatchingScroll } from './components/WatchingScroll';
 import { FavoritesScroll } from './components/FavoritesScroll';
 import { Trending } from './components/Trending';
 import { HomeCover } from './components/HomeCover';
 import { ScrollBarStyled } from '@/components/ScrollBarStyled';
-import { VodPage } from '../dashboard/components/vod/info';
+import { VodPage } from '../dashboard/components/vod';
 import { Fade } from 'react-awesome-reveal';
 
 export function HomeDashboard() {

@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../components/dashboard/SelectCategories"
-import { lazy, Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useDebounce } from 'use-debounce';
 import { useSeriesPlaylist, useVodPlaylist } from '@/states/usePlaylistData';
 import { MenuTab } from './components/MenuTab';
@@ -15,9 +15,7 @@ import Fuse from "fuse.js"
 import PaginationComponent from '@/components/PaginationComponent'
 import { useSearchParams } from 'react-router-dom';
 import { SearchInput } from '@/components/SearchInput';
-
-const VodPlaylistScroll = lazy(() => import('./components/vod/VodPlaylistScroll'))
-const SeriesPlaylistScroll = lazy(() => import('./components/series/SeriesPlaylistScroll'))
+import PlaylistScroll from "./components/PlaylistScroll";
 
 export function Dashboard() {
   const vodData = useVodPlaylist((state => state.data))
@@ -42,9 +40,19 @@ export function Dashboard() {
     setTab(tab)
   }
 
-  let data: { categories: any[], playlist: any[] } = vodData;
-  if (tab === 'vod') data = vodData
-  if (tab === 'series') data = seriesData
+  const data = useMemo(() => {
+    if (tab === 'vod') return vodData
+    return seriesData
+  }, [seriesData, vodData, tab])
+
+  const fuse: any = useMemo(() => {
+    if (!data) return 
+    return new Fuse(data.playlist as any, {
+      keys: ['name'],
+      threshold: 0.4,
+      minMatchCharLength: 2
+    })
+  }, [data])
 
   const handleScrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -52,27 +60,21 @@ export function Dashboard() {
 
   const filtered = useMemo(() => {
     setPage(1)
-    if (data) {
-      const fuse = new Fuse(data!.playlist, {
-        keys: ['name'],
-        threshold: 0.4,
-        minMatchCharLength: 2
-      })
-
-      if (currentCategory === 'all') {
-        return search.length > 0 ? fuse.search(search).map(i => i.item) : data!.playlist
-      }
-
-      return search.length > 0 ? fuse.search(search)
-        .map(i => i.item)
-        .filter(p => p.category_id === currentCategory) :
-          data!.playlist.filter(p => p.category_id === currentCategory)
+    if (!data) return
+    const isSearching = search.length > 0
+    if (currentCategory === 'all') {
+      if (isSearching) return fuse!.search(search).map((i: { item: any; }) => i.item)
+      return data!.playlist
     }
-    
-  }, [search, currentCategory, data, tab])
 
-  
-  
+    if (isSearching) {
+      return fuse!.search(search)
+        .map((i: { item: any; }) => i.item)
+        .filter((p: { category_id: string; }) => p.category_id === currentCategory)
+    }
+    return data!.playlist.filter(p => p.category_id === currentCategory)
+    
+  }, [search, currentCategory, data])
 
   const pages = useMemo(() => {
     if (!filtered) return 0
@@ -81,8 +83,8 @@ export function Dashboard() {
 
   const playlist = useMemo(() => {
     return paginate(page, itemsPerPage)
-  }, [search, currentCategory, page, data, tab, width, filtered])
-  
+  }, [search, currentCategory, page, data, width, filtered])
+
   function paginate(page: number, elements: number) {
     if (!filtered) return []
     const startIndex = (page - 1) * elements
@@ -128,8 +130,7 @@ export function Dashboard() {
         </div>
         {playlist.length > 0 ?
           <Suspense fallback={<div className='w-full h-screen' />}>
-            {tab === 'vod' && <VodPlaylistScroll data={playlist} />}
-            {tab === 'series' && <SeriesPlaylistScroll data={playlist} />}
+            <PlaylistScroll data={playlist} />
           </Suspense> : (
             search && <p className='text-sm text-muted-foreground'>No results found</p>
           )

@@ -9,7 +9,7 @@ import { Backdrop as BackdropType, MovieDb, } from "moviedb-promise"
 import { Button } from "@/components/ui/button"
 import { format } from "date-fns"
 import { LazyLoadImage } from "react-lazy-load-image-component"
-import { VlcDialog } from "../../VlcDialog"
+import { VlcDialog } from "../VlcDialog"
 import { ClearDataAlertDialog } from "./ClearDataAlertDialog"
 import { InfoSection } from "./InfoSection"
 import { ImSpinner8 } from "react-icons/im";
