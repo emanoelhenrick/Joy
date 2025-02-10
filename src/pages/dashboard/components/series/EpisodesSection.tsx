@@ -108,9 +108,9 @@ function EpisodesList({ episodes, seriesId, currentSeason, seriesCover, episodeS
     })
   }
 
-  const updateSeason = useCallback((progress: number) => {
+  const updateSeason = (progress: number) => {
     if (progress > 0) updateDefaultSeason(seriesId, currentSeason)
-  }, [currentSeason])
+  }
 
   useEffect(() => {
     if (!episodeRunning && state) {
