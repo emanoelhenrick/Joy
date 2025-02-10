@@ -132,7 +132,6 @@ export function Initial() {
 
   return (
     <div className="w-full h-screen flex justify-center items-center">
-      <img className="fixed w-full h-full object-cover blur-3xl opacity-30" src="https://images.unsplash.com/photo-1606054512716-fb198b6686c9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDN8fGFic3RyYWN0fGVufDB8MHwwfHx8Mg%3D%3D" alt="" />
       <Fade direction="up" duration={500}>
       <div className="flex items-center justify-center p-8 rounded-lg w-fit bg-primary-foreground/60 backdrop-blur-3xl">
         <div className="mx-auto grid w-[350px] gap-6">
