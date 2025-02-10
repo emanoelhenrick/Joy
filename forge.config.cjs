@@ -4,27 +4,38 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 module.exports = {
   packagerConfig: {
     asar: true,
+    icon: 'src/assets/icons/icon'
   },
-  icon: "./public/icons/icon",
+  icon: "src/assets/icons/icon",
   rebuildConfig: {},
   makers: [
     {
-      "name": "@electron-forge/maker-squirrel",
-      "config": {
-        "name": "joi-client",
-        "noMsi": true,
-        "shortcutName": "JXC",
-        "createDesktopShortcut": true
+      name: "@electron-forge/maker-squirrel",
+      config: {
+        name: "JOI",
+        setupIcon: 'src/assets/icons/icon.ico',
+        noMsi: true,
+        shortcutName: "JXC",
+        createDesktopShortcut: true
       }
-    },
-    {
-      name: '@electron-forge/maker-zip',
-      platforms: ['darwin'],
     },
     {
       name: '@electron-forge/maker-rpm',
       config: {
+        name: "JOI",
+        options: {
+          icon: 'src/assets/icons/icon.png'
+        }
       },
+    },
+    {
+      name: '@electron-forge/maker-deb',
+      config: {
+        name: "JOI",
+        options: {
+          icon: 'src/assets/icons/icon.png'
+        }
+      }
     }
   ],
   plugins: [

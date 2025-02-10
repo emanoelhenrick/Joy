@@ -1,7 +1,8 @@
 {
   "name": "joi-client",
+  "productName": "JOI Client",
   "private": true,
-  "version": "0.3.5",
+  "version": "0.4.1",
   "type": "module",
   "author": "Emanoel Henrick",
   "build": {
@@ -11,7 +12,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && npm run package && npm run make",
+    "build": "npx vite build && npm run package && npm run make",
     "preview": "vite preview",
     "start": "electron-forge start",
     "package": "electron-forge package",
