@@ -153,7 +153,7 @@ function Backdrop({ backdropPath, cover, blur }: { backdropPath: string, cover: 
       <div className="fixed">
         <Fade triggerOnce>
           <img
-            className={`w-1/2 h-full object-cover fixed top-0 -z-10 ${blur ? 'brightness-75' : 'scale-105'}`}
+            className={`w-full h-full ${blur ? 'brightness-75' : 'scale-105'} duration-700 object-cover fixed transition ease-out top-0`}
             src={imageSrc}
           />
         </Fade>

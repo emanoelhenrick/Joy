@@ -26721,24 +26721,33 @@ async function fetchTmdbTrending({ apiKey, playlistName }) {
   return filtered;
 }
 function launchVLC({ path: path2, startTime }, win2) {
-  const vlc = spawn$1(`vlc`, [
+  let vlc;
+  const args = [
     "--extraintf",
     "http",
-    "--http-host 127.0.0.1",
-    "--http-port 9090",
-    "--http-password joi",
+    "--http-host",
+    "127.0.0.1",
+    "--http-port",
+    "9090",
+    "--http-password",
+    "joi",
     "--fullscreen",
-    `--start-time=${startTime}`,
-    "--no-snapshot-preview",
-    "--no-osd",
-    "--network-caching=5000",
+    "--start-time",
+    startTime.toString(),
     path2
-  ], { shell: true });
+  ];
+  if (process.platform === "win32") {
+    const vlcExePath = "C:/Program Files/VideoLAN (x86)/VLC/vlc.exe";
+    vlc = spawn$1(vlcExePath, args);
+  } else {
+    vlc = spawn$1("vlc", args);
+  }
   vlc.setMaxListeners(2);
   vlc.stderr.on("data", (data) => {
-    if (data.toString().includes("access stream error")) {
+    const errorMessage = data.toString();
+    if (errorMessage.includes("access stream error")) {
       vlc.kill();
-      win2.webContents.send("vlc-status", { running: false, error: data.toString() });
+      win2.webContents.send("vlc-status", { running: false, error: errorMessage });
     }
   });
   vlc.on("close", () => {
