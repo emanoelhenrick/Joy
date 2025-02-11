@@ -98,6 +98,15 @@ export function MenuBar() {
     const updatedLive = await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: metadata.currentPlaylist.name })
     await electronApi.updatedAtPlaylist(metadata.currentPlaylist.name)
 
+    if (!updatedVod || !updatedSeries || !updatedLive) {
+      setUpdatingError(true)
+      setUpdating(false)
+      return toast({
+        variant: "destructive",
+        title: 'Playlist cannot be added.'
+      })
+    }
+
     updateVodPlaylistState(updatedVod)
     updateSeriesPlaylistState(updatedSeries)
     updateLivePlaylistState(updatedLive)

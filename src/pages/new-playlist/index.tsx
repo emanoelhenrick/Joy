@@ -74,6 +74,15 @@ export function Initial() {
     setProgress({ msg: 'Downloading Live playlist...', value: 80})
     const liveData = await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: formValue!.name })
 
+    if (!vodData || !seriesData || !liveData) {
+      setSubmitted(false)
+      setValidated(false)
+      return toast({
+        variant: "destructive",
+        title: 'Playlist cannot be added.'
+      })
+    }
+    
     setProgress({ msg: 'Updating configs...', value: 90})
     formValue!.updatedAt = Date.now()
     await electronApi.addPlaylistToMeta(formValue!)
