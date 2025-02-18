@@ -27,7 +27,9 @@ export function HomeDashboard() {
 
   const vodByDate = useMemo(() => {
     if (vodData && vodData.playlist) {
-      return vodData!.playlist.slice(0, 25)
+      return vodData!.playlist
+        .sort((a, b) => parseInt(b.added.toString()) - parseInt(a.added.toString()))
+        .slice(0, 25)
     }
   }, [vodData])
 
