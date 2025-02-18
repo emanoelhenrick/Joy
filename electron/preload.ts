@@ -55,6 +55,5 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 
   launchVLC: async (args: any) => await ipcRenderer.invoke('launch-vlc', args),
   getVLCState: async (args: any) => await ipcRenderer.invoke('get-vlc-state', args),
-  killProcess: async (args: any) => await ipcRenderer.invoke('kill-process', args),
   removeAllListeners: (args: any) => ipcRenderer.removeAllListeners(args),
 })

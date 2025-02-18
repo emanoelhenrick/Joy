@@ -23,7 +23,6 @@ import { removePlaylist } from "./services/removePlaylist";
 import { fetchTmdbTrending } from "./services/fetchTmdbTrending";
 import { launchVLC } from "./services/vlc/launchVLC";
 import { getVLCState } from "./services/vlc/getVLCState";
-import { killProcess } from "./services/vlc/killProcess";
 import { editPlaylistInfo } from "./services/editPlaylistInfo";
 
 export default function CoreControllers(win: BrowserWindow) {
@@ -60,5 +59,4 @@ export default function CoreControllers(win: BrowserWindow) {
 
   ipcMain.handle('launch-vlc', async (_event, args) => launchVLC(args, win))
   ipcMain.handle('get-vlc-state', async (_event) => await getVLCState())
-  ipcMain.handle('kill-process', async (_event, args) => killProcess(args))
 }
