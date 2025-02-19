@@ -24,7 +24,7 @@ export function launchVLC({ path, startTime }: LaunchVlcProps, win: BrowserWindo
   ];
 
   if (process.platform === "win32") {
-    const vlcExePath = "C:/Program Files/VideoLAN (x86)/VLC/vlc.exe";
+    const vlcExePath = "C:/Program Files (x86)/VideoLAN/VLC/vlc.exe";
     vlc = spawn(vlcExePath, args);
   } else {
     vlc = spawn("vlc", args);
