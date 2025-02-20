@@ -1,5 +1,5 @@
 import { ScrollBarStyled } from "@/components/ScrollBarStyled";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { EpisodeProps, SerieInfoProps } from "electron/core/models/SeriesModels";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Episode } from "./Episode";
@@ -167,7 +167,7 @@ function EpisodesList({ episodes, seriesId, currentSeason, seriesCover, episodeS
       <div className="flex w-max space-x-6 2xl:space-x-6 pb-4 whitespace-nowrap mr-6 ml-16">
         {episodes && episodes.map((ep, index) => renderItem(ep, seriesCover, index))}
       </div>
-      <ScrollBarStyled orientation="horizontal" />
+      <ScrollBar orientation={'horizontal'} className="cursor-pointer ml-16 mr-6" />
 
       {episodeRunning && (
         <VlcDialog

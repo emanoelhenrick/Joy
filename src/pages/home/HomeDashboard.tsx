@@ -203,7 +203,7 @@ export function HomeDashboard() {
                 <div className='flex gap-2 items-center mb-2'>
                   <h1 className="text-2xl font-bold">Recently updated series</h1>
                 </div>
-                <ScrollArea className="w-full rounded-md">
+                <ScrollArea className="w-full">
                   <div className="flex w-max gap-3 pb-5 pr-4 rounded-md">
                     {seriesByDate!.map(series => renderSeriesItem(series))}
                   </div>
@@ -217,7 +217,7 @@ export function HomeDashboard() {
                 <div className='flex gap-2 items-center mb-2'>
                   <h1 className="text-2xl font-bold">Recently added movies</h1>
                 </div>
-                <ScrollArea className="w-full rounded-md">
+                <ScrollArea className="w-full">
                   <div className="flex h-full w-max gap-3 pb-5 pr-4 rounded-md">
                   {vodByDate!.map(movie => renderVodItem(movie))}
                   </div>

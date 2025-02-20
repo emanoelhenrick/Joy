@@ -64,7 +64,7 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
         <h1 className="text-2xl font-bold">Continue watching</h1>
       </div>
         <ScrollArea className="w-full rounded-md">
-          <div className="flex w-max space-x-4 pb-5 pr-4 rounded-md">
+          <div className="flex w-max space-x-4 pb-5 pr-4">
             {watchingList && watchingList.map((m: any) => {
               if (m.stream_id) return renderVodItem(m as VodProps)
               return renderSeriesItem(m as SeriesProps)
