@@ -107,7 +107,7 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu, setUpdatingErro
             <p className="scroll-m-20 text-sm text-muted-foreground">Last updated: {lastUpdated && formatDistanceToNow(new Date(lastUpdated))}</p>
             <RotateCw size={15} className={`text-muted-foreground ${updating && 'animate-spin'}`} />
           </div>
-          <Select value={selectedPlaylist} onValueChange={(value) => setSelectedPlaylist(value)}>
+          <Select disabled={updating} value={selectedPlaylist} onValueChange={(value) => setSelectedPlaylist(value)}>
             <SelectTrigger className="w-[180px] hover:bg-secondary">
               <SelectValue />
             </SelectTrigger>
