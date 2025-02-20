@@ -13,7 +13,7 @@ import { differenceInHours } from "date-fns";
 import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from "@/states/usePlaylistData";
 import { SelectProfile } from "../select-profile/SelectProfile";
 import { useUserData } from "@/states/useUserData";
-import { PiHouseFill, PiMonitorFill, PiBroadcastFill, PiGearSixFill } from "react-icons/pi";
+import { PiHouseFill, PiMagnifyingGlassBold, PiBroadcastFill, PiGearSixFill } from "react-icons/pi";
 import { useMeasure } from "@uidotdev/usehooks";
 
 interface ProfilesProps {
@@ -184,11 +184,11 @@ export function MenuBar() {
             <Button variant='ghost' onClick={() => navigate(`/dashboard/home/${playlistName}`)} className={`h-fit gap-2 ${location.pathname.includes('home') ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
               <PiHouseFill className="size-6" />
             </Button>
-            <Button variant='ghost' onClick={() => navigate(`/dashboard/explore`)} className={`h-fit gap-2 ${location.pathname.includes('explore') ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
-              <PiMonitorFill className="size-6" />
-            </Button>
             <Button variant='ghost' onClick={() => navigate(`/dashboard/live`)} className={`h-fit gap-2 ${location.pathname.includes('live') ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
               <PiBroadcastFill className='size-6' />
+            </Button>
+            <Button variant='ghost' onClick={() => navigate(`/dashboard/explore`)} className={`h-fit gap-2 ${location.pathname.includes('explore') ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
+              <PiMagnifyingGlassBold className="size-6" />
             </Button>
           </div>
 
