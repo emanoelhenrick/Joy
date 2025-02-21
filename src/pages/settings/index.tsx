@@ -1,10 +1,7 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import electronApi from "@/config/electronApi";
-import { useToast } from "@/hooks/use-toast";
-import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from "@/states/usePlaylistData";
-import { usePlaylistUrl } from "@/states/usePlaylistUrl";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { PlaylistInfo } from "electron/core/models/PlaylistInfo";
 import { RotateCw } from "lucide-react";
@@ -13,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { NewPlaylistDialog } from "./NewPlaylistDialog";
 import { EditPlaylistDialog } from "./EditPlaylistDialog";
 
-export function SettingsPage({ currentPlaylist, updating, updatePlaylist }: { currentPlaylist: string, updating: boolean, updatePlaylist: () => void }) {
+export function SettingsPage({ currentPlaylist, updating, updatePlaylist }: { currentPlaylist: string, updating: boolean, updatePlaylist: (b: boolean) => void }) {
   const navigate = useNavigate()
   const [selectedPlaylist, setSelectedPlaylist] = useState<string>(currentPlaylist)
   const [playlists, setPlaylists] = useState<PlaylistInfo[]>()
