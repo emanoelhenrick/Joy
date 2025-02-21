@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./dialog";
 import { SettingsPage } from "@/pages/settings";
 import { Avatar } from "../ui/avatar";
 import { usePlaylistUrl } from "@/states/usePlaylistUrl";
-import { toast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { MetaProps } from "electron/core/models/MetaProps";
 import { differenceInHours } from "date-fns";
 import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from "@/states/usePlaylistData";
@@ -15,6 +15,7 @@ import { SelectProfile } from "../select-profile/SelectProfile";
 import { useUserData } from "@/states/useUserData";
 import { PiHouseFill, PiMagnifyingGlassBold, PiBroadcastFill, PiGearSixFill } from "react-icons/pi";
 import { useMeasure } from "@uidotdev/usehooks";
+import { ImSpinner8 } from "react-icons/im";
 
 interface ProfilesProps {
   current: string
@@ -37,12 +38,14 @@ export function MenuBar() {
   const [updateRender, setUpdateRender] = useState(false)
   const [menuRef, { width }] = useMeasure();
 
+  const { toast } = useToast()
+
   const updateVodPlaylistState = useVodPlaylist(state => state.update)
   const updateSeriesPlaylistState = useSeriesPlaylist(state => state.update)
   const updateLivePlaylistState = useLivePlaylist(state => state.update)
   const updateUserData = useUserData(state => state.updateUserData)
 
-  async function getPlaylistName() {
+  async function updatePlaylist(fromSettings?: boolean) {
     const meta = await electronApi.getMetadata()
     const prof = {
       current: meta.currentPlaylist.profile,
@@ -51,6 +54,11 @@ export function MenuBar() {
     }
     setProfiles(prof)
     setPlaylistName(meta.currentPlaylist.name)
+
+    const playlist = meta.playlists.find(p => p.name === meta.currentPlaylist.name)
+    const difference = differenceInHours(Date.now(), new Date(playlist!.updatedAt!))
+    if (fromSettings) return await updateCurrentPlaylist(meta)
+    if (difference < 12) return
     await updateCurrentPlaylist(meta)
   }
 
@@ -70,16 +78,12 @@ export function MenuBar() {
     await electronApi.switchProfile(selectedProfile)
     updateUserData(userData)
     setUpdateRender(prev => !prev)
-    toast({ title: `switching to ${selectedProfile}`})
+    toast({ description: `switching to ${selectedProfile}`})
     setProfileDialog(false)
   }
 
   async function updateCurrentPlaylist(metadata: MetaProps) {
-    const playlist = metadata.playlists.find(p => p.name === metadata.currentPlaylist.name)
-    const difference = differenceInHours(Date.now(), new Date(playlist!.updatedAt!))
-    if (difference < 12) return
     setUpdating(true)
-    toast({ title: `Updating playlist ${metadata.currentPlaylist.name}`})
     const authResponse = await electronApi.authenticateUser(urls.getAuthenticateUrl)
     if (!authResponse.status) {
       setUpdatingError(true)
@@ -112,7 +116,7 @@ export function MenuBar() {
     updateLivePlaylistState(updatedLive)
     
     setUpdating(false)
-    toast({ title: 'The playlist was updated'})
+    toast({ description: 'The playlist was updated'})
   }
 
   const ref = useRef<any>();
@@ -134,7 +138,7 @@ export function MenuBar() {
 
   useEffect(() => {
     verifyAuth()
-    getPlaylistName()
+    updatePlaylist()
   }, [updateRender])
 
   function getInitials(string: string) {
@@ -200,12 +204,19 @@ export function MenuBar() {
             </DialogTrigger>
             <DialogContent className="w-1/2 max-w-[700px] items-center p-8 border-none bg-primary-foreground" aria-describedby={undefined}>
               <DialogTitle className="hidden">Settings</DialogTitle>
-              {playlistName && <SettingsPage currentPlaylist={playlistName} setUpdatingMenu={setUpdating} setUpdatingError={setUpdatingError} />}
+              {playlistName && <SettingsPage currentPlaylist={playlistName} updating={updating} updatePlaylist={updatePlaylist} />}
             </DialogContent>
           </Dialog>
 
         </Fade>
       </div>
+
+      {updating && (
+        <div className="fixed z-50 right-4 bottom-4 flex p-4 w-56 items-center gap-2 bg-primary-foreground rounded-lg overflow-hidden">
+          <ImSpinner8 className="size-4 animate-spin text-muted-foreground" />
+          <span className="text-muted-foreground text-sm">Updating playlist...</span>
+        </div>
+      )}
     </div>
   )
 }

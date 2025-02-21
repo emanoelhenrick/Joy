@@ -13,29 +13,19 @@ import { useNavigate } from "react-router-dom";
 import { NewPlaylistDialog } from "./NewPlaylistDialog";
 import { EditPlaylistDialog } from "./EditPlaylistDialog";
 
-export function SettingsPage({ currentPlaylist, setUpdatingMenu, setUpdatingError }: { currentPlaylist: string, setUpdatingMenu: (bool: boolean) => void, setUpdatingError: (b: boolean) => void }) {
+export function SettingsPage({ currentPlaylist, updating, updatePlaylist }: { currentPlaylist: string, updating: boolean, updatePlaylist: () => void }) {
   const navigate = useNavigate()
   const [selectedPlaylist, setSelectedPlaylist] = useState<string>(currentPlaylist)
   const [playlists, setPlaylists] = useState<PlaylistInfo[]>()
 
-  const queryClient = useQueryClient()
-  const [updating, setUpdating] = useState(false)
-  const [playlistName, setPlaylistName] = useState<string>()
   const [playlistInfo, setPlaylistInfo] = useState<PlaylistInfo>()
   const [lastUpdated, setLastUpdated] = useState<any>()
-  const { urls } = usePlaylistUrl()
-  const { toast } = useToast()
-
-  const updateVodPlaylistState = useVodPlaylist(state => state.update)
-  const updateSeriesPlaylistState = useSeriesPlaylist(state => state.update)
-  const updateLivePlaylistState = useLivePlaylist(state => state.update)
 
   async function getPlaylistName() {
     const metadata = await electronApi.getMetadata()
     const playlistInfo = metadata.playlists.find(p => p.name === metadata.currentPlaylist.name)
     setPlaylistInfo(playlistInfo)
     setLastUpdated(playlistInfo!.updatedAt)
-    setPlaylistName(metadata.currentPlaylist.name)
   }
 
   const { isSuccess, data  } = useQuery({ queryKey: ['metadata'], queryFn: electronApi.getMetadata })
@@ -60,39 +50,6 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu, setUpdatingErro
     getPlaylistName()
   }, [])
 
-  async function updateCurrentPlaylist() {
-    if (playlistName) {
-      setUpdatingMenu(true)
-      setUpdating(true)
-      toast({ title: `Updating playlist ${playlistName}`})
-      const authResponse = await electronApi.authenticateUser(urls.getAuthenticateUrl)
-      if (!authResponse.status) {
-        setUpdating(false)
-        setUpdatingError(true)
-        return toast({
-          title: 'The playlist could not be updated',
-          description: authResponse.message,
-          variant: "destructive"
-        })
-      }
-      setUpdatingError(false)
-      const vodData = await electronApi.updateVod({ playlistUrl: urls.getAllVodUrl, categoriesUrl: urls.getAllVodCategoriesUrl, name: playlistName })
-      const seriesData = await electronApi.updateSeries({ playlistUrl: urls.getAllSeriesUrl, categoriesUrl: urls.getAllSeriesCategoriesUrl, name: playlistName })
-      const liveData = await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: playlistName })
-      await electronApi.updatedAtPlaylist(playlistName)
-      queryClient.removeQueries()
-
-      updateVodPlaylistState(vodData)
-      updateSeriesPlaylistState(seriesData)
-      updateLivePlaylistState(liveData)
-
-      setUpdating(false)
-      setUpdatingMenu(false)
-      setLastUpdated(Date.now())
-      toast({ title: 'The playlist was updated'})
-    }
-  }
-
   async function removePlaylist() {
     await electronApi.removePlaylist(selectedPlaylist)
     navigate('/')
@@ -103,7 +60,7 @@ export function SettingsPage({ currentPlaylist, setUpdatingMenu, setUpdatingErro
       <div className="flex justify-between mb-4">
         <h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-4xl">Settings</h1>
         <div className="flex items-center gap-2">
-          <div onClick={updateCurrentPlaylist} className={`h-fit gap-2 cursor-pointer hover:opacity-70 transition flex items-center p-1`}>
+          <div onClick={() => updatePlaylist(true)} className={`h-fit gap-2 cursor-pointer hover:opacity-70 transition flex items-center p-1`}>
             <p className="scroll-m-20 text-sm text-muted-foreground">Last updated: {lastUpdated && formatDistanceToNow(new Date(lastUpdated))}</p>
             <RotateCw size={15} className={`text-muted-foreground ${updating && 'animate-spin'}`} />
           </div>
