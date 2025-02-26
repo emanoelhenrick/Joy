@@ -27,7 +27,7 @@ export interface Api {
   updateSeries: (playlistUrls: PlaylistUrlsProps) => Promise<SeriesPlaylistProps>
   updateLive: (playlistUrls: PlaylistUrlsProps) => Promise<LivePlaylistProps>
   authenticateUser: (url: string) => Promise<AuthRes>
-  fetchTmdbTrending: ({ apiKey, playlistName }: { apiKey: string, playlistName: string}) => Promise<MovieMatch[]>
+  fetchTmdbTrending: ({ apiKey, playlist }: { apiKey: string, playlist: any}) => Promise<MovieMatch[]>
   addPlaylistToMeta: (playlistInfo: PlaylistInfo) => Promise<Boolean>
   editPlaylistInfo: (data: EditPlaylistInfoProps) => Promise<void>
   removePlaylist: (playlistName: string) => Promise<MetaProps>

@@ -31,7 +31,7 @@ export function SplashLoading() {
 
     const filteredTrending = await electronApi.fetchTmdbTrending({
       apiKey: import.meta.env.VITE_TMDB_API_KEY,
-      playlistName: info.name
+      playlist: vodData.playlist
     })
     
     updateMatches(filteredTrending!)
