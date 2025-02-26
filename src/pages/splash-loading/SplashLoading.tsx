@@ -7,6 +7,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { PlaylistInfo } from "electron/core/models/PlaylistInfo";
 import { useEffect } from "react"
 import { Fade } from "react-awesome-reveal";
+import { ImSpinner8 } from "react-icons/im";
 import { useNavigate } from "react-router-dom";
 
 export function SplashLoading() {
@@ -32,6 +33,7 @@ export function SplashLoading() {
       apiKey: import.meta.env.VITE_TMDB_API_KEY,
       playlistName: info.name
     })
+    
     updateMatches(filteredTrending!)
 
     const urls = makeUrls(info)
@@ -57,8 +59,9 @@ export function SplashLoading() {
   return (
     <div className="w-full h-screen flex flex-col gap-1 text-sm items-center justify-center">
       <Fade duration={2000}>
-        <div className="flex items-center space-x-2">
+        <div className="flex flex-col items-center gap-6">
           <h1 className="text-4xl">JOI</h1>
+          <ImSpinner8 className="size-6 animate-spin text-muted-foreground" />
         </div>
       </Fade>
     </div>

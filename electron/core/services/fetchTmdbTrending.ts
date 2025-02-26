@@ -24,14 +24,18 @@ export async function fetchTmdbTrending({ apiKey, playlistName }: any): Promise<
   })
 
   const filtered: MovieMatch[] = []
-  for (const movie of tmdbData) {
-    const query = movie.title! + movie.release_date!.split('-')[0]
-    const matchesList = fuseMovies.search(query).map(i => i.item)
-    if (matchesList.length > 0) {
-      const images = await moviedb.movieImages({ id: movie.id! })
-      filtered.push({ ...movie, matches: matchesList, images })
-    } 
-  }
+  
+  await Promise.all(
+    tmdbData.map(async (movie) => {
+      const query = movie.title! + movie.release_date!.split('-')[0];
+      const matchesList = fuseMovies.search(query).map(i => i.item);
+      
+      if (matchesList.length > 0) {
+        const images = await moviedb.movieImages({ id: movie.id! });
+        filtered.push({ ...movie, matches: matchesList, images });
+      }
+    })
+  );
 
   return filtered
 }
