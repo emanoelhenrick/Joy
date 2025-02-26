@@ -27,7 +27,6 @@ export async function fetchTmdbTrending({ apiKey, playlist }: any): Promise<Movi
     tmdbData.map(async (movie) => {
       const query = movie.title! + movie.release_date!.split('-')[0];
       const matchesList = fuseMovies.search(query).map(i => i.item);
-      
       if (matchesList.length > 0) {
         const images = await moviedb.movieImages({ id: movie.id! });
         filtered.push({ ...movie, matches: matchesList as unknown as VodProps[], images });

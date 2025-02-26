@@ -60,8 +60,7 @@ export function SplashLoading() {
     <div className="w-full h-screen flex flex-col gap-1 text-sm items-center justify-center">
       <Fade duration={2000}>
         <div className="flex flex-col items-center gap-6">
-          <h1 className="text-4xl">JOI</h1>
-          <ImSpinner8 className="size-6 animate-spin text-muted-foreground" />
+          <h1 className="text-4xl animate-pulse">JOI</h1>
         </div>
       </Fade>
     </div>
