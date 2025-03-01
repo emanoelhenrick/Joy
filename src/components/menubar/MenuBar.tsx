@@ -13,7 +13,8 @@ import { differenceInHours } from "date-fns";
 import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from "@/states/usePlaylistData";
 import { SelectProfile } from "../select-profile/SelectProfile";
 import { useUserData } from "@/states/useUserData";
-import { PiHouseFill, PiMagnifyingGlassBold, PiBroadcastFill, PiGearSixFill } from "react-icons/pi";
+import { PiHouseFill, PiMagnifyingGlassBold, PiGearSixFill } from "react-icons/pi";
+import { BiSolidTv } from "react-icons/bi";
 import { useMeasure } from "@uidotdev/usehooks";
 import { ImSpinner8 } from "react-icons/im";
 
@@ -189,7 +190,7 @@ export function MenuBar() {
               <PiHouseFill className="size-6" />
             </Button>
             <Button variant='ghost' onClick={() => navigate(`/dashboard/live`)} className={`h-fit gap-2 ${location.pathname.includes('live') ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
-              <PiBroadcastFill className='size-6' />
+              <BiSolidTv className='size-6' />
             </Button>
             <Button variant='ghost' onClick={() => navigate(`/dashboard/explore`)} className={`h-fit gap-2 ${location.pathname.includes('explore') ? 'text-primary' : 'text-muted-foreground opacity-50' }`}>
               <PiMagnifyingGlassBold className="size-6" />
