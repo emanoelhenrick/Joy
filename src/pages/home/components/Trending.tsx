@@ -83,7 +83,7 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
       <CarouselItem key={info.poster_path}> 
         <div className="flex items-center h-full justify-center rounded-2xl overflow-hidden">
           <div className="flex h-full w-full relative">
-            <div className="p-16 flex flex-col justify-between gap-2 z-20">
+            <div className="p-12 flex flex-col justify-between gap-2 z-20">
               <div className="mb-3">
                 <HoverCard openDelay={400}>
                   <HoverCardTrigger>
@@ -96,7 +96,7 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
                   </HoverCardContent>
                 </HoverCard>
               </div>
-              <div className="flex flex-col gap-3 z-10">
+              <div className="flex flex-col gap-2 z-10">
                 <div className="max-w-96 2xl:max-w-screen-sm h-fit">
                   { logoPath ? <img src={logoPath} className="object-contain w-fit max-h-28 2xl:max-h-36 mb-2 mt-2" /> : (
                     <h1 className="text-5xl 2xl:text-6xl font-bold">{info.title}</h1>
@@ -104,22 +104,21 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
                 </div>
                 
                 <div className="flex items-center gap-2">
-                  
                   <span className="w-fit text-sm 2xl:text-base px-2 py-1 2xl:py-0.5 rounded-md bg-primary/10 backdrop-blur-3xl text-primary leading-none">
                     Trending
                   </span>
                   <span className="text-muted-foreground">{releaseDate}</span>
                 </div>
-                
-                <span className="text-base 2xl:text-lg line-clamp-4 text-muted-foreground max-w-screen-sm">{info.overview}</span>
-                <div className="flex gap-3 items-center">
-                  <div className="mt-2 flex gap-3 bg-primary/5 backdrop-blur-3xl shadow-lg p-3 rounded-xl pr-4 relative">
-                    <img className="w-16 rounded-md" src={perfectMatch.stream_icon} alt="" />
 
+                <span className="text-base 2xl:text-lg line-clamp-4 text-muted-foreground max-w-screen-sm">{info.overview}</span>
+                
+                <div className="flex gap-3 items-center">
+                  <div className="mt-1 flex gap-2 bg-primary/5 backdrop-blur-3xl shadow-lg p-3 rounded-xl pr-4 relative">
+                    <img className="w-14 rounded-md" src={perfectMatch.stream_icon} alt="" />
                     <div className="flex flex-col justify-between">
                       <div>
                         <h1 className="text-xs text-muted-foreground">Perfect match</h1>
-                        <span className="text-xl line-clamp-1 max-w-96">{perfectMatch.name}</span>
+                        <h1 className="text-xl line-clamp-1 max-w-72">{perfectMatch.name}</h1>
                       </div>
                       <div className="flex gap-2">
                         <Button
@@ -133,6 +132,7 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
                     </div>
                   </div>
                 </div>
+
               </div>
             </div>
           </div>
@@ -155,8 +155,8 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
         <CarouselContent>
           {data.map(info => renderItem(info))}
         </CarouselContent>
-        <CarouselPrevious className="absolute left-2 bottom-2 border-none bg-background/10" />
-        <CarouselNext className="absolute right-2 bottom-2 border-none bg-background/10" />
+        <CarouselPrevious className="absolute left-1 bottom-1 border-none bg-background/5" />
+        <CarouselNext className="absolute right-1 bottom-1 border-none bg-background/5" />
       </Carousel>
 
       {selectedMovie && (
