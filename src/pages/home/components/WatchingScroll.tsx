@@ -25,7 +25,9 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
         onClick={() => setSelectedSeries(series)}
       >
         <HomeCover src={series.cover} title={series.name} />
-        <span className="absolute bottom-5 left-3 z-10 opacity-70 text-sm font-semibold">{series.watchingNow?.episode}</span>
+        <div className="absolute bottom-6 left-3 z-10 bg-primary/15 px-2 rounded-sm backdrop-blur-md">
+          <span className="opacity-80 text-sm font-semibold">{series.watchingNow?.episode}</span>
+        </div>
         <div className="absolute w-full h-1 bottom-3 px-3 z-10">
           <div className="relative w-full h-full">
             <div style={{ width: `${(series.watchingNow!.progress! * 100)}%`}} className="h-full absolute bg-primary rounded-full z-10" />
