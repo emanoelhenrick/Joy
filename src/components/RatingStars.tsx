@@ -35,14 +35,12 @@ export function RatingStars({ rating }: { rating: number }) {
 
   return (
     <div className="flex gap-1 items-center">
-      <Fade cascade delay={200} duration={500} damping={0.1} direction="right" triggerOnce>
         {stars.map((star, index) => {
           if (star === 0) return <FaStar key={index} className="opacity-40 size-3.5" />
           if (star < 1) return <HalfStar key={index} value={star} />
           return <FaStar key={index} className="text-primary size-3.5" />
         })}
         <span className="ml-1 leading-none font-medium text-muted-foreground text-sm">{fiveRating.toFixed(1)}</span>
-      </Fade>
     </div>
   )
 }
