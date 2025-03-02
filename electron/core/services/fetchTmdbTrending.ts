@@ -1,6 +1,5 @@
 import Fuse from "fuse.js"
 import { MovieDb, MovieImagesResponse, MovieResult } from "moviedb-promise"
-import { getLocalVodPlaylist } from "./vod/getLocalVodPlaylist"
 import { VodProps } from "../models/VodModels"
 
 export interface MovieMatch extends MovieResult {
@@ -10,7 +9,7 @@ export interface MovieMatch extends MovieResult {
 
 export async function fetchTmdbTrending({ apiKey, playlist }: any): Promise<MovieMatch[]> {
   const moviedb = new MovieDb(apiKey)
-  const res = await moviedb.moviePopular({ language: 'pt' })
+  const res = await moviedb.trending({ language: 'pt', media_type: "movie", time_window: 'week' })
   const tmdbData = res.results! as MovieResult[]
 
   if (tmdbData.length === 0) return []
