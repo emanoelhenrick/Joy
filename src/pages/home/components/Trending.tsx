@@ -14,6 +14,7 @@ import electronApi from "@/config/electronApi";
 import { usePlaylistUrl } from "@/states/usePlaylistUrl";
 import { useUserData } from "@/states/useUserData";
 import { VodProps } from "electron/core/models/VodModels";
+import { RatingStars } from "@/components/RatingStars";
 
 export function Trending({ refresh, slideActive }: { refresh: () => void, slideActive: boolean }) {
   const navigate = useNavigate()
@@ -24,6 +25,9 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
   const baseUrl = usePlaylistUrl(state => state.urls.getVodStreamUrl)
   const data = useTrending(state => state.matches)
   const updateVodStatus = useUserData(state => state.updateVodStatus)
+
+  console.log(data);
+  
 
   function updateUserStatus(data: { length: number, time: number }) {
     if (!selectedMovie) return
@@ -103,11 +107,14 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
                   )}
                 </div>
                 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-4">
                   <span className="w-fit text-sm 2xl:text-base px-2 py-1 2xl:py-0.5 rounded-md bg-primary/10 backdrop-blur-3xl text-primary leading-none">
                     Trending
                   </span>
-                  <span className="text-muted-foreground">{releaseDate}</span>
+                  <span className="text-muted-foreground leading-none">{releaseDate}</span>
+                  <div className="pb-0.5">
+                  {info.matches![0].rating && <RatingStars rating={parseFloat(info.matches![0].rating)} />}
+                  </div>
                 </div>
 
                 <span className="text-base 2xl:text-lg line-clamp-4 text-muted-foreground max-w-screen-sm">{info.overview}</span>
