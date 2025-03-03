@@ -8,12 +8,11 @@ interface Props {
   description: string
   cast: string
   director: string
-  rating: number
+  rating: any
   logos: TitleLogo[]
 }
 
 export function InfoSection({ title, releaseDate, genre, description, cast, director, rating, logos }: Props) {
-  
   function getRightLogo(logos: TitleLogo[]) {
     if (!logos) return
     if (logos.length === 0) return
@@ -43,14 +42,14 @@ export function InfoSection({ title, releaseDate, genre, description, cast, dire
       </div>
 
       {((releaseDate && releaseDate != 0) || genre || rating) && (
-        <div className="flex items-center gap-4 mt-2 py-1">
-          {(releaseDate && releaseDate != 0) && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{releaseDate}</span>}
-          {genre && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{genre}</span>}
-          {rating && <RatingStars rating={rating} />}
+        <div className="flex items-center gap-3 mt-4 py-1">
+          {(releaseDate && releaseDate != 0) && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{releaseDate}</span>}
+          {genre && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{genre}</span>}
+          {rating && <RatingStars rating={parseFloat(rating)} />}
         </div>
       )}
 
-      <div className="max-w-screen-md 2xl:max-w-screen-lg mt-1 flex flex-col gap-2">
+      <div className="max-w-screen-md 2xl:max-w-screen-lg mt-1.5 flex flex-col gap-2">
         {description && <span className="text-base 2xl:text-lg text-primary line-clamp-4 2xl:line-clamp-6">{description}</span>}
         <div>
           <p className="text-sm 2xl:text-base truncate max-w-xl text-muted-foreground">{cast}</p>

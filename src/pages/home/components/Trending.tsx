@@ -21,13 +21,9 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
 
   const [selectedMovie, setSelectedMovie] = useState<VodProps | undefined>(undefined)
   const [state, setState] = useState<any>(undefined)
-
   const baseUrl = usePlaylistUrl(state => state.urls.getVodStreamUrl)
   const data = useTrending(state => state.matches)
   const updateVodStatus = useUserData(state => state.updateVodStatus)
-
-  console.log(data);
-  
 
   function updateUserStatus(data: { length: number, time: number }) {
     if (!selectedMovie) return
@@ -100,21 +96,19 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
                   </HoverCardContent>
                 </HoverCard>
               </div>
-              <div className="flex flex-col gap-2 z-10">
+              <div className="flex flex-col gap-3 z-10">
                 <div className="max-w-96 2xl:max-w-screen-sm h-fit">
                   { logoPath ? <img src={logoPath} className="object-contain w-fit max-h-28 2xl:max-h-36 mb-2 mt-2" /> : (
                     <h1 className="text-5xl 2xl:text-6xl font-bold">{info.title}</h1>
                   )}
                 </div>
                 
-                <div className="flex items-center gap-4">
-                  <span className="w-fit text-sm 2xl:text-base px-2 py-1 2xl:py-0.5 rounded-md bg-primary/10 backdrop-blur-3xl text-primary leading-none">
+                <div className="flex items-center gap-3">
+                  <div style={{ lineHeight: 1 }} className="w-fit text-base 2xl:text-lg px-2 py-1 rounded-sm bg-primary/10 backdrop-blur-3xl text-muted-foreground">
                     Trending
-                  </span>
-                  <span className="text-muted-foreground leading-none">{releaseDate}</span>
-                  <div className="pb-0.5">
-                  {info.matches![0].rating && <RatingStars rating={parseFloat(info.matches![0].rating)} />}
                   </div>
+                  <div style={{ lineHeight: 1 }} className="text-base 2xl:text-lg backdrop-blur-md text-muted-foreground px-2 py-1 bg-primary/10 rounded-sm">{releaseDate}</div>
+                  {info.matches![0].rating && <RatingStars rating={parseFloat(info.matches![0].rating)} />}
                 </div>
 
                 <span className="text-base 2xl:text-lg line-clamp-4 text-muted-foreground max-w-screen-sm">{info.overview}</span>

@@ -10,7 +10,7 @@ interface Props {
   cast: string
   director: string
   logos: TitleLogo[]
-  rating: number
+  rating: any
   duration: string
 }
 
@@ -45,15 +45,15 @@ export function InfoSection({ title, releaseDate, cast, description, director, g
         </div>
 
         {(releaseDate || genre || rating || duration) && (
-          <div className="flex items-center gap-4 mt-4 py-1">
-            {releaseDate && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{releaseDate}</span>}
-            {duration && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{duration}</span>}
-            {genre && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{genre}</span>}
-            {rating && <RatingStars rating={rating} />}
+          <div className="flex items-center gap-3 mt-4 py-1">
+            {releaseDate && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{releaseDate}</span>}
+            {duration && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{duration}</span>}
+            {genre && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{genre}</span>}
+            {rating && <RatingStars rating={parseFloat(rating)} />}
           </div>
         )}
       
-      <div className="mt-2 flex flex-col gap-2">
+      <div className="mt-1.5 flex flex-col gap-2">
         {description && <span className="text-base 2xl:text-lg max-w-screen-md 2xl:max-w-screen-lg text-primary line-clamp-6">{description}</span>}
         
         {(cast || director) && (
