@@ -152,7 +152,7 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
     <section className="pr-4 mb-3 relative">
       <Carousel
         plugins={[
-          Autoplay({ delay: 5000, active: (!selectedMovie && slideActive) }),
+          Autoplay({ delay: 8000, active: (!selectedMovie && slideActive) }),
           FadeSlide()
         ]}
         className="bg-background rounded-2xl overflow-hidden"
