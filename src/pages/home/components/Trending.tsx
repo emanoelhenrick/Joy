@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay"
+import FadeSlide from "embla-carousel-fade"
 import { useCallback, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
@@ -150,7 +151,10 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
   if (data) return (
     <section className="pr-4 mb-3 relative">
       <Carousel
-        plugins={[Autoplay({ delay: 5000, active: (!selectedMovie && slideActive) })]}
+        plugins={[
+          Autoplay({ delay: 5000, active: (!selectedMovie && slideActive) }),
+          FadeSlide()
+        ]}
         className="bg-background rounded-2xl overflow-hidden"
       >
         <CarouselContent>
