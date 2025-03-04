@@ -59,10 +59,10 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
       if (!logos) return
       if (logos.length === 0) return
       const filteredByIso = logos.filter(l => l.iso_639_1 === 'pt-BR' || l.iso_639_1 === 'en')
-      if (filteredByIso.length === 0) return `https://image.tmdb.org/t/p/w500${logos[0].file_path}`
+      if (filteredByIso.length === 0) return `https://image.tmdb.org/t/p/w300${logos[0].file_path}`
       const filteredByAspectRatio = filteredByIso.filter(l => l.aspect_ratio! > 1.5 )
-      if (filteredByAspectRatio.length === 0) return `https://image.tmdb.org/t/p/w500${filteredByIso[0].file_path}`
-      return `https://image.tmdb.org/t/p/w500${filteredByAspectRatio[0].file_path}`
+      if (filteredByAspectRatio.length === 0) return `https://image.tmdb.org/t/p/w300${filteredByIso[0].file_path}`
+      return `https://image.tmdb.org/t/p/w300${filteredByAspectRatio[0].file_path}`
     }
 
     const releaseDate = format(info.release_date!, "u")
@@ -152,7 +152,7 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
     <section className="pr-4 mb-3 relative">
       <Carousel
         plugins={[
-          Autoplay({ delay: 8000, active: (!selectedMovie && slideActive) }),
+          Autoplay({ delay: 10000, active: (!selectedMovie && slideActive) }),
           FadeSlide()
         ]}
         className="bg-background rounded-2xl overflow-hidden"

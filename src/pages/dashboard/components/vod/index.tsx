@@ -113,11 +113,9 @@ export function VodPage({ streamId, cover }: Props) {
   return (
     <div className="w-screen h-screen flex flex-col justify-end">
       {isFetching ? (
-        <Fade>
-          <div className="w-full h-full fixed flex items-center justify-center top-0 z-20">
+          <div className="w-full h-full fixed flex items-center justify-center top-0 z-20 animate-fade">
             <ImSpinner8 className="size-8 animate-spin text-muted-foreground" />
           </div>
-        </Fade>
       ) : (
           <Backdrop
             backdrops={data && data.tmdbImages ? data.tmdbImages.backdrops! : []}
@@ -125,7 +123,6 @@ export function VodPage({ streamId, cover }: Props) {
           />
       )}
 
-      <Fade className="z-10">
         {isSuccess && (
           <div className="p-16 pb-20 z-10 space-y-4">
             <InfoSection
@@ -140,7 +137,7 @@ export function VodPage({ streamId, cover }: Props) {
               duration={duration!}
             />
             
-            <div className="mt-2 flex flex-col gap-4 z-10">
+            <div className="mt-2 flex flex-col gap-4 z-10 animate-fade">
               <div className="flex justify-between items-center">
                   <div className="flex gap-2">
                     <Button key='vlc' disabled={isFetching} onClick={launchVlc} variant={"default"} size={"lg"} className="transition-none relative overflow-hidden">
@@ -168,7 +165,6 @@ export function VodPage({ streamId, cover }: Props) {
             </div>
         </div>
         )}
-      </Fade>
 
       {isRunning && (
         <VlcDialog
@@ -238,8 +234,8 @@ function Backdrop({ backdrops, cover }: { backdrops: BackdropType[], cover: stri
         className={`w-full h-full object-cover fixed top-0 transition -z-10 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
         />
       </Fade>
-      <div className="inset-0 w-full h-full z-10 fixed scale-105 bg-gradient-to-l from-transparent to-background/80" />
-      <div className="inset-0 w-full h-full z-10 fixed scale-105 bg-gradient-to-b from-transparent to-background/50" />
+      <div className="inset-0 w-full h-full z-10 fixed scale-105 bg-gradient-to-l from-transparent to-background/90" />
+      <div className="inset-0 w-full h-full z-10 fixed scale-105 bg-gradient-to-b from-transparent to-background/60" />
     </div>
   )
 

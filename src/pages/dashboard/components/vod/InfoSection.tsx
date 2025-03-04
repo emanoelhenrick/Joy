@@ -1,6 +1,7 @@
 import { RatingStars } from "@/components/RatingStars"
 import { Skeleton } from "@/components/ui/skeleton"
 import { TitleLogo } from "moviedb-promise"
+import { Fade } from "react-awesome-reveal"
 
 interface Props {
   title: string
@@ -39,36 +40,38 @@ export function InfoSection({ title, releaseDate, cast, description, director, g
   return (
     <div>
         <div className="max-w-96 h-fit">
-          {logoPath !== undefined ? (
-              <img key={'logo'} className="object-contain max-h-40" src={logoPath} alt="" />
-          ) : <h1 className="text-5xl">{title || <Skeleton className="h-16" />}</h1>}
+          <Fade triggerOnce>
+            {logoPath !== undefined ? (
+                <img key={'logo'} className="object-contain max-h-40" src={logoPath} alt="" />
+            ) : <h1 className="text-5xl">{title || <Skeleton className="h-16" />}</h1>}
+          </Fade>
         </div>
 
         {(releaseDate || genre || rating || duration) && (
-          <div className="flex items-center gap-3 mt-4 py-1">
-            {releaseDate && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{releaseDate}</span>}
-            {duration && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{duration}</span>}
-            {genre && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{genre}</span>}
+            <div className="flex items-center gap-3 mt-4 py-1 animate-fade">
+            {releaseDate && <span style={{ lineHeight: 1}} className="text-base backdrop-blur-sm 2xl:text-lg text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{releaseDate}</span>}
+            {duration && <span style={{ lineHeight: 1}} className="text-base backdrop-blur-sm 2xl:text-lg text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{duration}</span>}
+            {genre && <span style={{ lineHeight: 1}} className="text-base backdrop-blur-sm 2xl:text-lg text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{genre}</span>}
             {rating && <RatingStars rating={parseFloat(rating)} />}
           </div>
         )}
       
-      <div className="mt-1.5 flex flex-col gap-2">
-        {description && <span className="text-base 2xl:text-lg max-w-screen-md 2xl:max-w-screen-lg text-primary line-clamp-6">{description}</span>}
-        
-        {(cast || director) && (
-          <div>
-            <p className="truncate text-sm 2xl:text-base max-w-xl text-muted-foreground">
-              {cast}
-            </p>
-            <p className=" text-sm 2xl:text-base text-muted-foreground max-w-screen-md 2xl:max-w-screen-lg">
-              {director && 'Directed by ' + director}
-            </p>
-          </div>
-        )}
-        
-        <span className="text-sm 2xl:text-base text-muted-foreground max-w-screen-md 2xl:max-w-screen-lg">Title: {title}</span>
-      </div>
+        <div className="mt-1.5 flex flex-col gap-2 animate-fade">
+          {description && <span className="text-base 2xl:text-lg max-w-screen-md 2xl:max-w-screen-lg text-primary line-clamp-6">{description}</span>}
+          
+          {(cast || director) && (
+            <div>
+              <p className="truncate text-sm 2xl:text-base max-w-xl text-muted-foreground">
+                {cast}
+              </p>
+              <p className=" text-sm 2xl:text-base text-muted-foreground max-w-screen-md 2xl:max-w-screen-lg">
+                {director && 'Directed by ' + director}
+              </p>
+            </div>
+          )}
+          
+          <span className="text-sm 2xl:text-base text-muted-foreground max-w-screen-md 2xl:max-w-screen-lg">Title: {title}</span>
+        </div>
     </div>
   )
     

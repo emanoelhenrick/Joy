@@ -43,8 +43,8 @@ export function InfoSection({ title, releaseDate, genre, description, cast, dire
 
       {((releaseDate && releaseDate != 0) || genre || rating) && (
         <div className="flex items-center gap-3 mt-4 py-1">
-          {(releaseDate && releaseDate != 0) && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{releaseDate}</span>}
-          {genre && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{genre}</span>}
+          {(releaseDate && releaseDate != 0) && <span style={{ lineHeight: 1}} className="text-base backdrop-blur-sm 2xl:text-lg text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{releaseDate}</span>}
+          {genre && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg backdrop-blur-sm text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{genre}</span>}
           {rating && <RatingStars rating={parseFloat(rating)} />}
         </div>
       )}
