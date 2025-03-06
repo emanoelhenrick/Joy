@@ -62,7 +62,7 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
       if (filteredByIso.length === 0) return `https://image.tmdb.org/t/p/w300${logos[0].file_path}`
       const filteredByAspectRatio = filteredByIso.filter(l => l.aspect_ratio! > 1.5 )
       if (filteredByAspectRatio.length === 0) return `https://image.tmdb.org/t/p/w300${filteredByIso[0].file_path}`
-      return `https://image.tmdb.org/t/p/w300${filteredByAspectRatio[0].file_path}`
+      return `https://image.tmdb.org/t/p/w500${filteredByAspectRatio[0].file_path}`
     }
 
     const releaseDate = format(info.release_date!, "u")

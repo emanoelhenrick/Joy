@@ -140,7 +140,7 @@ export function Dashboard() {
 
         {playlist.length > 0 ?
           <Suspense fallback={<div className='w-full h-screen' />}>
-            <section className="bg-primary-foreground/90 space-y-6 rounded-2xl p-6 mr-4">
+            <section className="bg-primary-foreground space-y-6 rounded-2xl p-6 mr-4">
 
               <div className="w-full flex items-center justify-between">
                 <div className="flex items-center gap-2">
