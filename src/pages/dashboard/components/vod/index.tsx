@@ -65,8 +65,9 @@ export function VodPage({ streamId, cover }: Props) {
     if (!vodInfo) return
     if (!vodInfo.info) return
     if (vodInfo.info.tmdb_id) {
-      const tmdbData = await moviedb.movieImages({ id: vodInfo.info.tmdb_id })
-      return { ...vodInfo, tmdbImages: tmdbData }
+      const tmdbCast = await moviedb.movieCredits(vodInfo.info.tmdb_id)
+      const tmdbImages = await moviedb.movieImages({ id: vodInfo.info.tmdb_id })
+      return { ...vodInfo, tmdbImages, tmdbCast: tmdbCast.cast?.slice(0, 9)}
     }
     return vodInfo
   } 
@@ -102,6 +103,7 @@ export function VodPage({ streamId, cover }: Props) {
   }
 
   const cast = data ? data.info.cast : undefined
+  const tmdbCast = data ? data.tmdbCast : []
   const director = data ? data.info.director : undefined
   const releaseDate = data ? data.info.releasedate && format(data?.info.releasedate, 'u') :  undefined
   const description = data ? (data.info.description || data.info.plot) : undefined
@@ -127,6 +129,7 @@ export function VodPage({ streamId, cover }: Props) {
           <div className="p-16 pb-20 z-10 space-y-4">
             <InfoSection
               cast={cast!}
+              tmdbCast={tmdbCast!}
               description={description!}
               director={director!}
               genre={genres[0]}
@@ -137,27 +140,27 @@ export function VodPage({ streamId, cover }: Props) {
               duration={duration!}
             />
             
-            <div className="mt-2 flex flex-col gap-4 z-10 animate-fade">
+            <div className="flex flex-col gap-4 z-10 animate-fade">
               <div className="flex justify-between items-center">
-                  <div className="flex gap-2">
-                    <Button key='vlc' disabled={isFetching} onClick={launchVlc} variant={"default"} size={"lg"} className="transition-none relative overflow-hidden">
-                      {userVodData && userVodData.currentTime ?
-                      <div>
-                        <span className="leading-none text-base">{`Resume from ${resumeDuration}`}</span>
-                      </div>
-                        : (
-                          <div className="flex items-center gap-2">
-                            <FaPlay className="size-3.5" />
-                            <span className="leading-none text-base">Watch</span>
-                          </div>
-                        )}
-                    </Button>
-                    <Button variant={'ghost'} onClick={handleFavorite} disabled={isFetching} size={"lg"} className="flex gap-2 items-center hover:bg-primary/10 transition-none">
-                      <FaStar className={`size-4 ${userVodData?.favorite && 'text-yellow-400'}`} />
-                      <span className="leading-none text-base">
-                        {userVodData?.favorite ? 'Remove from favorites' : 'Add to favorites'}
-                      </span>
-                    </Button>
+                <div className="flex gap-2">
+                  <Button key='vlc' disabled={isFetching} onClick={launchVlc} variant={"default"} size={"lg"} className="transition-none bg-primary/10 hover:text-background text-primary relative overflow-hidden">
+                    {userVodData && userVodData.currentTime ?
+                    <div>
+                      <span className="leading-none text-base">{`Resume from ${resumeDuration}`}</span>
+                    </div>
+                      : (
+                        <div className="flex items-center gap-2">
+                          <FaPlay className="size-3.5" />
+                          <span className="leading-none text-base">Watch</span>
+                        </div>
+                      )}
+                  </Button>
+                  <Button variant={'ghost'} onClick={handleFavorite} disabled={isFetching} size={"lg"} className="flex gap-2 items-center hover:bg-primary/10 transition-none">
+                    <FaStar className={`size-4 ${userVodData?.favorite && 'text-yellow-400'}`} />
+                    <span className="leading-none text-base">
+                      {userVodData?.favorite ? 'Remove from favorites' : 'Add to favorites'}
+                    </span>
+                  </Button>
                 </div>
 
                 {userVodData && <ClearDataAlertDialog removeVodData={() => removeVodStatus(streamId)} refresh={() => setRefresh(p => !p)}  />}
@@ -200,8 +203,8 @@ function Backdrop({ backdrops, cover }: { backdrops: BackdropType[], cover: stri
             src={imageSrc}
           />
         </Fade>
-        <div className="inset-0 w-full h-full z-10 scale-105 fixed bg-gradient-to-l from-transparent to-background/95" />
-        <div className="inset-0 w-full h-full z-10 scale-105 fixed bg-gradient-to-b from-transparent to-background/60" />
+        <div className="inset-0 w-full h-full z-10 scale-105 fixed bg-gradient-to-l from-transparent to-background" />
+        <div className="inset-0 w-full h-full z-10 scale-105 fixed bg-gradient-to-b from-transparent to-background" />
       </div>
     )
   }
@@ -234,8 +237,8 @@ function Backdrop({ backdrops, cover }: { backdrops: BackdropType[], cover: stri
         className={`w-full h-full object-cover fixed top-0 transition -z-10 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
         />
       </Fade>
-      <div className="inset-0 w-full h-full z-10 fixed scale-105 bg-gradient-to-l from-transparent to-background/90" />
-      <div className="inset-0 w-full h-full z-10 fixed scale-105 bg-gradient-to-b from-transparent to-background/60" />
+      <div className="inset-0 w-full h-full z-10 fixed scale-105 bg-gradient-to-l from-transparent to-background" />
+      <div className="inset-0 w-full h-full z-10 fixed scale-105 bg-gradient-to-b from-transparent to-background" />
     </div>
   )
 
