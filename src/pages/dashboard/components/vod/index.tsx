@@ -146,8 +146,8 @@ export function VodPage({ streamId, cover }: Props) {
                         <span className="leading-none text-base">{`Resume from ${resumeDuration}`}</span>
                       </div>
                         : (
-                          <div className="flex gap-2">
-                            <FaPlay />
+                          <div className="flex items-center gap-2">
+                            <FaPlay className="size-3.5" />
                             <span className="leading-none text-base">Watch</span>
                           </div>
                         )}

@@ -22,11 +22,15 @@ export default function PlaylistScroll({ data }: any) {
     const itemKey = isVod ? item.num : item.series_id + '-' + item.num
     const coverSrc = isVod ? item.stream_icon : item.cover
     const title = item.name
+    const rating = item.rating < 10 ? parseFloat(item.rating || '0').toFixed(1) : '10'
 
     return (
       <div className="w-full h-fit cursor-pointer relative group" key={itemKey}>
         <div onClick={selectFunction} className="group-hover:opacity-70 transition-transform group-hover:scale-95">
           <Cover src={coverSrc} title={title} />
+          <div className="bg-background/85 px-1.5 py-0.5 rounded-md absolute bottom-1 right-1">
+            <h1 className="text-muted-foreground text-xs font-medium">{rating}</h1>
+          </div>
         </div>
       </div>
     )

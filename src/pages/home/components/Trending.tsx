@@ -105,36 +105,33 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
                 </div>
                 
                 <div className="flex items-center gap-3">
-                  <div style={{ lineHeight: 1 }} className="w-fit text-base 2xl:text-lg px-2 py-1 rounded-sm bg-primary/10 backdrop-blur-3xl text-muted-foreground">
+                  <div style={{ lineHeight: 1 }} className="w-fit text-base 2xl:text-lg px-2 py-1 rounded-sm bg-primary/10  text-muted-foreground">
                     Trending
                   </div>
-                  <div style={{ lineHeight: 1 }} className="text-base 2xl:text-lg backdrop-blur-md text-muted-foreground px-2 py-1 bg-primary/10 rounded-sm">{releaseDate}</div>
+                  <div style={{ lineHeight: 1 }} className="text-base 2xl:text-lg text-muted-foreground px-2 py-1 bg-primary/10 rounded-sm">{releaseDate}</div>
                   {info.matches![0].rating && <RatingStars rating={parseFloat(info.matches![0].rating)} />}
                 </div>
 
                 <span className="text-base 2xl:text-lg line-clamp-4 text-muted-foreground max-w-screen-sm">{info.overview}</span>
                 
-                <div className="flex gap-3 items-center">
-                  <div className="mt-1 flex gap-2 bg-primary/5 backdrop-blur-3xl shadow-lg p-3 rounded-xl pr-4 relative">
-                    <img className="w-14 rounded-md" src={perfectMatch.stream_icon} alt="" />
-                    <div className="flex flex-col justify-between">
-                      <div>
-                        <h1 className="text-xs text-muted-foreground">Perfect match</h1>
-                        <h1 className="text-xl line-clamp-1 max-w-72">{perfectMatch.name}</h1>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button
-                          onClick={launchVlc}
-                          className="flex-1 px-6 flex gap-2 bg-primary/10 text-primary hover:text-background">
-                          <FaPlay className="size-3 opacity-90" />
-                          <span>Watch</span>
-                        </Button>
-                        <Button onClick={() => handleSearchForMatch('movie', info.title!)} variant={"ghost"} className="hover:bg-primary/10">See matches</Button>
-                      </div>
+                <div className=" space-y-4">
+                  <div className="flex gap-2">
+                    <div
+                      onClick={launchVlc}
+                      className="p-7 py-2 rounded-lg transition-none flex gap-2 items-center bg-primary/10 text-primary hover:opacity-80 cursor-pointer">
+                      <FaPlay className="size-3 opacity-90" />
+                      <span className="text-lg">Watch</span>
+                    </div>
+                    <div onClick={() => handleSearchForMatch('movie', info.title!)} className="px-6 py-2 rounded-lg transition-none flex gap-2 items-center text-primary hover:bg-primary/10 cursor-pointer">
+                      <span>See matches</span>
                     </div>
                   </div>
-                </div>
 
+                  <div>
+                    <h1 className="text-xs text-muted-foreground">Match found</h1>
+                    <h1 className="text-base line-clamp-1 max-w-72">{perfectMatch.name}</h1>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

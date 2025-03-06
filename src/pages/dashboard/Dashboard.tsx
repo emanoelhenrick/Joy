@@ -30,6 +30,7 @@ export function Dashboard() {
   const initialSearch = searchParams.get('search') || ''
   
   const [currentCategory, setCurrentCategory] = useState('all')
+  const [sortByRating, setSortByRating] = useState(false)
   const [page, setPage] = useState(1)
   const [tab, setTab] = useState(initialTab)
   const [searchValue, setSearchValue] = useState(initialSearch)
@@ -66,14 +67,12 @@ export function Dashboard() {
       if (isSearching) return fuse!.search(search).map((i: { item: any; }) => i.item)
       return data!.playlist
     }
-
     if (isSearching) {
       return fuse!.search(search)
         .map((i: { item: any; }) => i.item)
         .filter((p: { category_id: string; }) => p.category_id === currentCategory)
     }
     return data!.playlist.filter(p => p.category_id === currentCategory)
-    
   }, [search, currentCategory, data])
 
   const pages = useMemo(() => {
@@ -83,13 +82,20 @@ export function Dashboard() {
 
   const playlist = useMemo(() => {
     return paginate(page, itemsPerPage)
-  }, [search, currentCategory, page, data, width, filtered])
+  }, [search, currentCategory, page, data, width, filtered, sortByRating])
+
+  function handleSortByRating() {
+    setPage(1)
+    setSortByRating(prev => !prev)
+  }
 
   function paginate(page: number, elements: number) {
     if (!filtered) return []
+    const filtered2 = [...filtered]
+    if (sortByRating) filtered2.sort((a, b) => parseFloat(b.rating || '0') - parseFloat(a.rating || '0'))
     const startIndex = (page - 1) * elements
-    const endIndex = (page * elements) > filtered.length ? (filtered.length) : (page * elements)
-    const paginated = filtered.length === 1 ? filtered : filtered.slice(startIndex, endIndex)
+    const endIndex = (page * elements) > filtered2.length ? (filtered2.length) : (page * elements)
+    const paginated = filtered2.length === 1 ? filtered2 : filtered2.slice(startIndex, endIndex)
     return paginated
   }
 
@@ -113,6 +119,11 @@ export function Dashboard() {
         <div ref={ref} className='flex items-center justify-between mt-4 mb-1'>
           <div className='flex items-center gap-2'>
             <MenuTab tab={tab} switchTab={switchTab} />
+
+            <div onClick={handleSortByRating} className={`cursor-pointer transition hover:opacity-80 px-3 py-1.5 rounded-lg ${sortByRating ? 'bg-primary text-background' : 'bg-secondary text-muted-foreground'}`}>
+              <span className="text-sm leading-none">Sort by Rating</span>
+            </div>
+
             <Select onValueChange={(value) => setCurrentCategory(value)} value={currentCategory}>
               <SelectTrigger className="w-fit gap-2">
                 <SelectValue placeholder="All" />
@@ -124,6 +135,8 @@ export function Dashboard() {
                 </SelectGroup>
               </SelectContent>
             </Select>
+            
+            
           </div>
 
           <SearchInput setSearchValue={setSearchValue} searchValue={searchValue} />
