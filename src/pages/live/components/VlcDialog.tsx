@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { SiVlcmediaplayer } from "react-icons/si"
 import { useToast } from "@/hooks/use-toast"
 import { QueryFilters, useQuery, useQueryClient } from "@tanstack/react-query"
+import { ImSpinner8 } from "react-icons/im"
 
 interface VlcDialogProps {
   open: boolean
@@ -18,14 +19,16 @@ export function VlcDialog({ open, closeDialog }: VlcDialogProps) {
   const { data } = useQuery({
     queryKey: [`vlcState`],
     queryFn: async () => await electronApi.getVLCState(),
-    refetchInterval: 2000,
+    refetchInterval: 1000,
     retry: false,
     refetchIntervalInBackground: true,
     enabled: open
   })
 
   useEffect(() => {
-    if (data && data.length > 0) setIsRunning(true)
+    if (data && data.length > 0 && data.time > 0) {
+      setIsRunning(true)
+    }
   }, [data])
 
   useEffect(() => {
@@ -53,8 +56,9 @@ export function VlcDialog({ open, closeDialog }: VlcDialogProps) {
       </DialogTrigger>
       <DialogContent className="w-screen h-screen items-center justify-center bg-transparent border-none shadow-none z-50" aria-describedby={undefined}>
         <DialogTitle className="hidden" />
-        <div className="flex flex-col justify-center items-center gap-4">
-          <SiVlcmediaplayer className={`size-16 transition-colors ${isRunning ? 'text-orange-400' : 'animate-pulse'}`} />
+        <div className="flex h-full flex-col justify-center items-center gap-4 relative">
+          {!isRunning && <ImSpinner8 className="size-8 animate-spin text-muted-foreground fixed bottom-16" />}
+          <SiVlcmediaplayer className={`size-16 transition-colors ${isRunning && 'text-orange-400'}`} />
         </div>
       </DialogContent>
     </Dialog>

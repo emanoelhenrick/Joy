@@ -12,7 +12,7 @@ export function Cover({ src, title }: { src: string, title: string }) {
   }
 
   const imagePath = getImageTmdb()
-
+  
   return (
     <div style={{ aspectRatio: '2/3' }} className={`group w-full`}>
       <div className="w-full h-full bg-secondary rounded-lg overflow-hidden flex">

@@ -14,29 +14,21 @@ import electronApi from "@/config/electronApi";
 import { VlcDialog } from "./VlcDialog";
 import { Fade } from "react-awesome-reveal";
 import { format } from "date-fns";
+import { useMeasure } from "@uidotdev/usehooks";
 
-export default function LivePlaylistScroll({ playlist, fetchMore, hasMore, firstChannel }: { playlist: LiveProps[], fetchMore: () => void, hasMore: boolean, firstChannel: LiveProps }) {
+export default function LivePlaylistScroll({ playlist }: { playlist: LiveProps[] }) {
   const queryClient = useQueryClient()
+  const [ref, { width }] = useMeasure();
 
   const { urls } = usePlaylistUrl()
   const [update, setUpdate] = useState(false)
   const [favorites, setFavorites] = useState<string[]>()
   const [isRunning, setIsRunning] = useState(false)
+  const columns = Math.floor(width! / 180)
 
-  const [selectedLiveUrl, setSelectLiveUrl] = useState<string | undefined>(
-    `${firstChannel ? urls.getLiveStreamUrl + firstChannel.stream_id + '.m3u8' :
-      urls.getLiveStreamUrl + playlist[0].stream_id + '.m3u8'}`
-  )
-  const [live, setLive] = useState(firstChannel || playlist[0])
-  const { data, isFetching } = useQuery({ queryKey: [`liveEpg`], queryFn: () => axios.get(urls.getLiveEpgUrl + live.stream_id) })
+  const [selectedLiveUrl, setSelectLiveUrl] = useState<string | undefined>()
+  const [live, setLive] = useState(playlist[0])
   const { userData, updateFavorite } = useUserData();
-
-  const { ref, inView } = useInView({ threshold: 0 });
-
-  async function updateRender(streamId: string) {
-    updateFavorite(streamId, 'live')
-    setUpdate(prev => !prev)
-  }
 
   function handleChannel(live: LiveProps) {
     setLive(live)
@@ -50,7 +42,7 @@ export default function LivePlaylistScroll({ playlist, fetchMore, hasMore, first
   }
 
   useEffect(() => {
-    queryClient.refetchQueries()
+    if (!isRunning) launchVlc()
   }, [selectedLiveUrl])
 
   useEffect(() => {
@@ -64,80 +56,32 @@ export default function LivePlaylistScroll({ playlist, fetchMore, hasMore, first
 
   }, [userData, update])
 
-  useEffect(() => {
-    if (inView && hasMore) fetchMore()
-  }, [inView])
-
   const renderItem = useCallback((live: LiveProps) => {
     return (
-      <div
-        className="flex hover:bg-secondary transition w-full p-3 gap-3 cursor-pointer relative group"
-        key={live.stream_id}
-        onClick={() => handleChannel(live)}
-      >
-        <div className="flex gap-4 items-center">
+      <div className="w-full h-fit cursor-pointer relative group drop-shadow-lg" key={live.stream_id}>
+        <div onClick={() => handleChannel(live)} className="group-hover:opacity-70 transition-transform group-hover:scale-95 bg-secondary p-4 flex flex-col items-center justify-center aspect-square rounded-full">
           <LiveImage src={live.stream_icon} />
-          <span className="text-wrap text-muted-foreground text-lg font-bold">{live.name}</span>
         </div>
+        <h1 className="text-base font-medium line-clamp-2 text-center mt-2">{live.name}</h1>
       </div>
     )
   }, [])
 
   return (
-    <div className={`w-full flex mb-6 ml-2`}>
-      <div className={`grid grid-cols-[1fr_2fr] w-full gap-3 h-fit mr-6`}>
-        <div className="w-full pb-4">
-          <ScrollArea className="w-full h-[90vh] bg-primary-foreground rounded-lg">
-            <div className="flex flex-col mb-4">
-              {playlist.map((live) => renderItem(live))}
-              <div ref={ref} className="w-full h-1" />
-            </div>
-            <ScrollBar color="blue" />
-          </ScrollArea>
-        </div>
-        <div className="w-full pr-4 h-fit flex flex-col rounded-lg p-4 bg-primary-foreground">
-          <div className="flex items-center justify-between">
-            <div className="flex gap-4 items-center">
-              <LiveImage key={live.stream_icon} src={live.stream_icon} />
-              <span className="text-2xl block leading-none line-clamp-1 text-nowrap">{live.name}</span>
-            </div>
-
-            <Button key='vlc' onClick={launchVlc} size={"lg"} className="bg-primary transition-none relative overflow-hidden w-fit">
-              <div className="flex gap-2">
-                <FaPlay />
-                <span className="leading-none text-base">Watch</span>
-              </div>
-            </Button>
-          </div>
-
-          {(!isFetching && data && data.data.epg_listings[0]) && (
-          <Fade duration={500}>
-            <div className="mt-4 space-y-1 p-4 rounded-lg bg-secondary">
-              <div className="flex items-center gap-4 justify-between">
-                <span className="text-xl line-clamp-1 text-nowrap font-bold">{data?.data.epg_listings[0] && decode(data?.data.epg_listings[0].title)}</span>
-                <div className="flex gap-2 items-center">
-                  <span className="text-sm text-muted-foreground">{data && format(data?.data.epg_listings[0].start, 'p')}</span>
-                  <span className="text-sm text-muted-foreground">-</span>
-                  <span className="text-sm text-muted-foreground">{data && format(data?.data.epg_listings[0].stop || data?.data.epg_listings[0].end, 'p')}</span>
-                </div>
-              </div>
-              {data?.data.epg_listings[0] && (
-                <p className="rounded-md text-muted-foreground">{decode(data?.data.epg_listings[0].description)}</p>
-              )}
-            </div>
+    <div className="h-fit rounded-xl">
+      <div className={`w-full`}>
+        <div
+          ref={ref}
+          style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
+          className={`grid w-full gap-8 h-fit`}
+          >
+          <Fade triggerOnce duration={250}>
+            {playlist!.map((item: any) => renderItem(item))}
           </Fade>
-          )}
-
-          
         </div>
       </div>
 
-      {isRunning && (
-        <VlcDialog
-          open={isRunning}
-          closeDialog={() => setIsRunning(false)}
-        />
-      )}
+      <VlcDialog open={isRunning} closeDialog={() => setIsRunning(false)} />
     </div>
   )
 }

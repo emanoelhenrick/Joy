@@ -11,7 +11,7 @@ import { SeriesPage } from "./series";
 
 export default function PlaylistScroll({ data }: any) {
   const [ref, { width }] = useMeasure();
-  const columns = Math.floor(width! / 154)
+  const columns = Math.floor(width! / 170)
   const playlist: any = data
   const [selectedMovie, setSelectedMovie] = useState<VodProps>()
   const [selectedSeries, setSelectedSeries] = useState<SeriesProps>()
@@ -76,7 +76,7 @@ export default function PlaylistScroll({ data }: any) {
         <div
           ref={ref}
           style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
-          className={`grid w-full gap-4 h-fit`}
+          className={`grid w-full gap-6 h-fit`}
           >
           <Fade triggerOnce duration={250}>
             {playlist!.map((item: any) => renderItem(item))}

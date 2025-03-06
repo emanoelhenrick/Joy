@@ -23,7 +23,7 @@ export function Dashboard() {
   const seriesData = useSeriesPlaylist((state => state.data))
 
   const [ref, { width }] = useMeasure();
-  const itemsPerPage = Math.floor(width! / 156) * 10
+  const itemsPerPage = Math.floor(width! / 170) * 10
   const [searchParams] = useSearchParams()
   const initialSearch = searchParams.get('search') || ''
   const [currentCategory, setCurrentCategory] = useState('all')
