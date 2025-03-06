@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { NewPlaylistDialog } from "./NewPlaylistDialog";
 import { EditPlaylistDialog } from "./EditPlaylistDialog";
+import packageJson from "../../../package.json"
 
 export function SettingsPage({ currentPlaylist, updating, updatePlaylist }: { currentPlaylist: string, updating: boolean, updatePlaylist: (b: boolean) => void }) {
   const navigate = useNavigate()
@@ -53,7 +54,7 @@ export function SettingsPage({ currentPlaylist, updating, updatePlaylist }: { cu
   }
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1 relative">
       <div className="flex justify-between mb-4">
         <h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-4xl">Settings</h1>
         <div className="flex items-center gap-2">
@@ -93,6 +94,8 @@ export function SettingsPage({ currentPlaylist, updating, updatePlaylist }: { cu
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <span className="absolute right-0 bottom-0 text-sm text-muted-foreground">v{packageJson.version}</span>
     </div>
   )
 }
