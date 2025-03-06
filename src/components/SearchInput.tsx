@@ -18,17 +18,17 @@ export function SearchInput({ searchValue, setSearchValue }: any) {
   }, [searchValue]);
 
   return (
-    <div className="space-y-2 mr-4">
+    <div className="space-y-2 mr-4 max-w-screen-sm w-full">
       <div className="relative">
         <Input
           id={id}
-          className="peer pe-9 ps-9 bg-secondary border-none"
+          className="peer pe-14 ps-8 bg-secondary/80 rounded-full py-6 text-base border-none"
           placeholder="Search..."
           type="search"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
         />
-        <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 text-muted-foreground/80 peer-disabled:opacity-50">
+        <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center justify-center pe-8 text-muted-foreground/80 peer-disabled:opacity-50">
           {isLoading ? (
             <LoaderCircle
               className="animate-spin"
@@ -38,7 +38,7 @@ export function SearchInput({ searchValue, setSearchValue }: any) {
               aria-label="Loading..."
             />
           ) : (
-            <Search size={16} strokeWidth={2} aria-hidden="true" />
+            <Search className="size-4" strokeWidth={2} aria-hidden="true" />
           )}
         </div>
       </div>

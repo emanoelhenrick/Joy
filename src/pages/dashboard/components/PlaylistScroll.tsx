@@ -25,7 +25,7 @@ export default function PlaylistScroll({ data }: any) {
     const rating = item.rating < 10 ? parseFloat(item.rating || '0').toFixed(1) : '10'
 
     return (
-      <div className="w-full h-fit cursor-pointer relative group" key={itemKey}>
+      <div className="w-full h-fit cursor-pointer relative group drop-shadow-lg" key={itemKey}>
         <div onClick={selectFunction} className="group-hover:opacity-70 transition-transform group-hover:scale-95">
           <Cover src={coverSrc} title={title} />
           <div className="bg-background/85 px-1.5 py-0.5 rounded-md absolute bottom-1 right-1">
@@ -72,11 +72,11 @@ export default function PlaylistScroll({ data }: any) {
         </DialogContent>
       </Dialog>
 
-      <div className={`w-full flex`}>
+      <div className={`w-full`}>
         <div
           ref={ref}
           style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
-          className={`grid w-full gap-3 h-fit mr-4`}
+          className={`grid w-full gap-4 h-fit`}
           >
           <Fade triggerOnce duration={250}>
             {playlist!.map((item: any) => renderItem(item))}

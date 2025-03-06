@@ -3,19 +3,20 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectTrigger,
-  SelectValue,
+  SelectTrigger
 } from "../../components/dashboard/SelectCategories"
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useDebounce } from 'use-debounce';
 import { useSeriesPlaylist, useVodPlaylist } from '@/states/usePlaylistData';
-import { MenuTab } from './components/MenuTab';
 import { useMeasure } from "@uidotdev/usehooks";
 import Fuse from "fuse.js"
 import PaginationComponent from '@/components/PaginationComponent'
 import { useSearchParams } from 'react-router-dom';
 import { SearchInput } from '@/components/SearchInput';
 import PlaylistScroll from "./components/PlaylistScroll";
+import { ListFilter } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 
 export function Dashboard() {
   const vodData = useVodPlaylist((state => state.data))
@@ -23,28 +24,29 @@ export function Dashboard() {
 
   const [ref, { width }] = useMeasure();
   const itemsPerPage = Math.floor(width! / 156) * 10
-
   const [searchParams] = useSearchParams()
-
-  const initialTab = searchParams.get('type') || 'vod'
   const initialSearch = searchParams.get('search') || ''
-  
   const [currentCategory, setCurrentCategory] = useState('all')
+
   const [sortByRating, setSortByRating] = useState(false)
+  const [showMovies, setShowMovies] = useState(true)
+  const [showSeries, setShowSeries] = useState(true)
+
+
   const [page, setPage] = useState(1)
-  const [tab, setTab] = useState(initialTab)
   const [searchValue, setSearchValue] = useState(initialSearch)
   const [search, { flush }] = useDebounce(searchValue, 500)
 
-  function switchTab(tab: string) {
-    setSearchValue('')
-    setTab(tab)
-  }
-
   const data = useMemo(() => {
-    if (tab === 'vod') return vodData
+    if (showMovies && showSeries) {
+      return {
+        categories: [],
+        playlist: [...vodData.playlist, ...seriesData.playlist]
+      }
+    }
+    if (showMovies && !showSeries) return vodData
     return seriesData
-  }, [seriesData, vodData, tab])
+  }, [seriesData, vodData, showMovies, showSeries])
 
   const fuse: any = useMemo(() => {
     if (!data) return 
@@ -84,11 +86,6 @@ export function Dashboard() {
     return paginate(page, itemsPerPage)
   }, [search, currentCategory, page, data, width, filtered, sortByRating])
 
-  function handleSortByRating() {
-    setPage(1)
-    setSortByRating(prev => !prev)
-  }
-
   function paginate(page: number, elements: number) {
     if (!filtered) return []
     const filtered2 = [...filtered]
@@ -102,7 +99,7 @@ export function Dashboard() {
   useEffect(() => {
     flush()
     setCurrentCategory('all')
-  }, [tab])
+  }, [showMovies, showSeries])
 
   useEffect(() => {
     if (initialSearch || (searchValue === '')) return
@@ -113,37 +110,68 @@ export function Dashboard() {
     handleScrollToTop()
   }, [page])
 
+  function handleShowMovies() {
+    if (showMovies && showSeries) setShowSeries(false)
+    if (showMovies && !showSeries) setShowSeries(true)
+    if (!showMovies && showSeries) {
+      setShowSeries(false)
+      setShowMovies(true)
+    }
+  }
+
+  function handleShowSeries() {
+    if (showSeries && showMovies) setShowMovies(false)
+    if (showSeries && !showMovies) setShowMovies(true)
+    if (!showSeries && showMovies) {
+      setShowMovies(false)
+      setShowSeries(true)
+    }
+  }
+
   return (
     <div className="h-fit w-full">
       <div className='flex flex-col gap-2'>
-        <div ref={ref} className='flex items-center justify-between mt-4 mb-1'>
-          <div className='flex items-center gap-2'>
-            <MenuTab tab={tab} switchTab={switchTab} />
 
-            <div onClick={handleSortByRating} className={`cursor-pointer transition hover:opacity-80 px-3 py-1.5 rounded-lg ${sortByRating ? 'bg-primary text-background' : 'bg-secondary text-muted-foreground'}`}>
-              <span className="text-sm leading-none">Sort by Rating</span>
-            </div>
-
-            <Select onValueChange={(value) => setCurrentCategory(value)} value={currentCategory}>
-              <SelectTrigger className="w-fit gap-2">
-                <SelectValue placeholder="All" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value={'all'}>All</SelectItem>
-                  {data.categories && data.categories.map(c => <SelectItem value={c.category_id} key={c.category_id}>{c.category_name}</SelectItem>)}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            
-            
+        <section ref={ref} className='flex items-center justify-center w-full py-1 mt-4 mb-3'>
+          <div className="max-w-screen-sm w-full">
+            <SearchInput setSearchValue={setSearchValue} searchValue={searchValue} />
           </div>
+        </section>
 
-          <SearchInput setSearchValue={setSearchValue} searchValue={searchValue} />
-        </div>
         {playlist.length > 0 ?
           <Suspense fallback={<div className='w-full h-screen' />}>
-            <PlaylistScroll data={playlist} />
+            <section className="bg-primary-foreground/90 space-y-6 rounded-2xl p-6 mr-4">
+
+              <div className="w-full flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div onClick={handleShowMovies} className={`${showMovies && !showSeries ? 'bg-primary text-background' : 'bg-secondary text-muted-foreground'} hover:opacity-80 cursor-pointer px-6 py-1 rounded-full text-sm`}>Movies</div>
+                  <div onClick={handleShowSeries} className={`${showSeries && !showMovies ? 'bg-primary text-background' : 'bg-secondary text-muted-foreground'} hover:opacity-80 cursor-pointer px-6 py-1 rounded-full text-sm`}>Series</div>
+
+                  <Select disabled={showMovies && showSeries} onValueChange={(value) => setCurrentCategory(value)} value={currentCategory}>
+                    <SelectTrigger className="w-fit gap-2 font-medium">
+                      <Button disabled={showMovies && showSeries} variant="ghost" size="icon" aria-label="Filters">
+                        <ListFilter size={16} strokeWidth={2} aria-hidden="true" />
+                      </Button>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value={'all'}>All</SelectItem>
+                        {data.categories && data.categories.map(c => <SelectItem value={c.category_id} key={c.category_id}>{c.category_name}</SelectItem>)}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <span className="text-sm text-muted-foreground">{data.categories.find(v => v.category_id == currentCategory)?.category_name}</span>
+
+                <div className="flex gap-2 items-center">
+                  <span className="text-sm text-muted-foreground">Sort by Rating</span>
+                  <Switch checked={sortByRating} onCheckedChange={setSortByRating} />
+                </div>
+              </div>
+
+              <PlaylistScroll data={playlist} />
+            </section>
           </Suspense> : (
             search && <p className='text-sm text-muted-foreground'>No results found</p>
           )
