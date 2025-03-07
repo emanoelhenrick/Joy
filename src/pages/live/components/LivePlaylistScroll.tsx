@@ -59,7 +59,7 @@ export default function LivePlaylistScroll({ playlist }: { playlist: LiveProps[]
   const renderItem = useCallback((live: LiveProps) => {
     return (
       <div className="w-full h-fit cursor-pointer relative group drop-shadow-lg" key={live.stream_id}>
-        <div onClick={() => handleChannel(live)} className="group-hover:opacity-70 transition-transform group-hover:scale-95 bg-secondary p-4 flex flex-col items-center justify-center aspect-square rounded-full">
+        <div onClick={() => handleChannel(live)} className="group-hover:opacity-70 transition-transform group-hover:scale-95 bg-secondary flex flex-col items-center justify-center aspect-square rounded-3xl overflow-hidden">
           <LiveImage src={live.stream_icon} />
         </div>
         <h1 className="text-base font-medium line-clamp-2 text-center mt-2">{live.name}</h1>
