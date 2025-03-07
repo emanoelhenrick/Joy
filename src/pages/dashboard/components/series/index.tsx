@@ -116,7 +116,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
             logos={data && data.tmdbImages ? data.tmdbImages.logos! : []}
           />
 
-          <div className="px-16 justify-between items-end flex gap-2 mt-3 w-full mb-4 z-10">
+          <div className="px-16 justify-between items-end flex gap-2 mt-4 w-full mb-4 z-10">
             <div className="flex gap-2">
               <Button variant={'ghost'} onClick={handleFavorite} disabled={isFetching} size={"lg"} className="flex gap-2 items-center bg-primary/10 border-none hover:bg-primary/5">
                 <FaStar className={`size-4 transition duration-300 ease-in-out ${userSeriesData?.favorite && 'text-amber-300'}`} />

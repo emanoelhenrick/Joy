@@ -24,6 +24,7 @@ export function SearchInput({ searchValue, setSearchValue }: any) {
           id={id}
           className="peer pe-14 ps-8 bg-secondary/80 rounded-full py-6 text-base border-none"
           placeholder="Search..."
+          autoFocus
           type="search"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}

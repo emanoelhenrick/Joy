@@ -24,7 +24,7 @@ export default function LivePlaylistScroll({ playlist }: { playlist: LiveProps[]
   const [update, setUpdate] = useState(false)
   const [favorites, setFavorites] = useState<string[]>()
   const [isRunning, setIsRunning] = useState(false)
-  const columns = Math.floor(width! / 180)
+  const columns = Math.floor(width! / 150)
 
   const [selectedLiveUrl, setSelectLiveUrl] = useState<string | undefined>()
   const [live, setLive] = useState(playlist[0])

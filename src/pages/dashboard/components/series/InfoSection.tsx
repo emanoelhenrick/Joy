@@ -68,7 +68,7 @@ export function InfoSection({ title, releaseDate, genre, description, cast, tmdb
           </div>
           )}
       </div>
-      <div className="text-base text-muted-foreground mt-4">{title}</div>
+      {/* <div className="text-base text-muted-foreground mt-4">{title}</div> */}
     </div>
   )
 }

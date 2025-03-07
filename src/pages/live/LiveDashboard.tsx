@@ -21,7 +21,7 @@ export function LiveDashboard() {
   const liveData = useLivePlaylist((state => state.data))
 
   const [ref, { width }] = useMeasure();
-  const itemsPerPage = Math.floor(width! / 170) * 10
+  const itemsPerPage = Math.floor(width! / 150) * 10
   const [searchParams] = useSearchParams()
   const initialSearch = searchParams.get('search') || ''
   const [currentCategory, setCurrentCategory] = useState('all')
