@@ -23,11 +23,6 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
   const updateFavorite = useUserData(state => state.updateFavorite)
   const userSeriesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))
   const [_refresh, setRefresh] = useState(false)
-  const [blurBackdrop, setBlurBackdrop] = useState(false)
-
-  function setBlur(v: boolean) {
-    setBlurBackdrop(v) 
-  }
 
   async function fetchSeriesData() {
     const seriesInfo = await electronApi.getSerieInfo(urls.getSeriesInfoUrl + seriesId)
@@ -104,7 +99,6 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
                 <Backdrop
                   backdropPath={backdropPath!}
                   cover={cover}
-                  blur={blurBackdrop}
                 />
               </div>
           )}
@@ -140,7 +134,6 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
               seriesCover={cover}
               seriesId={seriesId}
               data={data}
-              setBlur={setBlur}
             />
         )}
         </div>
@@ -148,7 +141,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
     )
 }
 
-function Backdrop({ backdropPath, cover, blur }: { backdropPath: string, cover: string, blur: boolean }) {
+function Backdrop({ backdropPath, cover }: { backdropPath: string, cover: string }) {
   const imageSrc = backdropPath || cover
 
   if (!imageSrc.includes('tmdb')) {
@@ -156,13 +149,13 @@ function Backdrop({ backdropPath, cover, blur }: { backdropPath: string, cover: 
       <div className="fixed">
         <Fade triggerOnce>
           <img
-            className={`w-full h-full ${blur ? 'brightness-75' : 'scale-105'} duration-700 object-cover fixed transition ease-out top-0`}
+            className={`w-full h-full duration-700 object-cover fixed transition ease-out top-0`}
             src={imageSrc}
           />
         </Fade>
-        <div className="inset-0 w-full h-full z-0 scale-105 fixed bg-gradient-to-l from-transparent to-background/95" />
-        <div className="inset-0 w-full h-full fixed scale-105 bg-gradient-to-b from-transparent to-background" />
-      <div className="inset-0 w-full h-full fixed scale-105 bg-gradient-to-b from-transparent to-background" />
+        <div className="inset-0 w-full h-full scale-105 z-0 fixed bg-gradient-to-l from-transparent to-background/95" />
+        <div className="inset-0 w-full h-full scale-105 fixed bg-gradient-to-b from-transparent to-background" />
+        <div className="inset-0 w-full h-full scale-105 fixed bg-gradient-to-b from-transparent to-background" />
       </div>
     )
   }
@@ -186,13 +179,13 @@ function Backdrop({ backdropPath, cover, blur }: { backdropPath: string, cover: 
     <div className="fixed top-0 w-screen h-screen">
       <Fade triggerOnce duration={500}>
         <img
-          className={`w-full h-full object-cover fixed top-0 scale-105`}
+          className={`w-full h-full object-cover fixed top-0`}
           src={lowImage}
         />
         <LazyLoadImage
           onLoad={() => setImageLoaded(true)}
           src={highImage}
-          className={`w-full h-full ${blur ? 'brightness-75' : 'scale-105'} duration-700 object-cover fixed transition ease-out top-0 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+          className={`w-full h-full duration-700 object-cover fixed transition ease-out top-0 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
         />
       </Fade>
       <div className="inset-0 w-1/2 h-full fixed scale-105 bg-gradient-to-l from-transparent to-background" />

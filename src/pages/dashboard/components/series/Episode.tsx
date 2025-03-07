@@ -22,7 +22,7 @@ export function Episode({ imageSrc, cover, progress, episodeNumber, duration }: 
   return (
     <div className="w-72 2xl:w-80 cursor-pointer group relative">
       <Fade duration={500} className="z-10">
-        <div className="relative shadow-lg group-hover:opacity-80 duration-300 bg-secondary transition ease-out flex items-center aspect-video justify-center overflow-hidden rounded-lg ">
+        <div className="relative group-hover:opacity-80 duration-300 bg-secondary transition ease-out flex items-center aspect-video justify-center overflow-hidden rounded-lg ">
           {
             (imageSrc && !isError) ? <LazyLoadImage onError={() => setIsError(true)} src={imageSrc} className="w-full h-full group-hover:scale-100 scale-105 duration-300 transition ease-out object-cover opacity-90" />
             : <LazyLoadImage src={statedCover} className="object-cover w-full h-full group-hover:scale-100 scale-105 duration-300 transition ease-out opacity-90" />
@@ -32,7 +32,7 @@ export function Episode({ imageSrc, cover, progress, episodeNumber, duration }: 
           <div className="inset-0 w-full absolute bg-gradient-to-b from-transparent to-background/80" />
         </div>
         <div className="flex flex-col absolute bottom-5 left-5 z-10">
-          <span className="text-muted-foreground text-sm 2xl:text-base">{duration}</span>
+          <div className="bg-primary/10 w-fit px-1.5 mb-1 rounded-sm text-sm 2xl:text-base">{duration}</div>
           <h1 className="whitespace-normal text-sm 2xl:text-base font-semibold">{`Episode ${episodeNumber}`}</h1>
         </div>
           {

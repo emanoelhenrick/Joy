@@ -109,7 +109,7 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
                     Trending
                   </div>
                   <div style={{ lineHeight: 1 }} className="text-base 2xl:text-lg text-muted-foreground px-2 py-1 bg-primary/10 rounded-sm">{releaseDate}</div>
-                  {info.matches![0].rating && <RatingStars rating={parseFloat(info.matches![0].rating)} />}
+                  {info.matches![0].rating && <RatingStars blur={false} rating={parseFloat(info.matches![0].rating)} />}
                 </div>
 
                 <span className="text-base 2xl:text-lg line-clamp-4 text-muted-foreground max-w-screen-sm">{info.overview}</span>
