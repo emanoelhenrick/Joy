@@ -1,5 +1,6 @@
 import { RatingStars } from "@/components/RatingStars"
-import { TitleLogo } from "moviedb-promise"
+import { TmdbCast } from "@/components/TmdbCast"
+import { Cast, TitleLogo } from "moviedb-promise"
 
 interface Props {
   title: string
@@ -10,9 +11,10 @@ interface Props {
   director: string
   rating: any
   logos: TitleLogo[]
+  tmdbCast: Cast[]
 }
 
-export function InfoSection({ title, releaseDate, genre, description, cast, director, rating, logos }: Props) {
+export function InfoSection({ title, releaseDate, genre, description, cast, tmdbCast, director, rating, logos }: Props) {
   function getRightLogo(logos: TitleLogo[]) {
     if (!logos) return
     if (logos.length === 0) return
@@ -51,12 +53,22 @@ export function InfoSection({ title, releaseDate, genre, description, cast, dire
 
       <div className="max-w-screen-md 2xl:max-w-screen-lg mt-1.5 flex flex-col gap-2">
         {description && <span className="text-base 2xl:text-lg text-primary line-clamp-4 2xl:line-clamp-6">{description}</span>}
-        <div>
-          <p className="text-sm 2xl:text-base truncate max-w-xl text-muted-foreground">{cast}</p>
-          <p className="text-sm 2xl:text-base text-muted-foreground">{director && 'Directed by ' + director}</p>
-        </div>
+        {(cast || director || tmdbCast) && (
+          <div className="space-y-2">
+            {director && <h1 className="text-sm 2xl:text-base text-muted-foreground max-w-screen-md 2xl:max-w-screen-lg">
+              {'Directed by ' + director}
+            </h1>}
+            <div className="flex gap-8 w-fit">
+              {tmdbCast.length > 0 ? <TmdbCast tmdbCast={tmdbCast}  /> : (
+                <p className="truncate text-sm 2xl:text-base max-w-xl text-muted-foreground">
+                  {cast}
+                </p>
+              )}
+            </div>
+          </div>
+          )}
       </div>
-      <span className="text-sm 2xl:text-base text-muted-foreground">Title: {title}</span>
+      <div className="text-base text-muted-foreground mt-4">{title}</div>
     </div>
   )
 }

@@ -11,7 +11,7 @@ import { Fade } from "react-awesome-reveal";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { ImSpinner8 } from "react-icons/im";
 import { useUserData } from "@/states/useUserData";
-import { MovieDb } from "moviedb-promise";
+import { Cast, MovieDb } from "moviedb-promise";
 import { format } from "date-fns";
 
 export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: string }) {
@@ -44,6 +44,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
 
     const tmdbId = res.results[0].id
     const images = await moviedb.tvImages({ id: tmdbId! })
+    const tmdbCast = await moviedb.tvCredits(tmdbId!.toString())
 
     let imageSrc = ''
     let filteredByIso = (images.backdrops && images.backdrops.length > 0) && images.backdrops.filter(b => !b.iso_639_1)
@@ -59,7 +60,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
     }
 
     seriesInfo.info.backdrop_path = [imageSrc] 
-    return { ...seriesInfo, tmdbImages: images }
+    return { ...seriesInfo, tmdbImages: images, tmdbCast: tmdbCast.cast || [] }
   } 
 
   function refresh() {
@@ -83,6 +84,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
   const title = data ? data.info.name.replace(/\[\d+\]|\(\d+\)/g, '') : undefined
   const releaseDate = data ? (data.info.releaseDate && parseInt(format(data.info.releaseDate, 'u'))) || data.info.year : undefined
   const cast = data ? (data.info.cast && data.info.cast.trim()) : undefined
+  const tmdbCast = data ? data.tmdbCast : []
   const director = data ? (data.info.director && data.info.director.trim()) : undefined
 
   const genres = (data && data.info.genre) ? data.info.genre.replaceAll(/^\s+|\s+$/g, "").split(/[^\w\sÀ-ÿ-]/g) : ['']
@@ -114,6 +116,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
             genre={genres[0]!}
             description={description!}
             cast={cast!}
+            tmdbCast={tmdbCast!}
             director={director!}
             rating={rating!}
             logos={data && data.tmdbImages ? data.tmdbImages.logos! : []}

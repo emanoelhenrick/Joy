@@ -1,4 +1,5 @@
 import { RatingStars } from "@/components/RatingStars"
+import { TmdbCast } from "@/components/TmdbCast";
 import { Skeleton } from "@/components/ui/skeleton"
 import { Cast, TitleLogo } from "moviedb-promise"
 import { useCallback, useState } from "react";
@@ -41,34 +42,6 @@ export function InfoSection({ title, releaseDate, cast, tmdbCast, description, d
 
   const logoPath = getRightLogo(logos)
 
-  const renderProfile = useCallback((c: Cast) => {
-    const [isError, setIsError] = useState(false)
-    return (
-      <div key={c.profile_path} className="flex gap-3 items-center p-rounded-lg">
-        <div className="aspect-square size-11 flex justify-center items-center rounded-full overflow-hidden">
-          {!isError ? (
-            <LazyLoadImage
-              key={c.profile_path}
-              className="w-full h-full object-cover"
-              src={`https://image.tmdb.org/t/p/w45${c.profile_path}`}
-              onError={() => setIsError(true)}
-              alt=""
-            />
-          ) : (
-            <div className="bg-secondary w-full h-full flex justify-center items-center">
-              <GoPersonFill className="size-5" />
-            </div>
-          )}
-        </div>
-
-        <div>
-          <h1 className="font-medium text-base line-clamp-1">{c.name}</h1>
-          <h1 className="text-sm text-muted-foreground line-clamp-1">{c.character}</h1>
-        </div>
-      </div>
-    )
-  }, [tmdbCast])
-
   return (
     <div>
         <div className="max-w-96 h-fit">
@@ -97,8 +70,7 @@ export function InfoSection({ title, releaseDate, cast, tmdbCast, description, d
                 {director && 'Directed by ' + director}
               </h1>
               <div className="flex gap-8 w-fit">
-                {tmdbCast.length > 0 ?
-                  tmdbCast.slice(0, 4).map(c => renderProfile(c)) : (
+                {tmdbCast.length > 0 ? <TmdbCast tmdbCast={tmdbCast}  /> : (
                   <p className="truncate text-sm 2xl:text-base max-w-xl text-muted-foreground">
                     {cast}
                   </p>

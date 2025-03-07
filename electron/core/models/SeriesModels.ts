@@ -1,4 +1,4 @@
-import { TvImagesResponse } from "moviedb-promise"
+import { Cast, TvImagesResponse } from "moviedb-promise"
 
 export interface SeriesPlaylistProps {
   playlist: SeriesProps[] 
@@ -53,6 +53,7 @@ export interface SerieInfoProps {
     [key: string]: EpisodeProps[]
   },
   tmdbImages: TvImagesResponse
+  tmdbCast: Cast[]
 }
 
 export interface CategoriesProps {
