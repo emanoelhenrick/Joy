@@ -79,7 +79,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
   const title = data ? data.info.name.replace(/\[\d+\]|\(\d+\)/g, '') : undefined
   const releaseDate = data ? (data.info.releaseDate && parseInt(format(data.info.releaseDate, 'u'))) || data.info.year : undefined
   const cast = data ? (data.info.cast && data.info.cast.trim()) : undefined
-  const tmdbCast = data ? data.tmdbCast : []
+  const tmdbCast = data ? (data.tmdbCast && data.tmdbCast) : []
   const director = data ? (data.info.director && data.info.director.trim()) : undefined
 
   const genres = (data && data.info.genre) ? data.info.genre.replaceAll(/^\s+|\s+$/g, "").split(/[^\w\sÀ-ÿ-]/g) : ['']

@@ -40,7 +40,7 @@ export function InfoSection({ title, releaseDate, genre, description, cast, tmdb
       <div className="max-w-96 2xl:max-w-[500px] h-fit">
         {logoPath !== undefined ? (
             <img key={'logo'} className="object-cover max-h-32 2xl:max-h-40" src={logoPath} alt="" />
-        ) : <h1 className="text-4xl 2xl:text-5xl">{title}</h1>}
+        ) : <h1 className="text-4xl 2xl:text-5xl line-clamp-4">{title}</h1>}
       </div>
 
       {((releaseDate && releaseDate != 0) || genre || rating) && (
@@ -59,7 +59,7 @@ export function InfoSection({ title, releaseDate, genre, description, cast, tmdb
               {'Directed by ' + director}
             </h1>}
             <div className="flex gap-8 w-fit">
-              {tmdbCast.length > 0 ? <TmdbCast tmdbCast={tmdbCast}  /> : (
+              {(tmdbCast && tmdbCast.length > 0) ? <TmdbCast tmdbCast={tmdbCast}  /> : (
                 <p className="truncate text-sm 2xl:text-base max-w-xl text-muted-foreground">
                   {cast}
                 </p>

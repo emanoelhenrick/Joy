@@ -70,7 +70,7 @@ export function InfoSection({ title, releaseDate, cast, tmdbCast, description, d
                 {director && 'Directed by ' + director}
               </h1>
               <div className="flex gap-8 w-fit">
-                {tmdbCast.length > 0 ? <TmdbCast tmdbCast={tmdbCast}  /> : (
+                {(tmdbCast && tmdbCast.length > 0) ? <TmdbCast tmdbCast={tmdbCast}  /> : (
                   <p className="truncate text-sm 2xl:text-base max-w-xl text-muted-foreground">
                     {cast}
                   </p>
