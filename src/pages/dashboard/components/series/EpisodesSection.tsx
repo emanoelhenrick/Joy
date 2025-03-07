@@ -28,7 +28,6 @@ interface EpisodesSection {
   seriesId: string
   seriesCover: string
   data: SerieInfoProps
-  setBlur: (v: boolean) => void
 }
 
 export function EpisodesSection({ seriesId, seriesCover, data }: EpisodesSection) {
