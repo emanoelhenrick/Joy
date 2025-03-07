@@ -31,7 +31,7 @@ interface EpisodesSection {
   setBlur: (v: boolean) => void
 }
 
-export function EpisodesSection({ seriesId, seriesCover, data, setBlur }: EpisodesSection) {
+export function EpisodesSection({ seriesId, seriesCover, data }: EpisodesSection) {
   const { urls } = usePlaylistUrl()
   const userSeriesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))
 
@@ -49,11 +49,7 @@ export function EpisodesSection({ seriesId, seriesCover, data, setBlur }: Episod
   }, [data, currentSeason])
 
   return (
-    <section 
-      onMouseEnter={() => setBlur(true)}
-      onMouseLeave={() => setBlur(false)}
-      className="mb-8 space-y-1 mt-2 pb-4 2xl:pb-4"
-      >
+    <section className="mb-8 space-y-1 mt-2 pb-4 2xl:pb-4">
       {data.episodes ? (
         <div>
           <SeasonsList
