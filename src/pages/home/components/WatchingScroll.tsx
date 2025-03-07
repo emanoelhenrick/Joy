@@ -1,7 +1,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { SeriesProps } from "electron/core/models/SeriesModels"
 import { VodProps } from "electron/core/models/VodModels"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback } from "react"
 import { HomeCover } from "./HomeCover"
 import { ScrollBarStyled } from "@/components/ScrollBarStyled"
 import { Fade } from "react-awesome-reveal"
