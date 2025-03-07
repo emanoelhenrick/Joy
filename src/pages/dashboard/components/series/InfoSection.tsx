@@ -1,6 +1,7 @@
 import { RatingStars } from "@/components/RatingStars"
 import { TmdbCast } from "@/components/TmdbCast"
 import { Cast, TitleLogo } from "moviedb-promise"
+import { PiCheck, PiPlus } from "react-icons/pi"
 
 interface Props {
   title: string
@@ -12,9 +13,12 @@ interface Props {
   rating: any
   logos: TitleLogo[]
   tmdbCast: Cast[]
+  handleFavorite: () => void
+  isFetching: boolean
+  favorite: boolean
 }
 
-export function InfoSection({ title, releaseDate, genre, description, cast, tmdbCast, director, rating, logos }: Props) {
+export function InfoSection({ title, releaseDate, genre, description, cast, tmdbCast, director, rating, logos, handleFavorite, isFetching, favorite }: Props) {
   function getRightLogo(logos: TitleLogo[]) {
     if (!logos) return
     if (logos.length === 0) return
@@ -39,20 +43,30 @@ export function InfoSection({ title, releaseDate, genre, description, cast, tmdb
     <div className="px-16 py-0 h-fit z-10">
       <div className="max-w-96 2xl:max-w-[500px] h-fit">
         {logoPath !== undefined ? (
-            <img key={'logo'} className="object-cover max-h-32 2xl:max-h-40" src={logoPath} alt="" />
+            <div>
+              <img key={'logo'} className="object-cover max-h-32 2xl:max-h-40" src={logoPath} alt="" />
+              <h1 className="text-base text-muted-foreground mt-2 italic">{title}</h1>
+            </div>
         ) : <h1 className="text-4xl 2xl:text-5xl line-clamp-4">{title}</h1>}
       </div>
 
-      {((releaseDate && releaseDate != 0) || genre || rating) && (
-        <div className="flex items-center gap-3 mt-4 py-1">
-          {(releaseDate && releaseDate != 0) && <span style={{ lineHeight: 1}} className="text-base backdrop-blur-sm 2xl:text-lg text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{releaseDate}</span>}
-          {genre && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg backdrop-blur-sm text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{genre}</span>}
-          {rating && <RatingStars rating={parseFloat(rating)} />}
-        </div>
-      )}
+      <div className="flex items-center mt-2 gap-1">
+        {((releaseDate && releaseDate != 0) || genre || rating) && (
+          <div className="flex items-center gap-3 py-1">
+            {(releaseDate && releaseDate != 0) && <span style={{ lineHeight: 1}} className="text-base backdrop-blur-sm 2xl:text-lg text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{releaseDate}</span>}
+            {genre && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg backdrop-blur-sm text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{genre}</span>}
+            {rating && <RatingStars rating={parseFloat(rating)} />}
+          </div>
+        )}
 
-      <div className="max-w-screen-md 2xl:max-w-screen-lg mt-1.5 flex flex-col gap-2">
+        <button onClick={handleFavorite} disabled={isFetching} className="p-2 rounded-full hover:bg-primary/10 transition-none">
+          {favorite ? <PiCheck className="size-6" /> : <PiPlus className="size-6" />}
+        </button>
+      </div>
+
+      <div className="max-w-screen-md 2xl:max-w-screen-lg mt-1.5 flex flex-col gap-4">
         {description && <span className="text-base 2xl:text-lg text-primary line-clamp-4 2xl:line-clamp-6">{description}</span>}
+
         {(cast || director || tmdbCast) && (
           <div className="space-y-2">
             {director && <h1 className="text-sm 2xl:text-base text-muted-foreground max-w-screen-md 2xl:max-w-screen-lg">
@@ -68,7 +82,7 @@ export function InfoSection({ title, releaseDate, genre, description, cast, tmdb
           </div>
           )}
       </div>
-      {/* <div className="text-base text-muted-foreground mt-4">{title}</div> */}
+      
     </div>
   )
 }

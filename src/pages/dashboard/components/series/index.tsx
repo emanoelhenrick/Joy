@@ -13,6 +13,7 @@ import { ImSpinner8 } from "react-icons/im";
 import { useUserData } from "@/states/useUserData";
 import { Cast, MovieDb } from "moviedb-promise";
 import { format } from "date-fns";
+import { PiCheck, PiPlus } from "react-icons/pi";
 
 export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: string }) {
   const queryClient = useQueryClient();
@@ -55,7 +56,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
     }
 
     seriesInfo.info.backdrop_path = [imageSrc] 
-    return { ...seriesInfo, tmdbImages: images, tmdbCast: tmdbCast.cast || [] }
+    return { ...seriesInfo, tmdbImages: images, tmdbCast: tmdbCast.cast!.slice(0, 3) || [] }
   } 
 
   function refresh() {
@@ -103,39 +104,36 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
               </div>
           )}
 
-        <div className={`transition pb-4 duration-500 flex flex-col ${isFetching ? 'opacity-0' : 'opacity-100'}`}>
-          <InfoSection
-            title={title!}
-            releaseDate={releaseDate!}
-            genre={genres[0]!}
-            description={description!}
-            cast={cast!}
-            tmdbCast={tmdbCast!}
-            director={director!}
-            rating={rating!}
-            logos={data && data.tmdbImages ? data.tmdbImages.logos! : []}
-          />
+        <div className={`transition pb-10 space-y-6 duration-500 flex flex-col ${isFetching ? 'opacity-0' : 'opacity-100'}`}>
+          <div className="flex justify-between items-end">
+            <InfoSection
+              title={title!}
+              releaseDate={releaseDate!}
+              genre={genres[0]!}
+              description={description!}
+              cast={cast!}
+              tmdbCast={tmdbCast!}
+              director={director!}
+              rating={rating!}
+              logos={data && data.tmdbImages ? data.tmdbImages.logos! : []}
 
-          <div className="px-16 justify-between items-end flex gap-2 mt-4 w-full mb-4 z-10">
-            <div className="flex gap-2">
-              <Button variant={'ghost'} onClick={handleFavorite} disabled={isFetching} size={"lg"} className="flex gap-2 items-center bg-primary/10 border-none hover:bg-primary/5">
-                <FaStar className={`size-4 transition duration-300 ease-in-out ${userSeriesData?.favorite && 'text-amber-300'}`} />
-                <span className="leading-none text-base">
-                  {userSeriesData?.favorite ? 'Remove from favorites' : 'Add to favorites'}
-                </span>
-              </Button>
+              favorite={userSeriesData?.favorite || false}
+              isFetching={isFetching}
+              handleFavorite={handleFavorite}
+            />
+
+            <div className="px-16">
+              <ClearDataAlertDialog refresh={refresh} seriesId={seriesId}  />
             </div>
-
-            <ClearDataAlertDialog refresh={refresh} seriesId={seriesId}  />
           </div>
 
-        {data && (
+          {data && (
             <EpisodesSection
               seriesCover={cover}
               seriesId={seriesId}
               data={data}
             />
-        )}
+          )}
         </div>
       </div>
     )

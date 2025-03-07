@@ -14,6 +14,7 @@ import { ClearDataAlertDialog } from "./ClearDataAlertDialog"
 import { InfoSection } from "./InfoSection"
 import { ImSpinner8 } from "react-icons/im";
 import { formatDurationFromSeconds } from "@/utils/formatDuration"
+import { PiPlus, PiCheck } from "react-icons/pi";
 
 interface Props {
   streamId: string
@@ -66,8 +67,10 @@ export function VodPage({ streamId, cover }: Props) {
     if (!vodInfo.info) return
     if (vodInfo.info.tmdb_id) {
       const tmdbCast = await moviedb.movieCredits(vodInfo.info.tmdb_id)
+      const director = tmdbCast.crew!.find(c => c.job === "Director")
+      if (director) vodInfo.info.director = director.name!
       const tmdbImages = await moviedb.movieImages({ id: vodInfo.info.tmdb_id })
-      return { ...vodInfo, tmdbImages, tmdbCast: tmdbCast.cast?.slice(0, 9)}
+      return { ...vodInfo, tmdbImages, tmdbCast: tmdbCast.cast?.slice(0, 3)}
     }
     return vodInfo
   } 
@@ -126,7 +129,7 @@ export function VodPage({ streamId, cover }: Props) {
       )}
 
         {isSuccess && (
-          <div className="p-16 pb-20 z-10 space-y-4">
+          <div className="p-16 pb-20 z-10 space-y-6">
             <InfoSection
               cast={cast!}
               tmdbCast={tmdbCast!}
@@ -142,25 +145,29 @@ export function VodPage({ streamId, cover }: Props) {
             
             <div className="flex flex-col gap-4 z-10 animate-fade">
               <div className="flex justify-between items-center">
-                <div className="flex gap-2">
-                  <Button key='vlc' disabled={isFetching} onClick={launchVlc} variant={"default"} size={"lg"} className="transition-none bg-primary/10 hover:text-background text-primary relative overflow-hidden">
+                <div className="flex gap-6 items-center">
+                  <button key='vlc' disabled={isFetching} onClick={launchVlc} className="transition-none bg-primary/10 hover:bg-primary/20 px-8 py-4 rounded-md text-primary relative overflow-hidden">
                     {userVodData && userVodData.currentTime ?
-                    <div>
-                      <span className="leading-none text-base">{`Resume from ${resumeDuration}`}</span>
+                    <div className="flex items-center gap-5">
+                      <FaPlay className="size-4" />
+                      <div className="text-left">
+                        <h1 className="leading-none text-base">{`Resume from ${resumeDuration}`}</h1>
+                        <span className="text-sm italic text-muted-foreground">{title}</span>
+                      </div>
                     </div>
                       : (
-                        <div className="flex items-center gap-2">
-                          <FaPlay className="size-3.5" />
-                          <span className="leading-none text-base">Watch</span>
+                        <div className="flex items-center gap-5">
+                          <FaPlay className="size-4" />
+                          <div className="text-left">
+                            <h1 className="leading-none text-base font-medium">Watch</h1>
+                            <span className="text-sm italic text-muted-foreground">{title}</span>
+                          </div>
                         </div>
                       )}
-                  </Button>
-                  <Button variant={'ghost'} onClick={handleFavorite} disabled={isFetching} size={"lg"} className="flex gap-2 items-center hover:bg-primary/10 transition-none">
-                    <FaStar className={`size-4 ${userVodData?.favorite && 'text-yellow-400'}`} />
-                    <span className="leading-none text-base">
-                      {userVodData?.favorite ? 'Remove from favorites' : 'Add to favorites'}
-                    </span>
-                  </Button>
+                  </button>
+                  <button onClick={handleFavorite} disabled={isFetching} className="flex gap-2 items-center p-4 transition rounded-full hover:bg-primary/10 transition-none">
+                    {userVodData?.favorite ? <PiCheck className="size-6" /> : <PiPlus className="size-6" />}
+                  </button>
                 </div>
 
                 {userVodData && <ClearDataAlertDialog removeVodData={() => removeVodStatus(streamId)} refresh={() => setRefresh(p => !p)}  />}

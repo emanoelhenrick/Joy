@@ -79,8 +79,6 @@ export function InfoSection({ title, releaseDate, cast, tmdbCast, description, d
             </div>
           )}
         </div>
-
-        <div className="text-base mt-4 text-muted-foreground max-w-screen-md 2xl:max-w-screen-lg animate-fade">{title}</div>
     </div>
   )
     

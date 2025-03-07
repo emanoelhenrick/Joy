@@ -8,7 +8,6 @@ import { useUserData } from "@/states/useUserData";
 import { VlcDialog } from "../VlcDialog";
 import electronApi from "@/config/electronApi";
 import { formatDurationFromSeconds } from "@/utils/formatDuration";
-import { Bounce, Fade, Slide } from "react-awesome-reveal";
 
 interface SeasonsListProps {
   seasons: string[]
@@ -73,10 +72,10 @@ function SeasonsList({ seasons, currentSeason, setCurrentSeason }: SeasonsListPr
 
   return (
     <div>
-      <ScrollArea className="w-full pb-4 mb-2">
-        <div className="flex gap-6 text-nowrap ml-16 mr-6">
+      <ScrollArea className="w-full pb-4 mb-1">
+        <div className="flex gap-2 text-nowrap ml-16 mr-6">
           { seasons && seasons.map(s => (
-              <div key={s} onClick={() => setCurrentSeason(s)} className={`px-2 py-1 hover:opacity-80 border-b-2 transition ease-in-out text-sm 2xl:text-base cursor-pointer ${currentSeason === s ? 'border-b-2 border-primary' : 'text-muted-foreground border-transparent'}`}>Season {s}</div>
+              <div key={s} onClick={() => setCurrentSeason(s)} className={`py-1 hover:opacity-80 font-medium px-5 2xl:px-6 rounded-full transition ease-in-out text-sm 2xl:text-base cursor-pointer ${currentSeason === s ? 'bg-primary/10' : 'text-muted-foreground bg-primary/0'}`}>Season {s}</div>
           ))}
         </div>
         <ScrollBarStyled orientation="horizontal" />

@@ -35,7 +35,7 @@ export function TmdbCast({ tmdbCast }: { tmdbCast: Cast[] }) {
 
   return (
     <div className="flex gap-8 w-fit">
-      {tmdbCast.slice(0, 4).map(c => renderProfile(c))}
+      {tmdbCast.map(c => renderProfile(c))}
     </div>
   )
 }
