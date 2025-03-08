@@ -3,10 +3,9 @@ import { usePlaylistUrl } from "@/states/usePlaylistUrl"
 import { QueryFilters, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useMemo, useState } from "react"
 import { Fade } from "react-awesome-reveal"
-import { FaPlay, FaStar } from "react-icons/fa"
+import { FaPlay} from "react-icons/fa"
 import { useUserData } from "@/states/useUserData"
 import { Backdrop as BackdropType, MovieDb, } from "moviedb-promise"
-import { Button } from "@/components/ui/button"
 import { format } from "date-fns"
 import { LazyLoadImage } from "react-lazy-load-image-component"
 import { VlcDialog } from "../VlcDialog"
@@ -15,6 +14,8 @@ import { InfoSection } from "./InfoSection"
 import { ImSpinner8 } from "react-icons/im";
 import { formatDurationFromSeconds } from "@/utils/formatDuration"
 import { PiPlus, PiCheck } from "react-icons/pi";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { ScrollBarStyled } from "@/components/ScrollBarStyled"
 
 interface Props {
   streamId: string
@@ -67,10 +68,11 @@ export function VodPage({ streamId, cover }: Props) {
     if (!vodInfo.info) return
     if (vodInfo.info.tmdb_id) {
       const tmdbCast = await moviedb.movieCredits(vodInfo.info.tmdb_id)
+      const tmdbVideos = await moviedb.movieVideos(vodInfo.info.tmdb_id)
       const director = tmdbCast.crew!.find(c => c.job === "Director")
       if (director) vodInfo.info.director = director.name!
       const tmdbImages = await moviedb.movieImages({ id: vodInfo.info.tmdb_id })
-      return { ...vodInfo, tmdbImages, tmdbCast: tmdbCast.cast?.slice(0, 3)}
+      return { ...vodInfo, tmdbImages, tmdbCast: tmdbCast.cast?.slice(0, 3), tmdbExtras: tmdbVideos.results?.reverse()}
     }
     return vodInfo
   } 
@@ -116,74 +118,101 @@ export function VodPage({ streamId, cover }: Props) {
   const duration = formatDurationFromSeconds(data && data.info.duration_secs)
 
   return (
-    <div className="w-screen h-screen flex flex-col justify-end">
-      {isFetching ? (
-          <div className="w-full h-full fixed flex items-center justify-center top-0 z-20 animate-fade">
-            <ImSpinner8 className="size-8 animate-spin text-muted-foreground" />
-          </div>
-      ) : (
-          <Backdrop
-            backdrops={data && data.tmdbImages ? data.tmdbImages.backdrops! : []}
-            cover={cover}
-          />
-      )}
-
-        {isSuccess && (
-          <div className="p-16 pb-20 z-10 space-y-6">
-            <InfoSection
-              cast={cast!}
-              tmdbCast={tmdbCast!}
-              description={description!}
-              director={director!}
-              genre={genres[0]}
-              logos={data && data.tmdbImages ? data.tmdbImages.logos! : []}
-              releaseDate={releaseDate!}
-              title={title!}
-              rating={rating!}
-              duration={duration!}
-            />
-            
-            <div className="flex flex-col gap-4 z-10 animate-fade">
-              <div className="flex justify-between items-center">
-                <div className="flex gap-6 items-center">
-                  <button key='vlc' disabled={isFetching} onClick={launchVlc} className="transition-none bg-primary/10 hover:bg-primary/20 px-8 py-4 rounded-md text-primary relative overflow-hidden">
-                    {userVodData && userVodData.currentTime ?
-                    <div className="flex items-center gap-5">
-                      <FaPlay className="size-4" />
-                      <div className="text-left">
-                        <h1 className="leading-none text-base">{`Resume from ${resumeDuration}`}</h1>
-                        <span className="text-sm italic text-muted-foreground">{title}</span>
-                      </div>
-                    </div>
-                      : (
-                        <div className="flex items-center gap-5">
-                          <FaPlay className="size-4" />
-                          <div className="text-left">
-                            <h1 className="leading-none text-base font-medium">Watch</h1>
-                            <span className="text-sm italic text-muted-foreground">{title}</span>
-                          </div>
-                        </div>
-                      )}
-                  </button>
-                  <button onClick={handleFavorite} disabled={isFetching} className="flex gap-2 items-center p-4 transition rounded-full hover:bg-primary/10 transition-none">
-                    {userVodData?.favorite ? <PiCheck className="size-6" /> : <PiPlus className="size-6" />}
-                  </button>
-                </div>
-
-                {userVodData && <ClearDataAlertDialog removeVodData={() => removeVodStatus(streamId)} refresh={() => setRefresh(p => !p)}  />}
-              </div>
+    <ScrollArea className="w-full h-screen">
+      <div className="w-screen flex flex-col justify-end h-full">
+        {isFetching ? (
+            <div className="w-full h-full fixed flex items-center justify-center top-0 z-20 animate-fade">
+              <ImSpinner8 className="size-8 animate-spin text-muted-foreground" />
             </div>
-        </div>
+        ) : (
+            <Backdrop
+              backdrops={data && data.tmdbImages ? data.tmdbImages.backdrops! : []}
+              cover={cover}
+            />
         )}
 
-      {isRunning && (
-        <VlcDialog
-          updateUserStatus={updateUserStatus}
-          open={isRunning}
-          closeDialog={() => setIsRunning(false)}
-        />
-      )}
-    </div>
+          {isSuccess && (
+            <div style={{ height: '90vh'}} className="p-16 pb-8 z-10 space-y-6 flex flex-col justify-end">
+              <InfoSection
+                cast={cast!}
+                tmdbCast={tmdbCast!}
+                description={description!}
+                director={director!}
+                genre={genres[0]}
+                logos={data && data.tmdbImages ? data.tmdbImages.logos! : []}
+                releaseDate={releaseDate!}
+                title={title!}
+                rating={rating!}
+                duration={duration!}
+              />
+              
+              <div className="flex flex-col gap-4 z-10 animate-fade">
+                <div className="flex justify-between items-center">
+                  <div className="flex gap-6 items-center">
+                    <button key='vlc' disabled={isFetching} onClick={launchVlc} className="transition-none bg-primary/10 hover:bg-primary/20 px-8 py-4 rounded-md text-primary relative overflow-hidden">
+                      {userVodData && userVodData.currentTime ?
+                      <div className="flex items-center gap-5">
+                        <FaPlay className="size-4" />
+                        <div className="text-left">
+                          <h1 className="leading-none text-base">{`Resume from ${resumeDuration}`}</h1>
+                          <span className="text-sm italic text-muted-foreground">{title}</span>
+                        </div>
+                      </div>
+                        : (
+                          <div className="flex items-center gap-5">
+                            <FaPlay className="size-4" />
+                            <div className="text-left">
+                              <h1 className="leading-none text-base font-medium">Watch</h1>
+                              <span className="text-sm italic text-muted-foreground">{title}</span>
+                            </div>
+                          </div>
+                        )}
+                    </button>
+                    <button onClick={handleFavorite} disabled={isFetching} className="flex gap-2 items-center p-4 transition rounded-full hover:bg-primary/10 transition-none">
+                      {userVodData?.favorite ? <PiCheck className="size-6" /> : <PiPlus className="size-6" />}
+                    </button>
+                  </div>
+
+                  {userVodData && <ClearDataAlertDialog removeVodData={() => removeVodStatus(streamId)} refresh={() => setRefresh(p => !p)}  />}
+                </div>
+              </div>
+          </div>
+          )}
+
+        {isRunning && (
+          <VlcDialog
+            updateUserStatus={updateUserStatus}
+            open={isRunning}
+            closeDialog={() => setIsRunning(false)}
+          />
+        )}
+
+        {(data && data.tmdbExtras && data.tmdbExtras.length > 0) ? (
+          <section className="z-10 pb-16 space-y-2">
+            <h1 className="text-xl 2xl:text-2xl pl-16">Extras</h1>
+            <ScrollArea>
+              <div className="flex gap-6 w-fit pl-16 pr-8 mb-4">
+                {data.tmdbExtras.slice(0, 10).map(v => (
+                  <div className="space-y-2 max-w-96 ">
+                    <div className="aspect-video w-96 cursor-pointer hover:opacity-80 bg-primary-foreground rounded-xl relative overflow-hidden">
+                      <img className="w-full h-full object-cover animate-fade" src={`http://img.youtube.com/vi/${v.key}/0.jpg`} alt="" />
+                    </div>
+                    
+                    <div>
+                      <h1 className="leading-none font-medium line-clamp-1">{v.name}</h1>
+                      <div className="text-muted-foreground text-sm">{v.type}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <ScrollBar orientation="horizontal" className="cursor-pointer ml-16 mr-8" />
+            </ScrollArea>
+          </section>
+        ) : <div className="p-6" />}
+      </div>
+      <ScrollBarStyled orientation="vertical" />
+    </ScrollArea>
   )
 }
 

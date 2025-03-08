@@ -7,7 +7,6 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { PlaylistInfo } from "electron/core/models/PlaylistInfo";
 import { useEffect } from "react"
 import { Fade } from "react-awesome-reveal";
-import { ImSpinner8 } from "react-icons/im";
 import { useNavigate } from "react-router-dom";
 
 export function SplashLoading() {
