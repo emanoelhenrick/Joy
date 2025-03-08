@@ -1,6 +1,8 @@
 import { LivePlaylistProps } from "electron/core/models/LiveModels";
 import { SeriesPlaylistProps } from "electron/core/models/SeriesModels";
-import { VodPlaylistProps } from "electron/core/models/VodModels";
+import { VodPlaylistProps, VodProps } from "electron/core/models/VodModels";
+import { MovieMatch } from "electron/core/services/fetchTmdbTrending";
+import Fuse from "fuse.js";
 import { create } from "zustand";
 
 interface VodPlaylistState {

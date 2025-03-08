@@ -1,4 +1,4 @@
-import { Cast, MovieImagesResponse } from "moviedb-promise"
+import { Cast, MovieImagesResponse, Video } from "moviedb-promise"
 
 export interface VodPlaylistProps {
   playlist: VodProps[]
@@ -47,6 +47,7 @@ export interface VodInfoProps {
   password: string
   tmdbImages?: MovieImagesResponse
   tmdbCast?: Cast[]
+  tmdbExtras?: Video[]
 }
 
 export interface CategoriesProps {
