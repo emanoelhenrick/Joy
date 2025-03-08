@@ -1,11 +1,11 @@
 import electronApi from "@/config/electronApi"
 import { usePlaylistUrl } from "@/states/usePlaylistUrl"
 import { QueryFilters, useQuery, useQueryClient } from "@tanstack/react-query"
-import { useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { Fade } from "react-awesome-reveal"
 import { FaPlay} from "react-icons/fa"
 import { useUserData } from "@/states/useUserData"
-import { Backdrop as BackdropType, MovieDb, } from "moviedb-promise"
+import { Backdrop as BackdropType, MovieDb, Video, } from "moviedb-promise"
 import { format } from "date-fns"
 import { LazyLoadImage } from "react-lazy-load-image-component"
 import { VlcDialog } from "../VlcDialog"
@@ -16,6 +16,8 @@ import { formatDurationFromSeconds } from "@/utils/formatDuration"
 import { PiPlus, PiCheck } from "react-icons/pi";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { ScrollBarStyled } from "@/components/ScrollBarStyled"
+import { Dialog, DialogContent, DialogTrigger } from "./VideoDialog"
+import ReactPlayer from 'react-player'
 
 interface Props {
   streamId: string
@@ -72,7 +74,12 @@ export function VodPage({ streamId, cover }: Props) {
       const director = tmdbCast.crew!.find(c => c.job === "Director")
       if (director) vodInfo.info.director = director.name!
       const tmdbImages = await moviedb.movieImages({ id: vodInfo.info.tmdb_id })
-      return { ...vodInfo, tmdbImages, tmdbCast: tmdbCast.cast?.slice(0, 3), tmdbExtras: tmdbVideos.results?.reverse()}
+      return {
+        ...vodInfo,
+        tmdbImages,
+        tmdbCast: tmdbCast.cast?.slice(0, 3),
+        tmdbExtras: tmdbVideos.results?.reverse()
+      }
     }
     return vodInfo
   } 
@@ -116,6 +123,21 @@ export function VodPage({ streamId, cover }: Props) {
   const rating = data ? data.info.rating || data.info.rating_kinopoisk : undefined
   const resumeDuration = formatDurationFromSeconds(userVodData && userVodData.currentTime)
   const duration = formatDurationFromSeconds(data && data.info.duration_secs)
+
+  const renderExtra = useCallback((v: Video) => {
+    return (
+      <div className="space-y-2 max-w-96 ">
+        <div className="aspect-video w-96 cursor-pointer hover:opacity-80 bg-primary-foreground rounded-xl relative overflow-hidden">
+          <img className="w-full h-full object-cover animate-fade" src={`http://img.youtube.com/vi/${v.key}/0.jpg`} alt="" />
+        </div>
+        
+        <div>
+          <h1 className="leading-none font-medium line-clamp-1">{v.name}</h1>
+          <div className="text-muted-foreground text-sm">{v.type}</div>
+        </div>
+      </div>
+    )
+  }, [data])
 
   return (
     <ScrollArea className="w-full h-screen">
@@ -193,16 +215,14 @@ export function VodPage({ streamId, cover }: Props) {
             <ScrollArea>
               <div className="flex gap-6 w-fit pl-16 pr-8 mb-4">
                 {data.tmdbExtras.slice(0, 10).map(v => (
-                  <div className="space-y-2 max-w-96 ">
-                    <div className="aspect-video w-96 cursor-pointer hover:opacity-80 bg-primary-foreground rounded-xl relative overflow-hidden">
-                      <img className="w-full h-full object-cover animate-fade" src={`http://img.youtube.com/vi/${v.key}/0.jpg`} alt="" />
-                    </div>
-                    
-                    <div>
-                      <h1 className="leading-none font-medium line-clamp-1">{v.name}</h1>
-                      <div className="text-muted-foreground text-sm">{v.type}</div>
-                    </div>
-                  </div>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      {renderExtra(v)}
+                    </DialogTrigger>
+                    <DialogContent className="w-fit">
+                      <ReactPlayer controls url={`https://www.youtube.com/watch?v=${v.key}`} />
+                    </DialogContent>
+                  </Dialog>
                 ))}
               </div>
 

@@ -25,7 +25,6 @@ electron.contextBridge.exposeInMainWorld("ipcRenderer", {
   updateLive: async (args) => await electron.ipcRenderer.invoke("update-live", args),
   authenticateUser: async (args) => await electron.ipcRenderer.invoke("authenticate-user", args),
   fetchTmdbTrending: async (args) => await electron.ipcRenderer.invoke("fetch-tmdb-trending", args),
-  findInLocalPlaylist: async (args) => await electron.ipcRenderer.invoke("find-in-local-playlist", args),
   addPlaylistToMeta: async (args) => await electron.ipcRenderer.invoke("add-playlist-to-meta", args),
   editPlaylistInfo: async (args) => await electron.ipcRenderer.invoke("edit-playlist-info", args),
   removePlaylist: async (args) => await electron.ipcRenderer.invoke("remove-playlist", args),

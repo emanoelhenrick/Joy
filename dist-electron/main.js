@@ -26777,27 +26777,10 @@ async function editPlaylistInfo({ playlistName, newPlaylistInfo }) {
   await main$1.renameAsync(getPlaylistFolderPath(playlistName), newPlaylistInfo.name);
   return await main$1.writeAsync(META_PATH, metadata);
 }
-async function findInLocalPlaylist({ apiKey, playlist, vodData }) {
-  const fuseMovies = new Fuse(vodData, {
-    keys: ["name"],
-    threshold: 0.2,
-    minMatchCharLength: 2
-  });
-  const filtered = [];
-  playlist.map(async (movie) => {
-    const query = movie.title + movie.release_date.split("-")[0];
-    const matchesList = fuseMovies.search(query).map((i) => i.item);
-    if (matchesList.length > 0) {
-      filtered.push({ ...movie, matches: matchesList });
-    }
-  });
-  return filtered;
-}
 function CoreControllers(win2) {
   ipcMain.handle("get-metadata", getMetadata);
   ipcMain.handle("authenticate-user", async (_event, args) => await authenticateUser(args));
   ipcMain.handle("fetch-tmdb-trending", async (_event, args) => await fetchTmdbTrending(args));
-  ipcMain.handle("find-in-local-playlist", async (_event, args) => await findInLocalPlaylist(args));
   ipcMain.handle("update-vod", async (_event, args) => await updateVod(args));
   ipcMain.handle("update-series", async (_event, args) => await updateSeries(args));
   ipcMain.handle("update-live", async (_event, args) => await updateLive(args));
