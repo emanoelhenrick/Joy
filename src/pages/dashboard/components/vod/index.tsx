@@ -126,8 +126,8 @@ export function VodPage({ streamId, cover }: Props) {
 
   const renderExtra = useCallback((v: Video) => {
     return (
-      <div className="space-y-2 max-w-96 ">
-        <div className="aspect-video w-96 cursor-pointer hover:opacity-80 bg-primary-foreground rounded-xl relative overflow-hidden">
+      <div className="space-y-2 max-w-80 ">
+        <div className="aspect-video w-80 cursor-pointer hover:opacity-80 bg-primary-foreground rounded-xl relative overflow-hidden">
           <img className="w-full h-full object-cover animate-fade" src={`http://img.youtube.com/vi/${v.key}/0.jpg`} alt="" />
         </div>
         
@@ -231,7 +231,7 @@ export function VodPage({ streamId, cover }: Props) {
           </section>
         ) : <div className="p-6" />}
       </div>
-      <ScrollBarStyled orientation="vertical" />
+      <ScrollBar orientation="vertical" className="hidden" />
     </ScrollArea>
   )
 }
