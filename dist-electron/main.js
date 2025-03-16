@@ -26699,9 +26699,15 @@ var ExternalId;
   __exportStar(requestTypes, exports);
 })(dist);
 async function fetchTmdbTrending({ apiKey, playlist }) {
+  let tmdbData = [];
   const moviedb2 = new dist.MovieDb(apiKey);
-  const res = await moviedb2.trending({ language: "pt", media_type: "movie", time_window: "week" });
-  const tmdbData = res.results;
+  try {
+    const res = await moviedb2.trending({ language: "pt", media_type: "movie", time_window: "week" });
+    tmdbData = res.results;
+  } catch (error) {
+    const res = await moviedb2.trending({ language: "pt", media_type: "movie", time_window: "week" });
+    tmdbData = res.results;
+  }
   if (tmdbData.length === 0) return [];
   const fuseMovies = new Fuse(playlist, {
     keys: ["name"],

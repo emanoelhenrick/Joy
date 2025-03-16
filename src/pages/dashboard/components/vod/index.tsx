@@ -143,7 +143,7 @@ export function VodPage({ streamId, cover }: Props) {
     <ScrollArea className="w-full h-screen">
       <div className="w-screen flex flex-col justify-end h-full">
         {isFetching ? (
-            <div className="w-full h-full fixed flex items-center justify-center top-0 z-20 animate-fade">
+            <div className="w-full h-full fixed flex items-center justify-center top-0 animate-fade">
               <ImSpinner8 className="size-8 animate-spin text-muted-foreground" />
             </div>
         ) : (
