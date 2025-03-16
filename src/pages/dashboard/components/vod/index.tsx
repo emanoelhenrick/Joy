@@ -215,7 +215,7 @@ export function VodPage({ streamId, cover }: Props) {
             <ScrollArea>
               <div className="flex gap-6 w-fit pl-16 pr-8 mb-4">
                 {data.tmdbExtras.slice(0, 10).map(v => (
-                  <Dialog>
+                  <Dialog key={v.key}>
                     <DialogTrigger asChild>
                       {renderExtra(v)}
                     </DialogTrigger>
