@@ -8,9 +8,15 @@ export interface MovieMatch extends MovieResult {
 }
 
 export async function fetchTmdbTrending({ apiKey, playlist }: any): Promise<MovieMatch[]> {
+  let tmdbData = []
   const moviedb = new MovieDb(apiKey)
-  const res = await moviedb.trending({ language: 'pt', media_type: "movie", time_window: 'week' })
-  const tmdbData = res.results! as MovieResult[]
+  try {
+    const res = await moviedb.trending({ language: 'pt', media_type: "movie", time_window: 'week' })
+    tmdbData = res.results! as MovieResult[]
+  } catch (error) {
+    const res = await moviedb.trending({ language: 'pt', media_type: "movie", time_window: 'week' })
+    tmdbData = res.results! as MovieResult[]
+  }
 
   if (tmdbData.length === 0) return []
 
