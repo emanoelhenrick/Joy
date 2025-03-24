@@ -67,6 +67,7 @@ export function MenuBar() {
     const authResponse = await electronApi.authenticateUser(urls.getAuthenticateUrl)
     if (authResponse.status) return
     setUpdatingError(true)
+    setUpdating(false)
     return toast({
       title: 'The playlist could not be updated',
       description: authResponse.message,
@@ -153,7 +154,7 @@ export function MenuBar() {
     <div>
       <div style={{ width: width ? width : 95 }} className="block" />
     
-      <div ref={menuRef} className="flex flex-col fixed bg-background left-0 justify-between items-center px-6 py-4 h-screen z-10">
+      <div ref={menuRef} className="flex flex-col fixed bg-background left-0 justify-between items-center p-6 h-screen z-10">
         <Fade cascade direction="up" triggerOnce duration={500}>
           <Dialog open={profileDialog} >
             <DialogTrigger onClick={() => setProfileDialog(true)} asChild>

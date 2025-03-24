@@ -17,6 +17,7 @@ import PlaylistScroll from "./components/PlaylistScroll";
 import { ListFilter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { Fade, Slide } from "react-awesome-reveal";
 
 export function Dashboard() {
   const vodData = useVodPlaylist((state => state.data))

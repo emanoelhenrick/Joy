@@ -1,6 +1,7 @@
 import { RatingStars } from "@/components/RatingStars"
 import { TmdbCast } from "@/components/TmdbCast"
 import { Cast, TitleLogo } from "moviedb-promise"
+import { useState } from "react"
 import { PiCheck, PiPlus } from "react-icons/pi"
 
 interface Props {
@@ -19,6 +20,8 @@ interface Props {
 }
 
 export function InfoSection({ title, releaseDate, genre, description, cast, tmdbCast, director, rating, logos, handleFavorite, isFetching, favorite }: Props) {
+  const [isTitleVisible, setIsTitleVisible] = useState(false)
+  
   function getRightLogo(logos: TitleLogo[]) {
     if (!logos) return
     if (logos.length === 0) return
@@ -41,11 +44,11 @@ export function InfoSection({ title, releaseDate, genre, description, cast, tmdb
 
   return (
     <div className="px-16 py-0 h-fit z-10">
-      <div className="max-w-96 2xl:max-w-[500px] h-fit">
-        {logoPath !== undefined ? (
-            <div>
-              <img key={'logo'} className="object-cover max-h-32 2xl:max-h-40" src={logoPath} alt="" />
-              <h1 className="text-base text-muted-foreground mt-2 italic">{title}</h1>
+      <div className="max-w-md 2xl:max-w-xl h-fit w-full">
+        {(logoPath !== undefined) ? (
+            <div onClick={() => setIsTitleVisible(prev => !prev)} className="relative h-full cursor-pointer hover:opacity-80 transition-opacity">
+              <img key={'logo'} className={`absolute bottom-0 object-cover transition-opacity max-h-32 2xl:max-h-40 ${isTitleVisible ? 'opacity-0' : 'opacity-100'}`} src={logoPath} alt="" />
+              <h1 className={`text-5xl 2xl:text-5xl line-clamp-4 transition-opacity ${isTitleVisible ? 'opacity-100' : 'opacity-0'}`}>{title}</h1>
             </div>
         ) : <h1 className="text-4xl 2xl:text-5xl line-clamp-4">{title}</h1>}
       </div>
