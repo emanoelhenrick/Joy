@@ -61,9 +61,9 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
 
   return ((watchingVod.length > 0) || (watchingSeries.length > 0)) && (
   <Fade duration={500} triggerOnce>
-    <div>
-      <div className='flex gap-2 items-center mb-2'>
-        <h1 className="text-2xl font-bold">Continue watching</h1>
+    <div className="w-full p-5 rounded-2xl bg-primary-foreground">
+      <div className='flex gap-2 items-center mb-4'>
+        <h1 className="text-xl font-medium">Continue watching</h1>
       </div>
         <ScrollArea className="w-full rounded-md">
           <div className="flex w-max space-x-3 pb-5 pr-4">

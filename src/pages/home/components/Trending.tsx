@@ -7,7 +7,7 @@ import { format } from "date-fns";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { useNavigate } from "react-router-dom";
 import { useTrending } from "@/states/useTrending";
-import { FaPlay } from "react-icons/fa";
+import { FaPlay, FaStar } from "react-icons/fa";
 import { MovieMatch } from "electron/core/services/fetchTmdbTrending";
 import { TitleLogo } from "moviedb-promise";
 import { VlcDialog } from "@/pages/dashboard/components/VlcDialog";
@@ -15,7 +15,6 @@ import electronApi from "@/config/electronApi";
 import { usePlaylistUrl } from "@/states/usePlaylistUrl";
 import { useUserData } from "@/states/useUserData";
 import { VodProps } from "electron/core/models/VodModels";
-import { RatingStars } from "@/components/RatingStars";
 
 export function Trending({ refresh, slideActive }: { refresh: () => void, slideActive: boolean }) {
   const navigate = useNavigate()
@@ -32,6 +31,18 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
       id: selectedMovie.stream_id,
       data: data
     })
+  }
+
+  function RatingStars({ rating }: { rating: number, blur?: boolean }) {
+    if (!rating || rating == 0) return <></>
+    const ratingFloat = rating < 10 ? rating.toFixed(1) : 10
+  
+    return (
+      <div className={`flex items-center gap-1.5`}>
+        <FaStar className="size-3.5 2xl:size-3.5" />
+        <h1 className="text-sm leading-none">{ratingFloat}</h1>
+      </div>
+    )
   }
 
   useEffect(() => {
@@ -82,7 +93,7 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
 
     return (
       <CarouselItem key={info.poster_path}> 
-        <div className="flex items-center h-full justify-center rounded-2xl overflow-hidden">
+        <div className="flex items-center h-full justify-center rounded-xl overflow-hidden">
           <div className="flex h-full w-full relative">
             <div className="p-12 flex flex-col justify-between gap-2 z-20">
               <div className="mb-3">
@@ -97,39 +108,30 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
                   </HoverCardContent>
                 </HoverCard>
               </div>
-              <div className="flex flex-col gap-3 z-10">
+              <div className="flex flex-col gap-2 z-10">
                 <div className="max-w-96 2xl:max-w-screen-sm h-fit">
                   { logoPath ? <img src={logoPath} className="object-contain w-fit max-h-28 2xl:max-h-36 mb-2 mt-2" /> : (
                     <h1 className="text-5xl 2xl:text-6xl font-bold">{info.title}</h1>
                   )}
                 </div>
                 
-                <div className="flex items-center gap-3">
-                  <div style={{ lineHeight: 1 }} className="w-fit text-base 2xl:text-lg px-2 py-1 rounded-sm bg-primary/10  text-muted-foreground">
-                    Trending
-                  </div>
-                  <div style={{ lineHeight: 1 }} className="text-base 2xl:text-lg text-muted-foreground px-2 py-1 bg-primary/10 rounded-sm">{releaseDate}</div>
-                  {info.matches![0].rating && <RatingStars blur={false} rating={parseFloat(info.matches![0].rating)} />}
+                <div className="flex items-center gap-6 font-bold text-sm">
+                  <h1 className="leading-none">TRENDING</h1>
+                  <h1 className="leading-none">{releaseDate}</h1>
+                  {info.matches![0].rating && <RatingStars rating={parseFloat(info.matches![0].rating)} />}
                 </div>
 
-                <span className="text-base 2xl:text-lg line-clamp-4 text-muted-foreground max-w-screen-sm">{info.overview}</span>
+                <h1 className="text-sm 2xl:text-lg text-primary/80 font-medium line-clamp-4 max-w-screen-sm">{info.overview}</h1>
                 
-                <div className=" space-y-4">
-                  <div className="flex gap-2">
-                    <div
-                      onClick={launchVlc}
-                      className="p-7 py-2 rounded-lg transition-none flex gap-2 items-center bg-primary/10 text-primary hover:opacity-80 cursor-pointer">
-                      <FaPlay className="size-3 opacity-90" />
-                      <span className="text-lg">Watch</span>
-                    </div>
-                    <div onClick={() => handleSearchForMatch('movie', info.title!)} className="px-6 py-2 rounded-lg transition-none flex gap-2 items-center text-primary hover:bg-primary/10 cursor-pointer">
-                      <span>See matches</span>
-                    </div>
+                <div className="flex gap-2 mt-1">
+                  <div
+                    onClick={launchVlc}
+                    className="p-7 py-2 rounded-xl transition-none flex gap-2 items-center bg-primary/10 text-primary hover:opacity-80 cursor-pointer">
+                    <FaPlay className="size-3.5 opacity-90" />
+                    <h1 className="font-medium">Watch</h1>
                   </div>
-
-                  <div>
-                    <h1 className="text-xs text-muted-foreground">Match found</h1>
-                    <h1 className="text-base line-clamp-1 max-w-72">{perfectMatch.name}</h1>
+                  <div onClick={() => handleSearchForMatch('movie', info.title!)} className="px-6 py-2 rounded-lg transition-none flex gap-2 items-center text-primary hover:bg-primary/10 cursor-pointer">
+                    <h1>See matches</h1>
                   </div>
                 </div>
               </div>
@@ -137,28 +139,29 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
           </div>
 
           <div className="z-10 w-full h-full absolute flex items-end justify-start">
-            <div className="inset-0 w-full h-full bg-gradient-to-l from-transparent to-background/95" />
+            <div className="inset-0 w-full h-full scale-105 bg-gradient-to-l from-transparent to-background" />
           </div>
-          <img className="absolute h-full w-full object-cover" src={`https://image.tmdb.org/t/p/original${info.backdrop_path}`} />
+          <img className="absolute opacity-60 h-full w-full object-cover" src={`https://image.tmdb.org/t/p/original${info.backdrop_path}`} />
+
         </div>
       </CarouselItem>
     )
   }, [data])
 
   if (data) return (
-    <section className="pr-4 mb-3 relative">
+    <section className="relative bg-primary-foreground rounded-2xl">
       <Carousel
         plugins={[
           Autoplay({ delay: 10000, active: (!selectedMovie && slideActive) }),
           FadeSlide()
         ]}
-        className="bg-background rounded-2xl overflow-hidden"
+        className="bg-background rounded-xl overflow-hidden"
       >
         <CarouselContent>
           {data.map(info => renderItem(info))}
         </CarouselContent>
-        <CarouselPrevious className="absolute left-1 bottom-1 border-none bg-background/5" />
-        <CarouselNext className="absolute right-1 bottom-1 border-none bg-background/5" />
+        {/* <CarouselPrevious className="absolute left-1 bottom-1 border-none bg-background/5" />
+        <CarouselNext className="absolute right-1 bottom-1 border-none bg-background/5" /> */}
       </Carousel>
 
       {selectedMovie && (

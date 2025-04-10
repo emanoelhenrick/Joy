@@ -44,20 +44,20 @@ export function FavoritesScroll({ favoritesVod, favoritesSeries, setSelectedSeri
 
   return ((favoritesVod.length > 0) || (favoritesSeries.length > 0)) && (
     <Fade duration={500} triggerOnce>
-      <div>
-      <div className='flex gap-2 items-center mb-2'>
-        <h1 className="text-2xl font-bold">Favorites</h1>
-      </div>
-      <ScrollArea className="w-full">
-        <div className="flex w-max space-x-3 pb-5 pr-4 rounded-md">
-          {favoritesList && favoritesList.map((m: any) => {
-            if (m.stream_id) return renderVodItem(m as VodProps)
-            return renderSeriesItem(m as SeriesProps)
-          })}
+      <div className="w-full p-5 rounded-2xl bg-primary-foreground">
+        <div className='flex gap-2 items-center mb-4'>
+          <h1 className="text-xl font-medium">Favorites</h1>
         </div>
-        <ScrollBarStyled orientation="horizontal" />
-      </ScrollArea>
-    </div>
+        <ScrollArea className="w-full">
+          <div className="flex w-max space-x-3 pb-5 pr-4 rounded-md">
+            {favoritesList && favoritesList.map((m: any) => {
+              if (m.stream_id) return renderVodItem(m as VodProps)
+              return renderSeriesItem(m as SeriesProps)
+            })}
+          </div>
+          <ScrollBarStyled orientation="horizontal" />
+        </ScrollArea>
+      </div>
     </Fade>
   )
 }

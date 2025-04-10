@@ -97,6 +97,11 @@ export function Dashboard() {
     return paginated
   }
 
+  function getCover(item: any) {
+    const isVod =  item.stream_id ? true : false
+    return isVod ? item.stream_icon : item.cover
+  }
+
   useEffect(() => {
     flush()
     setCurrentCategory('all')
@@ -130,26 +135,23 @@ export function Dashboard() {
   }
 
   return (
-    <div className="h-fit w-full">
-      <div className='flex flex-col gap-2'>
-
-        <section ref={ref} className='flex items-center justify-center w-full py-1 mt-4 mb-3'>
-          <div className="max-w-screen-sm w-full">
-            <SearchInput setSearchValue={setSearchValue} searchValue={searchValue} />
-          </div>
+    <div className="h-fit w-full overflow-hidden my-3 rounded-2xl mr-3 relative">
+      {playlist[0] && <img className="absolute w-full h-full blur-3xl opacity-30 -z-10" src={getCover(playlist[0])} alt="" />}
+      <div className='flex flex-col gap-3 w-full'>
+        <section ref={ref} className='flex items-center justify-center w-full px-5 pt-5'>
+          <SearchInput setSearchValue={setSearchValue} searchValue={searchValue} />
         </section>
 
         {playlist.length > 0 ?
           <Suspense fallback={<div className='w-full h-screen' />}>
-            <section className="bg-primary-foreground space-y-6 rounded-2xl p-6 mr-4">
-
+            <section className="space-y-8 rounded-2xl px-5">
               <div className="w-full flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div onClick={handleShowMovies} className={`${showMovies && !showSeries ? 'bg-primary text-background' : 'bg-secondary text-muted-foreground'} hover:opacity-80 cursor-pointer px-6 py-1 rounded-full text-sm`}>Movies</div>
-                  <div onClick={handleShowSeries} className={`${showSeries && !showMovies ? 'bg-primary text-background' : 'bg-secondary text-muted-foreground'} hover:opacity-80 cursor-pointer px-6 py-1 rounded-full text-sm`}>Series</div>
+                <div className="flex items-center gap-3">
+                  <div onClick={handleShowMovies} className={`${showMovies && !showSeries ? 'bg-primary text-background' : 'bg-primary/10 text-primary/80'} font-medium hover:opacity-80 cursor-pointer px-6 py-1 rounded-lg text-sm`}>Movies</div>
+                  <div onClick={handleShowSeries} className={`${showSeries && !showMovies ? 'bg-primary text-background' : 'bg-primary/10 text-primary/80'} font-medium hover:opacity-80 cursor-pointer px-6 py-1 rounded-lg text-sm`}>Series</div>
 
                   <Select disabled={showMovies && showSeries} onValueChange={(value) => setCurrentCategory(value)} value={currentCategory}>
-                    <SelectTrigger className="w-fit gap-2 font-medium">
+                    <SelectTrigger className="w-fit font-medium">
                       <Button disabled={showMovies && showSeries} variant="ghost" size="icon" aria-label="Filters">
                         <ListFilter size={16} strokeWidth={2} aria-hidden="true" />
                       </Button>
@@ -161,6 +163,10 @@ export function Dashboard() {
                       </SelectGroup>
                     </SelectContent>
                   </Select>
+
+                  <span className="text-sm text-muted-foreground">
+                  {filtered ? `${filtered.length} results...` : '0 results...'}
+                  </span>
                 </div>
 
                 <span className="text-sm text-muted-foreground">{data.categories.find(v => v.category_id == currentCategory)?.category_name}</span>

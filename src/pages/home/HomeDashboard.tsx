@@ -151,84 +151,86 @@ export function HomeDashboard() {
   if (vodData && seriesData) {
 
     return (
-      <ScrollArea>
-      <div className="h-fit z-0">
-        <Dialog open={selectedSeries && true}>
-          <DialogContent className="w-screen items-center justify-center" aria-describedby={undefined}>
-            <div onClick={() => setSelectedSeries(undefined)} className="cursor-pointer absolute right-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
-              <Cross2Icon className="size-8 p-1 rounded-md bg-background/50" />
-            </div>
-            <DialogTitle className="hidden" />
-            <div className="w-screen">
-              <SeriesPage seriesId={selectedSeries ? selectedSeries!.series_id.toString() : ''} cover={selectedSeries ? selectedSeries!.cover : ''} />
-            </div>
-          </DialogContent>
-        </Dialog>
-        <Dialog open={selectedVod && true}>
-          <DialogContent className="w-screen h-screen items-center justify-center" aria-describedby={undefined}>
-            <div onClick={() => setSelectedVod(undefined)} className="cursor-pointer absolute right-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
-              <Cross2Icon className="size-8 p-1 rounded-md bg-background/50" />
-            </div>
-            <DialogTitle className="hidden" />
-            <div className="w-screen">
-              <VodPage streamId={selectedVod ? selectedVod!.stream_id.toString() : ''} cover={selectedVod ? selectedVod!.stream_icon : ''} />
-            </div>
-          </DialogContent>
-        </Dialog>
-        <div className='mb-6 mt-5'>
-          <div className="flex flex-col gap-8">
-            <Fade duration={500} triggerOnce>
-              <Trending
-                slideActive={(!selectedSeries && !selectedVod)}
-                refresh={() => setUpdate(p => !p)}
-              />
-            </Fade>
-
-            <WatchingScroll
-              watchingVod={watchingVod}
-              watchingSeries={watchingSeries}
-              setSelectedSeries={setSelectedSeries}
-              setSelectedVod={setSelectedVod}
-            />
-
-            <FavoritesScroll
-              favoritesSeries={favoritesSeries}
-              favoritesVod={favoritesVod}
-              setSelectedSeries={setSelectedSeries}
-              setSelectedVod={setSelectedVod}
-            />
-            
-            <Fade duration={500} triggerOnce>
-              <div>
-                <div className='flex gap-2 items-center mb-2'>
-                  <h1 className="text-2xl font-bold">Recently updated series</h1>
-                </div>
-                <ScrollArea className="w-full">
-                  <div className="flex w-max gap-3 pb-5 pr-4 rounded-md">
-                    {seriesByDate!.map(series => renderSeriesItem(series))}
+        <section className='w-full overflow-hidden'>
+          <ScrollArea className='w-full'>
+            <div className="h-fit z-0 py-3 pr-3">
+              <Dialog open={selectedSeries && true}>
+                <DialogContent className="w-screen items-center justify-center" aria-describedby={undefined}>
+                  <div onClick={() => setSelectedSeries(undefined)} className="cursor-pointer absolute right-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
+                    <Cross2Icon className="size-8 p-1 rounded-md bg-background/50" />
                   </div>
-                  <ScrollBarStyled orientation="horizontal" />
-                </ScrollArea>
-              </div>
-            </Fade>
-
-            <Fade duration={500} triggerOnce>
-              <div>
-                <div className='flex gap-2 items-center mb-2'>
-                  <h1 className="text-2xl font-bold">Recently added movies</h1>
-                </div>
-                <ScrollArea className="w-full">
-                  <div className="flex h-full w-max gap-3 pb-5 pr-4 rounded-md">
-                  {vodByDate!.map(movie => renderVodItem(movie))}
+                  <DialogTitle className="hidden" />
+                  <div className="w-screen">
+                    <SeriesPage seriesId={selectedSeries ? selectedSeries!.series_id.toString() : ''} cover={selectedSeries ? selectedSeries!.cover : ''} />
                   </div>
-                  <ScrollBarStyled orientation="horizontal" />
-                </ScrollArea>
+                </DialogContent>
+              </Dialog>
+              <Dialog open={selectedVod && true}>
+                <DialogContent className="w-screen h-screen items-center justify-center" aria-describedby={undefined}>
+                  <div onClick={() => setSelectedVod(undefined)} className="cursor-pointer absolute right-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
+                    <Cross2Icon className="size-8 p-1 rounded-md bg-background/50" />
+                  </div>
+                  <DialogTitle className="hidden" />
+                  <div className="w-screen">
+                    <VodPage streamId={selectedVod ? selectedVod!.stream_id.toString() : ''} cover={selectedVod ? selectedVod!.stream_icon : ''} />
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <div>
+                <div className="flex flex-col gap-3">
+                  <Fade duration={500} triggerOnce>
+                    <Trending
+                      slideActive={(!selectedSeries && !selectedVod)}
+                      refresh={() => setUpdate(p => !p)}
+                    />
+                  </Fade>
+
+                  <WatchingScroll
+                    watchingVod={watchingVod}
+                    watchingSeries={watchingSeries}
+                    setSelectedSeries={setSelectedSeries}
+                    setSelectedVod={setSelectedVod}
+                  />
+
+                  <FavoritesScroll
+                    favoritesSeries={favoritesSeries}
+                    favoritesVod={favoritesVod}
+                    setSelectedSeries={setSelectedSeries}
+                    setSelectedVod={setSelectedVod}
+                  />
+                  
+                  <Fade duration={500} triggerOnce>
+                    <div className='w-full p-5 rounded-2xl bg-primary-foreground'>
+                      <div className='flex gap-2 items-center mb-4'>
+                        <h1 className="text-xl font-medium">Recently updated series</h1>
+                      </div>
+                      <ScrollArea className="w-full">
+                        <div className="flex w-max gap-3 pb-5 pr-4 rounded-md">
+                          {seriesByDate!.map(series => renderSeriesItem(series))}
+                        </div>
+                        <ScrollBarStyled orientation="horizontal" />
+                      </ScrollArea>
+                    </div>
+                  </Fade>
+
+                  <Fade duration={500} triggerOnce>
+                    <div className='w-full p-5 rounded-2xl bg-primary-foreground'>
+                      <div className='flex gap-2 items-center mb-4'>
+                        <h1 className="text-xl font-medium">Recently added movies</h1>
+                      </div>
+                      <ScrollArea className="w-full">
+                        <div className="flex h-full w-max gap-3 pb-5 pr-4 rounded-md">
+                        {vodByDate!.map(movie => renderVodItem(movie))}
+                        </div>
+                        <ScrollBarStyled orientation="horizontal" />
+                      </ScrollArea>
+                    </div>
+                  </Fade>
+                </div>
               </div>
-            </Fade>
-          </div>
-        </div>
-      </div>
-      </ScrollArea>
+            </div>
+          </ScrollArea>
+        </section>
     )
   }
 

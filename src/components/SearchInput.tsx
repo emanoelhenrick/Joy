@@ -18,18 +18,18 @@ export function SearchInput({ searchValue, setSearchValue }: any) {
   }, [searchValue]);
 
   return (
-    <div className="space-y-2 mr-4 max-w-screen-sm w-full">
+    <div className="space-y-2 w-full">
       <div className="relative">
         <Input
           id={id}
-          className="peer pe-14 ps-8 bg-secondary/80 rounded-full py-6 text-base border-none"
+          className="peer pe-14 ps-6 bg-primary/10 rounded-xl py-6 text-base border-none"
           placeholder="Search..."
           autoFocus
           type="search"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
         />
-        <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center justify-center pe-8 text-muted-foreground/80 peer-disabled:opacity-50">
+        <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center justify-center pe-8 text-primary peer-disabled:opacity-50">
           {isLoading ? (
             <LoaderCircle
               className="animate-spin"

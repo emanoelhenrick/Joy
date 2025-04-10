@@ -12,7 +12,7 @@ export const router = createHashRouter(
       <Route path="/" Component={SplashLoading} />
       <Route path="/initial" Component={Initial} />
       <Route path="/dashboard" element={
-        <div className="flex">
+        <div style={{ maxWidth: '100vw'}} className="flex">
           <MenuBar />
           <Outlet />
         </div>
