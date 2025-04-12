@@ -53,10 +53,10 @@ export function InfoSection({ title, releaseDate, cast, tmdbCast, description, d
         </div>
 
         {(releaseDate || genre || rating || duration) && (
-            <div className="flex items-center gap-3 mt-4 py-1 animate-fade">
-            {releaseDate && <span style={{ lineHeight: 1}} className="text-base backdrop-blur-md 2xl:text-lg text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{releaseDate}</span>}
-            {duration && <span style={{ lineHeight: 1}} className="text-base backdrop-blur-md 2xl:text-lg text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{duration}</span>}
-            {genre && <span style={{ lineHeight: 1}} className="text-base backdrop-blur-md 2xl:text-lg text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{genre}</span>}
+            <div className="flex items-center gap-6 mt-4 py-1 animate-fade uppercase font-semibold">
+            {releaseDate && <h1 style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{releaseDate}</h1>}
+            {duration && <h1 style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{duration}</h1>}
+            {genre && <h1 style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{genre}</h1>}
             {rating && <RatingStars rating={parseFloat(rating)} />}
           </div>
         )}

@@ -102,9 +102,16 @@ export function SelectProfile({ changeProfile, data, setIsCreating, isCreating, 
           <AlertDialogHeader>
             <AlertDialogTitle>{`New profile`}</AlertDialogTitle>
           </AlertDialogHeader>
-          <Input className="border-none bg-secondary" placeholder='Name' onChange={(e) => setInputValue(e.target.value)} value={inputValue} />
+          <Input
+            className="border-none bg-secondary"
+            key={"new-prof"} placeholder='Name'
+            onChange={(e) => setInputValue(e.target.value)} value={inputValue}
+          />
           <AlertDialogFooter>
-            <AlertDialogCancel className="border-none bg-primary-foreground" onClick={() => setIsCreating(false)}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="border-none bg-primary-foreground" onClick={() => {
+              setIsCreating(false)
+              setInputValue('')
+            }}>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={createNewProfile}>Create</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -115,10 +122,13 @@ export function SelectProfile({ changeProfile, data, setIsCreating, isCreating, 
           <AlertDialogHeader>
             <AlertDialogTitle>{`Edit profile`}</AlertDialogTitle>
           </AlertDialogHeader>
-          <Input className="border-none bg-secondary" onChange={(e) => setInputValue(e.target.value)} value={inputValue} />
+          <Input className="border-none bg-secondary" autoFocus key={"edit-prof"} onChange={(e) => setInputValue(e.target.value)} value={inputValue} />
           <p onClick={() => setIsRemoving(true)} className="text-sm flex gap-1 w-fit text-red-500 hover:opacity-80 transition cursor-pointer items-center">Remove profile</p>
           <AlertDialogFooter>
-            <AlertDialogCancel className="border-none bg-primary-foreground" onClick={() => setIsEditing(false)}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="border-none bg-primary-foreground" onClick={() => {
+              setIsEditing(false)
+              setInputValue('')
+            }}>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={editProfile}>Confirm</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

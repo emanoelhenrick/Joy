@@ -8,10 +8,11 @@ import { useMeasure } from "@uidotdev/usehooks";
 import { VodPage } from "./vod";
 import { SeriesProps } from "electron/core/models/SeriesModels";
 import { SeriesPage } from "./series";
+import { FaStar } from "react-icons/fa";
 
 export default function PlaylistScroll({ data }: any) {
   const [ref, { width }] = useMeasure();
-  const columns = Math.floor(width! / 170)
+  const columns = Math.floor(width! / 140)
   const playlist: any = data
   const [selectedMovie, setSelectedMovie] = useState<VodProps>()
   const [selectedSeries, setSelectedSeries] = useState<SeriesProps>()
@@ -26,10 +27,17 @@ export default function PlaylistScroll({ data }: any) {
 
     return (
       <div className="w-full h-fit cursor-pointer relative group drop-shadow-lg" key={itemKey}>
-        <div onClick={selectFunction} className="group-hover:opacity-70 transition-transform group-hover:scale-95">
+        <div onClick={selectFunction} className="relative group-hover:opacity-70 transition-transform group-hover:scale-95">
           <Cover src={coverSrc} title={title} />
-          <div className="bg-background/85 px-1.5 py-0.5 rounded-md absolute bottom-1 right-1">
-            <h1 className="text-muted-foreground text-xs font-medium">{rating}</h1>
+          <div className="mt-2 space-y-1">
+            <div className="flex justify-between">
+              <h1 className="text-xs font-semibold text-muted-foreground">{isVod ? 'MOVIE' : 'TV SHOW'}</h1>
+              <div className="flex gap-1 items-center">
+                <FaStar className="opacity-50 size-2.5 2xl:size-3" />
+                <h1 className="text-muted-foreground text-xs font-medium leading-tight">{rating}</h1>
+              </div>
+            </div>
+            <h1 className="text-sm font-semibold line-clamp-3">{title}</h1>
           </div>
         </div>
       </div>
@@ -78,7 +86,7 @@ export default function PlaylistScroll({ data }: any) {
           style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
           className={`grid w-full gap-6 h-fit`}
           >
-          <Fade triggerOnce duration={250}>
+          <Fade triggerOnce duration={250} direction="up">
             {playlist!.map((item: any) => renderItem(item))}
           </Fade>
         </div>

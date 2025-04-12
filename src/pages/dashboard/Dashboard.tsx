@@ -17,14 +17,14 @@ import PlaylistScroll from "./components/PlaylistScroll";
 import { ListFilter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Fade, Slide } from "react-awesome-reveal";
+import { Fade } from "react-awesome-reveal";
 
 export function Dashboard() {
   const vodData = useVodPlaylist((state => state.data))
   const seriesData = useSeriesPlaylist((state => state.data))
 
   const [ref, { width }] = useMeasure();
-  const itemsPerPage = Math.floor(width! / 170) * 10
+  const itemsPerPage = Math.floor(width! / 145) * 10
   const [searchParams] = useSearchParams()
   const initialSearch = searchParams.get('search') || ''
   const [currentCategory, setCurrentCategory] = useState('all')
@@ -136,7 +136,13 @@ export function Dashboard() {
 
   return (
     <div className="h-fit w-full overflow-hidden my-3 rounded-2xl mr-3 relative">
-      {playlist[0] && <img className="absolute w-full h-full blur-3xl opacity-30 -z-10" src={getCover(playlist[0])} alt="" />}
+      {playlist[0] &&
+        <div className="absolute w-full h-full -z-30"> 
+          <Fade>
+            <img className="w-full h-full blur-3xl opacity-30 -z-10" src={getCover(playlist[0])} alt="" />
+          </Fade>
+        </div>
+      }
       <div className='flex flex-col gap-3 w-full'>
         <section ref={ref} className='flex items-center justify-center w-full px-5 pt-5'>
           <SearchInput setSearchValue={setSearchValue} searchValue={searchValue} />
@@ -147,12 +153,12 @@ export function Dashboard() {
             <section className="space-y-8 rounded-2xl px-5">
               <div className="w-full flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div onClick={handleShowMovies} className={`${showMovies && !showSeries ? 'bg-primary text-background' : 'bg-primary/10 text-primary/80'} font-medium hover:opacity-80 cursor-pointer px-6 py-1 rounded-lg text-sm`}>Movies</div>
-                  <div onClick={handleShowSeries} className={`${showSeries && !showMovies ? 'bg-primary text-background' : 'bg-primary/10 text-primary/80'} font-medium hover:opacity-80 cursor-pointer px-6 py-1 rounded-lg text-sm`}>Series</div>
+                  <h1 onClick={handleShowMovies} className={`${showMovies && !showSeries ? 'bg-primary text-background' : 'bg-primary/10 text-primary/80'} font-medium hover:opacity-80 cursor-pointer px-6 py-1 rounded-full text-sm`}>Movies</h1>
+                  <h1 onClick={handleShowSeries} className={`${showSeries && !showMovies ? 'bg-primary text-background' : 'bg-primary/10 text-primary/80'} font-medium hover:opacity-80 cursor-pointer px-6 py-1 rounded-full text-sm`}>Series</h1>
 
                   <Select disabled={showMovies && showSeries} onValueChange={(value) => setCurrentCategory(value)} value={currentCategory}>
                     <SelectTrigger className="w-fit font-medium">
-                      <Button disabled={showMovies && showSeries} variant="ghost" size="icon" aria-label="Filters">
+                      <Button disabled={showMovies && showSeries} variant="ghost" size="icon" aria-label="Filters" className="hover:bg-primary/10">
                         <ListFilter size={16} strokeWidth={2} aria-hidden="true" />
                       </Button>
                     </SelectTrigger>
@@ -180,7 +186,7 @@ export function Dashboard() {
               <PlaylistScroll data={playlist} />
             </section>
           </Suspense> : (
-            search && <p className='text-sm text-muted-foreground'>No results found</p>
+            search && <span className='pl-5 text-muted-foreground'>No results found</span>
           )
         }
       </div>

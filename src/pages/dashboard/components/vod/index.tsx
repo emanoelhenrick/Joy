@@ -127,11 +127,11 @@ export function VodPage({ streamId, cover }: Props) {
   const renderExtra = useCallback((v: Video) => {
     return (
       <div className="space-y-2 max-w-80 ">
-        <div className="aspect-video w-80 cursor-pointer hover:opacity-80 bg-primary-foreground rounded-xl relative overflow-hidden">
+        <div className="aspect-video w-80 cursor-pointer hover:opacity-80 bg-primary-foreground rounded-2xl relative overflow-hidden">
           <img className="w-full h-full object-cover animate-fade" src={`http://img.youtube.com/vi/${v.key}/0.jpg`} alt="" />
         </div>
         
-        <div>
+        <div className="space-y-1">
           <h1 className="leading-none font-medium line-clamp-1">{v.name}</h1>
           <div className="text-muted-foreground text-sm">{v.type}</div>
         </div>
@@ -170,28 +170,22 @@ export function VodPage({ streamId, cover }: Props) {
               
               <div className="flex flex-col gap-4 z-10 animate-fade">
                 <div className="flex justify-between items-center">
-                  <div className="flex gap-6 items-center">
-                    <button key='vlc' disabled={isFetching} onClick={launchVlc} className="transition-none bg-primary/10 hover:bg-primary/20 px-8 py-4 rounded-md text-primary relative overflow-hidden">
+                  <div className="flex gap-4 items-center">
+                    <button key='vlc' disabled={isFetching} onClick={launchVlc} className="transition-none bg-primary/10 hover:bg-primary/20 px-8 py-4 rounded-2xl text-primary relative overflow-hidden">
                       {userVodData && userVodData.currentTime ?
-                      <div className="flex items-center gap-5">
+                      <div className="flex items-center gap-4">
                         <FaPlay className="size-4" />
-                        <div className="text-left">
-                          <h1 className="leading-none text-base">{`Resume from ${resumeDuration}`}</h1>
-                          <span className="text-sm italic text-muted-foreground">{title}</span>
-                        </div>
+                        <h1 className="leading-none text-base">{`Resume from ${resumeDuration}`}</h1>
                       </div>
                         : (
-                          <div className="flex items-center gap-5">
+                          <div className="flex items-center gap-4">
                             <FaPlay className="size-4" />
-                            <div className="text-left">
-                              <h1 className="leading-none text-base font-medium">Watch</h1>
-                              <span className="text-sm italic text-muted-foreground">{title}</span>
-                            </div>
+                            <h1 className="leading-none text-base font-medium">Watch</h1>
                           </div>
                         )}
                     </button>
-                    <button onClick={handleFavorite} disabled={isFetching} className="flex gap-2 items-center p-4 transition rounded-full hover:bg-primary/10 transition-none">
-                      {userVodData?.favorite ? <PiCheck className="size-6" /> : <PiPlus className="size-6" />}
+                    <button onClick={handleFavorite} disabled={isFetching} className="flex gap-2 items-center p-2.5 transition rounded-2xl hover:bg-primary/10 transition-none">
+                      {userVodData?.favorite ? <PiCheck className="size-6" strokeWidth={2} /> : <PiPlus className="size-6" strokeWidth={2} />}
                     </button>
                   </div>
 

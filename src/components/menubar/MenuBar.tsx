@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import electronApi from "@/config/electronApi";
 import { useEffect, useRef, useState } from "react";
-import { Fade } from "react-awesome-reveal";
+import { Fade, Slide } from "react-awesome-reveal";
+import { PiClockFill } from "react-icons/pi";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./dialog";
 import { SettingsPage } from "@/pages/settings";
@@ -152,94 +153,105 @@ export function MenuBar() {
   }
 
   return (
-    <div>
+      <div>
       <div style={{ width: width ? width : 95 }} className="block" />
     
       <div ref={menuRef} className="flex flex-col gap-3 fixed p-3 bg-background left-0 justify-between items-start h-screen z-50">
-        <section className="bg-primary-foreground w-full rounded-2xl h-fit p-3 space-y-2">
-          <Dialog open={profileDialog} >
-            <DialogTrigger onClick={() => setProfileDialog(true)} asChild>
-                <div className="flex gap-3 bg-secondary/60 p-3 rounded-xl items-center relative hover:opacity-80 cursor-pointer">
-                  <div className="">
-                    <Avatar  className="relative rounded-md bg-secondary size-11 cursor-pointer hover:opacity-80 transition flex items-center justify-center">
-                      <AvatarImage src="https://github.com/shadcn.png" /> 
-                      <AvatarFallback>{getInitials(profiles.current)}</AvatarFallback>
-                    </Avatar>
-                  </div>
-
-                  <div className="flex flex-col gap-1">
-                    <h1 className="font-bold text-muted-foreground leading-none capitalize">{profiles.current}</h1>
-                    <div className="flex items-center gap-2">
-                      <h1 className="text-muted-foreground text-sm opacity-80 leading-none">
-                        {updating ? 'updating...' : updatingError ? 'disconnected' : 'connected'}
-                      </h1>
-
-                      <span className="flex h-2 w-2 ">
-                        {updating && <span className="animate-ping inline-flex h-full w-full rounded-full bg-blue-500 opacity-75" />}
-                        <span className={`inline-flex rounded-full h-full w-full ${updating ? 'bg-sky-400' : updatingError ? 'bg-red-500' : 'bg-green-500'}`}/>
-                      </span>
+        <Fade className="w-full" duration={500} direction="left" triggerOnce>
+          <section className="bg-primary-foreground w-full rounded-2xl h-fit p-3 space-y-2">
+            <Dialog open={profileDialog} modal>
+              <DialogTrigger onClick={() => setProfileDialog(true)} asChild>
+                  <div className="flex gap-3 bg-secondary/60 p-3 rounded-xl items-center relative hover:opacity-80 cursor-pointer">
+                    <div className="">
+                      <Avatar  className="relative rounded-md bg-secondary size-11 cursor-pointer hover:opacity-80 transition flex items-center justify-center">
+                        <AvatarImage src="https://github.com/shadcn.png" /> 
+                        <AvatarFallback>{getInitials(profiles.current)}</AvatarFallback>
+                      </Avatar>
                     </div>
-                    
+
+                    <div className="flex flex-col gap-1">
+                      <h1 className="font-bold text-muted-foreground leading-none capitalize">{profiles.current}</h1>
+                      <div className="flex items-center gap-2">
+                        <h1 className="text-muted-foreground text-sm opacity-80 leading-none">
+                          {updating ? 'updating...' : updatingError ? 'disconnected' : 'connected'}
+                        </h1>
+
+                        <span className="flex h-2 w-2 relative">
+                          {updating && <span className="absolute animate-ping inline-flex h-2 w-2 rounded-full bg-blue-500 opacity-75" />}
+                          <span className={`inline-flex rounded-full h-full w-full ${updating ? 'bg-sky-400' : updatingError ? 'bg-red-500' : 'bg-green-500'}`}/>
+                        </span>
+                      </div>
+                      
+                    </div>
                   </div>
-                </div>
-            </DialogTrigger>
-            <DialogContent ref={ref} onKeyDown={key => key.key == 'Escape' && setProfileDialog(false)} className="w-fit items-center focus:outline-none outline-none border-none bg-primary-foreground" aria-describedby={undefined}>
-              <DialogTitle className="text-center text-muted-foreground">Select profile</DialogTitle>
-              <SelectProfile
-                changeProfile={changeProfile}
-                data={profiles}
-                isCreating={isCreating}
-                setIsCreating={setIsCreating}
-                isEditing={isEditing}
-                setIsEditing={setIsEditing}
-                isRemoving={isRemoving}
-                setIsRemoving={setIsRemoving}
-                setUpdateRender={setUpdateRender}
+              </DialogTrigger>
+              <DialogContent ref={ref} className="w-fit items-center focus:outline-none outline-none border-none bg-primary-foreground" aria-describedby={undefined}>
+                <DialogTitle className="text-center text-muted-foreground">Select profile</DialogTitle>
+                <SelectProfile
+                  changeProfile={changeProfile}
+                  data={profiles}
+                  isCreating={isCreating}
+                  setIsCreating={setIsCreating}
+                  isEditing={isEditing}
+                  setIsEditing={setIsEditing}
+                  isRemoving={isRemoving}
+                  setIsRemoving={setIsRemoving}
+                  setUpdateRender={setUpdateRender}
 
-              />
-            </DialogContent>
-          </Dialog>
+                />
+              </DialogContent>
+            </Dialog>
 
-          <span className="text-sm hover:opacity-60 cursor-pointer font-medium p-1 text-muted-foreground opacity-80 mt-1 flex items-center gap-2">
-            <RotateCw className="size-4" />
-            About 5 minutes...
-          </span>
-        </section>
+            {/* <span className="text-sm hover:opacity-60 cursor-pointer font-medium p-1 text-muted-foreground opacity-80 mt-1 flex items-center gap-2">
+              <RotateCw className="size-4" />
+              About 5 minutes...
+            </span> */}
+          </section>
+        </Fade>
 
-        <section className="flex flex-col justify-between w-full bg-primary-foreground rounded-2xl h-full p-5">
-          <div className="space-y-3 pr-8">
-            <button onClick={() => navigate(`/dashboard/home/${playlistName}`)} className={`h-fit flex items-center hover:opacity-80 p-1 w-full gap-3 ${location.pathname.includes('home') ? 'text-primary' : 'text-muted-foreground' }`}>
-              <PiHouseFill className="size-6" />
-              <span className="font-bold">Home</span>
-            </button>
-
-            <button
-              onClick={() => navigate(`/dashboard/explore`)}
-              className={`h-fit flex hover:opacity-80 items-center p-1 w-full gap-3 ${location.pathname.includes('explore') ? 'text-primary' : 'text-muted-foreground' }`}
-              >
-              <PiMagnifyingGlassBold className="size-6" />
-              <span className="font-bold">Search...</span>
-            </button>
-
-            <button onClick={() => navigate(`/dashboard/live`)} className={`h-fit hover:opacity-100 flex items-center p-1 w-full gap-3 ${location.pathname.includes('live') ? 'text-primary' : 'text-muted-foreground' }`}>
-              <BiSolidTv className='size-6' />
-              <span className="font-bold">Live Channels</span>
-            </button>
-          </div>
-
-          <Dialog>
-            <DialogTrigger asChild>
-              <button className={`h-fit flex items-center p-2 w-full gap-3 text-muted-foreground opacity-50`}>
-                <PiGearSixFill className='size-6' />
-                <span className="font-bold">Settings</span>
+        <Fade className="h-full w-full" duration={500} direction="left" delay={100} triggerOnce>
+          <section className="flex flex-col justify-between w-full bg-primary-foreground rounded-2xl h-full p-5">
+            <div className="space-y-3 pr-8">
+              <button onClick={() => navigate(`/dashboard/home/${playlistName}`)} className={`transition h-fit flex items-center hover:opacity-80 p-1 w-full gap-3 ${location.pathname.includes('home') ? 'opacity-100' : 'opacity-50' }`}>
+                <PiHouseFill className="size-6" />
+                <span className="font-bold">Home</span>
               </button>
-            </DialogTrigger>
-            <DialogContent className="w-1/2 max-w-[700px] items-center p-8 border-none bg-primary-foreground" aria-describedby={undefined}>
-              <DialogTitle className="hidden">Settings</DialogTitle>
-              {playlistName && <SettingsPage currentPlaylist={playlistName} updating={updating} updatePlaylist={updatePlaylist} />}
-            </DialogContent>
-          </Dialog>
-        </section>
+
+              <button
+                onClick={() => navigate(`/dashboard/explore`)}
+                className={`h-fit transition flex hover:opacity-80 items-center p-1 w-full gap-3 ${location.pathname.includes('explore') ? 'opacity-100' : 'opacity-50' }`}
+                >
+                <PiMagnifyingGlassBold className="size-6" />
+                <span className="font-bold">Search...</span>
+              </button>
+
+              <button onClick={() => navigate(`/dashboard/live`)} className={`h-fit transition hover:opacity-80 flex items-center p-1 w-full gap-3 ${location.pathname.includes('live') ? 'opacity-100' : 'opacity-50' }`}>
+                <BiSolidTv className='size-6' />
+                <span className="font-bold">Live Channels</span>
+              </button>
+            </div>
+
+            <section className="flex flex-col space-y-3">
+              {/* <button disabled onClick={() => navigate(`/dashboard/history`)} className={`h-fit transition hover:opacity-80 flex items-center p-1 w-full gap-3 ${location.pathname.includes('history') ? 'opacity-100' : 'opacity-50' }`}>
+                <PiClockFill className='size-6' />
+                <span className="font-bold">History</span>
+              </button> */}
+
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button className={`h-fit transition hover:opacity-80 flex items-center p-1 w-full gap-3 ${location.pathname.includes('history') ? 'opacity-100' : 'opacity-50' }`}>
+                    <PiGearSixFill className='size-6' />
+                    <span className="font-bold">Settings</span>
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="w-1/2 max-w-[700px] items-center p-8 border-none bg-primary-foreground" aria-describedby={undefined}>
+                  <DialogTitle className="hidden">Settings</DialogTitle>
+                  {playlistName && <SettingsPage currentPlaylist={playlistName} updating={updating} updatePlaylist={updatePlaylist} />}
+                </DialogContent>
+              </Dialog>
+            </section>
+          </section>
+        </Fade>
       </div>
 
       {updating && (

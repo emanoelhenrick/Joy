@@ -53,17 +53,17 @@ export function InfoSection({ title, releaseDate, genre, description, cast, tmdb
         ) : <h1 className="text-4xl 2xl:text-5xl line-clamp-4">{title}</h1>}
       </div>
 
-      <div className="flex items-center mt-2 gap-1">
+      <div className="flex items-center mt-2 gap-1 uppercase font-semibold">
         {((releaseDate && releaseDate != 0) || genre || rating) && (
-          <div className="flex items-center gap-3 py-1">
-            {(releaseDate && releaseDate != 0) && <span style={{ lineHeight: 1}} className="text-base backdrop-blur-sm 2xl:text-lg text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{releaseDate}</span>}
-            {genre && <span style={{ lineHeight: 1}} className="text-base 2xl:text-lg backdrop-blur-sm text-muted-foreground bg-primary/10 rounded-sm px-2 py-1">{genre}</span>}
+          <div className="flex items-center gap-6 py-1 animate-fade">
+            {(releaseDate && releaseDate != 0) && <h1 style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{releaseDate}</h1>}
+            {genre && <h1 style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{genre}</h1>}
             {rating && <RatingStars rating={parseFloat(rating)} />}
           </div>
         )}
 
         <button onClick={handleFavorite} disabled={isFetching} className="p-2 rounded-full hover:bg-primary/10 transition-none">
-          {favorite ? <PiCheck className="size-6" /> : <PiPlus className="size-6" />}
+          {favorite ? <PiCheck className="size-5" /> : <PiPlus className="size-5" />}
         </button>
       </div>
 

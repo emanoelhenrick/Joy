@@ -11,9 +11,9 @@ import { WatchingScroll } from './components/WatchingScroll';
 import { FavoritesScroll } from './components/FavoritesScroll';
 import { Trending } from './components/Trending';
 import { HomeCover } from './components/HomeCover';
-import { ScrollBarStyled } from '@/components/ScrollBarStyled';
 import { VodPage } from '../dashboard/components/vod';
 import { Fade } from 'react-awesome-reveal';
+import { UpdatedMediaContainer } from './components/UpdatedMediaContainer';
 
 export function HomeDashboard() {
   const vodData = useVodPlaylist(state => state.data)
@@ -122,7 +122,7 @@ export function HomeDashboard() {
     if (!seriesData) return
     return (
       <div
-        className="hover:scale-95 transition duration-75 gap-3 w-fit h-fit cursor-pointer relative hover:opacity-70"
+        className="hover:scale-95 transition duration-75 gap-3 w-fit h-fit cursor-pointer relative hover:opacity-70 rounded-2xl overflow-hidden"
         key={series.series_id}
         onClick={() => setSelectedSeries(series)}
       >
@@ -135,7 +135,7 @@ export function HomeDashboard() {
     if (!vodData) return
     return (
       <div
-        className="hover:scale-95 hover:opacity-70 duration-75 transition gap-3 w-fit h-fit cursor-pointer relative"
+        className="hover:scale-95 hover:opacity-70 duration-75 transition gap-3 w-fit h-fit cursor-pointer relative rounded-2xl overflow-hidden"
         key={movie.num}
         onClick={() => setSelectedVod(movie)}
       >
@@ -147,6 +147,10 @@ export function HomeDashboard() {
   useEffect(() => {
     setTimeout(() => setUpdate(p => !p), 50)
   }, [selectedSeries, selectedVod])
+
+  useEffect(() => {
+    window.scrollTo({ top: 1 })
+  }, [])
 
   if (vodData && seriesData) {
 
@@ -178,53 +182,33 @@ export function HomeDashboard() {
               </Dialog>
               <div>
                 <div className="flex flex-col gap-3">
-                  <Fade duration={500} triggerOnce>
+                  <Fade duration={500} direction='up' triggerOnce>
                     <Trending
                       slideActive={(!selectedSeries && !selectedVod)}
                       refresh={() => setUpdate(p => !p)}
                     />
-                  </Fade>
 
-                  <WatchingScroll
-                    watchingVod={watchingVod}
-                    watchingSeries={watchingSeries}
-                    setSelectedSeries={setSelectedSeries}
-                    setSelectedVod={setSelectedVod}
-                  />
+                    <WatchingScroll
+                      watchingVod={watchingVod}
+                      watchingSeries={watchingSeries}
+                      setSelectedSeries={setSelectedSeries}
+                      setSelectedVod={setSelectedVod}
+                    />
 
-                  <FavoritesScroll
-                    favoritesSeries={favoritesSeries}
-                    favoritesVod={favoritesVod}
-                    setSelectedSeries={setSelectedSeries}
-                    setSelectedVod={setSelectedVod}
-                  />
-                  
-                  <Fade duration={500} triggerOnce>
-                    <div className='w-full p-5 rounded-2xl bg-primary-foreground'>
-                      <div className='flex gap-2 items-center mb-4'>
-                        <h1 className="text-xl font-medium">Recently updated series</h1>
-                      </div>
-                      <ScrollArea className="w-full">
-                        <div className="flex w-max gap-3 pb-5 pr-4 rounded-md">
-                          {seriesByDate!.map(series => renderSeriesItem(series))}
-                        </div>
-                        <ScrollBarStyled orientation="horizontal" />
-                      </ScrollArea>
-                    </div>
-                  </Fade>
+                    <FavoritesScroll
+                      favoritesSeries={favoritesSeries}
+                      favoritesVod={favoritesVod}
+                      setSelectedSeries={setSelectedSeries}
+                      setSelectedVod={setSelectedVod}
+                    />
 
-                  <Fade duration={500} triggerOnce>
-                    <div className='w-full p-5 rounded-2xl bg-primary-foreground'>
-                      <div className='flex gap-2 items-center mb-4'>
-                        <h1 className="text-xl font-medium">Recently added movies</h1>
-                      </div>
-                      <ScrollArea className="w-full">
-                        <div className="flex h-full w-max gap-3 pb-5 pr-4 rounded-md">
-                        {vodByDate!.map(movie => renderVodItem(movie))}
-                        </div>
-                        <ScrollBarStyled orientation="horizontal" />
-                      </ScrollArea>
-                    </div>
+                    <UpdatedMediaContainer title='Updated series'>
+                      {seriesByDate!.map(series => renderSeriesItem(series))}
+                    </UpdatedMediaContainer>
+
+                    <UpdatedMediaContainer title='Added movies'>
+                      {vodByDate!.map(movie => renderVodItem(movie))}
+                    </UpdatedMediaContainer>
                   </Fade>
                 </div>
               </div>
