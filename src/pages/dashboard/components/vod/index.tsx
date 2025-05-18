@@ -244,7 +244,7 @@ function Backdrop({ backdrops, cover }: { backdrops: BackdropType[], cover: stri
     imageSrc = cover
   }
 
-  if (!imageSrc.includes('tmdb')) {
+  if (!imageSrc || !imageSrc.includes('tmdb')) { 
     return (
       <div>
         <Fade triggerOnce>
