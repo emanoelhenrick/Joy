@@ -18,6 +18,7 @@ import { ListFilter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Fade } from "react-awesome-reveal";
+import { parseNumber } from "@/utils/parseNumber";
 
 export function Dashboard() {
   const vodData = useVodPlaylist((state => state.data))
@@ -32,7 +33,6 @@ export function Dashboard() {
   const [sortByRating, setSortByRating] = useState(false)
   const [showMovies, setShowMovies] = useState(true)
   const [showSeries, setShowSeries] = useState(true)
-
 
   const [page, setPage] = useState(1)
   const [searchValue, setSearchValue] = useState(initialSearch)
@@ -85,12 +85,12 @@ export function Dashboard() {
 
   const playlist = useMemo(() => {
     return paginate(page, itemsPerPage)
-  }, [search, currentCategory, page, data, width, filtered, sortByRating])
+  }, [page, itemsPerPage, filtered, sortByRating])
 
   function paginate(page: number, elements: number) {
     if (!filtered) return []
     const filtered2 = [...filtered]
-    if (sortByRating) filtered2.sort((a, b) => parseFloat(b.rating || '0') - parseFloat(a.rating || '0'))
+    if (sortByRating) filtered2.sort((a, b) => parseNumber(b.rating) - parseNumber(a.rating))
     const startIndex = (page - 1) * elements
     const endIndex = (page * elements) > filtered2.length ? (filtered2.length) : (page * elements)
     const paginated = filtered2.length === 1 ? filtered2 : filtered2.slice(startIndex, endIndex)

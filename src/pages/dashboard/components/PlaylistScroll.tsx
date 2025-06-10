@@ -9,6 +9,7 @@ import { VodPage } from "./vod";
 import { SeriesProps } from "electron/core/models/SeriesModels";
 import { SeriesPage } from "./series";
 import { FaStar } from "react-icons/fa";
+import { parseNumber } from "@/utils/parseNumber";
 
 export default function PlaylistScroll({ data }: any) {
   const [ref, { width }] = useMeasure();
@@ -23,7 +24,7 @@ export default function PlaylistScroll({ data }: any) {
     const itemKey = isVod ? item.num : item.series_id + '-' + item.num
     const coverSrc = isVod ? item.stream_icon : item.cover
     const title = item.name
-    const rating = item.rating < 10 ? parseFloat(item.rating || '0').toFixed(1) : '10'
+    const rating = parseNumber(item.rating).toFixed(1)
 
     return (
       <div className="w-full h-fit cursor-pointer relative group drop-shadow-lg" key={itemKey}>
