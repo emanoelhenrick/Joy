@@ -19085,29 +19085,59 @@ const axios = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePropert
   spread,
   toFormData
 }, Symbol.toStringTag, { value: "Module" }));
-async function updateVod({ playlistUrl, categoriesUrl, name }) {
-  const playlistResponse = await axios$1.get(playlistUrl);
-  const categoriesResponse = await axios$1.get(categoriesUrl);
+async function getUrls(name) {
+  const metadata = await getMetadata();
+  const playlistInfo = metadata.playlists.find((p) => p.name === name);
+  if (!playlistInfo) return false;
+  const { url: url2, username, password } = playlistInfo;
+  return {
+    getAuthenticateUrl: `${url2}/player_api.php?username=${username}&password=${password}`,
+    getAllVodUrl: `${url2}/player_api.php?username=${username}&password=${password}&action=get_vod_streams`,
+    getAllVodCategoriesUrl: `${url2}/player_api.php?username=${username}&password=${password}&action=get_vod_categories`,
+    getVodStreamUrl: `${url2}/movie/${username}/${password}/`,
+    getVodInfoUrl: `${url2}/player_api.php?username=${username}&password=${password}&action=get_vod_info&vod_id=`,
+    getAllSeriesUrl: `${url2}/player_api.php?username=${username}&password=${password}&action=get_series`,
+    getAllSeriesCategoriesUrl: `${url2}/player_api.php?username=${username}&password=${password}&action=get_series_categories`,
+    getSeriesInfoUrl: `${url2}/player_api.php?username=${username}&password=${password}&action=get_series_info&series_id=`,
+    getSeriesStreamUrl: `${url2}/series/${username}/${password}/`,
+    getAllLiveUrl: `${url2}/player_api.php?username=${username}&password=${password}&action=get_live_streams`,
+    getAllLiveCategoriesUrl: `${url2}/player_api.php?username=${username}&password=${password}&action=get_live_categories`,
+    getLiveStreamUrl: `${url2}/live/${username}/${password}/`,
+    getLiveEpgUrl: `${url2}/player_api.php?username=${username}&password=${password}&action=get_short_epg&limit=20&stream_id=`
+  };
+}
+async function updateVod(name) {
+  const urls = await getUrls(name);
+  if (!urls) return;
+  const playlistResponse = await axios$1.get(urls.getAllVodUrl);
+  const categoriesResponse = await axios$1.get(urls.getAllVodCategoriesUrl);
   if (playlistResponse.status !== 200 || categoriesResponse.status !== 200) return;
   if (!Array.isArray(playlistResponse.data) || !Array.isArray(categoriesResponse.data)) return;
+  if (playlistResponse.data.length === 0 || categoriesResponse.data.length === 0) return;
   const data = { playlist: playlistResponse.data, categories: categoriesResponse.data };
   await main$1.writeAsync(getVodPath(name), data);
   return data;
 }
-async function updateSeries({ playlistUrl, categoriesUrl, name }) {
-  const playlistResponse = await axios$1.get(playlistUrl);
-  const categoriesResponse = await axios$1.get(categoriesUrl);
+async function updateSeries(name) {
+  const urls = await getUrls(name);
+  if (!urls) return;
+  const playlistResponse = await axios$1.get(urls.getAllSeriesUrl);
+  const categoriesResponse = await axios$1.get(urls.getAllSeriesCategoriesUrl);
   if (playlistResponse.status !== 200 || categoriesResponse.status !== 200) return;
   if (!Array.isArray(playlistResponse.data) || !Array.isArray(categoriesResponse.data)) return;
+  if (playlistResponse.data.length === 0 || categoriesResponse.data.length === 0) return;
   const data = { playlist: playlistResponse.data, categories: categoriesResponse.data };
   await main$1.writeAsync(getSeriesPath(name), data);
   return data;
 }
-async function updateLive({ playlistUrl, categoriesUrl, name }) {
-  const playlistResponse = await axios$1.get(playlistUrl);
-  const categoriesResponse = await axios$1.get(categoriesUrl);
+async function updateLive(name) {
+  const urls = await getUrls(name);
+  if (!urls) return;
+  const playlistResponse = await axios$1.get(urls.getAllLiveUrl);
+  const categoriesResponse = await axios$1.get(urls.getAllLiveCategoriesUrl);
   if (playlistResponse.status !== 200 || categoriesResponse.status !== 200) return;
   if (!Array.isArray(playlistResponse.data) || !Array.isArray(categoriesResponse.data)) return;
+  if (playlistResponse.data.length === 0 || categoriesResponse.data.length === 0) return;
   const data = { playlist: playlistResponse.data, categories: categoriesResponse.data };
   await main$1.writeAsync(getLivePath(name), data);
   return data;
@@ -26783,10 +26813,37 @@ async function editPlaylistInfo({ playlistName, newPlaylistInfo }) {
   await main$1.renameAsync(getPlaylistFolderPath(playlistName), newPlaylistInfo.name);
   return await main$1.writeAsync(META_PATH, metadata);
 }
+async function updateCurrentPlaylist() {
+  const metadata = await getMetadata();
+  const currentPlaylist = metadata.currentPlaylist.name;
+  const playlistInfo = metadata.playlists.find((p) => p.name === currentPlaylist);
+  if (!playlistInfo) return createMessage(false, "Error: playlist info");
+  const urls = await getUrls(currentPlaylist);
+  if (!urls) return createMessage(false, "Error: urls");
+  const authResponse = await authenticateUser(urls.getAuthenticateUrl);
+  if (!authResponse || !authResponse.status) return createMessage(false, authResponse == null ? void 0 : authResponse.message);
+  const updatedVod = await updateVod(currentPlaylist);
+  const updatedSeries = await updateSeries(currentPlaylist);
+  const updatedLive = await updateLive(currentPlaylist);
+  await updatedAtPlaylist(currentPlaylist);
+  if (!updatedVod || !updatedSeries || !updatedLive) return createMessage(false, "Playlist cannot be added/updated");
+  return createMessage(true, {
+    updatedVod,
+    updatedSeries,
+    updatedLive
+  });
+}
+function createMessage(isSuccess, data) {
+  return {
+    isSuccess,
+    data
+  };
+}
 function CoreControllers(win2) {
   ipcMain.handle("get-metadata", getMetadata);
   ipcMain.handle("authenticate-user", async (_event, args) => await authenticateUser(args));
   ipcMain.handle("fetch-tmdb-trending", async (_event, args) => await fetchTmdbTrending(args));
+  ipcMain.handle("update-current-playlist", async (_event) => await updateCurrentPlaylist());
   ipcMain.handle("update-vod", async (_event, args) => await updateVod(args));
   ipcMain.handle("update-series", async (_event, args) => await updateSeries(args));
   ipcMain.handle("update-live", async (_event, args) => await updateLive(args));

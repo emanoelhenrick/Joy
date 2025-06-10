@@ -1,15 +1,12 @@
-import { Button } from "@/components/ui/button";
 import electronApi from "@/config/electronApi";
 import { useEffect, useRef, useState } from "react";
-import { Fade, Slide } from "react-awesome-reveal";
-import { PiClockFill } from "react-icons/pi";
+import { Fade } from "react-awesome-reveal";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./dialog";
 import { SettingsPage } from "@/pages/settings";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { usePlaylistUrl } from "@/states/usePlaylistUrl";
 import { useToast } from "@/hooks/use-toast";
-import { MetaProps } from "electron/core/models/MetaProps";
 import { differenceInHours } from "date-fns";
 import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from "@/states/usePlaylistData";
 import { SelectProfile } from "../select-profile/SelectProfile";
@@ -18,7 +15,6 @@ import { PiHouseFill, PiMagnifyingGlassBold, PiGearSixFill } from "react-icons/p
 import { BiSolidTv } from "react-icons/bi";
 import { useMeasure } from "@uidotdev/usehooks";
 import { ImSpinner8 } from "react-icons/im";
-import { RotateCw } from "lucide-react";
 
 interface ProfilesProps {
   current: string
@@ -60,9 +56,9 @@ export function MenuBar() {
 
     const playlist = meta.playlists.find(p => p.name === meta.currentPlaylist.name)
     const difference = differenceInHours(Date.now(), new Date(playlist!.updatedAt!))
-    if (fromSettings) return await updateCurrentPlaylist(meta)
+    if (fromSettings) return await updateCurrentPlaylist()
     if (difference < 12) return
-    await updateCurrentPlaylist(meta)
+    await updateCurrentPlaylist()
   }
 
   async function verifyAuth() {
@@ -86,34 +82,20 @@ export function MenuBar() {
     setProfileDialog(false)
   }
 
-  async function updateCurrentPlaylist(metadata: MetaProps) {
+  async function updateCurrentPlaylist() {
     setUpdating(true)
-    const authResponse = await electronApi.authenticateUser(urls.getAuthenticateUrl)
-    if (!authResponse.status) {
-      setUpdatingError(true)
-      setUpdating(false)
-      toast({
-        title: 'The playlist could not be updated',
-        description: authResponse.message,
-        variant: "destructive"
-      })
-      return
-    }
 
-    setUpdatingError(false)
-    const updatedVod = await electronApi.updateVod({ playlistUrl: urls.getAllVodUrl, categoriesUrl: urls.getAllVodCategoriesUrl, name: metadata.currentPlaylist.name })
-    const updatedSeries = await electronApi.updateSeries({ playlistUrl: urls.getAllSeriesUrl, categoriesUrl: urls.getAllSeriesCategoriesUrl, name: metadata.currentPlaylist.name })
-    const updatedLive = await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: metadata.currentPlaylist.name })
-    await electronApi.updatedAtPlaylist(metadata.currentPlaylist.name)
-
-    if (!updatedVod || !updatedSeries || !updatedLive) {
+    const response = await electronApi.updateCurrentPlaylist()
+    if (!response.isSuccess) {
       setUpdatingError(true)
       setUpdating(false)
       return toast({
         variant: "destructive",
-        title: 'Playlist cannot be added.'
+        title: typeof response.data === "string" ? response.data : 'Error'
       })
     }
+
+    const { updatedVod, updatedSeries, updatedLive } = response.data
 
     updateVodPlaylistState(updatedVod)
     updateSeriesPlaylistState(updatedSeries)

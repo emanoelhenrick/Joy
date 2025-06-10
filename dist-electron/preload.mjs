@@ -20,6 +20,7 @@ electron.contextBridge.exposeInMainWorld("ipcRenderer", {
   // You can expose other APTs you need here.
   // ...
   getMetadata: () => electron.ipcRenderer.invoke("get-metadata"),
+  updateCurrentPlaylist: async (args) => await electron.ipcRenderer.invoke("update-current-playlist", args),
   updateVod: async (args) => await electron.ipcRenderer.invoke("update-vod", args),
   updateSeries: async (args) => await electron.ipcRenderer.invoke("update-series", args),
   updateLive: async (args) => await electron.ipcRenderer.invoke("update-live", args),

@@ -23,6 +23,7 @@ interface RenameProfileProps {
 
 export interface Api {
   getMetadata: () => Promise<MetaProps>
+  updateCurrentPlaylist: () => Promise<{ isSuccess: boolean, data: any }>
   updateVod: (playlistUrls: PlaylistUrlsProps) => Promise<VodPlaylistProps>
   updateSeries: (playlistUrls: PlaylistUrlsProps) => Promise<SeriesPlaylistProps>
   updateLive: (playlistUrls: PlaylistUrlsProps) => Promise<LivePlaylistProps>

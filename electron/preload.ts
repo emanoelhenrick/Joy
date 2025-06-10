@@ -23,6 +23,8 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   // ...
   getMetadata: () => ipcRenderer.invoke('get-metadata'),
 
+  updateCurrentPlaylist: async (args: any) => await ipcRenderer.invoke('update-current-playlist', args),
+
   updateVod: async (args: any) => await ipcRenderer.invoke('update-vod', args),
   updateSeries: async (args: any) => await ipcRenderer.invoke('update-series', args),
   updateLive: async (args: any) => await ipcRenderer.invoke('update-live', args),

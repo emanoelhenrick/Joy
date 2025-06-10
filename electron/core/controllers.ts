@@ -24,11 +24,14 @@ import { fetchTmdbTrending } from "./services/fetchTmdbTrending";
 import { launchVLC } from "./services/vlc/launchVLC";
 import { getVLCState } from "./services/vlc/getVLCState";
 import { editPlaylistInfo } from "./services/editPlaylistInfo";
+import { updateCurrentPlaylist } from "./services/updateCurrentPlaylist";
 
 export default function CoreControllers(win: BrowserWindow) {
   ipcMain.handle('get-metadata', getMetadata)
   ipcMain.handle('authenticate-user', async (_event, args) => await authenticateUser(args))
   ipcMain.handle('fetch-tmdb-trending', async (_event, args) => await fetchTmdbTrending(args))
+
+  ipcMain.handle('update-current-playlist', async (_event) => await updateCurrentPlaylist())
 
   ipcMain.handle('update-vod', async (_event, args) => await updateVod(args))
   ipcMain.handle('update-series', async (_event, args) => await updateSeries(args))
