@@ -53,7 +53,7 @@ export function InfoSection({ title, releaseDate, cast, tmdbCast, description, d
         </div>
 
         {(releaseDate || genre || rating || duration) && (
-            <div className="flex items-center gap-6 mt-4 py-1 animate-fade uppercase font-semibold">
+          <div className="flex items-center gap-6 mt-4 py-1 animate-fade uppercase font-semibold">
             {releaseDate && <h1 style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{releaseDate}</h1>}
             {duration && <h1 style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{duration}</h1>}
             {genre && <h1 style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{genre}</h1>}
@@ -66,7 +66,7 @@ export function InfoSection({ title, releaseDate, cast, tmdbCast, description, d
           
           {(cast || director || tmdbCast) && (
             <div className="space-y-4">
-              <h1 className="text-sm 2xl:text-base text-muted-foreground max-w-screen-md 2xl:max-w-screen-lg">
+              <h1 className="text-sm 2xl:text-base font-medium text-muted-foreground max-w-screen-md 2xl:max-w-screen-lg">
                 {director && 'Directed by ' + director}
               </h1>
               <div className="flex gap-8 w-fit">

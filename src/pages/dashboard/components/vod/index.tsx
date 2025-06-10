@@ -171,7 +171,7 @@ export function VodPage({ streamId, cover }: Props) {
               <div className="flex flex-col gap-4 z-10 animate-fade">
                 <div className="flex justify-between items-center">
                   <div className="flex gap-4 items-center">
-                    <button key='vlc' disabled={isFetching} onClick={launchVlc} className="transition-none bg-primary/10 hover:bg-primary/20 px-8 py-4 rounded-2xl text-primary relative overflow-hidden">
+                    <button key='vlc' disabled={isFetching} onClick={launchVlc} className="transition bg-primary/95 hover:bg-primary/80 px-8 py-4 rounded-2xl text-background relative overflow-hidden hover:scale-95">
                       {userVodData && userVodData.currentTime ?
                       <div className="flex items-center gap-4">
                         <FaPlay className="size-4" />
@@ -184,7 +184,7 @@ export function VodPage({ streamId, cover }: Props) {
                           </div>
                         )}
                     </button>
-                    <button onClick={handleFavorite} disabled={isFetching} className="flex gap-2 items-center p-2.5 transition rounded-2xl hover:bg-primary/10 transition-none">
+                    <button onClick={handleFavorite} disabled={isFetching} className="flex gap-2 items-center p-2.5 rounded-2xl hover:bg-primary/10 transition">
                       {userVodData?.favorite ? <PiCheck className="size-6" strokeWidth={2} /> : <PiPlus className="size-6" strokeWidth={2} />}
                     </button>
                   </div>
