@@ -135,7 +135,7 @@ export function MenuBar() {
   }
 
   return (
-      <div>
+    <div>
       <div style={{ width: width ? width : 95 }} className="block" />
     
       <div ref={menuRef} className="flex flex-col gap-3 fixed p-3 bg-background left-0 justify-between items-start h-screen z-50">
@@ -151,7 +151,7 @@ export function MenuBar() {
                       </Avatar>
                     </div>
 
-                    <div className="flex flex-col gap-1">
+                    <div className="flex flex-col gap-1 pr-2">
                       <h1 className="font-bold text-muted-foreground leading-none capitalize">{profiles.current}</h1>
                       <div className="flex items-center gap-2">
                         <h1 className="text-muted-foreground text-sm opacity-80 leading-none">
@@ -204,12 +204,12 @@ export function MenuBar() {
                 className={`h-fit transition flex hover:opacity-80 items-center p-1 w-full gap-3 ${location.pathname.includes('explore') ? 'opacity-100' : 'opacity-50' }`}
                 >
                 <PiMagnifyingGlassBold className="size-6" />
-                <span className="font-bold">Search...</span>
+                <span className="font-bold">Explore</span>
               </button>
 
               <button onClick={() => navigate(`/dashboard/live`)} className={`h-fit transition hover:opacity-80 flex items-center p-1 w-full gap-3 ${location.pathname.includes('live') ? 'opacity-100' : 'opacity-50' }`}>
                 <BiSolidTv className='size-6' />
-                <span className="font-bold">Live Channels</span>
+                <span className="font-bold">Live</span>
               </button>
             </div>
 
