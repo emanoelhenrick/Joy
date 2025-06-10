@@ -2,7 +2,7 @@
   "name": "joi-client",
   "productName": "JOI Client",
   "private": true,
-  "version": "0.8.6",
+  "version": "0.9.1",
   "type": "module",
   "author": "Emanoel Henrick",
   "build": {
@@ -43,6 +43,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "dotenv": "^16.5.0",
     "electron-squirrel-startup": "^1.0.1",
     "embla-carousel-autoplay": "^8.5.2",
     "embla-carousel-fade": "^8.5.2",

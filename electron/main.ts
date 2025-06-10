@@ -3,6 +3,8 @@ import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import CoreControllers from './core/controllers'
 import started from "electron-squirrel-startup";
+import dotenv from 'dotenv';
+dotenv.config()
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -34,6 +36,7 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
       nodeIntegration: false,
+      // nodeIntegrationInWorker: true,
       contextIsolation: true,
       webSecurity: false,
       spellcheck: false,

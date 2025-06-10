@@ -1,20 +1,18 @@
-import { Button } from "@/components/ui/button";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay"
 import FadeSlide from "embla-carousel-fade"
 import { useCallback, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { useNavigate } from "react-router-dom";
-import { useTrending } from "@/states/useTrending";
 import { FaPlay, FaStar } from "react-icons/fa";
-import { MovieMatch } from "electron/core/services/fetchTmdbTrending";
 import { TitleLogo } from "moviedb-promise";
 import { VlcDialog } from "@/pages/dashboard/components/VlcDialog";
 import electronApi from "@/config/electronApi";
 import { usePlaylistUrl } from "@/states/usePlaylistUrl";
 import { useUserData } from "@/states/useUserData";
 import { VodProps } from "electron/core/models/VodModels";
+import { ImSpinner8 } from "react-icons/im";
 
 export function Trending({ refresh, slideActive }: { refresh: () => void, slideActive: boolean }) {
   const navigate = useNavigate()
@@ -22,7 +20,7 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
   const [selectedMovie, setSelectedMovie] = useState<VodProps | undefined>(undefined)
   const [state, setState] = useState<any>(undefined)
   const baseUrl = usePlaylistUrl(state => state.urls.getVodStreamUrl)
-  const data = useTrending(state => state.matches)
+  const [data, setData] = useState<any[]>([])
   const updateVodStatus = useUserData(state => state.updateVodStatus)
 
   function updateUserStatus(data: { length: number, time: number }) {
@@ -45,27 +43,18 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
     )
   }
 
-  useEffect(() => {
-    if (!selectedMovie && state) {
-      if (!state) return
-      const { time, length } = state.data
-      updateVodStatus(
-        state.id.toString(),
-        time,
-        length,
-        time / length < 0.95
-      )
-      setState(undefined)
-      setTimeout(refresh, 100)
-    }
-  }, [selectedMovie, updateVodStatus])
+  async function getTrending() {
+    const trending = await electronApi.getLocalTmdbTrending()
+    if (!trending || trending.length === 0) return await electronApi.fetchTmdbTrending()
+    setData(trending)
+  }
 
   function handleSearchForMatch(mediaType: string, search: string) {
     const type = mediaType === 'movie' ? 'vod' : 'series'
     navigate(`/dashboard/explore?type=${type}&search=${search}`)
   }
 
-  const renderItem = useCallback((info: MovieMatch) => {
+  const renderItem = useCallback((info: any) => {
     function getRightLogo(logos: TitleLogo[]) {
       if (!logos) return
       if (logos.length === 0) return
@@ -79,14 +68,12 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
     const releaseDate = format(info.release_date!, "u")
     const perfectMatch = info.matches![0]
     const logoPath = getRightLogo(info.images!.logos!)
-
-    const userVodData = useUserData(state => state.userData.vod?.find(v => v.id == perfectMatch.stream_id))
     
     async function launchVlc() {
       setSelectedMovie(perfectMatch)
       const props = {
         path: `${baseUrl}${perfectMatch.stream_id}.${perfectMatch.container_extension}`,
-        startTime: (userVodData && userVodData.currentTime) ? userVodData.currentTime : 0
+        startTime: 0
       }
       await electronApi.launchVLC(props)
     }
@@ -148,7 +135,34 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
     )
   }, [data])
 
-  if (data) return (
+  useEffect(() => {
+    getTrending()
+
+    window.ipcRenderer.on('trending', (_event, args) => {
+      if (args.isSuccess) getTrending()
+    });
+
+    return () => {
+      electronApi.removeAllListeners('trending')
+    }
+  }, [data])
+
+  useEffect(() => {
+    if (!selectedMovie && state) {
+      if (!state) return
+      const { time, length } = state.data
+      updateVodStatus(
+        state.id.toString(),
+        time,
+        length,
+        time / length < 0.95
+      )
+      setState(undefined)
+      setTimeout(refresh, 100)
+    }
+  }, [selectedMovie, updateVodStatus])
+
+  return (
     <section className="relative bg-primary-foreground rounded-2xl">
       <Carousel
         plugins={[
@@ -158,10 +172,16 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
         className="bg-background rounded-xl overflow-hidden"
       >
         <CarouselContent>
-          {data.map(info => renderItem(info))}
+          {data.length > 0 ? (
+            data.map(info => renderItem(info))
+          ) : (
+            <CarouselItem key={'loading'}>
+              <div className="min-h-96 bg-primary-foreground flex justify-center items-center">
+                <ImSpinner8 className="size-8 animate-spin text-muted-foreground" />
+              </div>
+            </CarouselItem>
+          )}
         </CarouselContent>
-        {/* <CarouselPrevious className="absolute left-1 bottom-1 border-none bg-background/5" />
-        <CarouselNext className="absolute right-1 bottom-1 border-none bg-background/5" /> */}
       </Carousel>
 
       {selectedMovie && (
@@ -173,6 +193,4 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
       )}
     </section>
   )
-
-  return <></>
 }

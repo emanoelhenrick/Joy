@@ -15,7 +15,6 @@ import { ImSpinner8 } from "react-icons/im";
 import { formatDurationFromSeconds } from "@/utils/formatDuration"
 import { PiPlus, PiCheck } from "react-icons/pi";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { ScrollBarStyled } from "@/components/ScrollBarStyled"
 import { Dialog, DialogContent, DialogTrigger } from "./VideoDialog"
 import ReactPlayer from 'react-player'
 

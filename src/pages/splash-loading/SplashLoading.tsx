@@ -18,7 +18,6 @@ export function SplashLoading() {
   const updateVodPlaylistState = useVodPlaylist(state => state.update)
   const updateSeriesPlaylistState = useSeriesPlaylist(state => state.update)
   const updateLivePlaylistState = useLivePlaylist(state => state.update)
-  const updateMatches = useTrending(state => state.updateMatches)
 
   const { isSuccess, data  } = useQuery({ queryKey: ['playlistExists'], queryFn: electronApi.getMetadata, staleTime: Infinity })
 
@@ -28,12 +27,12 @@ export function SplashLoading() {
     const seriesData = await electronApi.getLocalSeriesPlaylist(info.name)
     const liveData = await electronApi.getLocalLivePlaylist(info.name)
 
-    const filteredTrending = await electronApi.fetchTmdbTrending({
-      apiKey: import.meta.env.VITE_TMDB_API_KEY,
-      playlist: vodData.playlist
-    })
+    // const filteredTrending = await electronApi.fetchTmdbTrending({
+    //   apiKey: import.meta.env.VITE_TMDB_API_KEY,
+    //   playlist: vodData.playlist
+    // })
     
-    updateMatches(filteredTrending!)
+    // updateMatches(filteredTrending!)
 
     const urls = makeUrls(info)
     updateUrls(urls)
