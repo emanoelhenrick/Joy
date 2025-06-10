@@ -4,13 +4,15 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 module.exports = {
   packagerConfig: {
     asar: true,
-    icon: 'src/assets/icons/icon'
+    icon: 'src/assets/icons/icon',
+    executableName: "joi-client",
   },
   icon: "src/assets/icons/icon",
   rebuildConfig: {},
   makers: [
     {
       name: "@electron-forge/maker-squirrel",
+      executableName: "joi-client",
       config: {
         name: "JOI",
         setupIcon: 'src/assets/icons/icon.ico',
@@ -21,6 +23,7 @@ module.exports = {
     },
     {
       name: '@electron-forge/maker-rpm',
+      executableName: "joi-client",
       config: {
         name: "JOI",
         options: {
@@ -30,6 +33,7 @@ module.exports = {
     },
     {
       name: '@electron-forge/maker-deb',
+      executableName: "joi-client",
       config: {
         name: "JOI",
         options: {
