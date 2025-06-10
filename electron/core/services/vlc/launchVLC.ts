@@ -1,12 +1,13 @@
 import { spawn } from "child_process";
 import { BrowserWindow } from "electron";
+import { getMetadata } from "../getMetadata";
 
 export interface LaunchVlcProps {
   path: string;
   startTime: number;
 }
 
-export function launchVLC({ path, startTime }: LaunchVlcProps, win: BrowserWindow) {
+export async function launchVLC({ path, startTime }: LaunchVlcProps, win: BrowserWindow) {
   let vlc: ReturnType<typeof spawn>;
   const args = [
     "--extraintf",
@@ -23,12 +24,9 @@ export function launchVLC({ path, startTime }: LaunchVlcProps, win: BrowserWindo
     path,
   ];
 
-  if (process.platform === "win32") {
-    const vlcExePath = "C:/Program Files (x86)/VideoLAN/VLC/vlc.exe";
-    vlc = spawn(vlcExePath, args);
-  } else {
-    vlc = spawn("vlc", args);
-  }
+  const metadata = await getMetadata()
+
+  vlc = spawn(metadata.vlcPath, args);
 
   vlc.setMaxListeners(2);
 

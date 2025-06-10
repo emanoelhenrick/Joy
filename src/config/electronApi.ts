@@ -6,7 +6,6 @@ import { UserDataProps } from "electron/core/models/UserData";
 import { VodInfoProps, VodPlaylistProps } from "electron/core/models/VodModels";
 import { AuthRes } from "electron/core/services/authenticateUser";
 import { EditPlaylistInfoProps } from "electron/core/services/editPlaylistInfo";
-import { MovieMatch } from "electron/core/services/fetchTmdbTrending";
 import { VlcState } from "electron/core/services/vlc/getVLCState";
 import { LaunchVlcProps } from "electron/core/services/vlc/launchVLC";
 
@@ -22,6 +21,7 @@ interface RenameProfileProps {
 } 
 
 export interface Api {
+  getPlatform: () => string
   getMetadata: () => Promise<MetaProps>
   updateCurrentPlaylist: () => Promise<{ isSuccess: boolean, data: any }>
   updateVod: (playlistUrls: PlaylistUrlsProps) => Promise<VodPlaylistProps>
@@ -29,7 +29,7 @@ export interface Api {
   updateLive: (playlistUrls: PlaylistUrlsProps) => Promise<LivePlaylistProps>
   authenticateUser: (url: string) => Promise<AuthRes>
   fetchTmdbTrending: () => Promise<undefined>
-  getLocalTmdbTrending: () => Promise<MovieMatch[]>
+  getLocalTmdbTrending: () => Promise<any[]>
   addPlaylistToMeta: (playlistInfo: PlaylistInfo) => Promise<Boolean>
   editPlaylistInfo: (data: EditPlaylistInfoProps) => Promise<void>
   removePlaylist: (playlistName: string) => Promise<MetaProps>
@@ -49,6 +49,7 @@ export interface Api {
   removeProfile: (profile: string) => Promise<void>
   launchVLC: (props: LaunchVlcProps) => Promise<number>
   getVLCState: () => Promise<VlcState>
+  updateVLCPath: () => Promise<undefined>
   removeAllListeners: (listenerName: string) => void
 }
 

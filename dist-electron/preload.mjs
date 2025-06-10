@@ -19,6 +19,7 @@ electron.contextBridge.exposeInMainWorld("ipcRenderer", {
   },
   // You can expose other APTs you need here.
   // ...
+  getPlatform: () => electron.ipcRenderer.invoke("get-platform"),
   getMetadata: () => electron.ipcRenderer.invoke("get-metadata"),
   updateCurrentPlaylist: async (args) => await electron.ipcRenderer.invoke("update-current-playlist", args),
   updateVod: async (args) => await electron.ipcRenderer.invoke("update-vod", args),
@@ -46,5 +47,6 @@ electron.contextBridge.exposeInMainWorld("ipcRenderer", {
   removeProfile: async (args) => await electron.ipcRenderer.invoke("remove-profile", args),
   launchVLC: async (args) => await electron.ipcRenderer.invoke("launch-vlc", args),
   getVLCState: async (args) => await electron.ipcRenderer.invoke("get-vlc-state", args),
+  updateVLCPath: async (args) => await electron.ipcRenderer.invoke("update-vlc-path", args),
   removeAllListeners: (args) => electron.ipcRenderer.removeAllListeners(args)
 });

@@ -21,6 +21,7 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 
   // You can expose other APTs you need here.
   // ...
+  getPlatform: () => ipcRenderer.invoke('get-platform'),
   getMetadata: () => ipcRenderer.invoke('get-metadata'),
 
   updateCurrentPlaylist: async (args: any) => await ipcRenderer.invoke('update-current-playlist', args),
@@ -58,5 +59,6 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 
   launchVLC: async (args: any) => await ipcRenderer.invoke('launch-vlc', args),
   getVLCState: async (args: any) => await ipcRenderer.invoke('get-vlc-state', args),
+  updateVLCPath: async (args: any) => await ipcRenderer.invoke('update-vlc-path', args),
   removeAllListeners: (args: any) => ipcRenderer.removeAllListeners(args),
 })

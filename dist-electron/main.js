@@ -1,4 +1,4 @@
-import require$$3$1, { app as app$1, ipcMain, BrowserWindow } from "electron";
+import require$$3$1, { app as app$1, dialog, ipcMain, BrowserWindow } from "electron";
 import { fileURLToPath as fileURLToPath$1 } from "node:url";
 import path$6 from "node:path";
 import require$$1$1 from "util";
@@ -3046,7 +3046,8 @@ const getLivePath = (playlistName) => path$5.join(SessionDataDir, `Playlists/${p
 async function getMetadata() {
   const metadata = await main$1.readAsync(META_PATH, "json");
   if (!metadata) {
-    const newMeta = { currentPlaylist: { name: "", profile: "" }, playlists: [] };
+    const newMeta = { currentPlaylist: { name: "", profile: "" }, playlists: [], vlcPath: "" };
+    if (process.platform === "linux") newMeta.vlcPath = "vlc";
     await main$1.writeAsync(META_PATH, newMeta);
     return newMeta;
   }
@@ -19275,7 +19276,7 @@ async function removePlaylist(playlistName) {
   await main$1.writeAsync(META_PATH, metadata);
   return metadata;
 }
-function launchVLC({ path: path2, startTime }, win2) {
+async function launchVLC({ path: path2, startTime }, win2) {
   let vlc;
   const args = [
     "--extraintf",
@@ -19291,12 +19292,8 @@ function launchVLC({ path: path2, startTime }, win2) {
     startTime.toString(),
     path2
   ];
-  if (process.platform === "win32") {
-    const vlcExePath = "C:/Program Files (x86)/VideoLAN/VLC/vlc.exe";
-    vlc = spawn$1(vlcExePath, args);
-  } else {
-    vlc = spawn$1("vlc", args);
-  }
+  const metadata = await getMetadata();
+  vlc = spawn$1(metadata.vlcPath, args);
   vlc.setMaxListeners(2);
   vlc.stderr.on("data", (data) => {
     const errorMessage = data.toString();
@@ -19401,8 +19398,24 @@ async function runFetchTmdbTrendingInWorker(apiKey, win2) {
   })();
   return trendingWorkerPromise;
 }
+async function updateVLCPath() {
+  const result = await dialog.showOpenDialog({
+    title: "Selecione o executável do programa",
+    properties: ["openFile"],
+    filters: [
+      { name: "Executáveis", extensions: ["exe", "app", "bat", "sh", "*"] }
+    ]
+  });
+  if (result.filePaths.length === 0) return;
+  const path2 = result.filePaths[0];
+  const metadata = await main$1.readAsync(META_PATH, "json");
+  metadata.vlcPath = path2;
+  await main$1.writeAsync(META_PATH, metadata);
+  return path2;
+}
 function CoreControllers(win2) {
   const TMDB_API_KEY = process.env.VITE_TMDB_API_KEY;
+  ipcMain.handle("get-platform", () => process.platform);
   ipcMain.handle("get-metadata", getMetadata);
   ipcMain.handle("authenticate-user", async (_event, args) => await authenticateUser(args));
   ipcMain.handle("fetch-tmdb-trending", async (_event) => await runFetchTmdbTrendingInWorker(TMDB_API_KEY, win2));
@@ -19432,6 +19445,7 @@ function CoreControllers(win2) {
   ipcMain.handle("switch-profile", async (_event, args) => await switchProfile(args));
   ipcMain.handle("rename-profile", async (_event, args) => await renameProfile(args));
   ipcMain.handle("remove-profile", async (_event, args) => await removeProfile(args));
+  ipcMain.handle("update-vlc-path", async (_event) => updateVLCPath());
   ipcMain.handle("launch-vlc", async (_event, args) => launchVLC(args, win2));
   ipcMain.handle("get-vlc-state", async (_event) => await getVLCState());
 }

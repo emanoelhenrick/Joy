@@ -26,9 +26,12 @@ import { editPlaylistInfo } from "./services/editPlaylistInfo";
 import { updateCurrentPlaylist } from "./services/updateCurrentPlaylist";
 import { getLocalTmdbTrending } from "./services/getLocalTmdbTrending";
 import { runFetchTmdbTrendingInWorker } from "./services/runFetchTmdbTrendingInWorker";
+import { updateVLCPath } from "./services/updateVLCPath";
 
 export default function CoreControllers(win: BrowserWindow) {
   const TMDB_API_KEY = process.env.VITE_TMDB_API_KEY
+
+  ipcMain.handle('get-platform', () => process.platform)
 
   ipcMain.handle('get-metadata', getMetadata)
   ipcMain.handle('authenticate-user', async (_event, args) => await authenticateUser(args))
@@ -68,6 +71,7 @@ export default function CoreControllers(win: BrowserWindow) {
   ipcMain.handle('rename-profile', async (_event, args) => await renameProfile(args))
   ipcMain.handle('remove-profile', async (_event, args) => await removeProfile(args))
 
+  ipcMain.handle('update-vlc-path', async (_event) => updateVLCPath())
   ipcMain.handle('launch-vlc', async (_event, args) => launchVLC(args, win))
   ipcMain.handle('get-vlc-state', async (_event) => await getVLCState())
 }

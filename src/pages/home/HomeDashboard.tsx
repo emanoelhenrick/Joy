@@ -14,6 +14,7 @@ import { HomeCover } from './components/HomeCover';
 import { VodPage } from '../dashboard/components/vod';
 import { Fade } from 'react-awesome-reveal';
 import { UpdatedMediaContainer } from './components/UpdatedMediaContainer';
+import electronApi from '@/config/electronApi';
 
 export function HomeDashboard() {
   const vodData = useVodPlaylist(state => state.data)
@@ -149,6 +150,7 @@ export function HomeDashboard() {
   }, [selectedSeries, selectedVod])
 
   useEffect(() => {
+    (async () => await electronApi.getVLCPath())()
     window.scrollTo({ top: 1 })
   }, [])
 

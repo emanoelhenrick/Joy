@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import electronApi from "@/config/electronApi";
 import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from "@/states/usePlaylistData";
 import { makeUrls, usePlaylistUrl } from "@/states/usePlaylistUrl";
@@ -5,13 +7,16 @@ import { useTrending } from "@/states/useTrending";
 import { useUserData } from "@/states/useUserData";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { PlaylistInfo } from "electron/core/models/PlaylistInfo";
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Fade } from "react-awesome-reveal";
 import { useNavigate } from "react-router-dom";
 
 export function SplashLoading() {
   const navigate = useNavigate();
   const queryClient = useQueryClient()
+
+  const [openDialog, setOpenDialog] = useState(false)
+  const [allReady, setAllReady] = useState({ playlistName: '', path: false })
 
   const updateUrls = usePlaylistUrl(state => state.updateUrls)
   const updateUserData = useUserData(state => state.updateUserData)
@@ -27,13 +32,6 @@ export function SplashLoading() {
     const seriesData = await electronApi.getLocalSeriesPlaylist(info.name)
     const liveData = await electronApi.getLocalLivePlaylist(info.name)
 
-    // const filteredTrending = await electronApi.fetchTmdbTrending({
-    //   apiKey: import.meta.env.VITE_TMDB_API_KEY,
-    //   playlist: vodData.playlist
-    // })
-    
-    // updateMatches(filteredTrending!)
-
     const urls = makeUrls(info)
     updateUrls(urls)
 
@@ -42,7 +40,15 @@ export function SplashLoading() {
     updateLivePlaylistState(liveData)
     updateUserData(userData)
 
-    navigate(`/dashboard/home/${info.name}`)
+    setAllReady(prev => ({ ...prev, playlistName: info.name }))
+  }
+
+  async function updateVlcPath() {
+    const path = await electronApi.updateVLCPath()
+    if (path) {
+      setOpenDialog(false)
+      setAllReady(prev => ({ ...prev, path: true }))
+    }
   }
 
   useEffect(() => {
@@ -51,11 +57,33 @@ export function SplashLoading() {
       const currentPlaylist = data.playlists.find(p => p.name == data.currentPlaylist.name)!
       queryClient.removeQueries()
       updateStates(currentPlaylist, data.currentPlaylist.profile)
+
+      const platform = electronApi.getPlatform()
+      if (platform === 'win32' || data.vlcPath.length < 1) {
+        setOpenDialog(true)
+      } else {
+        setAllReady(prev => ({ ...prev, path: true }))
+      }
     }
   }, [isSuccess])
 
+  useEffect(() => {
+    if (allReady.playlistName && allReady.path) navigate(`/dashboard/home/${allReady.playlistName}`)
+  }, [allReady])
+
   return (
     <div className="w-full h-screen flex flex-col gap-1 text-sm items-center justify-center">
+      <Dialog open={openDialog}>
+        <DialogContent className="w-96 items-center justify-center" aria-describedby={undefined}>
+          <DialogTitle className="hidden" />
+          <div className="flex flex-col">
+            <h1 className="text-lg font-bold">This program uses VLC Player for media playback.</h1>
+            <span className="text-muted-foreground">Please select the destination of VLC on your computer</span>
+            <Button onClick={updateVlcPath} className="mt-4 hover:bg-orange-500">Select</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <Fade duration={2000}>
         <div className="flex flex-col items-center gap-6">
           <h1 className="text-4xl animate-pulse">JOI</h1>
