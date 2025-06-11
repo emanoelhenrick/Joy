@@ -24,9 +24,9 @@ export interface Api {
   getPlatform: () => string
   getMetadata: () => Promise<MetaProps>
   updateCurrentPlaylist: () => Promise<{ isSuccess: boolean, data: any }>
-  updateVod: (playlistUrls: PlaylistUrlsProps) => Promise<VodPlaylistProps>
-  updateSeries: (playlistUrls: PlaylistUrlsProps) => Promise<SeriesPlaylistProps>
-  updateLive: (playlistUrls: PlaylistUrlsProps) => Promise<LivePlaylistProps>
+  updateVod: (playlistName: string) => Promise<VodPlaylistProps>
+  updateSeries: (playlistName: string) => Promise<SeriesPlaylistProps>
+  updateLive: (playlistName: string) => Promise<LivePlaylistProps>
   authenticateUser: (url: string) => Promise<AuthRes>
   fetchTmdbTrending: () => Promise<undefined>
   getLocalTmdbTrending: () => Promise<any[]>

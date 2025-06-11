@@ -3,7 +3,6 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import electronApi from "@/config/electronApi";
 import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from "@/states/usePlaylistData";
 import { makeUrls, usePlaylistUrl } from "@/states/usePlaylistUrl";
-import { useTrending } from "@/states/useTrending";
 import { useUserData } from "@/states/useUserData";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { PlaylistInfo } from "electron/core/models/PlaylistInfo";
@@ -17,7 +16,7 @@ export function SplashLoading() {
 
   const [openDialog, setOpenDialog] = useState(false)
   const [allReady, setAllReady] = useState({ playlistName: '', path: false })
-
+  const [hasUpdated, setHasUpdated] = useState(false)
   const updateUrls = usePlaylistUrl(state => state.updateUrls)
   const updateUserData = useUserData(state => state.updateUserData)
   const updateVodPlaylistState = useVodPlaylist(state => state.update)
@@ -41,6 +40,13 @@ export function SplashLoading() {
     updateUserData(userData)
 
     setAllReady(prev => ({ ...prev, playlistName: info.name }))
+
+    const platform = electronApi.getPlatform()
+    if (platform === 'win32' || data!.vlcPath.length < 1) {
+      setOpenDialog(true)
+    } else {
+      setAllReady(prev => ({ ...prev, path: true }))
+    }
   }
 
   async function updateVlcPath() {
@@ -52,20 +58,14 @@ export function SplashLoading() {
   }
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && !hasUpdated) {
       if (data.playlists.length === 0) return navigate('/initial')
       const currentPlaylist = data.playlists.find(p => p.name == data.currentPlaylist.name)!
       queryClient.removeQueries()
       updateStates(currentPlaylist, data.currentPlaylist.profile)
-
-      const platform = electronApi.getPlatform()
-      if (platform === 'win32' || data.vlcPath.length < 1) {
-        setOpenDialog(true)
-      } else {
-        setAllReady(prev => ({ ...prev, path: true }))
-      }
+      setHasUpdated(true)
     }
-  }, [isSuccess])
+  }, [isSuccess, hasUpdated])
 
   useEffect(() => {
     if (allReady.playlistName && allReady.path) navigate(`/dashboard/home/${allReady.playlistName}`)

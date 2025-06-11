@@ -67,13 +67,13 @@ export function NewPlaylistDialog() {
 
   async function handleNewPLaylist(urls: PlaylistUrls) {
     setProgress({ msg: 'Downloading VOD playlist...', value: 20})
-    const vodData = await electronApi.updateVod({ playlistUrl: urls.getAllVodUrl, categoriesUrl: urls.getAllVodCategoriesUrl, name: formValue!.name })
+    const vodData = await electronApi.updateVod(formValue!.name)
     
     setProgress({ msg: 'Downloading Series playlist...', value: 50})
-    const seriesData = await electronApi.updateSeries({ playlistUrl: urls.getAllSeriesUrl, categoriesUrl: urls.getAllSeriesCategoriesUrl, name: formValue!.name })
+    const seriesData = await electronApi.updateSeries(formValue!.name)
 
     setProgress({ msg: 'Downloading Live playlist...', value: 80})
-    const liveData = await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: formValue!.name })
+    const liveData = await electronApi.updateLive(formValue!.name)
     
     if (!vodData || !seriesData || !liveData) {
       setSubmitted(false)

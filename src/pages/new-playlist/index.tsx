@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
 import { useEffect, useState } from "react"
 import { ReloadIcon } from "@radix-ui/react-icons"
 import { useNavigate } from "react-router-dom"
@@ -16,8 +16,6 @@ import { makeUrls, PlaylistUrls, usePlaylistUrl } from "@/states/usePlaylistUrl"
 import { useQueryClient } from "@tanstack/react-query"
 import { Fade } from "react-awesome-reveal"
 import { useUserData } from "@/states/useUserData"
-import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from "@/states/usePlaylistData"
-import { useTrending } from "@/states/useTrending"
  
 const formSchema = z.object({
   name: z.string()
@@ -49,10 +47,6 @@ export function Initial() {
   const { toast } = useToast()
 
   const resetUserData = useUserData(state => state.reset)
-  const updateVodPlaylistState = useVodPlaylist(state => state.update)
-  const updateSeriesPlaylistState = useSeriesPlaylist(state => state.update)
-  const updateLivePlaylistState = useLivePlaylist(state => state.update)
-  const updateMatches = useTrending(state => state.updateMatches)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema)
@@ -65,14 +59,16 @@ export function Initial() {
   }
 
   async function handleNewPLaylist(urls: PlaylistUrls) {
+    await electronApi.addPlaylistToMeta(formValue!)
+
     setProgress({ msg: 'Downloading VOD playlist...', value: 20})
-    const vodData = await electronApi.updateVod({ playlistUrl: urls.getAllVodUrl, categoriesUrl: urls.getAllVodCategoriesUrl, name: formValue!.name })
+    const vodData = await electronApi.updateVod(formValue!.name)
     
     setProgress({ msg: 'Downloading Series playlist...', value: 50})
-    const seriesData = await electronApi.updateSeries({ playlistUrl: urls.getAllSeriesUrl, categoriesUrl: urls.getAllSeriesCategoriesUrl, name: formValue!.name })
+    const seriesData = await electronApi.updateSeries(formValue!.name)
 
     setProgress({ msg: 'Downloading Live playlist...', value: 80})
-    const liveData = await electronApi.updateLive({ playlistUrl: urls.getAllLiveUrl, categoriesUrl: urls.getAllLiveCategoriesUrl, name: formValue!.name })
+    const liveData = await electronApi.updateLive(formValue!.name)
 
     if (!vodData || !seriesData || !liveData) {
       setSubmitted(false)
@@ -85,20 +81,11 @@ export function Initial() {
     
     setProgress({ msg: 'Updating configs...', value: 90})
     formValue!.updatedAt = Date.now()
-    await electronApi.addPlaylistToMeta(formValue!)
+    
     await electronApi.createProfile('Default')
     updateUrls(urls)
 
-    updateVodPlaylistState(vodData)
-    updateSeriesPlaylistState(seriesData)
-    updateLivePlaylistState(liveData)
     resetUserData()
-
-    const filteredTrending = await electronApi.fetchTmdbTrending({
-      apiKey: import.meta.env.VITE_TMDB_API_KEY,
-      playlistName: formValue!.name
-    })
-    updateMatches(filteredTrending!)
 
     setProgress({ msg: 'Finished.', value: 100})
     setIsSuccess(true)
@@ -134,7 +121,7 @@ export function Initial() {
       queryClient.removeQueries()
       setSubmitted(false)
       document.body.style.overflow = 'auto';
-      navigate(`/dashboard/home/${formValue!.name}`)
+      navigate(`/`)
     }
     
   }, [isSuccess])
