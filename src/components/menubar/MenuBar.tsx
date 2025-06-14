@@ -137,13 +137,13 @@ export function MenuBar() {
     <div>
       <div style={{ width: width ? width : 95 }} className="block" />
     
-      <div ref={menuRef} className="flex flex-col py-8 px-10 gap-8 fixed left-0 justify-between items-center h-screen z-50">
+      <div ref={menuRef} className="flex flex-col py-8 px-8 gap-8 fixed left-0 justify-between items-center h-screen z-50">
         <Fade className="w-full" duration={500} direction="left" triggerOnce>
           <Dialog open={profileDialog} modal>
               <DialogTrigger onClick={() => setProfileDialog(true)} asChild>
                   <div className="flex gap-3 rounded-xl justify-center items-center">
-                    <div className="text-background bg-primary/95 p-2 rounded-xl">
-                      <HugeiconsIcon strokeWidth={1} icon={PlayIcon} className="fill-black size-6" />
+                    <div className="text-background rounded-xl aspect-square">
+                      <HugeiconsIcon strokeWidth={1} icon={PlayIcon} className={`-m-2 color-primary fill-white size-14 rotate-90 ${updating && 'animate-pulse fill-blue-400'}`} />
                     </div>
                   </div>
               </DialogTrigger>
@@ -169,18 +169,18 @@ export function MenuBar() {
           <section className="flex flex-col justify-between w-full items-center h-full">
             <div className="space-y-10 flex flex-col justify-center h-full">
               <div onClick={() => navigate(`/dashboard/home/${playlistName}`)} className={`cursor-pointer transition h-fit flex items-center hover:opacity-80 p-1 w-full gap-3 ${location.pathname.includes('home') ? 'opacity-100' : 'opacity-50' }`}>
-                <HugeiconsIcon strokeWidth={2} icon={Home01Icon} className="size-5" />
+                <HugeiconsIcon strokeWidth={2} icon={Home01Icon} className="size-6" />
               </div>
 
               <div onClick={() => navigate(`/dashboard/live`)} className={`h-fit cursor-pointer transition hover:opacity-80 flex items-center p-1 w-full gap-3 ${location.pathname.includes('live') ? 'opacity-100' : 'opacity-50' }`}>
-                <HugeiconsIcon strokeWidth={2} icon={Tv01Icon} className="size-5" />
+                <HugeiconsIcon strokeWidth={2} icon={Tv01Icon} className="size-6" />
               </div>
 
               <div
                 onClick={() => navigate(`/dashboard/explore`)}
                 className={`h-fit cursor-pointer transition flex hover:opacity-80 items-center p-1 w-full gap-3 ${location.pathname.includes('explore') ? 'opacity-100' : 'opacity-50' }`}
                 >
-                <HugeiconsIcon strokeWidth={2} icon={Search01Icon} className="size-5" />
+                <HugeiconsIcon strokeWidth={2} icon={Search01Icon} className="size-6" />
               </div>
             </div>
 
@@ -212,13 +212,6 @@ export function MenuBar() {
           </section>
         </Fade>
       </div>
-
-      {updating && (
-        <div className="fixed z-50 right-4 bottom-4 flex p-4 w-56 items-center gap-2 bg-primary-foreground rounded-lg overflow-hidden">
-          <ImSpinner8 className="size-4 animate-spin text-muted-foreground" />
-          <span className="text-muted-foreground text-sm">Updating playlist...</span>
-        </div>
-      )}
     </div>
   )
 }

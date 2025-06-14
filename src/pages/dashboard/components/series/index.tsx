@@ -1,9 +1,7 @@
 import electronApi from "@/config/electronApi"
 import { usePlaylistUrl } from "@/states/usePlaylistUrl"
-import { FaStar } from "react-icons/fa";
 import { useEffect, useState } from "react"
 import { QueryFilters, useQuery, useQueryClient } from "@tanstack/react-query"
-import { Button } from "@/components/ui/button";
 import { EpisodesSection } from "./EpisodesSection";
 import { ClearDataAlertDialog } from "./ClearDataAlertDialog";
 import { InfoSection } from "./InfoSection";
@@ -42,7 +40,6 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
 
     const tmdbId = res.results[0].id
     const images = await moviedb.tvImages({ id: tmdbId! })
-    const tmdbCast = await moviedb.tvCredits(tmdbId!.toString())
 
     let imageSrc = ''
     let filteredByIso = (images.backdrops && images.backdrops.length > 0) && images.backdrops.filter(b => !b.iso_639_1)
@@ -58,7 +55,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
     }
 
     seriesInfo.info.backdrop_path = [imageSrc] 
-    return { ...seriesInfo, tmdbImages: images, tmdbCast: tmdbCast.cast!.slice(0, 3) || [] }
+    return { ...seriesInfo, tmdbImages: images }
   } 
 
   function refresh() {
@@ -81,8 +78,6 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
   const description = data ? data.info.plot : undefined
   const title = data ? data.info.name.replace(/\[\d+\]|\(\d+\)/g, '') : undefined
   const releaseDate = data ? (data.info.releaseDate && parseInt(format(data.info.releaseDate, 'u'))) || data.info.year : undefined
-  const cast = data ? (data.info.cast && data.info.cast.trim()) : undefined
-  const tmdbCast = data ? (data.tmdbCast && data.tmdbCast) : []
   const director = data ? (data.info.director && data.info.director.trim()) : undefined
 
   const genres = (data && data.info.genre) ? data.info.genre.replaceAll(/^\s+|\s+$/g, "").split(/[^\w\sÀ-ÿ-]/g) : ['']
@@ -114,12 +109,9 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
               releaseDate={releaseDate!}
               genre={genres[0]!}
               description={description!}
-              cast={cast!}
-              tmdbCast={tmdbCast!}
               director={director!}
               rating={rating!}
               logos={data && data.tmdbImages ? data.tmdbImages.logos! : []}
-              isFetching={isFetching}
             />
 
             <div className="px-16">
@@ -128,7 +120,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
           </div>
 
           <section className="flex gap-4 items-center pb-1">
-            <button disabled key='vlc' className="w-fit ml-16 transition bg-primary/95 hover:bg-primary/90 px-6 py-3 rounded-2xl text-background relative overflow-hidden hover:scale-95">
+            <button disabled key='vlc' className="w-fit ml-16 transition bg-primary hover:bg-primary/90 px-6 py-3 rounded-2xl text-background relative overflow-hidden hover:scale-95">
               <div className="flex items-center gap-2 pr-2">
                 <HugeiconsIcon icon={PlayIcon} className="fill-black size-7" />
                 <h1 className="leading-none text-base font-medium">Watch</h1>

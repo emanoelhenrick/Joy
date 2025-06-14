@@ -3,7 +3,6 @@ import { usePlaylistUrl } from "@/states/usePlaylistUrl"
 import { QueryFilters, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { Fade } from "react-awesome-reveal"
-import { FaPlay} from "react-icons/fa"
 import { useUserData } from "@/states/useUserData"
 import { Backdrop as BackdropType, MovieDb, Video, } from "moviedb-promise"
 import { format } from "date-fns"
@@ -13,12 +12,11 @@ import { ClearDataAlertDialog } from "./ClearDataAlertDialog"
 import { InfoSection } from "./InfoSection"
 import { ImSpinner8 } from "react-icons/im";
 import { formatDurationFromSeconds } from "@/utils/formatDuration"
-import { PiPlus, PiCheck } from "react-icons/pi";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Dialog, DialogContent, DialogTrigger } from "./VideoDialog"
 import ReactPlayer from 'react-player'
 import { HugeiconsIcon } from '@hugeicons/react';
-import { Bookmark02Icon, PlayIcon, Tick01Icon } from '@hugeicons/core-free-icons';
+import { Bookmark02Icon, PlayIcon } from '@hugeicons/core-free-icons';
 
 interface Props {
   streamId: string
@@ -78,7 +76,6 @@ export function VodPage({ streamId, cover }: Props) {
       return {
         ...vodInfo,
         tmdbImages,
-        tmdbCast: tmdbCast.cast?.slice(0, 3),
         tmdbExtras: tmdbVideos.results?.reverse()
       }
     }
@@ -117,7 +114,6 @@ export function VodPage({ streamId, cover }: Props) {
   }
 
   const cast = data ? data.info.cast : undefined
-  const tmdbCast = data ? data.tmdbCast : []
   const director = data ? data.info.director : undefined
   const releaseDate = data ? data.info.releasedate && format(data?.info.releasedate, 'u') :  undefined
   const description = data ? (data.info.description || data.info.plot) : undefined
@@ -159,7 +155,6 @@ export function VodPage({ streamId, cover }: Props) {
             <div style={{ height: '90vh'}} className="p-16 pb-8 z-10 space-y-6 flex flex-col justify-end">
               <InfoSection
                 cast={cast!}
-                tmdbCast={tmdbCast!}
                 description={description!}
                 director={director!}
                 genre={genres[0]}
@@ -173,7 +168,7 @@ export function VodPage({ streamId, cover }: Props) {
               <div className="z-10 animate-fade">
                 <div className="flex justify-between items-center">
                   <div className="flex gap-4 items-center">
-                    <button key='vlc' disabled={isFetching} onClick={launchVlc} className="transition bg-primary/95 hover:bg-primary/80 px-8 py-3 rounded-2xl text-background relative overflow-hidden hover:scale-95">
+                    <button key='vlc' disabled={isFetching} onClick={launchVlc} className="transition bg-primary hover:bg-primary/80 px-8 py-3 rounded-2xl text-background relative overflow-hidden hover:scale-95">
                       {userVodData && userVodData.currentTime ?
                       <div className="flex items-center gap-2 pr-2">
                         <HugeiconsIcon icon={PlayIcon} className="fill-black size-7" />

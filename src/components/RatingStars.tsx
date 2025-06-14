@@ -7,7 +7,6 @@ export function RatingStars({ rating }: { rating: number }) {
 
   return (
     <div className={`mr-2 flex items-center gap-1.5`}>
-      {/* <FaStar className="opacity-50 size-3 2xl:size-3.5" /> */}
       <HugeiconsIcon
         icon={StarIcon}
         strokeWidth={0.5}

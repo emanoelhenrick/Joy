@@ -1,36 +1,18 @@
 import { RatingStars } from "@/components/RatingStars"
-import { TmdbCast } from "@/components/TmdbCast"
-import { Cast, TitleLogo } from "moviedb-promise"
+import { TitleLogo } from "moviedb-promise"
 import { useState } from "react"
-import { PiPlus } from "react-icons/pi"
-import { HugeiconsIcon } from '@hugeicons/react';
-import { Bookmark02Icon } from '@hugeicons/core-free-icons';
-
-function App() {
-  return (
-    <HugeiconsIcon
-      icon={Bookmark02Icon}
-      size={24}
-      color="#000000"
-      strokeWidth={1.5}
-    />
-  );
-}
 
 interface Props {
   title: string
   releaseDate: number
   genre: string
   description: string
-  cast: string
   director: string
   rating: any
   logos: TitleLogo[]
-  tmdbCast: Cast[]
-  isFetching: boolean
 }
 
-export function InfoSection({ title, releaseDate, genre, description, cast, tmdbCast, director, rating, logos, isFetching }: Props) {
+export function InfoSection({ title, releaseDate, genre, description, director, rating, logos }: Props) {
   const [isTitleVisible, setIsTitleVisible] = useState(false)
   
   function getRightLogo(logos: TitleLogo[]) {
@@ -73,7 +55,6 @@ export function InfoSection({ title, releaseDate, genre, description, cast, tmdb
               {'By ' + director}
             </h1>}
             {rating && <RatingStars rating={parseFloat(rating)} />}
-
           </div>
         )}
       </div>
@@ -81,7 +62,6 @@ export function InfoSection({ title, releaseDate, genre, description, cast, tmdb
       <div className="max-w-screen-md 2xl:max-w-screen-lg mt-1.5">
         {description && <span className="text-base 2xl:text-lg text-primary line-clamp-4 2xl:line-clamp-6">{description}</span>}
       </div>
-      
     </div>
   )
 }

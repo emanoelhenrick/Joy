@@ -1,7 +1,6 @@
 import { RatingStars } from "@/components/RatingStars"
-import { TmdbCast } from "@/components/TmdbCast";
 import { Skeleton } from "@/components/ui/skeleton"
-import { Cast, TitleLogo } from "moviedb-promise"
+import { TitleLogo } from "moviedb-promise"
 import { Fade } from "react-awesome-reveal"
 
 interface Props {
@@ -14,10 +13,9 @@ interface Props {
   logos: TitleLogo[]
   rating: any
   duration: string
-  tmdbCast: Cast[]
 }
 
-export function InfoSection({ title, releaseDate, cast, tmdbCast, description, director, genre, logos, rating, duration }: Props) {
+export function InfoSection({ title, releaseDate, description, director, genre, logos, rating, duration }: Props) {
 
   function getRightLogo(logos: TitleLogo[]) {
     if (!logos) return

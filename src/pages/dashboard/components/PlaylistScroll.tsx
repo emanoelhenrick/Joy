@@ -35,10 +35,12 @@ export default function PlaylistScroll({ data }: any) {
           <div className="mt-2 space-y-1">
             <div className="flex justify-between">
               <h1 className="text-xs font-semibold text-muted-foreground">{isVod ? 'MOVIE' : 'TV SHOW'}</h1>
-              <div className="flex gap-1 items-center">
-                <FaStar className="opacity-50 size-2.5 2xl:size-3" />
-                <h1 className="text-muted-foreground text-xs font-medium leading-tight">{rating}</h1>
-              </div>
+              {parseNumber(rating) > 0 && (
+                <div className="flex gap-1 items-center">
+                  <FaStar className="opacity-50 size-2.5 2xl:size-3" />
+                  <h1 className="text-muted-foreground text-xs font-medium leading-tight">{rating}</h1>
+                </div>
+              )}
             </div>
             <h1 className="text-sm font-semibold line-clamp-3">{title}</h1>
           </div>
