@@ -1,4 +1,3 @@
-import { ScrollBarStyled } from "@/components/ScrollBarStyled";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { EpisodeProps, SerieInfoProps } from "electron/core/models/SeriesModels";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -8,6 +7,9 @@ import { useUserData } from "@/states/useUserData";
 import { VlcDialog } from "../VlcDialog";
 import electronApi from "@/config/electronApi";
 import { formatDurationFromSeconds } from "@/utils/formatDuration";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from "./SelectSeasons";
+import { HugeiconsIcon } from '@hugeicons/react';
+import { ArrowDown01Icon } from '@hugeicons/core-free-icons';
 
 interface SeasonsListProps {
   seasons: string[]
@@ -27,9 +29,10 @@ interface EpisodesSection {
   seriesId: string
   seriesCover: string
   data: SerieInfoProps
+  setIsHover: (v: boolean) => void
 }
 
-export function EpisodesSection({ seriesId, seriesCover, data }: EpisodesSection) {
+export function EpisodesSection({ seriesId, seriesCover, data, setIsHover }: EpisodesSection) {
   const { urls } = usePlaylistUrl()
   const userSeriesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))
 
@@ -47,9 +50,9 @@ export function EpisodesSection({ seriesId, seriesCover, data }: EpisodesSection
   }, [data, currentSeason])
 
   return (
-    <section className="mb-8 space-y-1 mt-2 pb-4 2xl:pb-4">
+    <section onPointerEnter={() => setIsHover(true)} onPointerLeave={() => setIsHover(false)} className="mb-8 pb-4 2xl:pb-4">
       {data.episodes ? (
-        <div>
+        <div className="space-y-4">
           <SeasonsList
             currentSeason={currentSeason}
             seasons={seasonsList}
@@ -71,21 +74,27 @@ export function EpisodesSection({ seriesId, seriesCover, data }: EpisodesSection
 function SeasonsList({ seasons, currentSeason, setCurrentSeason }: SeasonsListProps) {
 
   return (
-    <div>
-      <ScrollArea className="w-full pb-4 mb-1">
-        <div className="flex gap-2 text-nowrap ml-16 mr-6">
-          { seasons && seasons.map(s => (
-              <h1 key={s} onClick={() => setCurrentSeason(s)} className={`py-1 hover:opacity-80 font-medium px-5 2xl:px-6 rounded-full transition ease-in-out text-sm 2xl:text-base cursor-pointer ${currentSeason === s ? 'bg-primary/10' : 'text-muted-foreground bg-primary/0'}`}>Season {s}</h1>
+    <Select onValueChange={(value) => setCurrentSeason(value)} value={currentSeason}>
+      <SelectTrigger className="w-fit font-medium ml-16 mb-4 group hover:opacity-80 transition">
+        <button disabled={seasons.length === 1} aria-label="Seasons" className="w-full flex gap-1 items-center">
+          <h1 className="flex gap-2 text-2xl font-medium leading-none">Season {currentSeason}</h1>
+          <HugeiconsIcon icon={ArrowDown01Icon} strokeWidth={2} className="opacity-0 group-hover:opacity-100 size-6 transition duration-300 ease-in-out" />
+        </button>
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          {seasons && seasons.map(s => (
+            <SelectItem value={s} key={s}>
+              Season {s}
+            </SelectItem>
           ))}
-        </div>
-        <ScrollBarStyled orientation="horizontal" />
-      </ScrollArea>
-    </div>
+        </SelectGroup>
+      </SelectContent>
+    </Select>
   )
 }
 
 function EpisodesList({ episodes, seriesId, currentSeason, seriesCover, episodeStreamBaseUrl}: EpisodesListProps) {
-  
   const userEpisodesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))?.episodes
 
   const updateSeriesStatus = useUserData(state => state.updateSeriesStatus)
@@ -141,7 +150,8 @@ function EpisodesList({ episodes, seriesId, currentSeason, seriesCover, episodeS
       setEpisodeRunning(ep)
     }
 
-    const duration = formatDurationFromSeconds(ep.info.duration_secs || undefined) 
+    const duration = formatDurationFromSeconds(ep.info.duration_secs || undefined)
+    const title = ep.title && ep.title.length > 0 ? ep.title : `Episode ${index + 1}`
 
     return (
       <div key={ep.id} onClick={async () => await launchVlc(ep.id, currentTime, ep.container_extension)}>
@@ -149,7 +159,7 @@ function EpisodesList({ episodes, seriesId, currentSeason, seriesCover, episodeS
             cover={seriesCover}
             imageSrc={ep.info.movie_image!}
             progress={progress}
-            episodeNumber={index + 1}
+            title={title}
             duration={duration!}
           />
       </div>

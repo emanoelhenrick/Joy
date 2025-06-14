@@ -4,17 +4,16 @@ import { Fade } from "react-awesome-reveal";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./dialog";
 import { SettingsPage } from "@/pages/settings";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { usePlaylistUrl } from "@/states/usePlaylistUrl";
 import { useToast } from "@/hooks/use-toast";
 import { differenceInHours } from "date-fns";
 import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from "@/states/usePlaylistData";
 import { SelectProfile } from "../select-profile/SelectProfile";
 import { useUserData } from "@/states/useUserData";
-import { PiHouseFill, PiMagnifyingGlassBold, PiGearSixFill } from "react-icons/pi";
-import { BiSolidTv } from "react-icons/bi";
 import { useMeasure } from "@uidotdev/usehooks";
 import { ImSpinner8 } from "react-icons/im";
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Home01Icon, Search01Icon, Tv01Icon, Settings03Icon, PlayIcon, Download04Icon } from '@hugeicons/core-free-icons';
 
 interface ProfilesProps {
   current: string
@@ -138,32 +137,13 @@ export function MenuBar() {
     <div>
       <div style={{ width: width ? width : 95 }} className="block" />
     
-      <div ref={menuRef} className="flex flex-col gap-3 fixed p-3 bg-background left-0 justify-between items-start h-screen z-50">
+      <div ref={menuRef} className="flex flex-col py-8 px-10 gap-8 fixed left-0 justify-between items-center h-screen z-50">
         <Fade className="w-full" duration={500} direction="left" triggerOnce>
-          <section className="bg-primary-foreground w-full rounded-2xl h-fit p-3 space-y-2">
-            <Dialog open={profileDialog} modal>
+          <Dialog open={profileDialog} modal>
               <DialogTrigger onClick={() => setProfileDialog(true)} asChild>
-                  <div className="flex gap-3 bg-secondary/60 p-3 rounded-xl items-center relative hover:opacity-80 cursor-pointer">
-                    <div className="">
-                      <Avatar  className="relative rounded-md bg-secondary size-11 cursor-pointer hover:opacity-80 transition flex items-center justify-center">
-                        <AvatarImage src="https://github.com/shadcn.png" /> 
-                        <AvatarFallback>{getInitials(profiles.current)}</AvatarFallback>
-                      </Avatar>
-                    </div>
-
-                    <div className="flex flex-col gap-1 pr-2">
-                      <h1 className="font-bold text-muted-foreground leading-none capitalize">{profiles.current}</h1>
-                      <div className="flex items-center gap-2">
-                        <h1 className="text-muted-foreground text-sm opacity-80 leading-none">
-                          {updating ? 'updating...' : updatingError ? 'disconnected' : 'connected'}
-                        </h1>
-
-                        <span className="flex h-2 w-2 relative">
-                          {updating && <span className="absolute animate-ping inline-flex h-2 w-2 rounded-full bg-blue-500 opacity-75" />}
-                          <span className={`inline-flex rounded-full h-full w-full ${updating ? 'bg-sky-400' : updatingError ? 'bg-red-500' : 'bg-green-500'}`}/>
-                        </span>
-                      </div>
-                      
+                  <div className="flex gap-3 rounded-xl justify-center items-center">
+                    <div className="text-background bg-primary/95 p-2 rounded-xl">
+                      <HugeiconsIcon strokeWidth={1} icon={PlayIcon} className="fill-black size-6" />
                     </div>
                   </div>
               </DialogTrigger>
@@ -183,48 +163,45 @@ export function MenuBar() {
                 />
               </DialogContent>
             </Dialog>
-
-            {/* <span className="text-sm hover:opacity-60 cursor-pointer font-medium p-1 text-muted-foreground opacity-80 mt-1 flex items-center gap-2">
-              <RotateCw className="size-4" />
-              About 5 minutes...
-            </span> */}
-          </section>
         </Fade>
 
         <Fade className="h-full w-full" duration={500} direction="left" delay={100} triggerOnce>
-          <section className="flex flex-col justify-between w-full bg-primary-foreground rounded-2xl h-full p-5">
-            <div className="space-y-3 pr-8">
-              <button onClick={() => navigate(`/dashboard/home/${playlistName}`)} className={`transition h-fit flex items-center hover:opacity-80 p-1 w-full gap-3 ${location.pathname.includes('home') ? 'opacity-100' : 'opacity-50' }`}>
-                <PiHouseFill className="size-6" />
-                <span className="font-bold">Home</span>
-              </button>
+          <section className="flex flex-col justify-between w-full items-center h-full">
+            <div className="space-y-10 flex flex-col justify-center h-full">
+              <div onClick={() => navigate(`/dashboard/home/${playlistName}`)} className={`cursor-pointer transition h-fit flex items-center hover:opacity-80 p-1 w-full gap-3 ${location.pathname.includes('home') ? 'opacity-100' : 'opacity-50' }`}>
+                <HugeiconsIcon strokeWidth={2} icon={Home01Icon} className="size-5" />
+              </div>
 
-              <button
+              <div onClick={() => navigate(`/dashboard/live`)} className={`h-fit cursor-pointer transition hover:opacity-80 flex items-center p-1 w-full gap-3 ${location.pathname.includes('live') ? 'opacity-100' : 'opacity-50' }`}>
+                <HugeiconsIcon strokeWidth={2} icon={Tv01Icon} className="size-5" />
+              </div>
+
+              <div
                 onClick={() => navigate(`/dashboard/explore`)}
-                className={`h-fit transition flex hover:opacity-80 items-center p-1 w-full gap-3 ${location.pathname.includes('explore') ? 'opacity-100' : 'opacity-50' }`}
+                className={`h-fit cursor-pointer transition flex hover:opacity-80 items-center p-1 w-full gap-3 ${location.pathname.includes('explore') ? 'opacity-100' : 'opacity-50' }`}
                 >
-                <PiMagnifyingGlassBold className="size-6" />
-                <span className="font-bold">Explore</span>
-              </button>
-
-              <button onClick={() => navigate(`/dashboard/live`)} className={`h-fit transition hover:opacity-80 flex items-center p-1 w-full gap-3 ${location.pathname.includes('live') ? 'opacity-100' : 'opacity-50' }`}>
-                <BiSolidTv className='size-6' />
-                <span className="font-bold">Live</span>
-              </button>
+                <HugeiconsIcon strokeWidth={2} icon={Search01Icon} className="size-5" />
+              </div>
             </div>
 
-            <section className="flex flex-col space-y-3">
+            <section className="flex flex-col space-y-8">
               {/* <button disabled onClick={() => navigate(`/dashboard/history`)} className={`h-fit transition hover:opacity-80 flex items-center p-1 w-full gap-3 ${location.pathname.includes('history') ? 'opacity-100' : 'opacity-50' }`}>
-                <PiClockFill className='size-6' />
+                <PiClockCounterClockwiseFill className='size-6' />
                 <span className="font-bold">History</span>
               </button> */}
 
+              {/* <div
+                onClick={() => navigate(`/dashboard/explore`)}
+                className={`h-fit cursor-pointer transition flex hover:opacity-80 items-center p-1 w-full gap-3 ${location.pathname.includes('explore') ? 'opacity-100' : 'opacity-50' }`}
+                >
+                <HugeiconsIcon strokeWidth={2} icon={Download04Icon} className="size-5" />
+              </div> */}
+
               <Dialog>
                 <DialogTrigger asChild>
-                  <button className={`h-fit transition hover:opacity-80 flex items-center p-1 w-full gap-3 ${location.pathname.includes('history') ? 'opacity-100' : 'opacity-50' }`}>
-                    <PiGearSixFill className='size-6' />
-                    <span className="font-bold">Settings</span>
-                  </button>
+                  <div className={`h-fit cursor-pointer transition hover:opacity-80 flex items-center p-1 w-full ${location.pathname.includes('history') ? 'opacity-100' : 'opacity-50' }`}>
+                    <HugeiconsIcon strokeWidth={2} icon={Settings03Icon} className="size-5" />
+                  </div>
                 </DialogTrigger>
                 <DialogContent className="w-1/2 max-w-[700px] items-center p-8 border-none bg-primary-foreground" aria-describedby={undefined}>
                   <DialogTitle className="hidden">Settings</DialogTitle>

@@ -15,7 +15,7 @@ export function HomeCover({ src, title }: { src: string, title: string }) {
 
   return (
     <div className={`group w-full`}>
-      <div style={{ width: 140, aspectRatio: '2/3' }} className="bg-secondary transition overflow-hidden">
+      <div style={{ width: 160, aspectRatio: '2/3' }} className="bg-secondary transition overflow-hidden">
         {img ? (
           <LazyLoadImage
             src={imagePath}

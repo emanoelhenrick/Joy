@@ -17,6 +17,8 @@ import { PiPlus, PiCheck } from "react-icons/pi";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Dialog, DialogContent, DialogTrigger } from "./VideoDialog"
 import ReactPlayer from 'react-player'
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Bookmark02Icon, PlayIcon, Tick01Icon } from '@hugeicons/core-free-icons';
 
 interface Props {
   streamId: string
@@ -88,6 +90,7 @@ export function VodPage({ streamId, cover }: Props) {
       path: `${urls.getVodStreamUrl}${streamId}.${data?.movie_data.container_extension}`,
       startTime: (userVodData && userVodData.currentTime) ? userVodData.currentTime : 0
     }
+    
     await electronApi.launchVLC(props)
     setIsRunning(true)
   }
@@ -126,7 +129,7 @@ export function VodPage({ streamId, cover }: Props) {
   const renderExtra = useCallback((v: Video) => {
     return (
       <div className="space-y-2 max-w-80 ">
-        <div className="aspect-video w-80 cursor-pointer hover:opacity-80 bg-primary-foreground rounded-2xl relative overflow-hidden">
+        <div className="aspect-video w-80 cursor-pointer hover:opacity-80 bg-primary-foreground rounded-3xl relative overflow-hidden">
           <img className="w-full h-full object-cover animate-fade" src={`http://img.youtube.com/vi/${v.key}/0.jpg`} alt="" />
         </div>
         
@@ -167,24 +170,28 @@ export function VodPage({ streamId, cover }: Props) {
                 duration={duration!}
               />
               
-              <div className="flex flex-col gap-4 z-10 animate-fade">
+              <div className="z-10 animate-fade">
                 <div className="flex justify-between items-center">
                   <div className="flex gap-4 items-center">
-                    <button key='vlc' disabled={isFetching} onClick={launchVlc} className="transition bg-primary/95 hover:bg-primary/80 px-8 py-4 rounded-2xl text-background relative overflow-hidden hover:scale-95">
+                    <button key='vlc' disabled={isFetching} onClick={launchVlc} className="transition bg-primary/95 hover:bg-primary/80 px-8 py-3 rounded-2xl text-background relative overflow-hidden hover:scale-95">
                       {userVodData && userVodData.currentTime ?
-                      <div className="flex items-center gap-4">
-                        <FaPlay className="size-4" />
+                      <div className="flex items-center gap-2 pr-2">
+                        <HugeiconsIcon icon={PlayIcon} className="fill-black size-7" />
                         <h1 className="leading-none text-base">{`Resume from ${resumeDuration}`}</h1>
                       </div>
                         : (
-                          <div className="flex items-center gap-4">
-                            <FaPlay className="size-4" />
+                          <div className="flex items-center gap-2 pr-2">
+                            <HugeiconsIcon icon={PlayIcon} className="fill-black size-7" />
                             <h1 className="leading-none text-base font-medium">Watch</h1>
                           </div>
                         )}
                     </button>
-                    <button onClick={handleFavorite} disabled={isFetching} className="flex gap-2 items-center p-2.5 rounded-2xl hover:bg-primary/10 transition">
-                      {userVodData?.favorite ? <PiCheck className="size-6" strokeWidth={2} /> : <PiPlus className="size-6" strokeWidth={2} />}
+                    <button onClick={handleFavorite} disabled={isFetching} className="hover:opacity-80 transition-none">
+                      <HugeiconsIcon
+                        icon={Bookmark02Icon}
+                        strokeWidth={1}
+                        className={`size-6 fill-primary ${!userVodData?.favorite && 'opacity-25'} transition duration-300 ease-in-out`}
+                      />
                     </button>
                   </div>
 
@@ -212,7 +219,7 @@ export function VodPage({ streamId, cover }: Props) {
                     <DialogTrigger asChild>
                       {renderExtra(v)}
                     </DialogTrigger>
-                    <DialogContent className="w-fit">
+                    <DialogContent className="w-fit p-0 rounded-3xl overflow-hidden">
                       <ReactPlayer controls url={`https://www.youtube.com/watch?v=${v.key}`} />
                     </DialogContent>
                   </Dialog>
