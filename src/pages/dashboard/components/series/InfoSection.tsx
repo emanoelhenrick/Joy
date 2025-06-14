@@ -2,7 +2,20 @@ import { RatingStars } from "@/components/RatingStars"
 import { TmdbCast } from "@/components/TmdbCast"
 import { Cast, TitleLogo } from "moviedb-promise"
 import { useState } from "react"
-import { PiCheck, PiPlus } from "react-icons/pi"
+import { PiPlus } from "react-icons/pi"
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Bookmark02Icon } from '@hugeicons/core-free-icons';
+
+function App() {
+  return (
+    <HugeiconsIcon
+      icon={Bookmark02Icon}
+      size={24}
+      color="#000000"
+      strokeWidth={1.5}
+    />
+  );
+}
 
 interface Props {
   title: string
@@ -14,12 +27,10 @@ interface Props {
   rating: any
   logos: TitleLogo[]
   tmdbCast: Cast[]
-  handleFavorite: () => void
   isFetching: boolean
-  favorite: boolean
 }
 
-export function InfoSection({ title, releaseDate, genre, description, cast, tmdbCast, director, rating, logos, handleFavorite, isFetching, favorite }: Props) {
+export function InfoSection({ title, releaseDate, genre, description, cast, tmdbCast, director, rating, logos, isFetching }: Props) {
   const [isTitleVisible, setIsTitleVisible] = useState(false)
   
   function getRightLogo(logos: TitleLogo[]) {
@@ -53,37 +64,22 @@ export function InfoSection({ title, releaseDate, genre, description, cast, tmdb
         ) : <h1 className="text-4xl 2xl:text-5xl line-clamp-4">{title}</h1>}
       </div>
 
-      <div className="flex items-center mt-2 gap-1 uppercase font-semibold">
+      <div className="flex items-center mt-3 gap-1 font-semibold">
         {((releaseDate && releaseDate != 0) || genre || rating) && (
           <div className="flex items-center gap-6 py-1 animate-fade">
             {(releaseDate && releaseDate != 0) && <h1 style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{releaseDate}</h1>}
             {genre && <h1 style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{genre}</h1>}
+            {director && <h1 style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">
+              {'By ' + director}
+            </h1>}
             {rating && <RatingStars rating={parseFloat(rating)} />}
+
           </div>
         )}
-
-        <button onClick={handleFavorite} disabled={isFetching} className="p-2 rounded-full hover:bg-primary/10 transition-none">
-          {favorite ? <PiCheck className="size-5" /> : <PiPlus className="size-5" />}
-        </button>
       </div>
 
-      <div className="max-w-screen-md 2xl:max-w-screen-lg mt-1.5 flex flex-col gap-4">
+      <div className="max-w-screen-md 2xl:max-w-screen-lg mt-1.5">
         {description && <span className="text-base 2xl:text-lg text-primary line-clamp-4 2xl:line-clamp-6">{description}</span>}
-
-        {(cast || director || tmdbCast) && (
-          <div className="space-y-2">
-            {director && <h1 className="text-sm 2xl:text-base text-muted-foreground max-w-screen-md 2xl:max-w-screen-lg">
-              {'Directed by ' + director}
-            </h1>}
-            <div className="flex gap-8 w-fit">
-              {(tmdbCast && tmdbCast.length > 0) ? <TmdbCast tmdbCast={tmdbCast}  /> : (
-                <p className="truncate text-sm 2xl:text-base max-w-xl text-muted-foreground">
-                  {cast}
-                </p>
-              )}
-            </div>
-          </div>
-          )}
       </div>
       
     </div>

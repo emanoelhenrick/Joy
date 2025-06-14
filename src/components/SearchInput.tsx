@@ -22,7 +22,7 @@ export function SearchInput({ searchValue, setSearchValue }: any) {
       <div className="relative">
         <Input
           id={id}
-          className="peer pe-14 ps-6 bg-primary/10 rounded-xl py-6 text-base border-none"
+          className="peer pe-14 ps-6 bg-primary/15 rounded-2xl py-5 text-base border-none"
           placeholder="Search..."
           autoFocus
           type="search"

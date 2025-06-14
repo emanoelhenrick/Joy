@@ -3,9 +3,8 @@ import Autoplay from "embla-carousel-autoplay"
 import FadeSlide from "embla-carousel-fade"
 import { useCallback, useEffect, useState } from "react";
 import { format } from "date-fns";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { useNavigate } from "react-router-dom";
-import { FaPlay, FaStar } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 import { TitleLogo } from "moviedb-promise";
 import { VlcDialog } from "@/pages/dashboard/components/VlcDialog";
 import electronApi from "@/config/electronApi";
@@ -66,34 +65,14 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
     }
 
     const releaseDate = format(info.release_date!, "u")
-    const perfectMatch = info.matches![0]
     const logoPath = getRightLogo(info.images!.logos!)
-    
-    async function launchVlc() {
-      setSelectedMovie(perfectMatch)
-      const props = {
-        path: `${baseUrl}${perfectMatch.stream_id}.${perfectMatch.container_extension}`,
-        startTime: 0
-      }
-      await electronApi.launchVLC(props)
-    }
 
     return (
       <CarouselItem key={info.poster_path}> 
-        <div className="flex items-center h-full justify-center rounded-xl overflow-hidden">
+        <div onClick={() => handleSearchForMatch('movie', info.title!)} className="cursor-pointer flex items-center h-full justify-center rounded-3xl overflow-hidden">
           <div className="flex h-full w-full relative">
             <div className="p-12 flex flex-col justify-between gap-2 z-20">
-              <div className="mb-3">
-                <HoverCard openDelay={400}>
-                  <HoverCardTrigger>
-                  <h1 className="text-xs font-medium w-fit opacity-50 hover:opacity-40 cursor-pointer">by TMDB</h1>
-                  </HoverCardTrigger>
-                  <HoverCardContent>
-                    <span className="text-sm">
-                    TMDB is an external service that provides data about films and series and has no relation to your private playlist.
-                    </span>
-                  </HoverCardContent>
-                </HoverCard>
+              <div className="mb-24">
               </div>
               <div className="flex flex-col gap-2 z-10">
                 <div className="max-w-96 2xl:max-w-screen-sm h-fit">
@@ -103,33 +82,20 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
                 </div>
                 
                 <div className="flex items-center gap-6 font-bold text-sm">
-                  <h1 className="leading-none">TRENDING</h1>
                   <h1 className="leading-none">{releaseDate}</h1>
                   {info.matches![0].rating && <RatingStars rating={parseFloat(info.matches![0].rating)} />}
                 </div>
-
                 <h1 className="text-sm 2xl:text-lg text-primary/80 font-medium line-clamp-4 max-w-screen-sm">{info.overview}</h1>
-                
-                <div className="flex gap-2 mt-1">
-                  <div
-                    onClick={launchVlc}
-                    className="p-7 py-2 rounded-xl transition-none flex gap-2 items-center bg-primary/10 text-primary hover:opacity-80 cursor-pointer">
-                    <FaPlay className="size-3.5 opacity-90" />
-                    <h1 className="font-medium">Watch</h1>
-                  </div>
-                  <div onClick={() => handleSearchForMatch('movie', info.title!)} className="px-6 py-2 rounded-lg transition-none flex gap-2 items-center text-primary hover:bg-primary/10 cursor-pointer">
-                    <h1>See matches</h1>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
 
           <div className="z-10 w-full h-full absolute flex items-end justify-start">
-            <div className="inset-0 w-full h-full scale-105 bg-gradient-to-l from-transparent to-background" />
+            <div className="inset-0 w-full h-full bg-gradient-to-b from-transparent to-background/60" />
           </div>
           <img className="absolute opacity-60 h-full w-full object-cover" src={`https://image.tmdb.org/t/p/original${info.backdrop_path}`} />
-
+          
+          
         </div>
       </CarouselItem>
     )
@@ -163,20 +129,20 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
   }, [selectedMovie, updateVodStatus])
 
   return (
-    <section className="relative bg-primary-foreground rounded-2xl">
+    <section className="relative bg-primary-foreground rounded-3xl overflow-hidden">
       <Carousel
         plugins={[
           Autoplay({ delay: 10000, active: (!selectedMovie && slideActive) }),
           FadeSlide()
         ]}
-        className="bg-background rounded-xl overflow-hidden"
+        className="bg-background "
       >
         <CarouselContent>
           {data.length > 0 ? (
             data.map(info => renderItem(info))
           ) : (
             <CarouselItem key={'loading'}>
-              <div className="min-h-96 bg-primary-foreground flex justify-center items-center">
+              <div className="min-h-[30rem] bg-primary-foreground flex justify-center items-center">
                 <ImSpinner8 className="size-8 animate-spin text-muted-foreground" />
               </div>
             </CarouselItem>

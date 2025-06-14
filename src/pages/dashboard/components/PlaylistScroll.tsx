@@ -24,12 +24,14 @@ export default function PlaylistScroll({ data }: any) {
     const itemKey = isVod ? item.num : item.series_id + '-' + item.num
     const coverSrc = isVod ? item.stream_icon : item.cover
     const title = item.name
-    const rating = parseNumber(item.rating).toFixed(1)
+    const rating = item.rating == 10 ? 10 : item.rating == 0 ? 0 : parseNumber(item.rating).toFixed(1) 
 
     return (
       <div className="w-full h-fit cursor-pointer relative group drop-shadow-lg" key={itemKey}>
         <div onClick={selectFunction} className="relative group-hover:opacity-70 transition-transform group-hover:scale-95">
-          <Cover src={coverSrc} title={title} />
+          <div className="rounded-3xl overflow-hidden">
+            <Cover src={coverSrc} title={title} />
+          </div>
           <div className="mt-2 space-y-1">
             <div className="flex justify-between">
               <h1 className="text-xs font-semibold text-muted-foreground">{isVod ? 'MOVIE' : 'TV SHOW'}</h1>

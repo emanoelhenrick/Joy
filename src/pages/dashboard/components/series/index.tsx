@@ -11,9 +11,10 @@ import { Fade } from "react-awesome-reveal";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { ImSpinner8 } from "react-icons/im";
 import { useUserData } from "@/states/useUserData";
-import { Cast, MovieDb } from "moviedb-promise";
+import { MovieDb } from "moviedb-promise";
 import { format } from "date-fns";
-import { PiCheck, PiPlus } from "react-icons/pi";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Bookmark02Icon, PlayIcon } from "@hugeicons/core-free-icons";
 
 export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: string }) {
   const queryClient = useQueryClient();
@@ -24,6 +25,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
   const updateFavorite = useUserData(state => state.updateFavorite)
   const userSeriesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))
   const [_refresh, setRefresh] = useState(false)
+  const [isHover, setIsHover] = useState(false)
 
   async function fetchSeriesData() {
     const seriesInfo = await electronApi.getSerieInfo(urls.getSeriesInfoUrl + seriesId)
@@ -100,6 +102,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
                 <Backdrop
                   backdropPath={backdropPath!}
                   cover={cover}
+                  isHover={isHover}
                 />
               </div>
           )}
@@ -116,10 +119,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
               director={director!}
               rating={rating!}
               logos={data && data.tmdbImages ? data.tmdbImages.logos! : []}
-
-              favorite={userSeriesData?.favorite || false}
               isFetching={isFetching}
-              handleFavorite={handleFavorite}
             />
 
             <div className="px-16">
@@ -127,11 +127,29 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
             </div>
           </div>
 
+          <section className="flex gap-4 items-center pb-1">
+            <button disabled key='vlc' className="w-fit ml-16 transition bg-primary/95 hover:bg-primary/90 px-6 py-3 rounded-2xl text-background relative overflow-hidden hover:scale-95">
+              <div className="flex items-center gap-2 pr-2">
+                <HugeiconsIcon icon={PlayIcon} className="fill-black size-7" />
+                <h1 className="leading-none text-base font-medium">Watch</h1>
+              </div>
+            </button>
+
+            <button onClick={handleFavorite} disabled={isFetching} className="duration-300 hover:opacity-80 transition">
+              <HugeiconsIcon
+                icon={Bookmark02Icon}
+                strokeWidth={1.5}
+                className={`size-6 fill-primary ${!userSeriesData?.favorite && 'opacity-25'} transition duration-300 ease-in-out`}
+              />
+            </button>
+          </section>
+
           {data && (
             <EpisodesSection
               seriesCover={cover}
               seriesId={seriesId}
               data={data}
+              setIsHover={setIsHover}
             />
           )}
         </div>
@@ -139,7 +157,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
     )
 }
 
-function Backdrop({ backdropPath, cover }: { backdropPath: string, cover: string }) {
+function Backdrop({ backdropPath, cover, isHover }: { backdropPath: string, cover: string, isHover: boolean }) {
   const imageSrc = backdropPath || cover
 
   if (!imageSrc.includes('tmdb')) {
@@ -147,7 +165,7 @@ function Backdrop({ backdropPath, cover }: { backdropPath: string, cover: string
       <div className="fixed">
         <Fade triggerOnce>
           <img
-            className={`w-full h-full duration-700 object-cover fixed transition ease-out top-0`}
+            className={`w-full h-full duration-700 ${isHover && 'blur-[4px]'} object-cover fixed transition ease-out top-0`}
             src={imageSrc}
           />
         </Fade>
@@ -183,12 +201,15 @@ function Backdrop({ backdropPath, cover }: { backdropPath: string, cover: string
         <LazyLoadImage
           onLoad={() => setImageLoaded(true)}
           src={highImage}
-          className={`w-full h-full duration-700 object-cover fixed transition ease-out top-0 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+          className={`w-full h-full duration-1000 object-cover ${isHover && 'blur-[4px]'} fixed transition ease-out top-0 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
         />
       </Fade>
       <div className="inset-0 w-1/2 h-full fixed scale-105 bg-gradient-to-l from-transparent to-background" />
+      <div className="inset-0 w-1/2 h-full fixed scale-105 bg-gradient-to-l from-transparent to-background" />
+
       <div className="inset-0 w-full h-full fixed scale-105 bg-gradient-to-b from-transparent to-background" />
-      <div className="inset-0 w-full h-full fixed scale-105 bg-gradient-to-b from-transparent to-background" />
+      <div className="inset-0 w-full h-full fixed bg-gradient-to-b from-transparent to-background" />
+      <div className="inset-0 w-full h-full fixed bg-gradient-to-b from-transparent to-background" />
     </div>
   )
 }

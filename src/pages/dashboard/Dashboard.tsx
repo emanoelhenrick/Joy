@@ -14,11 +14,11 @@ import PaginationComponent from '@/components/PaginationComponent'
 import { useSearchParams } from 'react-router-dom';
 import { SearchInput } from '@/components/SearchInput';
 import PlaylistScroll from "./components/PlaylistScroll";
-import { ListFilter } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Ellipsis, ListFilter } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Fade } from "react-awesome-reveal";
 import { parseNumber } from "@/utils/parseNumber";
+
 
 export function Dashboard() {
   const vodData = useVodPlaylist((state => state.data))
@@ -35,8 +35,8 @@ export function Dashboard() {
   const [showSeries, setShowSeries] = useState(true)
 
   const [page, setPage] = useState(1)
-  const [searchValue, setSearchValue] = useState(initialSearch)
-  const [search, { flush }] = useDebounce(searchValue, 500)
+  const [searchValue, setSearchValue] = useState('')
+  const [search, { flush }] = useDebounce(searchValue, 400)
 
   const data = useMemo(() => {
     if (showMovies && showSeries) {
@@ -102,6 +102,10 @@ export function Dashboard() {
     return isVod ? item.stream_icon : item.cover
   }
 
+ useEffect(() => {
+  if (initialSearch) setSearchValue(initialSearch)
+ }, [])
+
   useEffect(() => {
     flush()
     setCurrentCategory('all')
@@ -135,54 +139,50 @@ export function Dashboard() {
   }
 
   return (
-    <div className="h-fit w-full overflow-hidden my-3 rounded-2xl mr-3 relative">
-      {playlist[0] &&
-        <div className="absolute w-full h-full -z-30"> 
-          <Fade>
-            <img className="w-full h-full blur-3xl opacity-30 -z-10" src={getCover(playlist[0])} alt="" />
-          </Fade>
-        </div>
-      }
-      <div className='flex flex-col gap-3 w-full'>
-        <section ref={ref} className='flex items-center justify-center w-full px-5 pt-5'>
-          <SearchInput setSearchValue={setSearchValue} searchValue={searchValue} />
+    <div className="h-fit w-full overflow-hidden my-3 rounded-3xl mr-3 relative">
+      <div className='flex flex-col gap-4 w-full'>
+        <section ref={ref} className='flex items-center justify-between w-full pr-5 pt-5'>
+          <div className="flex gap-4 items-center w-52">
+            <div className="flex gap-4 items-end">
+              <h1 onClick={handleShowMovies} className={`${showMovies && !showSeries ? 'text-2xl text-primary' : 'text-lg text-muted-foreground'} transition duration-1000 font-medium hover:opacity-80 cursor-pointer`}>Movies</h1>
+              <h1 onClick={handleShowSeries} className={`${showSeries && !showMovies ? 'text-2xl text-primary' : 'text-lg text-muted-foreground'} transition font-medium hover:opacity-80 cursor-pointer`}>Series</h1>
+            </div>
+
+            <Select disabled={showMovies && showSeries} onValueChange={(value) => setCurrentCategory(value)} value={currentCategory}>
+              <SelectTrigger className="w-fit font-medium">
+                <button disabled={showMovies && showSeries} aria-label="Categories" className={`cursor-pointer transition ${showMovies && showSeries ? 'opacity-0' : 'opacity-100'}`}>
+                  <Ellipsis />
+                </button>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value={'all'}>All</SelectItem>
+                  {data.categories && data.categories.map(c => <SelectItem value={c.category_id} key={c.category_id}>{c.category_name}</SelectItem>)}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <SearchInput setSearchValue={setSearchValue} searchValue={searchValue} />
+          </div>
+
+          <div className="flex gap-2 justify-end w-52">
+            <span className="text-sm text-muted-foreground">Sort by Rating</span>
+            <Switch checked={sortByRating} onCheckedChange={setSortByRating} />
+          </div>
         </section>
 
         {playlist.length > 0 ?
           <Suspense fallback={<div className='w-full h-screen' />}>
-            <section className="space-y-8 rounded-2xl px-5">
+            <section className="space-y-4 rounded-2xl pr-5">
               <div className="w-full flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <h1 onClick={handleShowMovies} className={`${showMovies && !showSeries ? 'bg-primary text-background' : 'bg-primary/10 text-primary/80'} font-medium hover:opacity-80 cursor-pointer px-6 py-1 rounded-full text-sm`}>Movies</h1>
-                  <h1 onClick={handleShowSeries} className={`${showSeries && !showMovies ? 'bg-primary text-background' : 'bg-primary/10 text-primary/80'} font-medium hover:opacity-80 cursor-pointer px-6 py-1 rounded-full text-sm`}>Series</h1>
-
-                  <Select disabled={showMovies && showSeries} onValueChange={(value) => setCurrentCategory(value)} value={currentCategory}>
-                    <SelectTrigger className="w-fit font-medium">
-                      <Button disabled={showMovies && showSeries} variant="ghost" size="icon" aria-label="Filters" className="hover:bg-primary/10">
-                        <ListFilter size={16} strokeWidth={2} aria-hidden="true" />
-                      </Button>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem value={'all'}>All</SelectItem>
-                        {data.categories && data.categories.map(c => <SelectItem value={c.category_id} key={c.category_id}>{c.category_name}</SelectItem>)}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-
-                  <span className="text-sm text-muted-foreground">
-                  {filtered ? `${filtered.length} results...` : '0 results...'}
-                  </span>
-                </div>
+                <span className="text-sm text-muted-foreground">
+                  {filtered ? `Showing ${itemsPerPage} of ${filtered.length} results...` : '0 results...'}
+                </span>
 
                 <span className="text-sm text-muted-foreground">{data.categories.find(v => v.category_id == currentCategory)?.category_name}</span>
-
-                <div className="flex gap-2 items-center">
-                  <span className="text-sm text-muted-foreground">Sort by Rating</span>
-                  <Switch checked={sortByRating} onCheckedChange={setSortByRating} />
-                </div>
               </div>
-
               <PlaylistScroll data={playlist} />
             </section>
           </Suspense> : (

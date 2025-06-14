@@ -28,7 +28,7 @@ export async function runFetchTmdbTrendingInWorker(apiKey: string, win: BrowserW
         { workerData: { apiKey, vodPlaylist } }
       );
       worker.on("message", async (msg) => {
-        trendingWorkerPromise = null; // Libera para próxima execução
+        trendingWorkerPromise = null;
         if (msg.isSuccess) {
           await writeAsync(path.join(getPlaylistFolderPath(currentPlaylist), 'trending.json'), msg.tmdbData);
           win.webContents.send("trending", { isSuccess: true, data: msg.result });

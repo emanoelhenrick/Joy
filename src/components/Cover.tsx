@@ -15,7 +15,7 @@ export function Cover({ src, title }: { src: string, title: string }) {
   
   return (
     <div style={{ aspectRatio: '2/3' }} className={`group w-full`}>
-      <div className="w-full h-full bg-secondary rounded-2xl overflow-hidden flex">
+      <div className="w-full h-full bg-secondary overflow-hidden flex">
         {img ? (
           <LazyLoadImage
             width={150}
