@@ -5,16 +5,16 @@ module.exports = {
   packagerConfig: {
     asar: true,
     icon: 'src/assets/icons/icon',
-    executableName: "joi-client",
+    executableName: "joy-client",
   },
   icon: "src/assets/icons/icon",
   rebuildConfig: {},
   makers: [
     {
       name: "@electron-forge/maker-squirrel",
-      executableName: "joi-client",
+      executableName: "joy-client",
       config: {
-        name: "JOI",
+        name: "Joy",
         setupIcon: 'src/assets/icons/icon.ico',
         noMsi: true,
         shortcutName: "JXC",
@@ -23,9 +23,9 @@ module.exports = {
     },
     {
       name: '@electron-forge/maker-rpm',
-      executableName: "joi-client",
+      executableName: "joy-client",
       config: {
-        name: "JOI",
+        name: "Joy",
         options: {
           icon: 'src/assets/icons/icon.png'
         }
@@ -33,9 +33,9 @@ module.exports = {
     },
     {
       name: '@electron-forge/maker-deb',
-      executableName: "joi-client",
+      executableName: "joy-client",
       config: {
-        name: "JOI",
+        name: "Joy",
         options: {
           icon: 'src/assets/icons/icon.png'
         }

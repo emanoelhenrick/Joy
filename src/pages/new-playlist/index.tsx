@@ -16,6 +16,8 @@ import { makeUrls, PlaylistUrls, usePlaylistUrl } from "@/states/usePlaylistUrl"
 import { useQueryClient } from "@tanstack/react-query"
 import { Fade } from "react-awesome-reveal"
 import { useUserData } from "@/states/useUserData"
+import { HugeiconsIcon } from "@hugeicons/react"
+import { PlayIcon } from "@hugeicons/core-free-icons"
  
 const formSchema = z.object({
   name: z.string()
@@ -213,7 +215,7 @@ export function Initial() {
       </div>
       </Fade>
 
-      <h1 className="fixed bottom-8 text-xl">JOI Client</h1>
+      <HugeiconsIcon strokeWidth={1} icon={PlayIcon} className={`fixed bottom-8 color-primary fill-white size-12 rotate-90`} />
     </div>
   )
 }

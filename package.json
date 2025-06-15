@@ -1,12 +1,12 @@
 {
-  "name": "joi-client",
-  "productName": "JOI Client",
+  "name": "joy-client",
+  "productName": "Joy Client",
   "private": true,
   "version": "0.10.1",
   "type": "module",
   "author": "Emanoel Henrick",
   "build": {
-    "appId": "emhk.joi.client"
+    "appId": "emhk.joy.client"
   },
   "description": "Client that consumes Xtream API made with modern web technologies.",
   "license": "UNLICENSED",

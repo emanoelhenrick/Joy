@@ -1,7 +1,7 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import electronApi from "@/config/electronApi";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { PlaylistInfo } from "electron/core/models/PlaylistInfo";
 import { RotateCw } from "lucide-react";
@@ -13,6 +13,7 @@ import packageJson from "../../../package.json"
 
 export function SettingsPage({ currentPlaylist, updating, updatePlaylist }: { currentPlaylist: string, updating: boolean, updatePlaylist: (b: boolean) => void }) {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const [selectedPlaylist, setSelectedPlaylist] = useState<string>(currentPlaylist)
   const [playlists, setPlaylists] = useState<PlaylistInfo[]>()
 
@@ -28,21 +29,21 @@ export function SettingsPage({ currentPlaylist, updating, updatePlaylist }: { cu
 
   const { isSuccess, data  } = useQuery({ queryKey: ['metadata'], queryFn: electronApi.getMetadata })
 
+  async function changePlaylist() {
+    await electronApi.changeCurrentPlaylist(selectedPlaylist)
+    queryClient.removeQueries()
+    navigate('/')
+  }
+
   useEffect(() => {
     if (selectedPlaylist != currentPlaylist) {
-      electronApi.changeCurrentPlaylist(selectedPlaylist)
+      changePlaylist()
     }
   }, [selectedPlaylist])
 
   useEffect(() => {
     if (isSuccess) setPlaylists(data.playlists)
   }, [isSuccess])
-
-  useEffect(() => {
-    if (selectedPlaylist != currentPlaylist) {
-      navigate('/')
-    }
-  }, [selectedPlaylist])
 
   useEffect(() => {
     getPlaylistName()

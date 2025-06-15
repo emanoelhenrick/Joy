@@ -1,2 +1,2 @@
-# JOI Client
+# Joy Client
 ## Em desenvolvimento...
