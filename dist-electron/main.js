@@ -19286,7 +19286,7 @@ async function launchVLC({ path: path2, startTime }, win2) {
     "--http-port",
     "9090",
     "--http-password",
-    "joi",
+    "joy",
     "--fullscreen",
     "--start-time",
     startTime.toString(),
@@ -19311,7 +19311,7 @@ async function getVLCState() {
   const res = await axios.get("http://127.0.0.1:9090/requests/status.json", {
     auth: {
       username: "",
-      password: "joi"
+      password: "joy"
     },
     timeout: 500
   });

@@ -32,20 +32,21 @@ export function Episode({ imageSrc, cover, progress, title, duration }: Props) {
           <HugeiconsIcon icon={PlayIcon} className="fill-white absolute size-14 z-10 opacity-80" />
           
           <div className="inset-0 w-full absolute bg-gradient-to-b from-transparent to-background/95" />
-        </div>
-        <div className="flex flex-col gap-0 w-full mt-2 z-10">
-          <h1 className="whitespace-normal text-base font-medium">{title}</h1>
-          <h1 className="text-sm 2xl:text-base text-primary/50 font-medium">{duration}</h1>
-        </div>
           {
           progress > 0 &&
-          <div className="absolute w-full bottom-16 h-1.5 z-10 px-5 opacity-90">
+          <div className="absolute w-full bottom-2 h-1 z-10 px-5 opacity-90">
             <div className="relative w-full h-full">
               <div style={{ width: `${progress}%`}} className="transition absolute z-10 h-full bg-primary rounded-full" />
               <div className="w-full transition h-full absolute bottom-0 bg-primary-foreground/50 rounded-full" />
             </div>
           </div>
           }
+        </div>
+        <div className="flex flex-col gap-0 w-full mt-2 z-10">
+          <h1 className="whitespace-normal text-base font-medium">{title}</h1>
+          <h1 className="text-sm 2xl:text-base text-primary/50 font-medium">{duration}</h1>
+        </div>
+          
       </Fade>
     </div>
   )

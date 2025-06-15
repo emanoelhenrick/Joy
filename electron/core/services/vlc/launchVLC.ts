@@ -17,7 +17,7 @@ export async function launchVLC({ path, startTime }: LaunchVlcProps, win: Browse
     "--http-port",
     "9090",
     "--http-password",
-    "joi",
+    "joy",
     "--fullscreen",
     "--start-time",
     startTime.toString(),

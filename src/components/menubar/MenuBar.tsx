@@ -126,20 +126,13 @@ export function MenuBar() {
     updatePlaylist()
   }, [updateRender])
 
-  function getInitials(string: string) {
-    if (!string || typeof string !== 'string') return '';
-    const words = string.trim().split(/\s+/);
-    const initials = words.slice(0, 2).map(word => word.charAt(0).toUpperCase());
-    return initials.join('');
-  }
-
   return (
     <div>
       <div style={{ width: width ? width : 95 }} className="block" />
     
       <div ref={menuRef} className="flex flex-col py-8 px-8 gap-8 fixed left-0 justify-between items-center h-screen z-50">
         <Fade className="w-full" duration={500} direction="left" triggerOnce>
-          <Dialog open={profileDialog} modal>
+          {/* <Dialog open={profileDialog} modal>
               <DialogTrigger onClick={() => setProfileDialog(true)} asChild>
                   <div className="flex gap-3 rounded-xl justify-center items-center">
                     <div className="text-background rounded-xl aspect-square">
@@ -162,7 +155,13 @@ export function MenuBar() {
 
                 />
               </DialogContent>
-            </Dialog>
+          </Dialog> */}
+
+          <div className="flex gap-3 rounded-xl justify-center items-center">
+            <div className="text-background rounded-xl aspect-square">
+              <HugeiconsIcon strokeWidth={1} icon={PlayIcon} className={`-m-2 color-primary fill-white size-14 rotate-90 ${updating && 'animate-pulse fill-blue-400'}`} />
+            </div>
+          </div>
         </Fade>
 
         <Fade className="h-full w-full" duration={500} direction="left" delay={100} triggerOnce>
@@ -200,7 +199,7 @@ export function MenuBar() {
               <Dialog>
                 <DialogTrigger asChild>
                   <div className={`h-fit cursor-pointer transition hover:opacity-80 flex items-center p-1 w-full ${location.pathname.includes('history') ? 'opacity-100' : 'opacity-50' }`}>
-                    <HugeiconsIcon strokeWidth={2} icon={Settings03Icon} className="size-5" />
+                    <HugeiconsIcon strokeWidth={2} icon={Settings03Icon} className="size-6" />
                   </div>
                 </DialogTrigger>
                 <DialogContent className="w-1/2 max-w-[700px] items-center p-8 border-none bg-primary-foreground" aria-describedby={undefined}>

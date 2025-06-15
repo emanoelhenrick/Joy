@@ -98,7 +98,7 @@ export function SelectProfile({ changeProfile, data, setIsCreating, isCreating, 
         <Plus size={42} className="text-muted-foreground transition" />
       </div>
       <AlertDialog open={isCreating}>
-        <AlertDialogContent className="border-none bg-primary-foreground">
+        <AlertDialogContent key={'new-profile-content'} className="border-none bg-primary-foreground">
           <AlertDialogHeader>
             <AlertDialogTitle>{`New profile`}</AlertDialogTitle>
           </AlertDialogHeader>

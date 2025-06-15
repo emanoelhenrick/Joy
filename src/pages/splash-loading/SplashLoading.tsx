@@ -4,7 +4,9 @@ import electronApi from "@/config/electronApi";
 import { useLivePlaylist, useSeriesPlaylist, useVodPlaylist } from "@/states/usePlaylistData";
 import { makeUrls, usePlaylistUrl } from "@/states/usePlaylistUrl";
 import { useUserData } from "@/states/useUserData";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { PlayIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { useQuery } from "@tanstack/react-query";
 import { PlaylistInfo } from "electron/core/models/PlaylistInfo";
 import { useEffect, useState } from "react"
 import { Fade } from "react-awesome-reveal";
@@ -12,7 +14,6 @@ import { useNavigate } from "react-router-dom";
 
 export function SplashLoading() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient()
 
   const [openDialog, setOpenDialog] = useState(false)
   const [allReady, setAllReady] = useState({ playlistName: '', path: false })
@@ -61,9 +62,8 @@ export function SplashLoading() {
     if (isSuccess && !hasUpdated) {
       if (data.playlists.length === 0) return navigate('/initial')
       const currentPlaylist = data.playlists.find(p => p.name == data.currentPlaylist.name)!
-      queryClient.removeQueries()
-      updateStates(currentPlaylist, data.currentPlaylist.profile)
       setHasUpdated(true)
+      updateStates(currentPlaylist, data.currentPlaylist.profile)
     }
   }, [isSuccess, hasUpdated])
 
@@ -86,7 +86,7 @@ export function SplashLoading() {
 
       <Fade duration={2000}>
         <div className="flex flex-col items-center gap-6">
-          <h1 className="text-4xl animate-pulse">JOI</h1>
+          <HugeiconsIcon strokeWidth={1} icon={PlayIcon} className={`color-primary fill-white size-32 rotate-90`} />
         </div>
       </Fade>
     </div>
