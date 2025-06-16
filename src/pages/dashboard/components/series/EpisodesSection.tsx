@@ -10,6 +10,10 @@ import { formatDurationFromSeconds } from "@/utils/formatDuration";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from "./SelectSeasons";
 import { HugeiconsIcon } from '@hugeicons/react';
 import { ArrowDown01Icon } from '@hugeicons/core-free-icons';
+import { useQuery } from "@tanstack/react-query";
+import { MovieDb } from "moviedb-promise";
+
+const moviedb = new MovieDb(import.meta.env.VITE_TMDB_API_KEY)
 
 interface SeasonsListProps {
   seasons: string[]
@@ -28,14 +32,15 @@ interface EpisodesListProps {
 interface EpisodesSection {
   seriesId: string
   seriesCover: string
+  tmdbId?: string
   data: SerieInfoProps
   setIsHover: (v: boolean) => void
 }
 
-export function EpisodesSection({ seriesId, seriesCover, data, setIsHover }: EpisodesSection) {
+export function EpisodesSection({ seriesId, seriesCover, tmdbId, data, setIsHover }: EpisodesSection) {
   const { urls } = usePlaylistUrl()
   const userSeriesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))
-
+  
   const seasonsList = useMemo(() => {
     if (!data) return []
     const seasonsList = []
@@ -44,10 +49,23 @@ export function EpisodesSection({ seriesId, seriesCover, data, setIsHover }: Epi
   }, [data])
 
   const [currentSeason, setCurrentSeason] = useState(userSeriesData?.season || seasonsList[0])
+  
+  const { data: tmdbData, isSuccess } = useQuery({ queryKey: [`${seriesId}-${currentSeason}-${tmdbId}`], queryFn: async () => {
+    return await moviedb.seasonInfo({ id: tmdbId!, season_number: parseInt(currentSeason), language: 'pt' })
+  }})
+
   const episodes = useMemo(() => {
     if (!data || !data.episodes) return []
-    return data.episodes[currentSeason]
-  }, [data, currentSeason])
+    if (!tmdbData) return data.episodes[currentSeason]
+
+    const newEpisodes = []
+    for (const episode of data.episodes[currentSeason]) {
+      newEpisodes.push(
+        { ...episode, tmdbData: tmdbData.episodes![Number(episode.episode_num) - 1]}
+      )
+    }
+    return newEpisodes
+  }, [data, currentSeason, tmdbData])
 
   return (
     <section onPointerEnter={() => setIsHover(true)} onPointerLeave={() => setIsHover(false)} className="mb-8 pb-4 2xl:pb-4">
@@ -151,13 +169,16 @@ function EpisodesList({ episodes, seriesId, currentSeason, seriesCover, episodeS
     }
 
     const duration = formatDurationFromSeconds(ep.info.duration_secs || undefined)
-    const title = ep.title && ep.title.length > 0 ? ep.title : `Episode ${index + 1}`
+    const tmdbData = episodes[index].tmdbData ? episodes[index].tmdbData : undefined
+    const tmdbImage = tmdbData ? tmdbData.still_path : undefined
+    const title = (tmdbData && tmdbData.name) ? tmdbData.name : ep.title && ep.title.length > 0 ? ep.title : `Episode ${index + 1}`
 
     return (
       <div key={ep.id} onClick={async () => await launchVlc(ep.id, currentTime, ep.container_extension)}>
           <Episode
             cover={seriesCover}
             imageSrc={ep.info.movie_image!}
+            tmdbImage={tmdbImage!} 
             progress={progress}
             title={title}
             duration={duration!}

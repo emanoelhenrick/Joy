@@ -1,5 +1,4 @@
 import { Fade } from "react-awesome-reveal"
-import { FaPlay } from "react-icons/fa"
 import { LazyLoadImage } from "react-lazy-load-image-component"
 import { useMemo, useState } from "react"
 import { HugeiconsIcon } from '@hugeicons/react';
@@ -11,11 +10,22 @@ interface Props {
   progress: number
   title: string
   duration: string
+  tmdbImage: string
 }
 
-export function Episode({ imageSrc, cover, progress, title, duration }: Props) {
+export function Episode({ imageSrc, tmdbImage, cover, progress, title, duration }: Props) {
 
   const [isError, setIsError] = useState(false)
+
+  function getImageTmdb() {
+    if (tmdbImage) return `https://image.tmdb.org/t/p/w300${tmdbImage}`
+    if (!imageSrc) return
+    if (!imageSrc.includes('tmdb')) return imageSrc
+    const stringList = imageSrc.split('/')
+    return `https://image.tmdb.org/t/p/w185/${stringList[stringList.length - 1]}`
+  }
+
+  const finalImage = getImageTmdb()
 
   const statedCover = useMemo(() => {
     return cover
@@ -24,10 +34,10 @@ export function Episode({ imageSrc, cover, progress, title, duration }: Props) {
   return (
     <div className="w-72 2xl:w-80 cursor-pointer group relative">
       <Fade duration={500} className="z-10">
-        <div className="relative group-hover:opacity-80 duration-300 bg-secondary transition ease-out flex items-center aspect-video justify-center overflow-hidden rounded-3xl ">
+        <div className="relative group-hover:opacity-80 duration-300 bg-transparent transition ease-out flex items-center aspect-video justify-center overflow-hidden rounded-3xl ">
           {
-            (imageSrc && !isError) ? <LazyLoadImage onError={() => setIsError(true)} src={imageSrc} className="w-full h-full group-hover:scale-100 scale-105 duration-300 transition ease-out object-cover opacity-90" />
-            : <LazyLoadImage src={statedCover} className="object-cover w-full h-full group-hover:scale-100 scale-105 duration-300 transition ease-out opacity-90" />
+            (finalImage && !isError) ? <LazyLoadImage onError={() => setIsError(true)} src={finalImage} className="w-full h-full group-hover:scale-100 scale-105 duration-300 transition ease-out object-cover opacity-90" />
+            : <img src={statedCover} className="object-cover w-full h-full group-hover:scale-100 scale-105 duration-300 transition ease-out opacity-90" />
           }
           <HugeiconsIcon icon={PlayIcon} className="fill-white absolute size-14 z-10 opacity-80" />
           

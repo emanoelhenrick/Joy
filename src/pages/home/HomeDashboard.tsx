@@ -14,12 +14,6 @@ import { HomeCover } from './components/HomeCover';
 import { VodPage } from '../dashboard/components/vod';
 import { Fade } from 'react-awesome-reveal';
 import { UpdatedMediaContainer } from './components/UpdatedMediaContainer';
-import electronApi from '@/config/electronApi';
-import { SearchInput } from '@/components/SearchInput';
-import { Search } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import CommandPalette from '@/components/ui/command-palette';
-import { CommandSearch } from './components/CommandSearch';
 
 export function HomeDashboard() {
   const vodData = useVodPlaylist(state => state.data)
@@ -30,7 +24,6 @@ export function HomeDashboard() {
   const userDataSeries = useUserData(state => state.userData.series)
   const userDataVod = useUserData(state => state.userData.vod)
   const [update, setUpdate] = useState(false)
-  const [openCommand, setOpenCommand] = useState(false)
 
   const vodByDate = useMemo(() => {
     if (vodData && vodData.playlist) {
@@ -162,9 +155,16 @@ export function HomeDashboard() {
   if (vodData && seriesData) {
 
     return (
+      <div className='w-full overflow-hidden'>
+        <Trending
+          slideActive={(!selectedSeries && !selectedVod)}
+          setSelectedVod={setSelectedVod}
+          selectedVod={selectedVod}
+        />
+        <div className='h-[36rem]' />
         <section className='w-full overflow-hidden'>
           <ScrollArea className='w-full'>
-            <div className="h-fit z-0 py-8 pr-4">
+            <div className="h-fit z-0 py-8 pt-0">
               <Dialog open={selectedSeries && true}>
                 <DialogContent className="w-screen items-center justify-center" aria-describedby={undefined}>
                   <div onClick={() => setSelectedSeries(undefined)} className="cursor-pointer absolute right-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
@@ -190,10 +190,6 @@ export function HomeDashboard() {
               <div>
                 <div className="flex flex-col gap-3">
                   <Fade duration={500} direction='up' triggerOnce>
-                    <Trending
-                      slideActive={(!selectedSeries && !selectedVod)}
-                      refresh={() => setUpdate(p => !p)}
-                    />
 
                     <WatchingScroll
                       watchingVod={watchingVod}
@@ -222,6 +218,7 @@ export function HomeDashboard() {
             </div>
           </ScrollArea>
         </section>
+      </div>
     )
   }
 

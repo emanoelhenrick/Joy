@@ -30,9 +30,9 @@ export function UpdatedMediaContainer({ title, children }: { title: string, chil
   return (
     <div className="w-full my-8 rounded-2xl space-y-4">
       <div className='flex gap-4 justify-between items-center'>
-        <h1 className="text-xl font-medium">{title}</h1>
+        <h1 className="text-lg font-medium">{title}</h1>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 pr-6 opacity-60">
           <HugeiconsIcon icon={ArrowRight01Icon} className="rotate-180 size-6 cursor-pointer hover:opacity-80 text-primary transition" onClick={handleScrollLeft} />
           <HugeiconsIcon icon={ArrowRight01Icon} className="size-6 cursor-pointer hover:opacity-80 text-primary transition" onClick={handleScrollRight} />
         </div>

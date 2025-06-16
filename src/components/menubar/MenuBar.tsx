@@ -130,7 +130,7 @@ export function MenuBar() {
     <div>
       <div style={{ width: width ? width : 95 }} className="block" />
     
-      <div ref={menuRef} className="flex flex-col py-8 px-8 gap-8 fixed left-0 justify-between items-center h-screen z-50">
+      <div ref={menuRef} className="flex flex-col py-8 px-14 gap-8 fixed left-0 justify-between items-center h-screen z-50">
         <Fade className="w-full" duration={500} direction="left" triggerOnce>
           {/* <Dialog open={profileDialog} modal>
               <DialogTrigger onClick={() => setProfileDialog(true)} asChild>
@@ -159,7 +159,7 @@ export function MenuBar() {
 
           <div className="flex gap-3 rounded-xl justify-center items-center">
             <div className="text-background rounded-xl aspect-square">
-              <HugeiconsIcon strokeWidth={1} icon={PlayIcon} className={`-m-2 color-primary fill-white size-14 rotate-90 ${updating && 'animate-pulse fill-blue-400'}`} />
+              <HugeiconsIcon strokeWidth={0} icon={PlayIcon} className={`-m-2 fill-white size-14 rotate-90 ${updating && 'animate-pulse fill-blue-400'}`} />
             </div>
           </div>
         </Fade>

@@ -6,6 +6,7 @@ import { writeAsync } from "fs-jetpack";
 import { getPlaylistFolderPath } from "./paths";
 import { getMetadata } from "./getMetadata";
 import { getLocalVodPlaylist } from "./vod/getLocalVodPlaylist";
+import { getUrls } from "./getUrls";
 
 // No topo do arquivo:
 const __filename = fileURLToPath(import.meta.url);
@@ -20,12 +21,13 @@ export async function runFetchTmdbTrendingInWorker(apiKey: string, win: BrowserW
     const metadata = await getMetadata();
     const currentPlaylist = metadata.currentPlaylist.name;
     const vodPlaylist = await getLocalVodPlaylist(currentPlaylist);
+    const urls = await getUrls(currentPlaylist)
 
-    if (!apiKey) return;
+    if (!apiKey || !urls) return;
     return new Promise((resolve, reject) => {
       const worker = new Worker(
         path.resolve(__dirname, "./fetchTmdbTrending.worker.js"),
-        { workerData: { apiKey, vodPlaylist } }
+        { workerData: { apiKey, vodPlaylist, url: urls.getVodInfoUrl } }
       );
       worker.on("message", async (msg) => {
         trendingWorkerPromise = null;

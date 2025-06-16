@@ -76,13 +76,10 @@ export function CommandSearch() {
 
   const renderItem = useCallback((item: any) => {
     const isVod =  item.stream_id ? true : false
-    // const selectFunction = isVod ? () => setSelectedMovie(item) : () => setSelectedSeries(item)
     const itemKey = isVod ? item.stream_id + '-' + item.num : item.series_id + '-' + item.num
     const coverSrc = isVod ? item.stream_icon : item.cover
     const title = item.name
     const rating = parseNumber(item.rating).toFixed(1)
-    console.log(item);
-    
 
     return (
       <CommandItem key={itemKey} className="items-start">

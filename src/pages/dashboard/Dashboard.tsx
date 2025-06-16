@@ -97,11 +97,6 @@ export function Dashboard() {
     return paginated
   }
 
-  function getCover(item: any) {
-    const isVod =  item.stream_id ? true : false
-    return isVod ? item.stream_icon : item.cover
-  }
-
  useEffect(() => {
   if (initialSearch) setSearchValue(initialSearch)
  }, [])

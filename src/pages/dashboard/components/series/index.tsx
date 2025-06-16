@@ -14,12 +14,13 @@ import { format } from "date-fns";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Bookmark02Icon, PlayIcon } from "@hugeicons/core-free-icons";
 
+const moviedb = new MovieDb(import.meta.env.VITE_TMDB_API_KEY)
+
 export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: string }) {
   const queryClient = useQueryClient();
-  const moviedb = new MovieDb(import.meta.env.VITE_TMDB_API_KEY)
 
   const { urls } = usePlaylistUrl()
-  const { data, isFetching } = useQuery({ queryKey: [`seriesInfo`], queryFn: fetchSeriesData})
+  const { data, isFetching } = useQuery({ queryKey: [`seriesInfo-${seriesId}`], queryFn: fetchSeriesData, })
   const updateFavorite = useUserData(state => state.updateFavorite)
   const userSeriesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))
   const [_refresh, setRefresh] = useState(false)
@@ -30,15 +31,30 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
     if (!seriesInfo) return
     if (!seriesInfo.info) return
 
-    const title = seriesInfo.info.name.replace(/\[\d+\]|\(\d+\)/g, '').split('-')
-    const releaseDate = seriesInfo ? (seriesInfo.info.releaseDate && parseInt(format(seriesInfo.info.releaseDate, 'u'))) || seriesInfo.info.year : undefined
+    const title = seriesInfo.info.name.replace(/\[\d+\]|\(\d+\)/g, '').replaceAll(' -', '').replaceAll('-', '').split('[')
+    const releaseDate = seriesInfo && seriesInfo.info.releaseDate ? parseInt(format(seriesInfo.info.releaseDate, 'u')) : seriesInfo.info.year ? seriesInfo.info.year : parseInt(format(seriesInfo.seasons[0].air_date, 'u')) 
     if (!releaseDate || releaseDate === '0' as unknown as number) return seriesInfo
 
-    const res = await moviedb.searchTv({ query: title[0], first_air_date_year: releaseDate })
+    const res = await moviedb.searchTv({ query: title[0].trim(), first_air_date_year: releaseDate })
+
     if (!res.results) return seriesInfo
     if (res.results && res.results.length === 0) return seriesInfo
+    
+    const isSeries = res.results.find(s => s.first_air_date ===  (seriesInfo.info.releaseDate ? seriesInfo.info.releaseDate : seriesInfo.seasons[0].air_date))
 
-    const tmdbId = res.results[0].id
+    if (!isSeries) return seriesInfo
+
+    const tmdbId = isSeries.id!.toString()
+    const seasonStated = (userSeriesData && userSeriesData.season) ? userSeriesData.season : '1'
+    
+    await queryClient.prefetchQuery({
+      queryKey: [`${seriesId}-${seasonStated}-${tmdbId}`],
+      queryFn: async () => {
+        return await moviedb.seasonInfo({ id: tmdbId!, season_number: parseInt(seasonStated), language: 'pt' })
+      },
+      staleTime: Infinity
+    });
+
     const images = await moviedb.tvImages({ id: tmdbId! })
 
     let imageSrc = ''
@@ -55,7 +71,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
     }
 
     seriesInfo.info.backdrop_path = [imageSrc] 
-    return { ...seriesInfo, tmdbImages: images }
+    return { ...seriesInfo, tmdbImages: images, tmdbId  }
   } 
 
   function refresh() {
@@ -66,12 +82,6 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
     updateFavorite(seriesId, 'series')
     setTimeout(() => setRefresh(p => !p), 100)
   }
-
-  useEffect(() => {
-    return () => {
-      queryClient.removeQueries({ queryKey: ['seriesInfo'], exact: true } as QueryFilters)
-    }
-  }, [])
   
   const backdropPath = getRightBackdrop(data ? data.info.backdrop_path : [])
 
@@ -82,6 +92,8 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
 
   const genres = (data && data.info.genre) ? data.info.genre.replaceAll(/^\s+|\s+$/g, "").split(/[^\w\sÀ-ÿ-]/g) : ['']
   const rating = data ? data.info.rating || (data.info.rating_5based && data.info.rating_5based * 2) : undefined
+
+  const tmdbId = data ? data.tmdbId : undefined
   
   return (
     <div className="w-screen h-screen flex flex-col justify-end">
@@ -140,6 +152,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
             <EpisodesSection
               seriesCover={cover}
               seriesId={seriesId}
+              tmdbId={tmdbId}
               data={data}
               setIsHover={setIsHover}
             />

@@ -4,7 +4,7 @@ import { QueryFilters, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { Fade } from "react-awesome-reveal"
 import { useUserData } from "@/states/useUserData"
-import { Backdrop as BackdropType, MovieDb, Video, } from "moviedb-promise"
+import { Backdrop as BackdropType, CreditsResponse, MovieDb, MovieImagesResponse, Video, VideosResponse, } from "moviedb-promise"
 import { format } from "date-fns"
 import { LazyLoadImage } from "react-lazy-load-image-component"
 import { VlcDialog } from "../VlcDialog"
@@ -23,10 +23,10 @@ interface Props {
   cover: string
 }
 
+const moviedb = new MovieDb(import.meta.env.VITE_TMDB_API_KEY)
+
 export function VodPage({ streamId, cover }: Props) {
   const queryClient = useQueryClient()
-
-  const moviedb = new MovieDb(import.meta.env.VITE_TMDB_API_KEY)
 
   const [isRunning, setIsRunning] = useState(false)
   const userVodData = useUserData(state => state.userData.vod?.find(v => v.id == streamId))
@@ -68,11 +68,16 @@ export function VodPage({ streamId, cover }: Props) {
     if (!vodInfo) return
     if (!vodInfo.info) return
     if (vodInfo.info.tmdb_id) {
-      const tmdbCast = await moviedb.movieCredits(vodInfo.info.tmdb_id)
-      const tmdbVideos = await moviedb.movieVideos(vodInfo.info.tmdb_id)
-      const director = tmdbCast.crew!.find(c => c.job === "Director")
+      const movieInfo = await moviedb.movieInfo({
+        id: vodInfo.info.tmdb_id,
+        append_to_response: 'videos,images,credits',
+      })
+      
+      const tmdbCast = (movieInfo as any).credits as CreditsResponse
+      const tmdbVideos = (movieInfo as any).videos as VideosResponse
+      const director = tmdbCast.crew!.find((c: any) => c.job === "Director")
       if (director) vodInfo.info.director = director.name!
-      const tmdbImages = await moviedb.movieImages({ id: vodInfo.info.tmdb_id })
+      const tmdbImages = (movieInfo as any).images as MovieImagesResponse
       return {
         ...vodInfo,
         tmdbImages,
@@ -288,7 +293,7 @@ function Backdrop({ backdrops, cover }: { backdrops: BackdropType[], cover: stri
         className={`w-full h-full object-cover fixed top-0 transition -z-10 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
         />
       </Fade>
-      <div className="inset-0 w-full h-full z-10 fixed scale-105 bg-gradient-to-l from-transparent to-background" />
+      <div className="inset-0 w-2/3 h-full z-10 fixed scale-105 bg-gradient-to-l from-transparent to-background" />
       <div className="inset-0 w-full h-full z-10 fixed scale-105 bg-gradient-to-b from-transparent to-background" />
     </div>
   )

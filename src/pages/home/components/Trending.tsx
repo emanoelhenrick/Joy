@@ -1,56 +1,19 @@
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay"
 import FadeSlide from "embla-carousel-fade"
 import { useCallback, useEffect, useState } from "react";
-import { format } from "date-fns";
-import { useNavigate } from "react-router-dom";
-import { FaStar } from "react-icons/fa";
 import { TitleLogo } from "moviedb-promise";
-import { VlcDialog } from "@/pages/dashboard/components/VlcDialog";
 import electronApi from "@/config/electronApi";
-import { usePlaylistUrl } from "@/states/usePlaylistUrl";
-import { useUserData } from "@/states/useUserData";
-import { VodProps } from "electron/core/models/VodModels";
 import { ImSpinner8 } from "react-icons/im";
 
-export function Trending({ refresh, slideActive }: { refresh: () => void, slideActive: boolean }) {
-  const navigate = useNavigate()
-
-  const [selectedMovie, setSelectedMovie] = useState<VodProps | undefined>(undefined)
-  const [state, setState] = useState<any>(undefined)
-  const baseUrl = usePlaylistUrl(state => state.urls.getVodStreamUrl)
+export function Trending({ setSelectedVod, selectedVod, slideActive }: { setSelectedVod: (data: any) => void, selectedVod: any, slideActive: boolean }) {
+  const [api, setApi] = useState<CarouselApi>()
   const [data, setData] = useState<any[]>([])
-  const updateVodStatus = useUserData(state => state.updateVodStatus)
-
-  function updateUserStatus(data: { length: number, time: number }) {
-    if (!selectedMovie) return
-    setState({
-      id: selectedMovie.stream_id,
-      data: data
-    })
-  }
-
-  function RatingStars({ rating }: { rating: number, blur?: boolean }) {
-    if (!rating || rating == 0) return <></>
-    const ratingFloat = rating < 10 ? rating.toFixed(1) : 10
-  
-    return (
-      <div className={`flex items-center gap-1.5`}>
-        <FaStar className="size-3.5 2xl:size-3.5" />
-        <h1 className="text-sm leading-none">{ratingFloat}</h1>
-      </div>
-    )
-  }
 
   async function getTrending() {
     const trending = await electronApi.getLocalTmdbTrending()
     if (!trending || trending.length === 0) return await electronApi.fetchTmdbTrending()
     setData(trending)
-  }
-
-  function handleSearchForMatch(mediaType: string, search: string) {
-    const type = mediaType === 'movie' ? 'vod' : 'series'
-    navigate(`/dashboard/explore?type=${type}&search=${search}`)
   }
 
   const renderItem = useCallback((info: any) => {
@@ -64,39 +27,30 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
       return `https://image.tmdb.org/t/p/w500${filteredByAspectRatio[0].file_path}`
     }
 
-    const releaseDate = format(info.release_date!, "u")
     const logoPath = getRightLogo(info.images!.logos!)
 
     return (
       <CarouselItem key={info.poster_path}> 
-        <div onClick={() => handleSearchForMatch('movie', info.title!)} className="cursor-pointer flex items-center h-full justify-center rounded-3xl overflow-hidden">
-          <div className="flex h-full w-full relative">
-            <div className="p-12 flex flex-col justify-between gap-2 z-20">
-              <div className="mb-24">
+        <div onClick={() => setSelectedVod(info.perfectMatch.movie_data)} className="group cursor-pointer min-h-[40rem] flex items-center h-full justify-center rounded-3xl relative">
+          <div className="left-36 flex flex-col justify-between gap-2 z-20 absolute bottom-24">
+            <div className="flex flex-col gap-2 z-10">
+              <div className="max-w-96 2xl:max-w-screen-sm h-fit">
+                { logoPath ? <img src={logoPath} className="object-contain w-fit max-h-28 2xl:max-h-36 mb-2 mt-2" /> : (
+                  <h1 className="text-5xl 2xl:text-6xl font-bold">{info.title}</h1>
+                )}
               </div>
-              <div className="flex flex-col gap-2 z-10">
-                <div className="max-w-96 2xl:max-w-screen-sm h-fit">
-                  { logoPath ? <img src={logoPath} className="object-contain w-fit max-h-28 2xl:max-h-36 mb-2 mt-2" /> : (
-                    <h1 className="text-5xl 2xl:text-6xl font-bold">{info.title}</h1>
-                  )}
-                </div>
-                
-                <div className="flex items-center gap-6 font-bold text-sm">
-                  <h1 className="leading-none">{releaseDate}</h1>
-                  {info.matches![0].rating && <RatingStars rating={parseFloat(info.matches![0].rating)} />}
-                </div>
-                <h1 className="text-sm 2xl:text-lg text-primary/80 font-medium line-clamp-4 max-w-screen-sm">{info.overview}</h1>
-              </div>
+              <h1 className="text-sm 2xl:text-lg text-primary/60 font-medium line-clamp-4 max-w-screen-sm">{info.overview}</h1>
             </div>
           </div>
 
           <div className="z-10 w-full h-full absolute flex items-end justify-start">
-            <div className="inset-0 w-full h-full bg-gradient-to-b from-transparent to-background/60" />
+            <div className="absolute bottom-0 w-full h-full bg-gradient-to-b from-transparent to-background" />
+            <div className="absolute left-0 w-96 h-full bg-gradient-to-l from-transparent to-background/40" />
           </div>
-          <img className="absolute opacity-60 h-full w-full object-cover" src={`https://image.tmdb.org/t/p/original${info.backdrop_path}`} />
-          
-          
+          <img className="absolute h-full w-full object-cover opacity-90 transition" src={`https://image.tmdb.org/t/p/original${info.backdrop_path}`} />
         </div>
+
+        <h1 className="absolute top-10 left-40 z-10 text-lg font-medium opacity-60"># {info.title}</h1>
       </CarouselItem>
     )
   }, [data])
@@ -113,36 +67,22 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
     }
   }, [data])
 
-  useEffect(() => {
-    if (!selectedMovie && state) {
-      if (!state) return
-      const { time, length } = state.data
-      updateVodStatus(
-        state.id.toString(),
-        time,
-        length,
-        time / length < 0.95
-      )
-      setState(undefined)
-      setTimeout(refresh, 100)
-    }
-  }, [selectedMovie, updateVodStatus])
-
   return (
-    <section className="relative bg-primary-foreground rounded-3xl overflow-hidden">
+    <section className="absolute right-0 left-0 rounded-3xl ">
       <Carousel
         plugins={[
-          Autoplay({ delay: 10000, active: (!selectedMovie && slideActive) }),
+          Autoplay({ delay: 10000, active: (!selectedVod && slideActive) }),
           FadeSlide()
         ]}
-        className="bg-background "
+        className="bg-background"
+        setApi={setApi}
       >
-        <CarouselContent>
+        <CarouselContent className="overflow-visible">
           {data.length > 0 ? (
             data.map(info => renderItem(info))
           ) : (
             <CarouselItem key={'loading'}>
-              <div className="min-h-[30rem] bg-primary-foreground flex justify-center items-center">
+              <div className="min-h-[30rem] flex justify-center items-center">
                 <ImSpinner8 className="size-8 animate-spin text-muted-foreground" />
               </div>
             </CarouselItem>
@@ -150,13 +90,15 @@ export function Trending({ refresh, slideActive }: { refresh: () => void, slideA
         </CarouselContent>
       </Carousel>
 
-      {selectedMovie && (
-        <VlcDialog
-          updateUserStatus={updateUserStatus}
-          open={selectedMovie ? true : false}
-          closeDialog={() => setSelectedMovie(undefined)}
-        />
-      )}
+      <div className="flex absolute right-8 bottom-24 gap-4">
+        {data.length > 0 && data.map((info, index) => {
+          return (
+            <div onClick={() => api?.scrollTo(index)} className={`w-16 hover:scale-105 transition cursor-pointer rounded-2xl overflow-hidden ${(api && api.selectedScrollSnap() === index) ? 'opacity-100 scale-110' : 'opacity-40'}`}>
+              <img src={info.perfectMatch.info.movie_image} alt="" />
+            </div>
+          )
+        })}
+      </div>
     </section>
   )
 }

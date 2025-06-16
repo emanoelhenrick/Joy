@@ -1,11 +1,9 @@
 import { parentPort, workerData } from "worker_threads";
-import path from "path";
-import { fileURLToPath } from "url";
 import Fuse from "fuse.js"
 import { MovieDb } from "moviedb-promise"
+import axios from "axios";
 
-
-async function fetchTmdbTrending(apiKey, vodPlaylist) {
+async function fetchTmdbTrending(apiKey, vodPlaylist, url) {
   if (!apiKey) return []
 
   let tmdbData = []
@@ -14,11 +12,10 @@ async function fetchTmdbTrending(apiKey, vodPlaylist) {
     const res = await moviedb.trending({ language: 'pt', media_type: "movie", time_window: 'week' })
     tmdbData = res.results
   } catch (error) {
-    const res = await moviedb.trending({ language: 'pt', media_type: "movie", time_window: 'week' })
-    tmdbData = res.results
+    return []
   }
 
-  if (tmdbData.length === 0) return []
+  if (!tmdbData || tmdbData.length === 0) return []
 
   const fuseMovies = new Fuse(vodPlaylist.playlist, {
     keys: ['name'],
@@ -30,24 +27,40 @@ async function fetchTmdbTrending(apiKey, vodPlaylist) {
 
   await Promise.all(
     tmdbData.map(async (movie) => {
-      const query = movie.title + movie.release_date.split('-')[0];
+      const query = movie.title.replace(' -', '')
       const matchesList = fuseMovies.search(query).map(i => i.item);
+      
       if (matchesList.length > 0) {
-        const images = await moviedb.movieImages({ id: movie.id });
-        filtered.push({ ...movie, matches: matchesList, images });
+        let perfectMatch;
+        for (const match of matchesList.slice(0, 3)) {
+          if (match.stream_id) {
+            try {
+              const res = await axios.get(url + match.stream_id)
+              const tmdbId = res?.data?.info?.tmdb_id
+              if (tmdbId && tmdbId == movie.id) {
+                perfectMatch = res.data
+              }
+            } catch (e) {
+              console.error('error', e);
+            }
+          }
+        }
+
+        if (perfectMatch) {
+          const images = await moviedb.movieImages({ id: movie.id });
+          filtered.push({ ...movie, images, perfectMatch });
+        }
       }
     })
   );
 
-  if (filtered.length > 0) return filtered
+  if (filtered.length > 0) return filtered.slice(0, 6)
   return []
 }
 
-const __filename = fileURLToPath(import.meta.url);
-
 (async () => {
   try {
-    const result = await fetchTmdbTrending(workerData.apiKey, workerData.vodPlaylist);
+    const result = await fetchTmdbTrending(workerData.apiKey, workerData.vodPlaylist, workerData.url);
     parentPort?.postMessage({ isSuccess: true, tmdbData: result });
   } catch (error) {
     parentPort?.postMessage({ isSuccess: false, error: error.message });
