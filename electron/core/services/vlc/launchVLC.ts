@@ -1,6 +1,9 @@
 import { spawn } from "child_process";
 import { BrowserWindow } from "electron";
 import { getMetadata } from "../getMetadata";
+import * as filePath from "path";
+import { getSnapshotsFolder } from "../paths";
+import crypto from 'crypto'
 
 export interface LaunchVlcProps {
   path: string;
@@ -9,15 +12,21 @@ export interface LaunchVlcProps {
 
 export async function launchVLC({ path, startTime }: LaunchVlcProps, win: BrowserWindow) {
   let vlc: ReturnType<typeof spawn>;
+
+  const filename = crypto.createHash('md5').update(path, 'utf8').digest('hex')
+  const snapshotPath = filePath.join(getSnapshotsFolder(), filename)
+
   const args = [
-    "--extraintf",
-    "http",
-    "--http-host",
-    "127.0.0.1",
-    "--http-port",
-    "9090",
-    "--http-password",
-    "joy",
+    "--extraintf", "http",
+    "--http-host", "127.0.0.1",
+    "--http-port", "9090",
+    "--http-password", "joy",
+    "--no-snapshot-preview",
+    "--no-osd",
+    "--snapshot-format=jpg",
+    "--snapshot-width=500",
+    "--snapshot-height=0",
+    "--snapshot-path" + `=${snapshotPath}.jpg`,
     "--fullscreen",
     "--start-time",
     startTime.toString(),

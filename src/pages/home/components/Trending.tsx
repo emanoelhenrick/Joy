@@ -20,7 +20,7 @@ export function Trending({ setSelectedVod, selectedVod, slideActive }: { setSele
     function getRightLogo(logos: TitleLogo[]) {
       if (!logos) return
       if (logos.length === 0) return
-      const filteredByIso = logos.filter(l => l.iso_639_1 === 'pt-BR' || l.iso_639_1 === 'en')
+      const filteredByIso = logos.filter(l => l.iso_639_1 === 'pt' || l.iso_639_1 === 'en')
       if (filteredByIso.length === 0) return `https://image.tmdb.org/t/p/w300${logos[0].file_path}`
       const filteredByAspectRatio = filteredByIso.filter(l => l.aspect_ratio! > 1.5 )
       if (filteredByAspectRatio.length === 0) return `https://image.tmdb.org/t/p/w300${filteredByIso[0].file_path}`
@@ -31,7 +31,7 @@ export function Trending({ setSelectedVod, selectedVod, slideActive }: { setSele
 
     return (
       <CarouselItem key={info.poster_path}> 
-        <div onClick={() => setSelectedVod(info.perfectMatch.movie_data)} className="group cursor-pointer min-h-[40rem] flex items-center h-full justify-center rounded-3xl relative">
+        <div onClick={() => setSelectedVod(info.perfectMatch.movie_data)} className="group cursor-pointer min-h-[44rem] flex items-center h-full justify-center rounded-3xl relative">
           <div className="left-36 flex flex-col justify-between gap-2 z-20 absolute bottom-24">
             <div className="flex flex-col gap-2 z-10">
               <div className="max-w-96 2xl:max-w-screen-sm h-fit">

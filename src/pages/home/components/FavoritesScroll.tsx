@@ -78,7 +78,7 @@ export function FavoritesScroll({ favoritesVod, favoritesSeries, setSelectedSeri
           </div>
         </div>
         <ScrollArea ref={scrollViewportRef} className="w-full relative">
-          <div  className="flex w-max space-x-4 rounded-md">
+          <div  className="flex w-max space-x-4 rounded-md pr-8">
             {favoritesList && favoritesList.map((m: any) => {
               if (m.stream_id) return renderVodItem(m as VodProps)
               return renderSeriesItem(m as SeriesProps)

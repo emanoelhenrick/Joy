@@ -24,6 +24,8 @@ export interface Api {
   getPlatform: () => string
   getMetadata: () => Promise<MetaProps>
   updateCurrentPlaylist: () => Promise<{ isSuccess: boolean, data: any }>
+  takeSnapshot: () => Promise<void>
+  getSnapshot: (url: string) => Promise<string>
   updateVod: (playlistName: string) => Promise<VodPlaylistProps>
   updateSeries: (playlistName: string) => Promise<SeriesPlaylistProps>
   updateLive: (playlistName: string) => Promise<LivePlaylistProps>

@@ -26,6 +26,9 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 
   updateCurrentPlaylist: async (args: any) => await ipcRenderer.invoke('update-current-playlist', args),
 
+  takeSnapshot: async (args: any) => await ipcRenderer.invoke('take-snapshot', args),
+  getSnapshot: async (args: any) => await ipcRenderer.invoke('get-snapshot', args),
+
   updateVod: async (args: any) => await ipcRenderer.invoke('update-vod', args),
   updateSeries: async (args: any) => await ipcRenderer.invoke('update-series', args),
   updateLive: async (args: any) => await ipcRenderer.invoke('update-live', args),

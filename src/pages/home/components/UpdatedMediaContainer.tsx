@@ -38,7 +38,7 @@ export function UpdatedMediaContainer({ title, children }: { title: string, chil
         </div>
       </div>
       <ScrollArea ref={scrollViewportRef} className="w-full">
-        <div  className="flex w-max space-x-4 rounded-md">
+        <div  className="flex w-max space-x-4 rounded-md pr-8">
           {children}
         </div>
         <div className="w-16 right-0 top-0 absolute h-full bg-gradient-to-r from-transparent to-background/95" />

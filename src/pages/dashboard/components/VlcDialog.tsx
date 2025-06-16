@@ -18,6 +18,15 @@ export function VlcDialog({ open, closeDialog, updateUserStatus }: VlcDialogProp
   const { toast } = useToast()
   const [isRunning, setIsRunning] = useState(false)
 
+  useQuery({
+    queryKey: [`snapshot`],
+    queryFn: async () => await electronApi.takeSnapshot(),
+    refetchInterval: 2000,
+    retry: false,
+    refetchIntervalInBackground: true,
+    enabled: open
+  })
+
   const { data } = useQuery({
     queryKey: [`vlcState`],
     queryFn: async () => await electronApi.getVLCState(),

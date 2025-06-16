@@ -27,6 +27,8 @@ import { updateCurrentPlaylist } from "./services/updateCurrentPlaylist";
 import { getLocalTmdbTrending } from "./services/getLocalTmdbTrending";
 import { runFetchTmdbTrendingInWorker } from "./services/runFetchTmdbTrendingInWorker";
 import { updateVLCPath } from "./services/updateVLCPath";
+import { getSnapshot } from "./services/getSnapshot";
+import { takeSnapshot } from "./services/vlc/takeSnapshot";
 
 export default function CoreControllers(win: BrowserWindow) {
   const TMDB_API_KEY = process.env.VITE_TMDB_API_KEY
@@ -43,6 +45,9 @@ export default function CoreControllers(win: BrowserWindow) {
     if (response.isSuccess) await runFetchTmdbTrendingInWorker(TMDB_API_KEY!, win)
     return response
   })
+
+  ipcMain.handle('take-snapshot', async (_event) => await takeSnapshot())
+  ipcMain.handle('get-snapshot', async (_event, args) => await getSnapshot(args))
 
   ipcMain.handle('update-vod', async (_event, args) => await updateVod(args))
   ipcMain.handle('update-series', async (_event, args) => await updateSeries(args))

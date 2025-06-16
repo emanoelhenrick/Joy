@@ -9,6 +9,7 @@ export interface SeriesProps {
   title: string
   name: string
   num: number
+  backdrop_path: string[]
   series_id: number
   rating: string
   plot: string
