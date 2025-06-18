@@ -34,10 +34,9 @@ interface EpisodesSection {
   seriesCover: string
   tmdbId?: string
   data: SerieInfoProps
-  setIsHover: (v: boolean) => void
 }
 
-export function EpisodesSection({ seriesId, seriesCover, tmdbId, data, setIsHover }: EpisodesSection) {
+export function EpisodesSection({ seriesId, seriesCover, tmdbId, data }: EpisodesSection) {
   const { urls } = usePlaylistUrl()
   const userSeriesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))
   
@@ -50,7 +49,7 @@ export function EpisodesSection({ seriesId, seriesCover, tmdbId, data, setIsHove
 
   const [currentSeason, setCurrentSeason] = useState(userSeriesData?.season || seasonsList[0])
   
-  const { data: tmdbData, isSuccess } = useQuery({ queryKey: [`${seriesId}-${currentSeason}-${tmdbId}`], queryFn: async () => {
+  const { data: tmdbData } = useQuery({ queryKey: [`${seriesId}-${currentSeason}-${tmdbId}`], queryFn: async () => {
     return await moviedb.seasonInfo({ id: tmdbId!, season_number: parseInt(currentSeason), language: 'pt' })
   }})
 
@@ -68,7 +67,7 @@ export function EpisodesSection({ seriesId, seriesCover, tmdbId, data, setIsHove
   }, [data, currentSeason, tmdbData])
 
   return (
-    <section onPointerEnter={() => setIsHover(true)} onPointerLeave={() => setIsHover(false)} className="mb-8 pb-4 2xl:pb-4">
+    <section className="mb-8 pb-4 2xl:pb-4">
       {data.episodes ? (
         <div className="space-y-4">
           <SeasonsList

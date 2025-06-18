@@ -86,7 +86,7 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
             </div>
           </div>
           <div className="relative h-full w-full border border-primary-foreground rounded-3xl overflow-hidden">
-            <img className="h-full opacity-80 w-full object-cover group-hover:opacity-60 " src={snapshot.image} alt="" />
+            <img className="h-full w-full object-cover group-hover:opacity-80 " src={snapshot.image} alt="" />
             <div className="z-0 bottom-0 w-full absolute h-full bg-gradient-to-b from-transparent to-background/90" />
           </div>
         </div>
@@ -124,7 +124,7 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
           </div>
 
           <div className="relative h-full w-full border border-primary-foreground rounded-3xl overflow-hidden">
-            <img className="h-full opacity-70 w-full object-cover group-hover:opacity-60 " src={snapshot.image} alt="" />
+            <img className="h-full w-full object-cover group-hover:opacity-80" src={snapshot.image} alt="" />
             <div className="z-0 bottom-0 w-full absolute h-full bg-gradient-to-b from-transparent to-background/90" />
           </div>
         </div>

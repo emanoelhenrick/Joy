@@ -1,7 +1,7 @@
 import electronApi from "@/config/electronApi"
 import { usePlaylistUrl } from "@/states/usePlaylistUrl"
-import { useEffect, useState } from "react"
-import { QueryFilters, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useState } from "react"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { EpisodesSection } from "./EpisodesSection";
 import { ClearDataAlertDialog } from "./ClearDataAlertDialog";
 import { InfoSection } from "./InfoSection";
@@ -24,7 +24,6 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
   const updateFavorite = useUserData(state => state.updateFavorite)
   const userSeriesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))
   const [_refresh, setRefresh] = useState(false)
-  const [isHover, setIsHover] = useState(false)
 
   async function fetchSeriesData() {
     const seriesInfo = await electronApi.getSerieInfo(urls.getSeriesInfoUrl + seriesId)
@@ -109,7 +108,6 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
                 <Backdrop
                   backdropPath={backdropPath!}
                   cover={cover}
-                  isHover={isHover}
                 />
               </div>
           )}
@@ -154,7 +152,6 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
               seriesId={seriesId}
               tmdbId={tmdbId}
               data={data}
-              setIsHover={setIsHover}
             />
           )}
         </div>
@@ -162,7 +159,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
     )
 }
 
-function Backdrop({ backdropPath, cover, isHover }: { backdropPath: string, cover: string, isHover: boolean }) {
+function Backdrop({ backdropPath, cover }: { backdropPath: string, cover: string }) {
   const imageSrc = backdropPath || cover
 
   if (!imageSrc.includes('tmdb')) {
@@ -170,7 +167,7 @@ function Backdrop({ backdropPath, cover, isHover }: { backdropPath: string, cove
       <div className="fixed">
         <Fade triggerOnce>
           <img
-            className={`w-full h-full duration-700 ${isHover && 'blur-[4px]'} object-cover fixed transition ease-out top-0`}
+            className={`w-full h-full duration-700 object-cover fixed transition ease-out top-0`}
             src={imageSrc}
           />
         </Fade>
@@ -200,13 +197,13 @@ function Backdrop({ backdropPath, cover, isHover }: { backdropPath: string, cove
     <div className="fixed top-0 w-screen h-screen">
       <Fade triggerOnce duration={500}>
         <img
-          className={`w-full h-full ${isHover && 'blur-[4px]'} object-cover fixed top-0`}
+          className={`w-full h-full object-cover fixed top-0`}
           src={lowImage}
         />
         <LazyLoadImage
           onLoad={() => setImageLoaded(true)}
           src={highImage}
-          className={`w-full h-full duration-1000 object-cover ${isHover && 'blur-[4px]'} fixed transition ease-out top-0 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+          className={`w-full h-full duration-1000 object-cover fixed transition ease-out top-0 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
         />
       </Fade>
       <div className="inset-0 w-1/2 h-full fixed scale-105 bg-gradient-to-l from-transparent to-background" />
