@@ -1,4 +1,4 @@
-import { getMetadata } from "./getMetadata"
+import { getMetadata } from "../playlist/getMetadata"
 
 export async function getUrls(name: string) {
   const metadata = await getMetadata()

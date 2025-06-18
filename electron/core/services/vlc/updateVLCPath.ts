@@ -1,7 +1,7 @@
 import { dialog } from "electron";
-import { MetaProps } from "../models/MetaProps";
+import { MetaProps } from "../../models/MetaProps";
 import { readAsync, writeAsync } from "fs-jetpack";
-import { META_PATH } from "./paths";
+import { META_PATH } from "../utils/paths";
 
 export async function updateVLCPath() {
   const result = await dialog.showOpenDialog({

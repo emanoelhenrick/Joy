@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { writeAsync } from 'fs-jetpack';
-import { getVodPath } from '../paths';
-import { getUrls } from '../getUrls';
+import { getVodPath } from '../utils/paths';
+import { getUrls } from '../utils/getUrls';
 
 export async function updateVod(name: string) {
   const urls = await getUrls(name)

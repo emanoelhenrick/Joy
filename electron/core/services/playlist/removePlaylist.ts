@@ -1,6 +1,6 @@
-import { readAsync, writeAsync, removeAsync } from "fs-jetpack"
-import { MetaProps } from "../models/MetaProps"
-import { getPlaylistFolderPath, META_PATH } from "./paths"
+import { writeAsync, removeAsync } from "fs-jetpack"
+import { MetaProps } from "../../models/MetaProps"
+import { getPlaylistFolderPath, META_PATH } from "../utils/paths"
 import { getMetadata } from "./getMetadata";
 
 export async function removePlaylist(playlistName: string) {

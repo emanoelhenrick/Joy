@@ -1,6 +1,6 @@
 import { readAsync, writeAsync } from "fs-jetpack"
-import { MetaProps } from "../models/MetaProps"
-import { META_PATH } from "./paths"
+import { MetaProps } from "../../models/MetaProps"
+import { META_PATH } from "../utils/paths"
 
 export async function changeCurrentPlaylist(playlistName: string) {
   const metadata: MetaProps = await readAsync(META_PATH, 'json')

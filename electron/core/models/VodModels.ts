@@ -20,6 +20,7 @@ export interface VodProps {
   stream_icon: string
   updatedAt?: number
   progress?: number
+  currentTime?: number
 }
 
 export interface VodInfoProps {

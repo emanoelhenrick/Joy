@@ -1,6 +1,6 @@
 import { readAsync, writeAsync } from 'fs-jetpack'
-import { MetaProps } from '../models/MetaProps';
-import { META_PATH } from './paths';
+import { MetaProps } from '../../models/MetaProps';
+import { META_PATH } from '../utils/paths';
 
 export async function getMetadata(): Promise<MetaProps> {
   const metadata = await readAsync(META_PATH, 'json')

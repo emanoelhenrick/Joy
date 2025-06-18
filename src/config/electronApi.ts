@@ -4,8 +4,8 @@ import { PlaylistInfo } from "electron/core/models/PlaylistInfo";
 import { SerieInfoProps, SeriesPlaylistProps } from "electron/core/models/SeriesModels";
 import { UserDataProps } from "electron/core/models/UserData";
 import { VodInfoProps, VodPlaylistProps } from "electron/core/models/VodModels";
-import { AuthRes } from "electron/core/services/authenticateUser";
-import { EditPlaylistInfoProps } from "electron/core/services/editPlaylistInfo";
+import { AuthRes } from "electron/core/services/playlist/authenticateUser";
+import { EditPlaylistInfoProps } from "electron/core/services/playlist/editPlaylistInfo";
 import { VlcState } from "electron/core/services/vlc/getVLCState";
 import { LaunchVlcProps } from "electron/core/services/vlc/launchVLC";
 

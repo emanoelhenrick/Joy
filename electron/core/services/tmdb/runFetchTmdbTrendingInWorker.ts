@@ -3,10 +3,10 @@ import { BrowserWindow } from "electron";
 import { fileURLToPath } from "url";
 import path from "path";
 import { writeAsync } from "fs-jetpack";
-import { getPlaylistFolderPath } from "./paths";
-import { getMetadata } from "./getMetadata";
-import { getLocalVodPlaylist } from "./vod/getLocalVodPlaylist";
-import { getUrls } from "./getUrls";
+import { getPlaylistFolderPath } from "../utils/paths";
+import { getMetadata } from "../playlist/getMetadata";
+import { getLocalVodPlaylist } from "../vod/getLocalVodPlaylist";
+import { getUrls } from "../utils/getUrls";
 
 // No topo do arquivo:
 const __filename = fileURLToPath(import.meta.url);

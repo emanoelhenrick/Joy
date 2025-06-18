@@ -1,6 +1,6 @@
 import { removeAsync, writeAsync } from 'fs-jetpack'
-import { getUserDataPath, META_PATH } from '../paths';
-import { getMetadata } from '../getMetadata';
+import { getUserDataPath, META_PATH } from '../utils/paths';
+import { getMetadata } from '../playlist/getMetadata';
 
 export async function removeProfile(profile: string): Promise<void> {
   const metadata = await getMetadata()

@@ -200,7 +200,7 @@ function Backdrop({ backdropPath, cover, isHover }: { backdropPath: string, cove
     <div className="fixed top-0 w-screen h-screen">
       <Fade triggerOnce duration={500}>
         <img
-          className={`w-full h-full object-cover fixed top-0`}
+          className={`w-full h-full ${isHover && 'blur-[4px]'} object-cover fixed top-0`}
           src={lowImage}
         />
         <LazyLoadImage

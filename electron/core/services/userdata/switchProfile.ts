@@ -1,5 +1,5 @@
 import { readAsync, writeAsync } from "fs-jetpack"
-import { META_PATH } from "../paths"
+import { META_PATH } from "../utils/paths"
 import { MetaProps } from "electron/core/models/MetaProps"
 
 export async function switchProfile(profile: string) {

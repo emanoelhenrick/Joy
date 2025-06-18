@@ -1,7 +1,7 @@
 import path from "path"
 import crypto from 'crypto'
 import fs from "fs"
-import { getSnapshotsFolder } from "./paths"
+import { getSnapshotsFolder } from "../utils/paths"
 
 export async function getSnapshot(url: string) {
   const filename = crypto.createHash('md5').update(url, 'utf8').digest('hex')

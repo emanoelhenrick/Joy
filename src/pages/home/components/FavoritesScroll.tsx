@@ -3,7 +3,6 @@ import { SeriesProps } from "electron/core/models/SeriesModels"
 import { VodProps } from "electron/core/models/VodModels"
 import { useCallback, useRef } from "react"
 import { HomeCover } from "./HomeCover"
-import { PiArrowLeft, PiArrowRight } from "react-icons/pi";
 import { Fade } from "react-awesome-reveal"
 import { ScrollBarStyled } from "@/components/ScrollBarStyled"
 import { HugeiconsIcon } from '@hugeicons/react';

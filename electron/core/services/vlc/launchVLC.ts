@@ -1,19 +1,28 @@
 import { spawn } from "child_process";
 import { BrowserWindow } from "electron";
-import { getMetadata } from "../getMetadata";
+import { getMetadata } from "../playlist/getMetadata";
 import * as filePath from "path";
-import { getSnapshotsFolder } from "../paths";
+import { getSnapshotsFolder } from "../utils/paths";
 import crypto from 'crypto'
 
 export interface LaunchVlcProps {
   path: string;
   startTime: number;
+  seriesId?: string
 }
 
-export async function launchVLC({ path, startTime }: LaunchVlcProps, win: BrowserWindow) {
+export async function launchVLC({ path, startTime, seriesId }: LaunchVlcProps, win: BrowserWindow) {
   let vlc: ReturnType<typeof spawn>;
+  let nameToHash = ''
 
-  const filename = crypto.createHash('md5').update(path, 'utf8').digest('hex')
+  if (seriesId) {
+    const url = new URL(path)
+    nameToHash = url.origin + seriesId
+  } else {
+    nameToHash = path
+  }
+  
+  const filename = crypto.createHash('md5').update(nameToHash, 'utf8').digest('hex')
   const snapshotPath = filePath.join(getSnapshotsFolder(), filename)
 
   const args = [

@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { TitleLogo } from "moviedb-promise";
 import electronApi from "@/config/electronApi";
 import { ImSpinner8 } from "react-icons/im";
+import { Fade } from "react-awesome-reveal";
 
 export function Trending({ setSelectedVod, selectedVod, slideActive }: { setSelectedVod: (data: any) => void, selectedVod: any, slideActive: boolean }) {
   const [api, setApi] = useState<CarouselApi>()
@@ -29,10 +30,12 @@ export function Trending({ setSelectedVod, selectedVod, slideActive }: { setSele
 
     const logoPath = getRightLogo(info.images!.logos!)
 
+    const backdrop = info.images.backdrops.length > 0 ? info.images.backdrops[1] : info.images.backdrops[0]
+
     return (
       <CarouselItem key={info.poster_path}> 
-        <div onClick={() => setSelectedVod(info.perfectMatch.movie_data)} className="group cursor-pointer min-h-[44rem] flex items-center h-full justify-center rounded-3xl relative">
-          <div className="left-36 flex flex-col justify-between gap-2 z-20 absolute bottom-24">
+        <div onClick={() => setSelectedVod(info.perfectMatch.movie_data)} className="group cursor-pointer min-h-[46rem] flex items-center h-full justify-center rounded-3xl relative">
+          <div className="left-36 flex flex-col justify-between gap-2 z-20 absolute bottom-32">
             <div className="flex flex-col gap-2 z-10">
               <div className="max-w-96 2xl:max-w-screen-sm h-fit">
                 { logoPath ? <img src={logoPath} className="object-contain w-fit max-h-28 2xl:max-h-36 mb-2 mt-2" /> : (
@@ -47,7 +50,9 @@ export function Trending({ setSelectedVod, selectedVod, slideActive }: { setSele
             <div className="absolute bottom-0 w-full h-full bg-gradient-to-b from-transparent to-background" />
             <div className="absolute left-0 w-96 h-full bg-gradient-to-l from-transparent to-background/40" />
           </div>
-          <img className="absolute h-full w-full object-cover opacity-90 transition" src={`https://image.tmdb.org/t/p/original${info.backdrop_path}`} />
+          <Fade className="absolute top-0 w-full h-full">
+            <img className="h-full w-full object-cover opacity-90 transition" src={`https://image.tmdb.org/t/p/original${backdrop.file_path}`} />
+          </Fade>
         </div>
 
         <h1 className="absolute top-10 left-40 z-10 text-lg font-medium opacity-60"># {info.title}</h1>
@@ -90,7 +95,7 @@ export function Trending({ setSelectedVod, selectedVod, slideActive }: { setSele
         </CarouselContent>
       </Carousel>
 
-      <div className="flex absolute right-8 bottom-24 gap-4">
+      <div className="flex absolute right-8 bottom-36 gap-4">
         {data.length > 0 && data.map((info, index) => {
           return (
             <div onClick={() => api?.scrollTo(index)} className={`w-16 hover:scale-105 transition cursor-pointer rounded-2xl overflow-hidden ${(api && api.selectedScrollSnap() === index) ? 'opacity-100 scale-110' : 'opacity-40'}`}>

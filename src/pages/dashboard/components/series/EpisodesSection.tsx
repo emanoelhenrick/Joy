@@ -162,7 +162,8 @@ function EpisodesList({ episodes, seriesId, currentSeason, seriesCover, episodeS
     async function launchVlc(episodeId: string, currentTime: number, containerExtension: string) {
       const props = {
         path: `${episodeStreamBaseUrl}${episodeId}.${containerExtension}`,
-        startTime: currentTime
+        startTime: currentTime,
+        seriesId: seriesId
       }
       await electronApi.launchVLC(props)
       setEpisodeRunning(ep)

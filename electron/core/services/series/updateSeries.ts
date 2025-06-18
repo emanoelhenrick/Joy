@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { writeAsync } from 'fs-jetpack';
-import { getSeriesPath } from '../paths';
-import { getUrls } from '../getUrls';
+import { getSeriesPath } from '../utils/paths';
+import { getUrls } from '../utils/getUrls';
 
 export async function updateSeries(name: string) {
   const urls = await getUrls(name)

@@ -1,6 +1,6 @@
 import { SeriesPlaylistProps } from '../../models/SeriesModels';
 import { readAsync } from 'fs-jetpack';
-import { getSeriesPath } from '../paths';
+import { getSeriesPath } from '../utils/paths';
 
 export async function getLocalSeriesPlaylist(playlistName: string) {
   const SeriesPlaylist = await readAsync(getSeriesPath(playlistName), 'json');

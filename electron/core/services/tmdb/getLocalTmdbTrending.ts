@@ -1,6 +1,6 @@
 import { readAsync } from "fs-jetpack"
-import { getMetadata } from "./getMetadata"
-import { getPlaylistFolderPath } from "./paths"
+import { getMetadata } from "../playlist/getMetadata"
+import { getPlaylistFolderPath } from "../utils/paths"
 import path from "path"
 
 export async function getLocalTmdbTrending() {

@@ -97,7 +97,9 @@ export function HomeDashboard() {
             return (v.stream_id.toString() == vd.id!.toString()) && watchingList.includes(vd.id!)
           })
           if (vod) {
-            watchingVod.push({ ...v, updatedAt: vod.updatedAt, progress: vod.currentTime! })
+            if (vod.currentTime! / vod.duration! < 0.9) {
+              watchingVod.push({ ...v, updatedAt: vod.updatedAt, progress: vod.currentTime! / vod.duration!, currentTime: vod.currentTime! })
+            }
           }
         })
       }
@@ -161,7 +163,7 @@ export function HomeDashboard() {
           setSelectedVod={setSelectedVod}
           selectedVod={selectedVod}
         />
-        <div className='h-[41rem]' />
+        <div className='h-[42rem]' />
         <section className='w-full overflow-hidden'>
           <ScrollArea className='w-full'>
             <div className="h-fit z-0 py-8 pt-0">

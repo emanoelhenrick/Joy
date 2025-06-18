@@ -18,6 +18,8 @@ import { Ellipsis, ListFilter } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Fade } from "react-awesome-reveal";
 import { parseNumber } from "@/utils/parseNumber";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { StarIcon } from "@hugeicons/core-free-icons";
 
 
 export function Dashboard() {
@@ -162,9 +164,14 @@ export function Dashboard() {
             <SearchInput setSearchValue={setSearchValue} searchValue={searchValue} />
           </div>
 
-          <div className="flex gap-2 justify-end w-52">
-            <span className="text-sm text-muted-foreground">Sort by Rating</span>
+          <div className="flex gap-2 justify-end items-center w-52">
             <Switch checked={sortByRating} onCheckedChange={setSortByRating} />
+            <HugeiconsIcon
+              icon={StarIcon}
+              strokeWidth={0}
+              className="size-4 fill-primary/40"
+            />
+            
           </div>
         </section>
 

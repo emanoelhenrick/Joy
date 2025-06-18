@@ -1,10 +1,10 @@
 import { authenticateUser } from "./authenticateUser"
 import { getMetadata } from "./getMetadata"
-import { getUrls } from "./getUrls"
-import { updateLive } from "./live/updateLive"
-import { updateSeries } from "./series/updateSeries"
+import { getUrls } from "../utils/getUrls"
+import { updateLive } from "../live/updateLive"
+import { updateSeries } from "../series/updateSeries"
 import { updatedAtPlaylist } from "./updatedAtPlaylist"
-import { updateVod } from "./vod/updateVod"
+import { updateVod } from "../vod/updateVod"
 
 export async function updateCurrentPlaylist() {
   const metadata = await getMetadata()

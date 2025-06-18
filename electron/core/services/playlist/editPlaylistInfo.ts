@@ -1,7 +1,7 @@
 import { readAsync, renameAsync, writeAsync } from "fs-jetpack";
-import { PlaylistInfo } from "../models/PlaylistInfo";
-import { getPlaylistFolderPath, META_PATH } from "./paths";
-import { MetaProps } from "../models/MetaProps";
+import { PlaylistInfo } from "../../models/PlaylistInfo";
+import { getPlaylistFolderPath, META_PATH } from "../utils/paths";
+import { MetaProps } from "../../models/MetaProps";
 
 export interface EditPlaylistInfoProps { 
   playlistName: string

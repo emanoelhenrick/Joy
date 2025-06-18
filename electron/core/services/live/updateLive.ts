@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { writeAsync } from 'fs-jetpack';
-import { getLivePath } from '../paths';
-import { getUrls } from '../getUrls';
+import { getLivePath } from '../utils/paths';
+import { getUrls } from '../utils/getUrls';
 
 export async function updateLive(name: string) {
   const urls = await getUrls(name)
