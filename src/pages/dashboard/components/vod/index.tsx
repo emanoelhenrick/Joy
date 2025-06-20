@@ -38,7 +38,7 @@ export function VodPage({ streamId, cover }: Props) {
   const [_refresh, setRefresh] = useState(false)
 
   const [state, setState] = useState<any>(undefined)
-  
+
   function updateUserStatus(dataState: { length: number, time: number }) {
     if (!isRunning) return
     setState(dataState)
@@ -190,7 +190,7 @@ export function VodPage({ streamId, cover }: Props) {
                       <HugeiconsIcon
                         icon={Bookmark02Icon}
                         strokeWidth={1}
-                        className={`size-6 fill-primary ${!userVodData?.favorite && 'opacity-25'} transition duration-300 ease-in-out`}
+                        className={`size-6 fill-primary ${!userVodData?.favorite && 'opacity-20'} transition duration-300 ease-in-out`}
                       />
                     </button>
                   </div>
@@ -293,7 +293,7 @@ function Backdrop({ backdrops, cover }: { backdrops: BackdropType[], cover: stri
         className={`w-full h-full object-cover fixed top-0 transition -z-10 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
         />
       </Fade>
-      <div className="inset-0 w-2/3 h-full z-10 fixed scale-105 bg-gradient-to-l from-transparent to-background" />
+      <div className="inset-0 w-2/3 h-full z-10 fixed scale-105 bg-gradient-to-l from-transparent to-background/90" />
       <div className="inset-0 w-full h-full z-10 fixed scale-105 bg-gradient-to-b from-transparent to-background" />
     </div>
   )

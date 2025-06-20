@@ -98,7 +98,7 @@ export function Trending({ setSelectedVod, selectedVod, slideActive }: { setSele
       <div className="flex absolute right-8 bottom-36 gap-4">
         {data.length > 0 && data.map((info, index) => {
           return (
-            <div onClick={() => api?.scrollTo(index)} className={`w-16 hover:scale-105 transition cursor-pointer rounded-2xl overflow-hidden ${(api && api.selectedScrollSnap() === index) ? 'opacity-100 scale-110' : 'opacity-40'}`}>
+            <div style={{ aspectRatio: '2/3' }} onClick={() => api?.scrollTo(index)} className={`w-16 bg-primary-foreground hover:scale-105 transition cursor-pointer rounded-2xl overflow-hidden ${(api && api.selectedScrollSnap() === index) ? 'opacity-100 scale-110' : 'opacity-40'}`}>
               <img src={info.perfectMatch.info.movie_image} alt="" />
             </div>
           )

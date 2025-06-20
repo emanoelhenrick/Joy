@@ -1,5 +1,7 @@
 import { RatingStars } from "@/components/RatingStars"
 import { Skeleton } from "@/components/ui/skeleton"
+import { FourKIcon, VolumeMute01Icon } from "@hugeicons/core-free-icons"
+import { HugeiconsIcon } from "@hugeicons/react"
 import { TitleLogo } from "moviedb-promise"
 import { Fade } from "react-awesome-reveal"
 
@@ -48,12 +50,13 @@ export function InfoSection({ title, releaseDate, description, director, genre, 
         </div>
 
         {(releaseDate || genre || rating || duration) && (
-          <div className="flex items-center gap-6 mt-4 py-1 animate-fade font-semibold">
-            {releaseDate && <h1 style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{releaseDate}</h1>}
-            {duration && <h1 style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{duration}</h1>}
-            {genre && <h1 style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{genre}</h1>}
+          <div className="flex items-center gap-3 mt-4 py-1 animate-fade font-semibold">
+            {genre && <h1 style={{ lineHeight: 1}} className="text-sm px-3 py-1.5 bg-primary/10 rounded-lg 2xl:text-base text-primary/60">{genre}</h1>}
+            {releaseDate && <h1 style={{ lineHeight: 1}} className="text-sm px-3 py-1.5 bg-primary/10 rounded-lg 2xl:text-base text-primary/60">{releaseDate}</h1>}
+            {duration && <h1 style={{ lineHeight: 1}} className="text-sm px-3 py-1.5 bg-primary/10 rounded-lg 2xl:text-base text-primary/60">{duration}</h1>}
+            
             {director && (
-              <h1 style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">
+              <h1 style={{ lineHeight: 1}} className="text-sm px-3 py-1.5 bg-primary/10 rounded-lg border border-secondary/0 2xl:text-base text-primary/60">
                 {director && 'By ' + director}
               </h1>
             )}

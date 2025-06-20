@@ -2,7 +2,7 @@
   "name": "joy-client",
   "productName": "Joy Client",
   "private": true,
-  "version": "0.10.4",
+  "version": "0.10.5",
   "type": "module",
   "author": "Emanoel Henrick",
   "build": {

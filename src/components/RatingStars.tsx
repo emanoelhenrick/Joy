@@ -6,13 +6,13 @@ export function RatingStars({ rating }: { rating: number }) {
   const ratingFloat = rating < 10 ? rating.toFixed(1) : 10
 
   return (
-    <div className={`mr-2 flex items-center gap-1.5`}>
+    <div className={`flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg bg-primary/10`}>
       <HugeiconsIcon
         icon={StarIcon}
         strokeWidth={0.5}
-        className="opacity-50 size-3.5 fill-primary"
+        className="opacity-60 size-3 fill-primary"
       />
-      <h1 style={{ lineHeight: 1 }} className="text-muted-foreground text-base 2xl:text-lg">{ratingFloat}</h1>
+      <h1 style={{ lineHeight: 1 }} className="text-primary/60 text-sm 2xl:text-base">{ratingFloat}</h1>
     </div>
   )
 }

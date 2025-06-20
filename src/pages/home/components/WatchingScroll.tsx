@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { HomeCover } from "./HomeCover"
 import { ScrollBarStyled } from "@/components/ScrollBarStyled"
 import { HugeiconsIcon } from '@hugeicons/react';
-import { ArrowRight01Icon, PlayIcon } from '@hugeicons/core-free-icons';
+import { ArrowRight01Icon, ImageNotFound01Icon, PlayIcon } from '@hugeicons/core-free-icons';
 import { usePlaylistUrl } from "@/states/usePlaylistUrl"
 import electronApi from "@/config/electronApi"
 import { formatDurationFromSeconds } from "@/utils/formatDuration"
@@ -91,8 +91,9 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
           </div>
         </div>
       
-        <div className="absolute drop-shadow-2xl bg-background rounded-2xl overflow-hidden -bottom-8 left-4 group-hover:-translate-y-4 ease-in-out transition duration-200">
-          <img src={series.cover} className="w-24" alt="" />
+        <div style={{ aspectRatio: '2/3' }} className="absolute w-24 drop-shadow-2xl bg-primary-foreground rounded-2xl overflow-hidden -bottom-8 left-4 group-hover:-translate-y-4 ease-in-out transition duration-200 flex justify-center items-center">
+          <HugeiconsIcon icon={ImageNotFound01Icon} className="absolute text-muted-foreground z-0" />
+          <img src={series.cover} className="w-24 z-10" alt="" />
         </div>
       </div>
       )
@@ -129,8 +130,9 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
           </div>
         </div>
       
-        <div className="absolute drop-shadow-2xl bg-background rounded-2xl overflow-hidden -bottom-8 left-4 group-hover:-translate-y-4 ease-in-out transition duration-200">
-          <img src={movie.stream_icon} className="w-24" alt="" />
+        <div style={{ aspectRatio: '2/3' }} className="absolute w-24 drop-shadow-2xl bg-primary-foreground rounded-2xl overflow-hidden -bottom-8 left-4 group-hover:-translate-y-4 ease-in-out transition duration-200 flex justify-center items-center">
+          <HugeiconsIcon icon={ImageNotFound01Icon} className="absolute text-muted-foreground z-0" />
+          <img src={movie.stream_icon} className="w-24 z-10" alt="" />
         </div>
       </div>
       )

@@ -34,7 +34,7 @@ export function Episode({ imageSrc, tmdbImage, cover, progress, title, duration 
   return (
     <div className="w-80 cursor-pointer group relative">
       <Fade duration={500} className="z-10">
-        <div className="relative group-hover:opacity-80 duration-300 bg-transparent transition ease-out flex items-center aspect-video justify-center overflow-hidden rounded-3xl ">
+        <div className="relative group-hover:opacity-80 duration-300 bg-transparent transition ease-out flex items-center aspect-video justify-center overflow-hidden rounded-3xl border border-primary-foreground">
           {
             (finalImage && !isError) ? <LazyLoadImage onError={() => setIsError(true)} src={finalImage} className="w-full h-full group-hover:scale-100 scale-105 duration-300 transition ease-out object-cover opacity-90" />
             : <img src={statedCover} className="object-cover w-full h-full group-hover:scale-100 scale-105 duration-300 transition ease-out opacity-90" />

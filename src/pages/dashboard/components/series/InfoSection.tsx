@@ -44,10 +44,10 @@ export function InfoSection({ title, releaseDate, genre, description, director, 
 
       <div className="flex items-center mt-3 gap-1 font-semibold">
         {((releaseDate && releaseDate != 0) || genre || rating) && (
-          <div className="flex items-center gap-6 py-1 animate-fade">
-            {(releaseDate && releaseDate != 0) && <h1 style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{releaseDate}</h1>}
-            {genre && <h1 style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">{genre}</h1>}
-            {director && <h1 style={{ lineHeight: 1}} className="text-base 2xl:text-lg text-muted-foreground">
+          <div className="flex items-center gap-3 py-1 animate-fade">
+            {genre && <h1 style={{ lineHeight: 1}} className="text-sm px-3 py-1.5 rounded-lg bg-primary/10 2xl:text-base text-primary/60">{genre}</h1>}
+            {(releaseDate && releaseDate != 0) && <h1 style={{ lineHeight: 1}} className="text-sm px-3 py-1.5 bg-primary/10 rounded-lg 2xl:text-base text-primary/60">{releaseDate}</h1>}
+            {director && <h1 style={{ lineHeight: 1}} className="text-sm px-3 py-1.5 bg-primary/10 rounded-lg 2xl:text-base text-primary/60">
               {'By ' + director}
             </h1>}
             {rating && <RatingStars rating={parseFloat(rating)} />}

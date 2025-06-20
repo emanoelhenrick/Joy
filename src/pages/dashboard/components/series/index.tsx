@@ -34,12 +34,13 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
     const releaseDate = seriesInfo && seriesInfo.info.releaseDate ? parseInt(format(seriesInfo.info.releaseDate, 'u')) : seriesInfo.info.year ? seriesInfo.info.year : parseInt(format(seriesInfo.seasons[0].air_date, 'u')) 
     if (!releaseDate || releaseDate === '0' as unknown as number) return seriesInfo
 
-    const res = await moviedb.searchTv({ query: title[0].trim(), first_air_date_year: releaseDate })
+    let res = await moviedb.searchTv({ query: title[0].trim(), first_air_date_year: releaseDate })
 
-    if (!res.results) return seriesInfo
+    if (res.results!.length === 0) res = await moviedb.searchTv({ query: title[0].trim(), first_air_date_year: releaseDate, language: 'pt' })
+    if (res.results!.length === 0) return seriesInfo
     if (res.results && res.results.length === 0) return seriesInfo
     
-    const isSeries = res.results.find(s => s.first_air_date ===  (seriesInfo.info.releaseDate ? seriesInfo.info.releaseDate : seriesInfo.seasons[0].air_date))
+    const isSeries = res.results!.find(s => s.first_air_date ===  (seriesInfo.info.releaseDate ? seriesInfo.info.releaseDate : seriesInfo.seasons[0].air_date))
 
     if (!isSeries) return seriesInfo
 

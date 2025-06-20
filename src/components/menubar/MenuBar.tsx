@@ -159,7 +159,11 @@ export function MenuBar() {
 
           <div className="flex gap-3 rounded-xl justify-center items-center">
             <div className="text-background rounded-xl aspect-square">
-              <HugeiconsIcon strokeWidth={0} icon={PlayIcon} className={`-m-2 fill-white size-14 rotate-90 ${updating && 'animate-pulse fill-blue-400'}`} />
+              <HugeiconsIcon
+                strokeWidth={0}
+                icon={PlayIcon}
+                className={`-m-2 fill-white size-14 rotate-90 ${updating && 'animate-pulse fill-blue-600'} ${updatingError && 'fill-red-600'}`}
+                />
             </div>
           </div>
         </Fade>
