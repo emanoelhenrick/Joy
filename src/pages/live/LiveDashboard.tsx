@@ -88,10 +88,10 @@ export function LiveDashboard() {
 
   return (
     <div className="h-fit w-full">
-      <div className='flex flex-col gap-2'>
+      <div className='flex flex-col gap-2 mt-3'>
 
         <section ref={ref} className='flex items-center justify-center w-full py-1 mt-4 mb-3'>
-          <div className="max-w-screen-sm w-full">
+          <div className="flex">
             <SearchInput setSearchValue={setSearchValue} searchValue={searchValue} />
           </div>
         </section>

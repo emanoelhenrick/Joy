@@ -30,9 +30,6 @@ export default function LivePlaylistScroll({ playlist }: { playlist: LiveProps[]
   const [live, setLive] = useState(playlist[0])
   const { userData, updateFavorite } = useUserData();
 
-  console.log(playlist);
-  
-
   function handleChannel(live: LiveProps) {
     setLive(live)
     setSelectLiveUrl(`${urls.getLiveStreamUrl}${live.stream_id}.m3u8`)

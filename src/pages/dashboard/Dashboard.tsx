@@ -139,10 +139,10 @@ export function Dashboard() {
     <div className="h-fit w-full overflow-hidden my-3 rounded-3xl mr-3 relative">
       <div className='flex flex-col gap-4 w-full'>
         <section ref={ref} className='flex items-center justify-between w-full pr-5 pt-5'>
-          <div className="flex gap-4 items-center w-52">
-            <div className="flex gap-4 items-end">
-              <h1 onClick={handleShowMovies} className={`${showMovies && !showSeries ? 'text-2xl text-primary' : 'text-lg text-muted-foreground'} transition duration-1000 font-medium hover:opacity-80 cursor-pointer`}>Movies</h1>
-              <h1 onClick={handleShowSeries} className={`${showSeries && !showMovies ? 'text-2xl text-primary' : 'text-lg text-muted-foreground'} transition font-medium hover:opacity-80 cursor-pointer`}>Series</h1>
+          <div className="flex gap-4 items-center w-72">
+            <div className="flex items-end border rounded-full overflow-hidden">
+              <h1 onClick={handleShowMovies} className={`${showMovies && !showSeries ? 'text-background bg-primary/95' : 'text-muted-foreground'} px-4 py-1 transition duration-300 font-medium hover:opacity-80 cursor-pointer`}>Movies</h1>
+              <h1 onClick={handleShowSeries} className={`${showSeries && !showMovies ? 'text-background bg-primary/95' : 'text-muted-foreground'} px-4 py-1 transition duration-300 border-l font-medium hover:opacity-80 cursor-pointer`}>Series</h1>
             </div>
 
             <Select disabled={showMovies && showSeries} onValueChange={(value) => setCurrentCategory(value)} value={currentCategory}>
@@ -164,14 +164,13 @@ export function Dashboard() {
             <SearchInput setSearchValue={setSearchValue} searchValue={searchValue} />
           </div>
 
-          <div className="flex gap-2 justify-end items-center w-52">
-            <Switch checked={sortByRating} onCheckedChange={setSortByRating} />
+          <div className="flex gap-2 justify-end items-center w-72">
             <HugeiconsIcon
               icon={StarIcon}
               strokeWidth={0}
-              className="size-4 fill-primary/40"
+              className="size-4 fill-primary/30"
             />
-            
+            <Switch checked={sortByRating} onCheckedChange={setSortByRating} />
           </div>
         </section>
 
