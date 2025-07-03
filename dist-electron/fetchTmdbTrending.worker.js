@@ -19,7 +19,7 @@ async function fetchTmdbTrending(apiKey, vodPlaylist, url) {
 
   const fuseMovies = new Fuse(vodPlaylist.playlist, {
     keys: ['name'],
-    threshold: 0.2,
+    threshold: 0.4,
     minMatchCharLength: 2
   })
 
@@ -28,10 +28,10 @@ async function fetchTmdbTrending(apiKey, vodPlaylist, url) {
   await Promise.all(
     tmdbData.map(async (movie) => {
       const queryPt = movie.title.replace(' -', '')
-      const matchesListPt = fuseMovies.search(queryPt).map(i => i.item).slice(0, 5)
+      const matchesListPt = fuseMovies.search(queryPt).map(i => i.item).slice(0, 3)
 
       const queryOriginal = movie.original_title.replace(' -', '')
-      const matchesListOriginal = fuseMovies.search(queryOriginal).map(i => i.item).slice(0, 5)
+      const matchesListOriginal = fuseMovies.search(queryOriginal).map(i => i.item).slice(0, 3)
 
       const mergedList = [...matchesListPt, ...matchesListOriginal]
 
