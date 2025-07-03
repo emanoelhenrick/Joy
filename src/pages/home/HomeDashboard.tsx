@@ -17,7 +17,7 @@ import { UpdatedMediaContainer } from './components/UpdatedMediaContainer';
 
 export function HomeDashboard() {
   const vodData = useVodPlaylist(state => state.data)
-  const seriesData = useSeriesPlaylist(state => state.data)
+  const seriesData = useSeriesPlaylist(state => state.data);
 
   const [selectedVod, setSelectedVod] = useState<VodProps | undefined>(undefined)
   const [selectedSeries, setSelectedSeries] = useState<SeriesProps | undefined>(undefined)

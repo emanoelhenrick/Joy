@@ -8,7 +8,6 @@ import { getMetadata } from "../playlist/getMetadata";
 import { getLocalVodPlaylist } from "../vod/getLocalVodPlaylist";
 import { getUrls } from "../utils/getUrls";
 
-// No topo do arquivo:
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 

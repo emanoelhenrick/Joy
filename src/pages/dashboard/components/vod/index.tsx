@@ -85,7 +85,10 @@ export function VodPage({ streamId, cover }: Props) {
       }
     }
     return vodInfo
-  } 
+  }
+
+  console.log(`${urls.getVodStreamUrl}${streamId}.${data?.movie_data.container_extension}`);
+  
 
   async function launchVlc() {
     const props = {

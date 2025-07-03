@@ -42,7 +42,7 @@ export default function CoreControllers(win: BrowserWindow) {
 
   ipcMain.handle('update-current-playlist', async (_event) => {
     const response = await updateCurrentPlaylist()
-    if (response.isSuccess) await runFetchTmdbTrendingInWorker(TMDB_API_KEY!, win)
+    if (response.isSuccess) runFetchTmdbTrendingInWorker(TMDB_API_KEY!, win)
     return response
   })
 

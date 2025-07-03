@@ -27,21 +27,31 @@ async function fetchTmdbTrending(apiKey, vodPlaylist, url) {
 
   await Promise.all(
     tmdbData.map(async (movie) => {
-      const query = movie.title.replace(' -', '')
-      const matchesList = fuseMovies.search(query).map(i => i.item);
+      const queryPt = movie.title.replace(' -', '')
+      const matchesListPt = fuseMovies.search(queryPt).map(i => i.item).slice(0, 5)
+
+      const queryOriginal = movie.original_title.replace(' -', '')
+      const matchesListOriginal = fuseMovies.search(queryOriginal).map(i => i.item).slice(0, 5)
+
+      const mergedList = [...matchesListPt, ...matchesListOriginal]
+
+      const noDuplicatedList = []
+
+      for (const match of mergedList) {
+        if (noDuplicatedList.find(m => m.stream_id == match.stream_id)) continue
+        noDuplicatedList.push(match)
+      }
       
-      if (matchesList.length > 0) {
+      if (noDuplicatedList.length > 0) {
         let perfectMatch;
-        for (const match of matchesList.slice(0, 3)) {
+        for (const match of noDuplicatedList) {
           if (match.stream_id) {
             try {
               const res = await axios.get(url + match.stream_id)
               const tmdbId = res?.data?.info?.tmdb_id
-              if (tmdbId && tmdbId == movie.id) {
-                perfectMatch = res.data
-              }
+              if (tmdbId && tmdbId == movie.id) perfectMatch = res.data
             } catch (e) {
-              console.error('error', e);
+              continue
             }
           }
         }

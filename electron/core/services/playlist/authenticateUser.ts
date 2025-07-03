@@ -6,6 +6,8 @@ export interface AuthRes {
 }
 
 export async function authenticateUser(url: string) {
+  console.log(url);
+  
   try {
     const res = await axios.get(url)
     if (res.status !== 200) return { status: false, message: res.statusText }
