@@ -19388,28 +19388,51 @@ async function runFetchTmdbTrendingInWorker(apiKey, win2) {
     const currentPlaylist = metadata.currentPlaylist.name;
     const vodPlaylist = await getLocalVodPlaylist(currentPlaylist);
     const urls = await getUrls(currentPlaylist);
-    if (!apiKey || !urls) return;
+    if (!apiKey || !urls) {
+      trendingWorkerPromise = null;
+      return Promise.reject(new Error("API key or URLs missing"));
+    }
     return new Promise((resolve, reject) => {
       const worker = new Worker(
         path__default.resolve(__dirname$1, "./fetchTmdbTrending.worker.js"),
         { workerData: { apiKey, vodPlaylist, url: urls.getVodInfoUrl } }
       );
+      let settled = false;
       worker.on("message", async (msg) => {
-        trendingWorkerPromise = null;
+        if (settled) return;
         if (msg.isSuccess) {
-          await main$1.writeAsync(path__default.join(getPlaylistFolderPath(currentPlaylist), "trending.json"), msg.tmdbData);
-          win2.webContents.send("trending", { isSuccess: true, data: msg.result });
-          resolve(msg.isSuccess);
-          worker.terminate();
+          try {
+            await main$1.writeAsync(
+              path__default.join(getPlaylistFolderPath(currentPlaylist), "trending.json"),
+              msg.tmdbData
+            );
+            win2.webContents.send("trending", { isSuccess: true, data: msg.result });
+            settled = true;
+            resolve(msg.isSuccess);
+          } catch (err) {
+            settled = true;
+            reject(err);
+          } finally {
+            trendingWorkerPromise = null;
+            worker.terminate();
+          }
         } else {
+          settled = true;
+          trendingWorkerPromise = null;
           reject(msg.error);
+          worker.terminate();
         }
       });
       worker.on("error", (err) => {
+        if (settled) return;
+        settled = true;
         trendingWorkerPromise = null;
         reject(err);
+        worker.terminate();
       });
       worker.on("exit", (code) => {
+        if (settled) return;
+        settled = true;
         trendingWorkerPromise = null;
         if (code !== 0) reject(new Error(`Worker stopped with exit code ${code}`));
       });
