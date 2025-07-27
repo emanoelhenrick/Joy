@@ -8,75 +8,58 @@ import { getMetadata } from "../playlist/getMetadata";
 import { getLocalVodPlaylist } from "../vod/getLocalVodPlaylist";
 import { getUrls } from "../utils/getUrls";
 
+const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-let trendingWorkerPromise: Promise<any> | null = null;
+export async function runFetchTmdbTrendingInWorker(win: BrowserWindow) {
 
-export async function runFetchTmdbTrendingInWorker(apiKey: string, win: BrowserWindow) {
-  if (trendingWorkerPromise) return trendingWorkerPromise;
+  const metadata = await getMetadata();
+  const currentPlaylist = metadata.currentPlaylist.name;
+  const vodPlaylist = await getLocalVodPlaylist(currentPlaylist);
+  const urls = await getUrls(currentPlaylist);
 
-  trendingWorkerPromise = (async () => {
-    const metadata = await getMetadata();
-    const currentPlaylist = metadata.currentPlaylist.name;
-    const vodPlaylist = await getLocalVodPlaylist(currentPlaylist);
-    const urls = await getUrls(currentPlaylist);
+  if (!TMDB_API_KEY) return Promise.reject(new Error("API key missing"))
+  if (!urls) return Promise.reject(new Error("URLs missing"));
 
-    if (!apiKey || !urls) {
-      trendingWorkerPromise = null;
-      return Promise.reject(new Error("API key or URLs missing"));
-    }
+  win.webContents.send("trending", { status: 'fetching' });
 
-    return new Promise((resolve, reject) => {
-      const worker = new Worker(
-        path.resolve(__dirname, "./fetchTmdbTrending.worker.js"),
-        { workerData: { apiKey, vodPlaylist, url: urls.getVodInfoUrl } }
-      );
+  const worker = new Worker(
+    path.resolve(__dirname, "fetchTmdbTrending.worker.js"),
+    { workerData: { apiKey: TMDB_API_KEY, vodPlaylist, url: urls.getVodInfoUrl } }
+  );
 
-      let settled = false;
-
-      worker.on("message", async (msg) => {
-        if (settled) return;
-        if (msg.isSuccess) {
-          try {
-            await writeAsync(
-              path.join(getPlaylistFolderPath(currentPlaylist), "trending.json"),
-              msg.tmdbData
-            );
-            win.webContents.send("trending", { isSuccess: true, data: msg.result });
-            settled = true;
-            resolve(msg.isSuccess);
-          } catch (err) {
-            settled = true;
-            reject(err);
-          } finally {
-            trendingWorkerPromise = null;
-            worker.terminate();
-          }
-        } else {
-          settled = true;
-          trendingWorkerPromise = null;
-          reject(msg.error);
-          worker.terminate();
-        }
-      });
-
-      worker.on("error", (err) => {
-        if (settled) return;
-        settled = true;
-        trendingWorkerPromise = null;
-        reject(err);
+  worker.on("message", async (msg) => {
+    if (msg.isSuccess) {
+      try {
+        await writeAsync(
+          path.join(getPlaylistFolderPath(currentPlaylist), "trending.json"),
+          msg.tmdbData
+        );
+        win.webContents.send("trending", { status: 'success', data: msg.result });
+        return msg.isSuccess;
+      } catch (err) {
+        win.webContents.send("trending", { status: 'error', data: msg.result });
+      } finally {
         worker.terminate();
-      });
+      }
+    } else {
+      worker.terminate();
+      win.webContents.send("trending", { status: 'error', data: msg.result });
+    }
+  });
 
-      worker.on("exit", (code) => {
-        if (settled) return;
-        settled = true;
-        trendingWorkerPromise = null;
-        if (code !== 0) reject(new Error(`Worker stopped with exit code ${code}`));
-      });
-    });
-  })();
+  worker.on("error", (err) => {
+    worker.terminate();
+    win.webContents.send("trending", { status: 'error'});
+    throw new Error();
+  });
 
-  return trendingWorkerPromise;
+  worker.on("exit", (code) => {
+    if (code !== 0) {
+      throw new Error(`Worker stopped with exit code ${code}`);
+    } else {
+      return false;
+    }
+  });
 }

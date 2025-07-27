@@ -4,7 +4,7 @@ import { MovieDb } from "moviedb-promise"
 import axios from "axios";
 
 async function fetchTmdbTrending(apiKey, vodPlaylist, url) {
-  if (!apiKey) return []
+  if (!apiKey) throw new Error('No TMDB API Key provided')
 
   let tmdbData = []
   const moviedb = new MovieDb(apiKey)
@@ -12,7 +12,7 @@ async function fetchTmdbTrending(apiKey, vodPlaylist, url) {
     const res = await moviedb.trending({ language: 'pt', media_type: "movie", time_window: 'week' })
     tmdbData = res.results
   } catch (error) {
-    return []
+    throw new Error('Error: fetching tmdb trending')
   }
 
   if (!tmdbData || tmdbData.length === 0) return []

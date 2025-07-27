@@ -3,13 +3,16 @@ import Autoplay from "embla-carousel-autoplay"
 import FadeSlide from "embla-carousel-fade"
 import { useCallback, useEffect, useState } from "react";
 import { TitleLogo } from "moviedb-promise";
+import { useToast } from "@/hooks/use-toast";
 import electronApi from "@/config/electronApi";
 import { ImSpinner8 } from "react-icons/im";
 import { Fade } from "react-awesome-reveal";
 
 export function Trending({ setSelectedVod, selectedVod, slideActive }: { setSelectedVod: (data: any) => void, selectedVod: any, slideActive: boolean }) {
   const [api, setApi] = useState<CarouselApi>()
+  const [isFetching, setIsFetching] = useState(false)
   const [data, setData] = useState<any[]>([])
+  const { toast } = useToast()
 
   async function getTrending() {
     const trending = await electronApi.getLocalTmdbTrending()
@@ -30,7 +33,7 @@ export function Trending({ setSelectedVod, selectedVod, slideActive }: { setSele
 
     const logoPath = getRightLogo(info.images!.logos!)
 
-    const backdrop = info.images.backdrops.length > 0 ? info.images.backdrops[1] : info.images.backdrops[0]
+    const backdrop = info.images.backdrops[0]
 
     return (
       <CarouselItem key={info.poster_path}> 
@@ -64,7 +67,17 @@ export function Trending({ setSelectedVod, selectedVod, slideActive }: { setSele
     getTrending()
 
     window.ipcRenderer.on('trending', (_event, args) => {
-      if (args.isSuccess) getTrending()
+      if (args.status === 'success') {
+        getTrending()
+        setIsFetching(false)
+      } else if (args.status === 'fetching') {
+        setIsFetching(true)
+      } else if (args.status === 'error') {
+        toast({
+          variant: "destructive",
+          title: 'Unable to update TMDB data'
+        })
+      }
     });
 
     return () => {
@@ -104,6 +117,13 @@ export function Trending({ setSelectedVod, selectedVod, slideActive }: { setSele
           )
         })}
       </div>
+
+      {isFetching && (
+        <div className="absolute right-8 top-10 flex gap-4 items-center bg-background/40 px-3 py-1 rounded-lg">
+          <span className="text-sm">Fetching TMDB Trending...</span>
+          <ImSpinner8 className="size-3 animate-spin text-muted-foreground text-white" />
+        </div>
+      )}
     </section>
   )
 }

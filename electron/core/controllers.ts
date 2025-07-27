@@ -31,18 +31,16 @@ import { getSnapshot } from "./services/vlc/getSnapshot";
 import { takeSnapshot } from "./services/vlc/takeSnapshot";
 
 export default function CoreControllers(win: BrowserWindow) {
-  const TMDB_API_KEY = process.env.VITE_TMDB_API_KEY
-
   ipcMain.handle('get-platform', () => process.platform)
 
   ipcMain.handle('get-metadata', getMetadata)
   ipcMain.handle('authenticate-user', async (_event, args) => await authenticateUser(args))
-  ipcMain.handle('fetch-tmdb-trending', async (_event) => await runFetchTmdbTrendingInWorker(TMDB_API_KEY!, win))
+  ipcMain.handle('fetch-tmdb-trending', async (_event) => await runFetchTmdbTrendingInWorker(win))
   ipcMain.handle('get-local-tmdb-trending', async (_event) => await getLocalTmdbTrending())
 
   ipcMain.handle('update-current-playlist', async (_event) => {
     const response = await updateCurrentPlaylist()
-    if (response.isSuccess) runFetchTmdbTrendingInWorker(TMDB_API_KEY!, win)
+    runFetchTmdbTrendingInWorker(win)
     return response
   })
 

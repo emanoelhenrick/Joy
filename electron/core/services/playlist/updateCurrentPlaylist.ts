@@ -5,6 +5,7 @@ import { updateLive } from "../live/updateLive"
 import { updateSeries } from "../series/updateSeries"
 import { updatedAtPlaylist } from "./updatedAtPlaylist"
 import { updateVod } from "../vod/updateVod"
+import { runFetchTmdbTrendingInWorker } from "../tmdb/runFetchTmdbTrendingInWorker"
 
 export async function updateCurrentPlaylist() {
   const metadata = await getMetadata()
