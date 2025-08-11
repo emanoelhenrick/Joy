@@ -2,7 +2,7 @@
   "name": "joy-client",
   "productName": "Joy Client",
   "private": true,
-  "version": "0.10.9",
+  "version": "0.11.1",
   "type": "module",
   "author": "Emanoel Henrick",
   "build": {
@@ -41,7 +41,7 @@
     "@radix-ui/react-toast": "^1.2.2",
     "@tanstack/react-query": "^5.64.2",
     "@uidotdev/usehooks": "^2.4.1",
-    "axios": "^1.7.7",
+    "axios": "^1.11.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",

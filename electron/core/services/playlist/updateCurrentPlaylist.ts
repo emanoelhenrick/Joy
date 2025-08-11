@@ -13,8 +13,6 @@ export async function updateCurrentPlaylist() {
   if (!playlistInfo) return createMessage(false, "Error: playlist info")
   const urls = await getUrls(currentPlaylist)
   if (!urls) return createMessage(false, "Error: urls")
-
-    
     
   const authResponse = await authenticateUser(urls.getAuthenticateUrl)
   if (!authResponse || !authResponse.status) return createMessage(false, authResponse?.message)

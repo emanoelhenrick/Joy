@@ -93,8 +93,12 @@ export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries,
       
         <div style={{ aspectRatio: '2/3' }} className="absolute w-24 drop-shadow-2xl bg-primary-foreground rounded-2xl overflow-hidden -bottom-8 left-4 group-hover:-translate-y-4 ease-in-out transition duration-200 flex justify-center items-center">
           <HugeiconsIcon icon={ImageNotFound01Icon} className="absolute text-muted-foreground z-0" />
-          <img src={series.cover} className="w-24 z-10" alt="" />
+          <img src={series.cover} className="w-24 h-full z-10" alt="" />
         </div>
+
+        {/* <div className="absolute right-4 top-4 bg-primary/80 text-background px-3 py-1 rounded-xl">
+          <span>New episodes</span>
+        </div> */}
       </div>
       )
   }, [snapshots, watchingSeries])

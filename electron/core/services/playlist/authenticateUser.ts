@@ -13,7 +13,8 @@ export async function authenticateUser(url: string) {
     return { status: true, message: 'Validated' }
   } catch (error) {
     if (error instanceof Error) {
-      return { status: false, message: error.message }
+      if (error.message) return { status: false, message: error.message }
+      return { status: false, message: 'Unknown error' }
     }
   }
 }
