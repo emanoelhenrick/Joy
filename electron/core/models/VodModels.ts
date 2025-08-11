@@ -36,7 +36,7 @@ export interface VodInfoProps {
     description: string
     backdrop_path: string[]
     releasedate: string
-    tmdb_id?: number
+    tmdb_id?: any
     duration_secs: number
   },
   movie_data: {

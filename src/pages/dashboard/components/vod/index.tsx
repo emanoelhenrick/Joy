@@ -16,7 +16,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Dialog, DialogContent, DialogTrigger } from "./VideoDialog"
 import ReactPlayer from 'react-player'
 import { HugeiconsIcon } from '@hugeicons/react';
-import { Bookmark02Icon, PlayIcon } from '@hugeicons/core-free-icons';
+import { Bookmark02Icon, PlayIcon } from '@hugeicons/core-free-icons'
 
 interface Props {
   streamId: string
@@ -34,6 +34,7 @@ export function VodPage({ streamId, cover }: Props) {
   const removeVodStatus = useUserData(state => state.removeVodStatus)
   const updateFavorite = useUserData(state => state.updateFavorite)
   const { data, isSuccess, isFetching } = useQuery({ queryKey: [`vodInfo`], queryFn: async () => await fetchMovieData() })
+  
   const { urls } = usePlaylistUrl()
   const [_refresh, setRefresh] = useState(false)
 
@@ -67,7 +68,7 @@ export function VodPage({ streamId, cover }: Props) {
     const vodInfo = await electronApi.getVodInfo(urls.getVodInfoUrl + streamId)
     if (!vodInfo) return
     if (!vodInfo.info) return
-    if (vodInfo.info.tmdb_id) {
+    if (vodInfo.info.tmdb_id && vodInfo.info.tmdb_id.length > 1) {
       const movieInfo = await moviedb.movieInfo({
         id: vodInfo.info.tmdb_id,
         append_to_response: 'videos,images,credits',
@@ -87,7 +88,7 @@ export function VodPage({ streamId, cover }: Props) {
     return vodInfo
   }
 
-  console.log(`${urls.getVodStreamUrl}${streamId}.${data?.movie_data.container_extension}`);
+  // console.log(`${urls.getVodStreamUrl}${streamId}.${data?.movie_data.container_extension}`);
   
 
   async function launchVlc() {
