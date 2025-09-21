@@ -1,5 +1,7 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useUserData } from "@/states/useUserData";
+import { CancelIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 
 export function ClearDataAlertDialog({ seriesId, refresh }: { seriesId: string, refresh: () => void }) {
   const userSeriesData = useUserData(state => state.userData.series?.find(s => s.id == seriesId))
@@ -9,8 +11,8 @@ export function ClearDataAlertDialog({ seriesId, refresh }: { seriesId: string, 
 
   return (
     <AlertDialog onOpenChange={refresh}>
-      <AlertDialogTrigger className="outline-none ring-none border-none">
-        <div className="text-primary/60 text-right hover:text-primary cursor-pointer transition mt-2">Clear data</div>
+      <AlertDialogTrigger className="outline-none ring-none border-none items-center flex opacity-40 hover:opacity-90 transition duration-300 ease-in-out">
+        <HugeiconsIcon strokeWidth={2} icon={CancelIcon} className="size-6" />
       </AlertDialogTrigger>
       <AlertDialogContent className="border-none bg-primary-foreground">
         <AlertDialogHeader>

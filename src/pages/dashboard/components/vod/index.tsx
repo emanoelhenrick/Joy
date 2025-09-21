@@ -122,14 +122,14 @@ export function VodPage({ streamId, cover }: Props) {
     if (newStr.length > 1) return newStr
   }
 
-  const cast = data ? data.info.cast : undefined
-  const director = data ? data.info.director : undefined
-  const releaseDate = data ? data.info.releasedate && format(data?.info.releasedate, 'u') :  undefined
-  const description = data ? (data.info.description || data.info.plot) : undefined
-  const title = data ? getString(data!.info.title)  || getString(data!.movie_data.name) : undefined
-  const rating = data ? data.info.rating || data.info.rating_kinopoisk : undefined
+  const cast = (data && !Array.isArray(data.info)) ? data.info.cast : undefined
+  const director = (data && !Array.isArray(data.info)) ? data.info.director : undefined
+  const releaseDate = (data && !Array.isArray(data.info)) ? data.info.releasedate && format(data?.info.releasedate, 'u') :  undefined
+  const description = (data && !Array.isArray(data.info)) ? (data.info.description || data.info.plot) : undefined
+  const title = (data && !Array.isArray(data.info)) ? getString(data!.info.title)  || getString(data!.movie_data.name) : undefined
+  const rating = (data && !Array.isArray(data.info)) ? data.info.rating || data.info.rating_kinopoisk : undefined
   const resumeDuration = formatDurationFromSeconds(userVodData && userVodData.currentTime)
-  const duration = formatDurationFromSeconds(data && data.info.duration_secs)
+  const duration = formatDurationFromSeconds(((data && !Array.isArray(data.info))) && data.info.duration_secs)
 
   const renderExtra = useCallback((v: Video) => {
     return (

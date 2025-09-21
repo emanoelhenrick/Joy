@@ -10,6 +10,8 @@ import { SeriesProps } from "electron/core/models/SeriesModels";
 import { SeriesPage } from "./series";
 import { FaStar } from "react-icons/fa";
 import { parseNumber } from "@/utils/parseNumber";
+import { ArrowRight01Icon, MoreHorizontalIcon } from '@hugeicons/core-free-icons';
+import { HugeiconsIcon } from "@hugeicons/react";
 
 export default function PlaylistScroll({ data }: any) {
   const [ref, { width }] = useMeasure();
@@ -55,8 +57,8 @@ export default function PlaylistScroll({ data }: any) {
         <DialogContent className="w-screen h-screen items-center justify-center" aria-describedby={undefined}>
           <div
             onClick={() => setSelectedMovie(undefined)}
-            className="cursor-pointer absolute right-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
-            <Cross2Icon className="size-8 p-1 rounded-md bg-background/50" />
+            className="cursor-pointer absolute left-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
+            <HugeiconsIcon icon={ArrowRight01Icon} className="rotate-180 size-8" />
           </div>
           <DialogTitle className="hidden" />
           <div className="h-screen">
@@ -72,8 +74,8 @@ export default function PlaylistScroll({ data }: any) {
         <DialogContent className="w-screen h-screen items-center justify-center" aria-describedby={undefined}>
           <div
             onClick={() => setSelectedSeries(undefined)}
-            className="cursor-pointer absolute right-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
-            <Cross2Icon className="size-8 p-1 rounded-md bg-background/50" />
+            className="cursor-pointer absolute left-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
+            <HugeiconsIcon icon={ArrowRight01Icon} className="rotate-180 size-8" />
           </div>
           <DialogTitle className="hidden" />
           <div className="h-screen">

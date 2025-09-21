@@ -44,6 +44,8 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
 
     if (!isSeries) return seriesInfo
 
+    const seriesTMDBinfo = await moviedb.tvInfo(isSeries.id!)
+    
     const tmdbId = isSeries.id!.toString()
     const seasonStated = (userSeriesData && userSeriesData.season) ? userSeriesData.season : '1'
     
@@ -71,7 +73,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
     }
 
     seriesInfo.info.backdrop_path = [imageSrc] 
-    return { ...seriesInfo, tmdbImages: images, tmdbId  }
+    return { ...seriesInfo, tmdbImages: images, tmdbId, networkLogo: seriesTMDBinfo.networks![0].logo_path  }
   } 
 
   function refresh() {
@@ -114,6 +116,7 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
           )}
 
         <div className={`transition pb-10 space-y-6 duration-500 flex flex-col ${isFetching ? 'opacity-0' : 'opacity-100'}`}>
+
           <div className="flex justify-between items-end">
             <InfoSection
               title={title!}
@@ -125,26 +128,32 @@ export function SeriesPage({ seriesId, cover }: { seriesId: string, cover: strin
               logos={data && data.tmdbImages ? data.tmdbImages.logos! : []}
             />
 
-            <div className="px-16">
-              <ClearDataAlertDialog refresh={refresh} seriesId={seriesId}  />
-            </div>
+            
           </div>
 
-          <section className="flex gap-4 items-center pb-1">
-            <button disabled key='vlc' className="w-fit ml-16 transition bg-primary hover:bg-primary/90 px-6 py-3 rounded-2xl text-background relative overflow-hidden hover:scale-95">
-              <div className="flex items-center gap-2 pr-2">
-                <HugeiconsIcon icon={PlayIcon} className="fill-black size-7" />
-                <h1 className="leading-none text-base font-medium">Watch</h1>
-              </div>
-            </button>
+          <section className="flex justify-between items-center pr-16 pb-1">
+            <section className="flex gap-4 items-center">
+              <button disabled key='vlc' className="w-fit ml-16 transition bg-primary hover:bg-primary/90 px-6 py-3 rounded-2xl text-background relative overflow-hidden hover:scale-95">
+                <div className="flex items-center gap-2 pr-2">
+                  <HugeiconsIcon icon={PlayIcon} className="fill-black size-7" />
+                  <h1 className="leading-none text-base font-medium">Watch</h1>
+                </div>
+              </button>
 
-            <button onClick={handleFavorite} disabled={isFetching} className="duration-300 hover:opacity-80 transition">
-              <HugeiconsIcon
-                icon={Bookmark02Icon}
-                strokeWidth={1.5}
-                className={`size-6 fill-primary ${!userSeriesData?.favorite && 'opacity-25'} transition duration-300 ease-in-out`}
-              />
-            </button>
+              <button title="Favorite" onClick={handleFavorite} disabled={isFetching} className="duration-300 hover:opacity-80 transition ">
+                <HugeiconsIcon
+                  icon={Bookmark02Icon}
+                  strokeWidth={1.5}
+                  className={`size-6 fill-primary ${!userSeriesData?.favorite && 'opacity-25'} transition duration-300 ease-in-out`}
+                />
+              </button>
+
+              <div title="Remove all data" className="-ml-1">
+                <ClearDataAlertDialog refresh={refresh} seriesId={seriesId}  />
+              </div>
+            </section>
+            {(data && data.networkLogo) && <img className="h-8 max-w-36 object-contain grayscale-100 brightness-0 invert" src={`https://image.tmdb.org/t/p/w154/${data.networkLogo!}`} alt="" />}
+            
           </section>
 
           {data && (

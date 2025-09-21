@@ -62,6 +62,8 @@ export function MenuBar() {
 
   async function verifyAuth() {
     const authResponse = await electronApi.authenticateUser(urls.getAuthenticateUrl)
+    console.log(urls.getAuthenticateUrl);
+    
     if (authResponse.status) return
     setUpdatingError(true)
     setUpdating(false)

@@ -58,6 +58,7 @@ export interface SerieInfoProps {
   tmdbImages: TvImagesResponse
   tmdbCast: Cast[]
   tmdbId?: string
+  networkLogo?: string
 }
 
 export interface CategoriesProps {

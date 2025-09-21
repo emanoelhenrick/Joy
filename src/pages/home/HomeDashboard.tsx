@@ -14,6 +14,8 @@ import { HomeCover } from './components/HomeCover';
 import { VodPage } from '../dashboard/components/vod';
 import { Fade } from 'react-awesome-reveal';
 import { UpdatedMediaContainer } from './components/UpdatedMediaContainer';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { ArrowRight01Icon } from '@hugeicons/core-free-icons';
 
 export function HomeDashboard() {
   const vodData = useVodPlaylist(state => state.data)
@@ -169,8 +171,8 @@ export function HomeDashboard() {
             <div className="h-fit z-0 py-8 pt-0">
               <Dialog open={selectedSeries && true}>
                 <DialogContent className="w-screen items-center justify-center" aria-describedby={undefined}>
-                  <div onClick={() => setSelectedSeries(undefined)} className="cursor-pointer absolute right-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
-                    <Cross2Icon className="size-8 p-1 rounded-md bg-background/50" />
+                  <div onClick={() => setSelectedSeries(undefined)} className="cursor-pointer absolute left-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
+                    <HugeiconsIcon icon={ArrowRight01Icon} className="rotate-180 size-8" />
                   </div>
                   <DialogTitle className="hidden" />
                   <div className="w-screen">
@@ -180,8 +182,8 @@ export function HomeDashboard() {
               </Dialog>
               <Dialog open={selectedVod && true}>
                 <DialogContent className="w-screen h-screen items-center justify-center" aria-describedby={undefined}>
-                  <div onClick={() => setSelectedVod(undefined)} className="cursor-pointer absolute right-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
-                    <Cross2Icon className="size-8 p-1 rounded-md bg-background/50" />
+                  <div onClick={() => setSelectedVod(undefined)} className="cursor-pointer absolute left-16 top-16 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-20">
+                    <HugeiconsIcon icon={ArrowRight01Icon} className="rotate-180 size-8" />
                   </div>
                   <DialogTitle className="hidden" />
                   <div className="w-screen">

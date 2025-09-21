@@ -9,7 +9,7 @@ interface Props {
   description: string
   director: string
   rating: any
-  logos: TitleLogo[]
+  logos: TitleLogo[],
 }
 
 export function InfoSection({ title, releaseDate, genre, description, director, rating, logos }: Props) {
