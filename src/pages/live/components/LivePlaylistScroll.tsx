@@ -37,6 +37,8 @@ export default function LivePlaylistScroll({ playlist }: { playlist: LiveProps[]
 
   async function launchVlc() {
     if (!selectedLiveUrl) return
+    console.log(selectedLiveUrl);
+    
     await electronApi.launchVLC({ path: selectedLiveUrl, startTime: 0 })
     setIsRunning(true)
   }

@@ -66,8 +66,10 @@ export function VodPage({ streamId, cover }: Props) {
 
   async function fetchMovieData() {
     const vodInfo = await electronApi.getVodInfo(urls.getVodInfoUrl + streamId)
+    
     if (!vodInfo) return
     if (!vodInfo.info) return
+
     if (vodInfo.info.tmdb_id && vodInfo.info.tmdb_id.length > 1) {
       const movieInfo = await moviedb.movieInfo({
         id: vodInfo.info.tmdb_id,
@@ -87,9 +89,6 @@ export function VodPage({ streamId, cover }: Props) {
     }
     return vodInfo
   }
-
-  // console.log(`${urls.getVodStreamUrl}${streamId}.${data?.movie_data.container_extension}`);
-  
 
   async function launchVlc() {
     const props = {

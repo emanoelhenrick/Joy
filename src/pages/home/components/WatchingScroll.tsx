@@ -18,6 +18,8 @@ interface WatchingScrollProps {
 }
 
 export function WatchingScroll({ watchingVod, watchingSeries, setSelectedSeries, setSelectedVod }: WatchingScrollProps) {
+  if (!watchingVod || !watchingSeries) return <></>
+
   const watchingList = [ ...watchingVod, ...watchingSeries ].sort((a, b) => b.updatedAt! - a.updatedAt!)
   const [snapshots, setSnapshots] = useState<any[]>()
   const { urls } = usePlaylistUrl()

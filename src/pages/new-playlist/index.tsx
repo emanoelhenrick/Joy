@@ -95,6 +95,8 @@ export function Initial() {
 
   async function validate() {
     const urls = makeUrls(formValue!)
+    console.log(urls.getAuthenticateUrl);
+    
     const authResponse = await electronApi.authenticateUser(urls.getAuthenticateUrl)
     if (authResponse.status) {
       setValidated(true)

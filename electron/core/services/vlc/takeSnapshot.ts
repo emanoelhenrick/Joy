@@ -1,6 +1,6 @@
 import axios from "axios"
 
-export async function takeSnapshot(): Promise<void> {
+export async function takeSnapshot(): Promise<boolean> {
   try {
     await axios.get('http://127.0.0.1:9090/requests/status.xml?command=snapshot', {
       auth: {
@@ -9,8 +9,10 @@ export async function takeSnapshot(): Promise<void> {
       },
       timeout: 500
     })
+
+    return true;
   } catch (error) {
     console.log('erro snapshot');
-    
+    return false;
   }
 }

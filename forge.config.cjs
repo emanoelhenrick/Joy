@@ -22,25 +22,33 @@ module.exports = {
       }
     },
     {
-      name: '@electron-forge/maker-rpm',
+      name: '@electron-forge/maker-flatpak',
       executableName: "joy-client",
       config: {
         name: "Joy",
-        options: {
-          icon: 'src/assets/icons/icon.png'
-        }
-      },
-    },
-    {
-      name: '@electron-forge/maker-deb',
-      executableName: "joy-client",
-      config: {
-        name: "Joy",
-        options: {
-          icon: 'src/assets/icons/icon.png'
-        }
+        setupIcon: 'src/assets/icons/icon.png'
       }
     }
+    // {
+    //   name: '@electron-forge/maker-rpm',
+    //   executableName: "joy-client",
+    //   config: {
+    //     name: "Joy",
+    //     options: {
+    //       icon: 'src/assets/icons/icon.png'
+    //     }
+    //   },
+    // },
+    // {
+    //   name: '@electron-forge/maker-deb',
+    //   executableName: "joy-client",
+    //   config: {
+    //     name: "Joy",
+    //     options: {
+    //       icon: 'src/assets/icons/icon.png'
+    //     }
+    //   }
+    // }
   ],
   plugins: [
     {

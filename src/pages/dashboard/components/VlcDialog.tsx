@@ -48,6 +48,8 @@ export function VlcDialog({ open, closeDialog, updateUserStatus }: VlcDialogProp
       if (args.running) return
       closeDialog()
       if (args.error) {
+        console.error(args.error);
+        
         toast({
           variant: "destructive",
           title: 'Unable to connect to the server',

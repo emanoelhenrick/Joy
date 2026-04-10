@@ -1,1 +1,54 @@
-"use strict";const a=require("electron");a.contextBridge.exposeInMainWorld("ipcRenderer",{on(...e){const[i,n]=e;return a.ipcRenderer.on(i,(t,...r)=>n(t,...r))},off(...e){const[i,...n]=e;return a.ipcRenderer.off(i,...n)},send(...e){const[i,...n]=e;return a.ipcRenderer.send(i,...n)},invoke(...e){const[i,...n]=e;return a.ipcRenderer.invoke(i,...n)},getPlatform:()=>a.ipcRenderer.invoke("get-platform"),getMetadata:()=>a.ipcRenderer.invoke("get-metadata"),updateCurrentPlaylist:async e=>await a.ipcRenderer.invoke("update-current-playlist",e),takeSnapshot:async e=>await a.ipcRenderer.invoke("take-snapshot",e),getSnapshot:async e=>await a.ipcRenderer.invoke("get-snapshot",e),updateVod:async e=>await a.ipcRenderer.invoke("update-vod",e),updateSeries:async e=>await a.ipcRenderer.invoke("update-series",e),updateLive:async e=>await a.ipcRenderer.invoke("update-live",e),authenticateUser:async e=>await a.ipcRenderer.invoke("authenticate-user",e),fetchTmdbTrending:async e=>await a.ipcRenderer.invoke("fetch-tmdb-trending",e),getLocalTmdbTrending:async e=>await a.ipcRenderer.invoke("get-local-tmdb-trending",e),addPlaylistToMeta:async e=>await a.ipcRenderer.invoke("add-playlist-to-meta",e),editPlaylistInfo:async e=>await a.ipcRenderer.invoke("edit-playlist-info",e),removePlaylist:async e=>await a.ipcRenderer.invoke("remove-playlist",e),getLocalVodPlaylist:async e=>await a.ipcRenderer.invoke("get-local-vod-playlist",e),getLocalSeriesPlaylist:async e=>await a.ipcRenderer.invoke("get-local-series-playlist",e),getLocalLivePlaylist:async e=>await a.ipcRenderer.invoke("get-local-live-playlist",e),getPlaylistInfo:async e=>await a.ipcRenderer.invoke("get-playlist-info",e),getVodInfo:async e=>await a.ipcRenderer.invoke("get-vod-info",e),getSerieInfo:async e=>await a.ipcRenderer.invoke("get-serie-info",e),getUserData:async e=>await a.ipcRenderer.invoke("get-user-data",e),updateUserData:async e=>await a.ipcRenderer.invoke("update-user-data",e),changeCurrentPlaylist:async e=>await a.ipcRenderer.invoke("change-current-playlist",e),updatedAtPlaylist:async e=>await a.ipcRenderer.invoke("updated-at-playlist",e),createProfile:async e=>await a.ipcRenderer.invoke("create-profile",e),switchProfile:async e=>await a.ipcRenderer.invoke("switch-profile",e),renameProfile:async e=>await a.ipcRenderer.invoke("rename-profile",e),removeProfile:async e=>await a.ipcRenderer.invoke("remove-profile",e),launchVLC:async e=>await a.ipcRenderer.invoke("launch-vlc",e),getVLCState:async e=>await a.ipcRenderer.invoke("get-vlc-state",e),updateVLCPath:async e=>await a.ipcRenderer.invoke("update-vlc-path",e),removeAllListeners:e=>a.ipcRenderer.removeAllListeners(e)});
+"use strict";
+const electron = require("electron");
+electron.contextBridge.exposeInMainWorld("ipcRenderer", {
+  on(...args) {
+    const [channel, listener] = args;
+    return electron.ipcRenderer.on(channel, (event, ...args2) => listener(event, ...args2));
+  },
+  off(...args) {
+    const [channel, ...omit] = args;
+    return electron.ipcRenderer.off(channel, ...omit);
+  },
+  send(...args) {
+    const [channel, ...omit] = args;
+    return electron.ipcRenderer.send(channel, ...omit);
+  },
+  invoke(...args) {
+    const [channel, ...omit] = args;
+    return electron.ipcRenderer.invoke(channel, ...omit);
+  },
+  // You can expose other APTs you need here.
+  // ...
+  getPlatform: () => electron.ipcRenderer.invoke("get-platform"),
+  getMetadata: () => electron.ipcRenderer.invoke("get-metadata"),
+  updateCurrentPlaylist: async (args) => await electron.ipcRenderer.invoke("update-current-playlist", args),
+  takeSnapshot: async (args) => await electron.ipcRenderer.invoke("take-snapshot", args),
+  getSnapshot: async (args) => await electron.ipcRenderer.invoke("get-snapshot", args),
+  updateVod: async (args) => await electron.ipcRenderer.invoke("update-vod", args),
+  updateSeries: async (args) => await electron.ipcRenderer.invoke("update-series", args),
+  updateLive: async (args) => await electron.ipcRenderer.invoke("update-live", args),
+  authenticateUser: async (args) => await electron.ipcRenderer.invoke("authenticate-user", args),
+  fetchTmdbTrending: async (args) => await electron.ipcRenderer.invoke("fetch-tmdb-trending", args),
+  getLocalTmdbTrending: async (args) => await electron.ipcRenderer.invoke("get-local-tmdb-trending", args),
+  addPlaylistToMeta: async (args) => await electron.ipcRenderer.invoke("add-playlist-to-meta", args),
+  editPlaylistInfo: async (args) => await electron.ipcRenderer.invoke("edit-playlist-info", args),
+  removePlaylist: async (args) => await electron.ipcRenderer.invoke("remove-playlist", args),
+  getLocalVodPlaylist: async (args) => await electron.ipcRenderer.invoke("get-local-vod-playlist", args),
+  getLocalSeriesPlaylist: async (args) => await electron.ipcRenderer.invoke("get-local-series-playlist", args),
+  getLocalLivePlaylist: async (args) => await electron.ipcRenderer.invoke("get-local-live-playlist", args),
+  getPlaylistInfo: async (args) => await electron.ipcRenderer.invoke("get-playlist-info", args),
+  getVodInfo: async (args) => await electron.ipcRenderer.invoke("get-vod-info", args),
+  getSerieInfo: async (args) => await electron.ipcRenderer.invoke("get-serie-info", args),
+  getUserData: async (args) => await electron.ipcRenderer.invoke("get-user-data", args),
+  updateUserData: async (args) => await electron.ipcRenderer.invoke("update-user-data", args),
+  changeCurrentPlaylist: async (args) => await electron.ipcRenderer.invoke("change-current-playlist", args),
+  updatedAtPlaylist: async (args) => await electron.ipcRenderer.invoke("updated-at-playlist", args),
+  createProfile: async (args) => await electron.ipcRenderer.invoke("create-profile", args),
+  switchProfile: async (args) => await electron.ipcRenderer.invoke("switch-profile", args),
+  renameProfile: async (args) => await electron.ipcRenderer.invoke("rename-profile", args),
+  removeProfile: async (args) => await electron.ipcRenderer.invoke("remove-profile", args),
+  launchVLC: async (args) => await electron.ipcRenderer.invoke("launch-vlc", args),
+  getVLCState: async (args) => await electron.ipcRenderer.invoke("get-vlc-state", args),
+  updateVLCPath: async (args) => await electron.ipcRenderer.invoke("update-vlc-path", args),
+  removeAllListeners: (args) => electron.ipcRenderer.removeAllListeners(args)
+});
