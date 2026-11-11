@@ -1,21 +1,20 @@
-<div align="center">
+<p align="center">
 	<img src="src/assets/icons/icon.png" alt="Joy Client" width="112" />
+</p>
 
-	<h1>Joy Client</h1>
+<h1 align="center">Joy Client</h1>
 
-	<strong>Seu catálogo de entretenimento, organizado em um só lugar.</strong>
-
+<p align="center">
+	<strong>Seu catálogo de entretenimento, organizado em um só lugar.</strong><br />
 	Cliente desktop para playlists Xtream, construído com Electron, React e TypeScript.
+</p>
 
-	<p>
-		<img src="https://img.shields.io/badge/status-em%20desenvolvimento-e8a317?style=for-the-badge" alt="Status: em desenvolvimento" />
-		<img src="https://img.shields.io/badge/Electron-30-47848f?style=for-the-badge&logo=electron&logoColor=white" alt="Electron 30" />
-		<img src="https://img.shields.io/badge/React-18-61dafb?style=for-the-badge&logo=react&logoColor=111827" alt="React 18" />
-		<img src="https://img.shields.io/badge/TypeScript-5.2-3178c6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript 5.2" />
-	</p>
-</div>
-
-<br />
+<p align="center">
+	<img src="https://img.shields.io/badge/status-em%20desenvolvimento-e8a317?style=for-the-badge" alt="Status: em desenvolvimento" />
+	<img src="https://img.shields.io/badge/Electron-30-47848f?style=for-the-badge&logo=electron&logoColor=white" alt="Electron 30" />
+	<img src="https://img.shields.io/badge/React-18-61dafb?style=for-the-badge&logo=react&logoColor=111827" alt="React 18" />
+	<img src="https://img.shields.io/badge/TypeScript-5.2-3178c6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript 5.2" />
+</p>
 
 ## Sobre o projeto
 
