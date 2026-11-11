@@ -1,9 +1,9 @@
 <div align="center">
 	<img src="src/assets/icons/icon.png" alt="Joy Client" width="112" />
 
-	# Joy Client
+	<h1>Joy Client</h1>
 
-	**Seu catálogo de entretenimento, organizado em um só lugar.**
+	<strong>Seu catálogo de entretenimento, organizado em um só lugar.</strong>
 
 	Cliente desktop para playlists Xtream, construído com Electron, React e TypeScript.
 
