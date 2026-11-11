@@ -1,8 +1,4 @@
-<p align="center">
-	<img src="src/assets/icons/icon.png" alt="Joy Client" width="112" />
-</p>
-
-<h1 align="center">Joy Client</h1>
+<h1 align="center">JOY</h1>
 
 <p align="center">
 	<strong>Seu catálogo de entretenimento, organizado em um só lugar.</strong><br />
