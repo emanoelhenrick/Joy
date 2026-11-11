@@ -122,8 +122,3 @@ O Joy Client é apenas um cliente para serviços compatíveis com a Xtream API. 
 ## Licença
 
 O pacote declara licença `UNLICENSED`. Consulte o autor antes de redistribuir ou utilizar este projeto em outro contexto.
-
-<div align="center">
-	<br />
-	Feito com TypeScript, Electron e atenção aos detalhes.
-</div>
